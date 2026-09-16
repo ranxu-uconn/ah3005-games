@@ -117,10 +117,10 @@ main>h2{margin-top:1.8rem}
    ============================================================ */
 const CONFIG = {
   mission: 4,
-  version: "1.0",
+  version: "1.1",
   // Paste your Qualtrics survey link between the quotes, e.g.
   // "https://uconn.co1.qualtrics.com/jfe/form/SV_xxxxxxxxxxxx"
-  qualtricsUrl: "",
+  qualtricsUrl: "https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey: "ahstat3005-mission4-v1"
 };
 
@@ -678,10 +678,13 @@ function renderExpertOffer(){
 }
 
 function buildPayload(){
-  const p={mission:CONFIG.mission,version:CONFIG.version,path:S.path.join(""),credibility:S.cred,hints:S.hints,
-    minutes:Math.round((Date.now()-S.started)/60000),followups:S.fuDone.join("|"),expert:S.expDone.join("|")};
-  allFields().slice(8).forEach(id=>{p[id]=valueOf(S.results[id]);});
-  return p;
+  /* Everything goes into ONE Qualtrics embedded data field named "results". */
+  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`case levels ${S.path.join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
+  const add=(u,name)=>u.steps.forEach(st=>{const v=valueOf(S.results[st.id]);if(v)parts.push(`${name}, ${st.label}: ${v}`);});
+  CORE.forEach((c,i)=>{if(i<S.path.length){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
+  S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
+  EXPERT.map(f=>f()).filter(u=>S.expDone.includes(u.id)).forEach(u=>add(u,u.title));
+  return {results:parts.join(" | ")};
 }
 
 function renderSummary(){
@@ -699,10 +702,10 @@ function renderSummary(){
     <div class="stat"><b>${S.cred}</b><span>team credibility</span></div>
     <div class="stat"><b>${S.hints}</b><span>hints used</span></div></div>
     <div class="submit-box">${configured
-      ?`<h2>Submit your results for credit</h2><p>You'll go to a short UConn survey and sign in with your NetID. Your game results are sent along automatically.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
+      ?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results are sent along automatically, without your name.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
       :`<h2>Instructor preview</h2><p>No results survey is connected yet, so nothing is sent. The values below are what a student's submission would contain.</p>`}</div>
     ${units.map(list).join("")}${fus.map(list).join("")}${exps.map(list).join("")}
-    ${(!configured||PREVIEW)?tbl("Values sent to the survey","Blank = not played",["Field","Value"],Object.entries(payload).map(([k,v])=>[k,String(v)])):""}
+    ${(!configured||PREVIEW)?`<h2>What gets sent to the survey</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
     <div class="actions"><button class="linkish" id="restart">Start the mission over</button></div>`;
   focusTop(app.querySelector("h1"));
   const sb=document.getElementById("submit");
