@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission 5: ANOVA rounds | AH/STAT 3005</title>
+<style>
+
+:root{
+  --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB;
+  --teal:#15656C; --teal-deep:#0C474C; --teal-wash:#E1EEEF; --on-teal:#FFFFFF;
+  --good:#256A40; --good-wash:#E3F1E7; --bad:#9E2F28; --bad-wash:#F7E4E2;
+  --amber:#7F500B; --amber-wash:#F7EDDA;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F181C; --card:#162228; --ink:#E2EBEE; --muted:#9DAEB5; --line:#2C3C43;
+    --teal:#6DBAC1; --teal-deep:#96D2D7; --teal-wash:#173338; --on-teal:#08181B;
+    --good:#86CD9E; --good-wash:#1A3224; --bad:#F29A92; --bad-wash:#3A211F;
+    --amber:#E6B96C; --amber-wash:#382C17;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--sans)}
+.bar{position:sticky;top:0;z-index:5;background:var(--teal-deep);color:#fff;border-bottom:3px solid var(--teal)}
+@media (prefers-color-scheme: dark){.bar{background:#0B2427;color:var(--ink)}}
+.bar-in{max-width:780px;margin:0 auto;padding:.55rem 1.1rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar-title{font-family:var(--serif);font-size:1.02rem;font-weight:600}
+.bar-meta{display:flex;gap:1.1rem;align-items:center;font-size:.86rem}
+.meter{display:flex;align-items:center;gap:.45rem}
+.meter-track{width:92px;height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+.meter-fill{height:100%;background:#9FE0C0;transition:width .35s ease}
+main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
+h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
+h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
+p{margin:0 0 .9rem;max-width:68ch}
+.where{color:var(--muted);font-size:.92rem;margin:0}
+.lede{font-size:1.1rem}
+.memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
+.memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
+.memo p{max-width:none}
+.output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
+.output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
+.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:.86rem;min-width:100%}
+th,td{padding:.35rem .55rem;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+thead th{border-bottom:2px solid var(--ink);font-weight:700;vertical-align:bottom;white-space:normal;min-width:4.2rem}
+tbody th{text-align:left;font-weight:600}
+thead th:first-child{text-align:left}
+.step{border-top:1px solid var(--line);padding-top:1.2rem;margin-top:.6rem}
+.step-count{color:var(--muted);font-size:.9rem;margin-bottom:.3rem}
+.prompt{font-size:1.18rem}
+.opts{display:grid;gap:.55rem;margin:.9rem 0}
+.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:.75rem .9rem;cursor:pointer}
+.opt:hover:not([aria-disabled="true"]){border-color:var(--teal)}
+.opt-mark{flex:0 0 1.35rem;height:1.35rem;border-radius:50%;border:1.5px solid var(--muted);margin-top:.12rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.opt.wrong{background:var(--bad-wash);border-color:var(--bad);cursor:default}
+.opt.wrong .opt-mark{border-color:var(--bad);color:var(--bad)}
+.opt.wrong .opt-mark::after{content:"\2715"}
+.opt.right{background:var(--good-wash);border-color:var(--good)}
+.opt.right .opt-mark{border-color:var(--good);background:var(--good);color:var(--card)}
+.opt.right .opt-mark::after{content:"\2713"}
+.opt.locked:not(.right):not(.wrong){opacity:.55;cursor:default}
+.fb{margin:.3rem 0 .8rem}
+.fb-box{border-radius:8px;padding:.8rem 1rem .1rem;border:1px solid}
+.fb-box.good{background:var(--good-wash);border-color:var(--good)}
+.fb-box.bad{background:var(--bad-wash);border-color:var(--bad)}
+.fb-head{font-weight:700;margin-bottom:.3rem}
+.hint{background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.75rem 1rem .1rem;margin:.4rem 0 .8rem}
+.hint .fb-head{color:var(--amber)}
+button{font:inherit}
+.primary{background:var(--teal);color:var(--on-teal);border:0;border-radius:8px;padding:.7rem 1.25rem;font-weight:600;cursor:pointer}
+.primary:hover{background:var(--teal-deep)}
+@media (prefers-color-scheme: dark){.primary:hover{background:var(--teal-deep)}}
+.quiet{background:transparent;color:var(--teal-deep);border:1.5px solid var(--teal);border-radius:8px;padding:.6rem 1.05rem;font-weight:600;cursor:pointer}
+.linkish{background:none;border:0;color:var(--teal-deep);text-decoration:underline;cursor:pointer;padding:.3rem 0;font-size:.95rem}
+.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+:focus-visible{outline:3px solid #E0A526;outline-offset:2px}
+.outro{border-top:1px solid var(--line);margin-top:1rem;padding-top:1.2rem}
+.takeaway{background:var(--teal-wash);border-radius:8px;padding:.8rem 1rem}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 .8rem;padding:.6rem .9rem .7rem;background:var(--card)}
+legend{font-weight:600;padding:0 .3rem}
+.radios{display:flex;gap:1.2rem;flex-wrap:wrap}
+.radios label{display:flex;gap:.4rem;align-items:center;cursor:pointer}
+.stats{display:flex;gap:2rem;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.stat b{display:block;font-family:var(--serif);font-size:2rem;line-height:1.1;font-weight:600}
+.stat span{color:var(--muted);font-size:.9rem}
+.review{margin:0 0 1.2rem;padding:0;list-style:none}
+.review li{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.review .st{white-space:nowrap;font-weight:600}
+.st.ok{color:var(--good)} .st.retry{color:var(--amber)}
+main>h2{margin-top:1.8rem}
+.submit-box{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem}
+.kpis{display:flex;gap:.6rem;flex-wrap:wrap;margin:0 0 .9rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.45rem .85rem;min-width:7rem}
+.kpi b{display:block;font-family:var(--serif);font-size:1.3rem;line-height:1.25}
+.kpi span{font-size:.8rem;color:var(--muted)}
+.vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
+.viz{display:block;width:100%;height:auto}
+.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.viz text{font:12px var(--sans);fill:var(--muted)}
+.viz .v-strong{fill:var(--ink);font-weight:600}
+.viz .v-reflab{fill:var(--amber);font-weight:600}
+.viz .v-altlab{fill:var(--teal);font-weight:600}
+.viz .v-t1lab{fill:var(--bad);font-weight:600}
+.v-axis,.v-grid{stroke:var(--line);stroke-width:1}
+.v-dot{fill:var(--teal);opacity:.85}
+.v-ref{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}
+.v-down{stroke:var(--teal);stroke-width:1.6;opacity:.65}
+.v-up{stroke:var(--bad);stroke-width:1.8;opacity:.8}
+.v-flat{stroke:var(--muted);stroke-width:1.4;opacity:.6}
+.v-curve{fill:none;stroke:var(--ink);stroke-width:2}
+.v-shade{fill:var(--teal);opacity:.4}
+.v-null{fill:none;stroke:var(--muted);stroke-width:2}
+.v-alt{fill:none;stroke:var(--teal);stroke-width:2.5}
+.v-pow{fill:var(--teal);opacity:.28}
+.v-t1{fill:var(--bad);opacity:.45}
+.v-bar{stroke:var(--teal);stroke-width:7;stroke-linecap:round}
+.v-est{fill:var(--card);stroke:var(--teal);stroke-width:3}
+.v-mean{stroke:var(--ink);stroke-width:3}
+.status{display:flex;gap:.8rem;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--good);border-radius:4px 10px 10px 4px;padding:.75rem 1rem .1rem;margin-bottom:.9rem}
+.status.mixed{border-left-color:var(--amber)}
+.status-icon{font-size:1.35rem;line-height:1.3;font-weight:700;color:var(--good)}
+.status.mixed .status-icon{color:var(--amber)}
+.status-title{font-weight:700;margin-bottom:.15rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){body{font-size:16px}h1{font-size:1.65rem}.bar-meta{gap:.7rem}.meter-track{width:60px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.viz .v-null2{fill:none;stroke:var(--muted);stroke-width:2.5;stroke-dasharray:7 5}.viz .v-alt2{fill:none;stroke:var(--teal);stroke-width:3}
+
+.map-wrap{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.4rem;margin:.6rem 0}
+#mapsvg{display:block;width:100%;height:auto;touch-action:manipulation;cursor:pointer;border-radius:6px}
+#mapsvg:focus-visible{outline:3px solid #E0A526}
+.m-floor{fill:#E9EEF0}.m-corr{fill:#DCE4E7}.m-wall{fill:#34474F}
+.r1{fill:#F3E6DA}.r2{fill:#E2EEF6}.r3{fill:#F6E3E6}.r4{fill:#E8E4F3}.r5{fill:#E3F1E6}.r6{fill:#F6EFD9}.r7{fill:#E1EEEF}
+.m-label{font:600 15px var(--sans);fill:#34474F}
+.m-name{font:600 11px var(--sans);fill:#34474F}
+.m-init{font:700 12px var(--sans);fill:#fff}
+.m-deco{fill:#34474F;opacity:.12}
+.mk-need{fill:#E0A526}.mk-done{fill:#2E7D4F}.mk-wait{fill:#9AA8AE}
+.mk-t{font:800 15px var(--sans);fill:#fff}
+@media (prefers-color-scheme: dark){.m-floor{fill:#223239}.m-corr{fill:#1B292F}.m-wall{fill:#0A1215}.r1{fill:#3A2E25}.r2{fill:#23323D}.r3{fill:#3B2A2E}.r4{fill:#2D2A3B}.r5{fill:#23352A}.r6{fill:#3A3422}.r7{fill:#1F3538}.m-label,.m-name{fill:#D5E0E4}}
+.toast{min-height:2.9rem;background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.55rem .9rem;margin:.4rem 0;font-size:.95rem}
+.toast:empty{background:transparent;border-color:transparent}
+.quest{font-size:.95rem;margin:.2rem 0 .3rem}
+.controls{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.5rem}
+.dpad{display:grid;grid-template-columns:repeat(3,3rem);grid-template-rows:repeat(2,3rem);gap:.3rem}
+.dpad button{font-size:1.2rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
+.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}
+.dir{flex:1;min-width:15rem}
+.dir h2{font-size:1.05rem;margin:.1rem 0 .4rem}
+.dir ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.dir button{width:100%;text-align:left;font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem}
+.dir .tag{font-size:.78rem;font-weight:700;white-space:nowrap}
+.tag.need{color:var(--amber)}.tag.done{color:var(--good)}.tag.wait{color:var(--muted)}
+.talk-head{display:flex;gap:1rem;align-items:center;margin:.3rem 0 .6rem}
+.talk-head h1{margin:0 0 .15rem}
+.who{margin:0;color:var(--muted)}
+.bubble{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem .1rem;margin:.4rem 0 1rem}
+.bubble::before{content:"";position:absolute;top:-9px;left:28px;width:16px;height:16px;background:var(--card);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.slider{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0}
+.slider input{width:100%}
+.swatches{display:flex;gap:.8rem;margin:.4rem 0 1rem}
+.swatches label{display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;font-size:.85rem}
+.swatch{width:2.4rem;height:2.4rem;border-radius:50%;border:3px solid transparent}
+.swatches input{position:absolute;opacity:0}
+.swatches input:checked+.swatch{border-color:var(--ink)}
+.swatches input:focus-visible+.swatch{outline:3px solid #E0A526}
+ .m-clue{fill:#FFFFFF;stroke:#34474F;stroke-width:2}.m-clue-l{stroke:#34474F;stroke-width:2}
+.build{width:100%;border-collapse:collapse;margin:.4rem 0 .8rem;font-size:.92rem}
+.build th,.build td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);white-space:normal}
+.build code{font-weight:700}
+.build select{font:inherit;padding:.3rem;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.typ{font-size:.75rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;background:var(--teal-wash);color:var(--teal-deep);white-space:nowrap}
+.notes{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .9rem;margin:0 0 1rem}
+.notes summary{font-weight:700;cursor:pointer}
+.note{border-top:1px solid var(--line);padding-top:.5rem;margin-top:.5rem}
+.clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
+.dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
+.toast table{font-size:.82rem;min-width:0}
+.notes td,.toast td,.notes th,.toast th{text-align:left;white-space:normal}.notes figcaption:empty,.toast figcaption:empty{display:none}
+.side{display:grid;grid-template-columns:1fr;gap:.2rem}
+@media (max-width:620px){.side{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div class="bar-title">Mission 5: ANOVA rounds</div>
+  <div class="bar-meta">
+    <span id="progress"></span>
+    <span class="meter" role="img" id="meter" aria-label="Reputation">Reputation
+      <span class="meter-track"><span class="meter-fill" id="meterFill" style="width:50%"></span></span>
+      <span id="credv">50</span></span>
+  </div>
+</div></header>
+<main id="app" tabindex="-1"></main>
+<script>
+const CONFIG={mission:5,version:"2.0",
+  // Qualtrics survey link (same survey as Mission 4)
+  qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
+  storageKey:"ahstat3005-mission5-v2"};
+function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
+function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
+function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
+function tcdf(t,df){const x=df/(df+t*t);const tail=0.5*betai(df/2,0.5,x);return t>=0?1-tail:tail;}
+function tinv(p,df){let lo=-80,hi=80;for(let i=0;i<200;i++){const m=(lo+hi)/2;if(tcdf(m,df)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+function zinv(p){let lo=-10,hi=10;for(let i=0;i<100;i++){const m=(lo+hi)/2;if(ncdf(m)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function twoSidedP(t,df){return 2*(1-tcdf(Math.abs(t),df));}
+function power2(d,n,alpha){return ncdf(d*Math.sqrt(n/2)-zinv(1-alpha/2));}
+function welchDf(s1,n1,s2,n2){const a=s1*s1/n1,b=s2*s2/n2;return (a+b)*(a+b)/(a*a/(n1-1)+b*b/(n2-1));}
+
+function makeRng(seed){let a=seed>>>0;const next=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  return {u:next,uni:(lo,hi)=>lo+(hi-lo)*next(),int:(lo,hi)=>lo+Math.floor(next()*(hi-lo+1)),
+    normal:(m,s)=>{let u=0,v=0;while(u===0)u=next();while(v===0)v=next();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}};}
+
+function fx(x,d=2){const r=Number(x).toFixed(d);return r==="-0."+"0".repeat(d)?(0).toFixed(d):r;}
+function fP(p){return p<0.001?"&lt;.001":p.toFixed(3).replace(/^0\./,".");}
+function fPtext(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+function tbl(title,note,heads,rows){
+  return `<figure class="output"><figcaption>${title}${note?`<span class="out-note">${note}</span>`:""}</figcaption><div class="scroll"><table><thead><tr>${heads.map(h=>`<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>i===0?`<th scope="row">${c}</th>`:`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
+}
+const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
+
+function pT(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
+function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
+function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
+function ticks(lo,hi,k=6){const s0=(hi-lo)/k,m=Math.pow(10,Math.floor(Math.log10(s0)));const st=[1,2,5,10].map(v=>v*m).find(v=>v>=s0);const o=[];for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9;v+=st)o.push(+v.toFixed(6));return o;}
+function axis(x,lo,hi,y,x0,x1){return `<line class="v-axis" x1="${x0}" x2="${x1}" y1="${y}" y2="${y}"/>`+ticks(lo,hi).map(v=>`<line class="v-axis" x1="${x(v)}" x2="${x(v)}" y1="${y}" y2="${y+5}"/><text x="${x(v)}" y="${y+18}" text-anchor="middle">${v}</text>`).join("");}
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length;}
+function sdv(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/(a.length-1));}
+function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1));const mu=mean(x),sd=sdv(x);return x.map(v=>m+(v-mu)/sd*s);}
+function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
+
+
+/* ---------- ANOVA calculations ---------- */
+function oneway(groups){const all=groups.flat(),N=all.length,k=groups.length,g=mean(all);
+  const SSB=groups.reduce((s,a)=>s+a.length*(mean(a)-g)**2,0),SSW=groups.reduce((s,a)=>{const m=mean(a);return s+a.reduce((t,v)=>t+(v-m)**2,0);},0);
+  const dfB=k-1,dfW=N-k,MSB=SSB/dfB,MSW=SSW/dfW,F=MSB/MSW;return {N,k,SSB,SSW,dfB,dfW,MSB,MSW,F,p:fSurv(F,dfB,dfW)};}
+function scheffe(groups,names,a){const out=[];for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++){
+  const d=mean(groups[i])-mean(groups[j]),Fp=(d*d/(a.MSW*(1/groups[i].length+1/groups[j].length)))/(a.k-1);
+  out.push({a:names[i],b:names[j],d,p:fSurv(Fp,a.k-1,a.dfW)});}return out;}
+function aovRows(a,label){return [["Between Groups",fx(a.SSB,3),a.dfB,fx(a.MSB,3),fx(a.F,3),fP(a.p)],["Within Groups",fx(a.SSW,3),a.dfW,fx(a.MSW,3),"",""],["Total",fx(a.SSB+a.SSW,3),a.N-1,"","",""]];}
+
+/* ---------- more charts ---------- */
+function stripK(groups,xlab,rng){
+  const all=groups.flatMap(g=>g.vals),lo=rng?rng[0]:Math.min(...all),hi=rng?rng[1]:Math.max(...all),pad=rng?0:Math.max((hi-lo)*0.08,1),x=sc(lo-pad,hi+pad,130,620),H=groups.length*50+56;
+  const rows=groups.map((g,i)=>{const yc=34+i*50;return `<text class="v-strong" x="10" y="${yc+4}">${g.name}</text>`+g.vals.map((v,j)=>`<circle class="v-dot" cx="${x(v)}" cy="${yc+((j*29)%7-3)*3}" r="3.8"/>`).join("")+`<line class="v-mean" x1="${x(mean(g.vals))}" x2="${x(mean(g.vals))}" y1="${yc-16}" y2="${yc+16}"/>`;}).join("");
+  return vz(650,H,`Dot plots of ${xlab} for ${groups.map(g=>g.name).join(", ")}; dark bars mark group means.`,`${rows}${axis(x,lo-pad,hi+pad,H-40,130,620)}<text x="375" y="${H-6}" text-anchor="middle">${xlab}</text>`,"Each dot is one patient; the dark bar is the group mean.");
+}
+function spaghetti(data,labels,connect,ylab){
+  const all=data.flat(),lo=Math.min(...all)-15,hi=Math.max(...all)+15,y=sc(lo,hi,230,20),xs=labels.map((_,i)=>150+i*170);
+  let body="";data.forEach((r,i)=>{const jx=connect?0:((i*53)%11-5)*3;if(connect)body+=`<path class="v-down" fill="none" d="M${r.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`;body+=r.map((v,t)=>`<circle class="v-dot" cx="${xs[t]+jx}" cy="${y(v)}" r="3.5"/>`).join("");});
+  const mu=labels.map((_,t)=>mean(data.map(r=>r[t])));
+  body+=`<path class="v-mean" fill="none" d="M${mu.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`+mu.map((v,t)=>`<rect x="${xs[t]-5}" y="${y(v)-5}" width="10" height="10" fill="var(--ink)"/>`).join("");
+  const yt=ticks(lo,hi,4).map(v=>`<text x="70" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="78" x2="530" y1="${y(v)}" y2="${y(v)}"/>`).join("");
+  return vz(600,262,connect?`Line chart: each thin line is one patient across ${labels.join(", ")}; the dark line is the average.`:`Dots for each visit, ${data.length} patients; the dark line is the average.`,
+    `${yt}${body}${labels.map((l,t)=>`<text x="${xs[t]}" y="252" text-anchor="middle">${l}</text>`).join("")}<text x="20" y="125" transform="rotate(-90 20 125)" text-anchor="middle">${ylab}</text>`,
+    connect?"Each thin line is one patient; the dark line is the average.":"Each dot is one measurement; the dark line is the average.");
+}
+function interactionPlot(cm,aN,bN,ylab){
+  const all=cm.flat(),lo=Math.floor(Math.min(...all)/5)*5-5,hi=Math.ceil(Math.max(...all)/5)*5+5,y=sc(lo,hi,220,24),xs=[170,400];
+  const line=(i,cls,mk)=>`<path class="${cls}" d="M${xs[0]},${y(cm[i][0])} L${xs[1]},${y(cm[i][1])}"/>`+cm[i].map((v,j)=>mk==="c"?`<circle cx="${xs[j]}" cy="${y(v)}" r="6" class="v-est"/>`:`<rect x="${xs[j]-6}" y="${y(v)-6}" width="12" height="12" fill="var(--ink)"/>`).join("")+`<text class="v-strong" x="${xs[1]+14}" y="${y(cm[i][1])+4}">${aN[i]} (${fx(cm[i][1],0)})</text><text x="${xs[0]-12}" y="${y(cm[i][0])+4+(Math.abs(cm[0][0]-cm[1][0])<4?(cm[i][0]>=cm[1-i][0]?-8:8):0)}" text-anchor="end">${fx(cm[i][0],0)}</text>`;
+  const yt=ticks(lo,hi,4).map(v=>`<text x="62" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="70" x2="420" y1="${y(v)}" y2="${y(v)}"/>`).join("");
+  return vz(600,262,`Interaction plot of mean ${ylab} by ${bN.join(" and ")}, one line for each of ${aN.join(" and ")}.`,
+    `${yt}${line(0,"v-null2","s")}${line(1,"v-alt2","c")}${bN.map((b,j)=>`<text x="${xs[j]}" y="248" text-anchor="middle">${b}</text>`).join("")}<text x="18" y="122" transform="rotate(-90 18 122)" text-anchor="middle">${ylab}</text>`,
+    "Each point is a group mean. Parallel lines = no interaction.");
+}
+function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
+
+/* ============================================================
+   CASES (4 core, 3 decisions each)
+   ============================================================ */
+function case1(R,level){
+  const n=level?12:15,names=["Low-carb","Mediterranean","Low-fat"],mus=level?[-10,-15,-18]:[-7,-14,-19];
+  let E=names.map(()=>{const e=[];for(let i=0;i<n;i++)e.push(R.normal(0,1));const m=mean(e);return e.map(v=>v-m);});
+  const ss=E.flat().reduce((s,v)=>s+v*v,0),kf=Math.sqrt((3*n-3)/ss);E=E.map(g=>g.map(v=>v*kf));
+  const mk=s=>names.map((nm,i)=>({name:nm,vals:E[i].map(v=>mus[i]+s*v)}));
+  const g=mean(mus),SSB=n*mus.reduce((a,m)=>a+(m-g)**2,0),dfW=3*n-3,Fof=s=>(SSB/2)/(s*s),pof=s=>fSurv(Fof(s),2,dfW);
+  const tight=level?9:7,wide=level?15:17,aTight=R.u()<.5,sA=aTight?tight:wide,sB=aTight?wide:tight;
+  const lab="LDL change (mg/dL)";const all20=mk(20).flatMap(g=>g.vals),RNG=[Math.floor(Math.min(...all20)/5)*5,Math.ceil(Math.max(...all20)/5)*5];const wideAll=mk(wide).flatMap(g=>g.vals),RNG2=[Math.floor(Math.min(...wideAll)/5)*5,Math.ceil(Math.max(...wideAll)/5)*5];
+  return {id:"c1",npc:"aisha",title:"Three diets, one question",
+    message:`<p>Thanks for looking around. Can you set up the analysis for our diet study?</p>`,
+    steps:[
+      {id:"c1s1",label:"Building the analysis",type:"build",prompt:"Set up Aisha's analysis from your notes, then run it.",
+       hint:"What did the team measure? Which grouping are they comparing? Was anyone in more than one diet?",
+       spec:{outcome:"ldl_change",factors:["diet"],repeated:false,
+        vars:[["patient_id","Patient ID","ID"],["diet","Diet assigned (3 groups)","categorical",3],["ldl_change","LDL change at 12 weeks (mg/dL)","numeric"],["age","Age (years)","numeric"],["clinic_site","Clinic site (2 sites)","categorical",2]],
+        msgs:{extra_factor:"Clinic site wasn't part of Aisha's question; she wants to compare the diets.",false_repeated:"Each patient followed only one diet, so nobody is in more than one group."},
+        ok:"One factor with three independent groups and a numeric outcome."}},
+      {id:"c1s2",label:"Predicting the evidence",show:`<p>Two clinics ran this study and got the <strong>same group means</strong>.</p><div class="side"><div><p class="where">Clinic A</p>${stripK(mk(sA),lab,RNG2)}</div><div><p class="where">Clinic B</p>${stripK(mk(sB),lab,RNG2)}</div></div>`,
+       prompt:"Which clinic's data give stronger evidence that the diets differ?",
+       hint:"The means are identical. What else differs between the two charts?",
+       options:[
+        {t:"Clinic A",tag:aTight?"correct":"within_between_confusion",fb:aTight?`Tighter groups make the same mean differences stand out. Clinic A: F = ${fx(Fof(sA),1)}, ${pT(pof(sA))}. Clinic B: F = ${fx(Fof(sB),1)}, ${pT(pof(sB))}.`:"Clinic A's groups overlap a lot, which makes the mean differences less convincing."},
+        {t:"Clinic B",tag:aTight?"within_between_confusion":"correct",fb:aTight?"Clinic B's groups overlap a lot, which makes the mean differences less convincing.":`Tighter groups make the same mean differences stand out. Clinic B: F = ${fx(Fof(sB),1)}, ${pT(pof(sB))}. Clinic A: F = ${fx(Fof(sA),1)}, ${pT(pof(sA))}.`},
+        {t:"The same, because the means are the same",tag:"within_between_confusion",fb:"ANOVA also weighs the spread within groups, and that differs."},
+        {t:"You can't tell without running the test",tag:"f_misconception",fb:"You can get a good sense from the picture: compare spread between groups with spread within them."}]},
+      {id:"c1s3",label:"Between vs. within",show:`<div class="slider"><label for="spread">Spread within each diet group (SD): <strong id="sdlab">16</strong> mg/dL &nbsp; <span id="flab"></span></label><input type="range" id="spread" min="4" max="20" step="1" value="16"></div><div id="liveviz"></div>`,
+       init:()=>{const el=document.getElementById("spread"),draw=()=>{const s=+el.value;document.getElementById("sdlab").textContent=s;document.getElementById("flab").innerHTML=`F = ${fx(Fof(s),2)}, ${pT(pof(s))}`;document.getElementById("liveviz").innerHTML=stripK(mk(s),lab,RNG);};el.addEventListener("input",draw);draw();},
+       prompt:"Drag the slider. The group means never move. Why does F shrink as the spread grows?",
+       hint:"F is a ratio. What's in the top, and what's in the bottom?",
+       options:[
+        {t:"The group means get closer together.",tag:"within_between_confusion",fb:"Watch the dark bars: the means stay put."},
+        {t:"The sample size gets smaller.",tag:"f_misconception",fb:"Every patient is still there; only the spread changes."},
+        {t:"F compares variation between groups with variation within groups, so more within-group spread shrinks it.",tag:"correct",fb:"F = between-group variance ÷ within-group variance."},
+        {t:"F only measures how far apart the means are.",tag:"f_misconception",fb:"If that were true, F wouldn't change here."}]}
+    ],
+    outro:g=>g("c1s1")==="correct"?{ok:true,title:"Aisha signs off",text:"She'll run a one-way ANOVA and report the spread in each group."}
+      :{ok:false,title:"Aisha signs off after a rethink",text:"She almost ran three t tests. One ANOVA it is."},
+    takeaway:"ANOVA asks whether variation between group means is large compared with variation within groups."};
+}
+
+function case2(R,level){
+  const names=["Usual care","Group classes","Phone app"],ns=level?[48,40,30]:[51,42,35],mus=level?[-0.3,-0.75,-0.55]:[-0.2,-0.85,-0.6];
+  let G,a,ph;
+  for(let k=0;k<400;k++){const sd=R.uni(.85,.95);G=names.map((_,i)=>exactSample(R,ns[i],mus[i]+R.normal(0,.04),sd).map(v=>Math.round(v*10)/10));a=oneway(G);ph=scheffe(G,names,a);
+    const sig=ph.map(q=>q.p<.05);if(level?(a.p>.005&&a.p<.04&&sig[0]&&!sig[1]&&!sig[2]):(a.p<.001&&sig[0]&&sig[1]&&!sig[2]))break;}
+  const table=tbl("ANOVA","HbA1c change (%)",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(a));
+  const post=tbl("Multiple Comparisons (Scheffé)","",["Comparison","Mean Difference","Sig."],ph.map(q=>[`${q.a} vs. ${q.b}`,fx(q.d,2),fP(q.p)]));
+  const sigPairs=ph.filter(q=>q.p<.05).map(q=>`${q.a} vs. ${q.b}`);
+  return {id:"c2",npc:"luis",title:"Which program works?",
+    message:`<p>You've seen our enrollment sheet and poster. What can we say about the three programs? α = 0.05.</p>`,viz:stripK(names.map((nm,i)=>({name:nm,vals:G[i]})),"HbA1c change (%)"),
+    steps:[
+      {id:"c2s1",label:"Writing the hypotheses",prompt:"Which hypotheses fit an overall ANOVA?",
+       hint:"The null says all population means are equal. What's the opposite of \"all equal\"?",
+       options:[
+        {t:`${H0}: μ<sub>usual</sub> = μ<sub>classes</sub> = μ<sub>app</sub> &nbsp; ${HA}: all three means differ`,tag:"all_means_differ",fb:"The opposite of \"all equal\" is \"at least one differs,\" not \"all differ.\""},
+        {t:`${H0}: x̄<sub>usual</sub> = x̄<sub>classes</sub> = x̄<sub>app</sub> &nbsp; ${HA}: at least one differs`,tag:"sample_not_population",fb:"Hypotheses are about population means (μ), not sample means."},
+        {t:`${H0}: μ<sub>usual</sub> = μ<sub>classes</sub> = μ<sub>app</sub> &nbsp; ${HA}: at least one mean differs`,tag:"correct",fb:"The alternative only needs one mean to be different."},
+        {t:`${H0}: at least one mean differs &nbsp; ${HA}: all means are equal`,tag:"swapped_hypotheses",fb:"Flipped: \"no difference\" is the null."}]},
+      {id:"c2s2",label:"Reading the ANOVA table",show:table,prompt:"What can you conclude?",
+       hint:"Compare Sig. with α. Then ask: does F say which groups differ?",
+       options:[
+        {t:"All three programs differ from each other.",tag:"all_means_differ",fb:"A significant F shows at least one difference, not that every pair differs."},
+        {t:"Group classes work best, since they had the largest drop.",tag:"skip_posthoc",fb:"Largest sample mean isn't proof; you need pairwise comparisons."},
+        {t:"Reject H<sub>0</sub>: at least one program's mean differs, but the table doesn't say which.",tag:"correct",fb:"Next step: find where the differences are."},
+        {t:`There's a ${a.p<.001?"less than 0.1%":fx(a.p*100,1)+"%"} chance the programs work equally well.`,tag:"p_as_prob_null",fb:"p assumes the null is true; it isn't the probability the null is true."}]},
+      {id:"c2s3",label:"Following up",
+       show:`<div class="slider"><p><strong>Try it first.</strong> Suppose the three programs were truly identical. Each t test at α = 0.05 has a 5% chance of a false positive. Run the pairwise tests one at a time and watch the overall risk.</p>
+         <button class="quiet" id="runT">Run t test 1: Usual care vs. Group classes</button>
+         <div style="margin:.7rem 0 .2rem"><span id="fwText">Tests run: 0. Chance of at least one false positive: 0%</span></div>
+         <div class="meter-track" style="display:block;width:100%;height:14px;background:var(--line)" role="img" id="fwBar" aria-label="Chance of at least one false positive: 0%"><span class="meter-fill" id="fwFill" style="display:block;width:0%;background:var(--bad)"></span></div>
+         <p id="fwMore" class="where" style="margin-top:.5rem"></p></div>`,
+       init:()=>{const pairs=["Usual care vs. Group classes","Usual care vs. Phone app","Group classes vs. Phone app"];let k=0;const btn=document.getElementById("runT");
+         btn.onclick=()=>{k++;const r=Math.round((1-Math.pow(.95,k))*100);document.getElementById("fwText").textContent=`Tests run: ${k}. Chance of at least one false positive: ${r}%`;
+           document.getElementById("fwFill").style.width=r+"%";document.getElementById("fwBar").setAttribute("aria-label",`Chance of at least one false positive: ${r}%`);
+           if(k<3)btn.textContent=`Run t test ${k+1}: ${pairs[k]}`;else{btn.disabled=true;btn.textContent="All 3 pairs tested";document.getElementById("fwMore").textContent="With 5 programs, you'd need 10 tests, and the risk would reach about 40%.";}};},
+       prompt:`Luis wants to answer his second question. Best approach? (Your notes may help.)`,
+       hint:"Many comparisons raise the false-positive risk. Check the enrollment sheet: are the groups the same size?",
+       options:[
+        {t:"Three separate t tests at α = 0.05",tag:"multiple_testing",fb:"Across three tests, the chance of at least one false positive is about 1 − 0.95³ ≈ 14%."},
+        {t:"Tukey's test, since the design is balanced",tag:"posthoc_balance",fb:"The groups aren't equal in size, so the design isn't balanced."},
+        {t:"A post hoc test for unequal group sizes, such as Tukey-Kramer or Scheffé",tag:"correct",fb:`${post}<p>Significant difference${sigPairs.length>1?"s":""}: ${sigPairs.join("; ")}.</p>`},
+        {t:"No follow-up needed; the F test already shows the difference",tag:"skip_posthoc",fb:"The F test only says at least one mean differs."}]}
+    ],
+    outro:g=>g("c2s3")==="correct"?{ok:true,title:"Luis signs off",text:`His report names the program pair${sigPairs.length>1?"s":""} that differ, with family-wise error controlled.`}
+      :{ok:false,title:"Luis signs off after a correction",text:"The report now uses a post hoc test instead of separate t tests."},
+    takeaway:"A significant F means at least one mean differs; post hoc tests find which, while controlling family-wise error."};
+}
+
+function case3(R,level){
+  const n=level?10:12,labels=["Week 0","Week 6","Week 12"];let D,rm,ow;
+  for(let k=0;k<400;k++){const e1=R.uni(18,28),e2=R.uni(32,45),ns=R.uni(15,22);
+    D=[];for(let i=0;i<n;i++){const b=R.normal(390,60);D.push([b,b+e1,b+e2].map(v=>Math.round(v+R.normal(0,ns))));}
+    const all=D.flat(),g=mean(all),tm=[0,1,2].map(t=>mean(D.map(r=>r[t]))),SST=all.reduce((s,v)=>s+(v-g)**2,0);
+    const SSt=n*tm.reduce((s,m)=>s+(m-g)**2,0),SSs=3*D.reduce((s,r)=>s+(mean(r)-g)**2,0),SSe=SST-SSt-SSs,dft=2,dfe=2*(n-1);
+    rm={SSt,SSe,dft,dfe,MSt:SSt/dft,MSe:SSe/dfe};rm.F=rm.MSt/rm.MSe;rm.p=fSurv(rm.F,dft,dfe);ow=oneway([0,1,2].map(t=>D.map(r=>r[t])));
+    if(rm.p<.01&&ow.p>.1)break;}
+  const table=tbl("Tests of Within-Subjects Effects","",["Source","Sum of Squares","df","Mean Square","F","Sig."],[["Time",fx(rm.SSt,1),rm.dft,fx(rm.MSt,1),fx(rm.F,3),fP(rm.p)],["Error",fx(rm.SSe,1),rm.dfe,fx(rm.MSe,1),"",""]]);
+  return {id:"c3",npc:"grace",title:"Are patients walking farther?",
+    message:`<p>Here are our walk distances. Is walking distance changing over the program? α = 0.05.</p>`,
+    viz:spaghetti(D,labels,!level,"Distance (m)"),
+    steps:[
+      {id:"c3s1",label:"Building the analysis",type:"build",prompt:"Set up Grace's analysis from your notes, then run it.",
+       hint:"Look at the walk test log. Are the three visits separate groups of people?",
+       spec:{outcome:"walk_distance",factors:["visit"],repeated:true,
+        vars:[["patient_id","Patient ID","ID"],["visit","Visit (week 0, 6, 12)","categorical",3],["walk_distance","6-minute walk distance (m)","numeric"],["age","Age (years)","numeric"],["sex","Sex (2 groups)","categorical",2]],
+        msgs:{ignore_dependence:`${tbl("ANOVA","Treating each visit as a separate group",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(ow))}<p>This says ${pT(ow.p)}. Grace frowns: "So rehab isn't working?" Check the walk test log: who was measured at each visit?</p>`,
+         extra_factor:"Sex wasn't part of Grace's question; she asked about change across visits."},
+        ok:"The same patients at three visits, so the analysis accounts for repeated measurements."}},
+      {id:"c3s2",label:"Reading the result",show:table,prompt:"What can you conclude?",
+       hint:"Compare Sig. with α. Does the overall test say which visits differ?",
+       options:[
+        {t:"Fail to reject H<sub>0</sub>, because F is large.",tag:"threshold_misread",fb:"A large F with a small p means reject."},
+        {t:"Distance improved between every pair of visits.",tag:"all_means_differ",fb:"The overall test doesn't say which visits differ; that needs follow-up comparisons."},
+        {t:"Reject H<sub>0</sub>: mean walking distance differs across at least two visits.",tag:"correct",fb:"Follow-up comparisons would show which visits differ."},
+        {t:"Every patient walked farther over time.",tag:"proof_overclaim",fb:"The test is about the average; check the chart for individual patients."}]},
+      {id:"c3s3",label:"Why the design matters",prompt:`Ignoring that these are the same patients, a one-way ANOVA gives ${pT(ow.p)}. Why so different?`,
+       hint:"Patients differ a lot from each other in how far they walk. Where does that variation go in each analysis?",
+       options:[
+        {t:"The repeated measures test uses a larger α.",tag:"f_misconception",fb:"Both used α = 0.05."},
+        {t:"Repeated measures removes differences between patients from the error, so the change over time stands out.",tag:"correct",fb:"That's why repeated measures designs are more powerful."},
+        {t:"The one-way ANOVA used more patients.",tag:"ignore_dependence",fb:"Same measurements, but treated as if they came from different people."},
+        {t:"Repeated measures ANOVA gives more false positives, so trust the one-way result.",tag:"ignore_dependence",fb:"For repeated data, repeated measures ANOVA is the correct model."}]}
+    ],
+    outro:g=>g("c3s1")==="correct"?{ok:true,title:"Grace signs off",text:"The rehab report will show walking distance changing over the program."}
+      :{ok:false,title:"Grace signs off after a rethink",text:"She'll use repeated measures ANOVA, since the same patients were measured three times."},
+    takeaway:"For repeated measurements on the same people, repeated measures ANOVA separates patient differences from error, which adds power."};
+}
+
+function case4(R,level){
+  const n=level?12:10,aN=["Standard teaching","Teach-back"],bN=["Under 65","65 and older"],M=level?[[72,64],[80,72]]:[[72,60],[75,77]];let C,cm,res;
+  for(let k=0;k<900;k++){C=[0,1].map(i=>[0,1].map(j=>exactSample(R,n,M[i][j]+R.normal(0,1),R.uni(6.5,7.5)).map(Math.round)));
+    cm=C.map(r=>r.map(mean));const g=mean(cm.flat()),am=cm.map(mean),bm=[0,1].map(j=>mean([cm[0][j],cm[1][j]]));
+    const SSA=2*n*am.reduce((s,v)=>s+(v-g)**2,0),SSB=2*n*bm.reduce((s,v)=>s+(v-g)**2,0);
+    let SSAB=0,SSE=0;for(let i=0;i<2;i++)for(let j=0;j<2;j++){SSAB+=n*(cm[i][j]-am[i]-bm[j]+g)**2;SSE+=C[i][j].reduce((s,v)=>s+(v-cm[i][j])**2,0);}
+    const dfe=4*(n-1),MSE=SSE/dfe,row=(ss)=>({ss,F:ss/MSE,p:fSurv(ss/MSE,1,dfe)});
+    res={A:row(SSA),B:row(SSB),AB:row(SSAB),SSE,dfe,MSE};
+    if(level?(res.AB.p>.3&&res.A.p<.01&&res.B.p<.01):(res.AB.p<.01))break;}
+  const r=(nm,o)=>[nm,fx(o.ss,2),1,fx(o.ss,2),fx(o.F,3),fP(o.p)];
+  const table=tbl("Tests of Between-Subjects Effects","Dependent variable: medication knowledge score",["Source","Sum of Squares","df","Mean Square","F","Sig."],[r("Method",res.A),r("Age group",res.B),r("Method × Age group",res.AB),["Error",fx(res.SSE,2),res.dfe,fx(res.MSE,2),"",""]]);
+  const gapY=cm[1][0]-cm[0][0],gapO=cm[1][1]-cm[0][1];
+  const s2=level
+    ?[{t:"No: teach-back raises scores by about the same amount in both age groups.",tag:"correct",fb:`The lines are roughly parallel: about +${fx(gapY,0)} under 65 and +${fx(gapO,0)} for 65 and older.`},
+      {t:"Yes: older patients score lower, so the effect depends on age.",tag:"main_effect_only",fb:"Scoring lower overall is a main effect of age. Interaction means the teach-back effect changes with age."},
+      {t:"Yes: the two lines are at different heights.",tag:"interaction_misread",fb:"Different heights show a main effect of method. Interaction shows up as lines that aren't parallel."},
+      {t:"You can't tell without a p-value.",tag:"interaction_misread",fb:"The table tests it, but parallel versus non-parallel lines is the visual clue."}]
+    :[{t:"No: teach-back scores are higher in both age groups.",tag:"interaction_misread",fb:`Higher in both isn't the question. The gain is +${fx(gapY,0)} under 65 but +${fx(gapO,0)} for 65 and older, so the lines aren't parallel.`},
+      {t:"Yes: older patients score lower overall.",tag:"main_effect_only",fb:"That's a main effect of age. Interaction means the teach-back effect changes with age."},
+      {t:"Yes: teach-back helps patients 65 and older much more than younger patients.",tag:"correct",fb:`Non-parallel lines: +${fx(gapY,0)} under 65 versus +${fx(gapO,0)} for 65 and older.`},
+      {t:"You can't tell without a p-value.",tag:"interaction_misread",fb:"The table tests it, but non-parallel lines are the visual clue."}];
+  const s3=level
+    ?[{t:"The interaction is significant, so teach-back works differently by age.",tag:"interaction_misread",fb:`Method × Age group has ${pT(res.AB.p)}, which isn't significant.`},
+      {t:"Both main effects are significant and the interaction isn't: teach-back raises scores similarly at both ages, and older patients score lower overall.",tag:"correct",fb:"Main effects can be interpreted directly because there's no interaction."},
+      {t:"Only teaching method matters; age has no effect.",tag:"main_effect_only",fb:`Age group has ${pT(res.B.p)}, so age matters too.`},
+      {t:"All four groups differ from each other.",tag:"all_means_differ",fb:"The table tests factors and their interaction, not every pair of groups."}]
+    :[{t:"Teach-back improves scores and older patients score lower; both main effects are significant.",tag:"main_effect_only",fb:"Check the interaction first. It's significant, so the method's effect isn't the same at both ages."},
+      {t:"All four groups differ from each other.",tag:"all_means_differ",fb:"The table tests factors and their interaction, not every pair of groups."},
+      {t:"Teach-back only works for older patients.",tag:"interaction_misread",fb:"Younger patients' effect is smaller, which isn't the same as zero."},
+      {t:`The interaction is significant (${pT(res.AB.p)}): teach-back's benefit depends on age, with a much larger gain for patients 65 and older.`,tag:"correct",fb:"When the interaction is significant, describe the effect of one factor at each level of the other."}];
+  return {id:"c4",npc:"sam",title:"Does teach-back help everyone?",
+    message:`<p>You've seen the whiteboard. Let's work through our pilot results. α = 0.05.</p>`,viz:interactionPlot(cm,aN,bN,"Mean knowledge score"),
+    steps:[
+      {id:"c4s1",label:"Building the analysis",type:"build",prompt:"Set up Sam's analysis from your notes, then run it.",
+       hint:"Reread the whiteboard: how many questions does Sam have, and which groupings do they involve?",
+       spec:{outcome:"knowledge_score",factors:["teaching_method","age_group"],repeated:false,
+        vars:[["patient_id","Patient ID","ID"],["teaching_method","Teaching method (2 groups)","categorical",2],["age_group","Age group (2 groups)","categorical",2],["knowledge_score","Medication knowledge score","numeric"],["bed_number","Bed number","ID"]],
+        msgs:{lose_factor_structure:"With one factor, you can't see whether teach-back works differently by age, which is one of Sam's questions.",false_repeated:"Each patient got only one teaching method."},
+        ok:"Two factors, so you can test both main effects and their interaction."}},
+      {id:"c4s2",label:"Reading the interaction plot",prompt:"Before the table: do the lines in the chart suggest an interaction?",
+       hint:"Interaction means the effect of one factor depends on the other. Are the lines parallel?",options:s2},
+      {id:"c4s3",label:"Reporting the result",show:table,prompt:"What's the right summary for Sam's report?",
+       hint:"Start with the Method × Age group row.",options:s3}
+    ],
+    outro:g=>g("c4s3")==="correct"?{ok:true,title:"Sam signs off",text:level?"The unit rolls out teach-back for all ages.":"The unit prioritizes teach-back for older patients first."}
+      :{ok:false,title:"Sam signs off after a revision",text:"The summary now starts with the interaction."},
+    takeaway:"In a two-way ANOVA, check the interaction first: if it's significant, one factor's effect depends on the other."};
+}
+const CORE=[case1,case2,case3,case4];
+
+/* ---------- optional expert case ---------- */
+function expertCase(){
+  const G=[[2,3,3,4,4,5,7,19],[2,2,3,3,4,4,6,11],[3,4,5,5,6,8,12,31]],nm=["Protocol A","Protocol B","Protocol C"];
+  return {id:"e1",npc:"noah",title:"Skewed stays in the ED",
+    message:"<p>We compared ED length of stay under three triage protocols, 8 patients each. A few patients stayed a very long time. What should we do?</p>",
+    viz:stripK(nm.map((n,i)=>({name:n,vals:G[i]})),"Length of stay (hours)"),
+    steps:[
+      {id:"e1s1",label:"Choosing a test for skewed data",prompt:"Which test fits best?",hint:"Small groups, long right tail, three independent groups. Check the test-selection chart.",
+       options:[{t:"One-way ANOVA",tag:"ignore_distribution",fb:"With 8 per group and heavy skew, the normality and equal-variance assumptions don't hold."},{t:"Wilcoxon rank-sum test",tag:"wrong_anova_type",fb:"That compares two groups; there are three."},{t:"Kruskal-Wallis test",tag:"correct",fb:"The nonparametric test for 3+ independent groups."},{t:"Repeated measures ANOVA",tag:"ignore_dependence",fb:"These are different patients in each protocol."}]},
+      {id:"e1s2",label:"Another option",prompt:"The lecture showed another way to handle unequal spread. Which?",hint:"Think about slide 17's cortisol example.",
+       options:[{t:"Remove the longest stays",tag:"ignore_distribution",fb:"Those are real patients; dropping them biases the results."},{t:"Log-transform length of stay to stabilize the variance, then recheck assumptions",tag:"correct",fb:"A log transform often evens out spread in right-skewed data."},{t:"Run ANOVA anyway; assumptions don't matter",tag:"ignore_distribution",fb:"With small, uneven groups, violations can lead to wrong conclusions."}]}],
+    outro:()=>({ok:true,title:"Dr. Fischer thanks you",text:"He'll report a Kruskal-Wallis test and check a log-transformed ANOVA as a sensitivity analysis."}),
+    takeaway:"Small, skewed groups call for a nonparametric test like Kruskal-Wallis, or a transformation."};
+}
+
+/* ---------- quick reviews with Jordan ---------- */
+const JR=(id,title,msg,steps,take)=>({id,npc:"jordan",title,message:`<p>${msg}</p>`,steps,outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."}),takeaway:take});
+const FOLLOWUPS={
+ fu_familywise:()=>JR("fu_familywise","Quick review: many comparisons","You ran into the multiple comparisons trap. Two quick ones.",[
+  {id:"fu_fw_1",label:"Error across tests",prompt:"Three separate tests, each at α = 0.05, when no real differences exist. Chance of at least one false positive?",hint:"1 − 0.95 × 0.95 × 0.95",
+   options:[{t:"About 5%",tag:"multiple_testing",fb:"That's for one test. Risks add up across tests."},{t:"About 14%",tag:"correct",fb:"1 − 0.95³ ≈ 0.14."},{t:"About 0.1%",tag:"multiple_testing",fb:"More tests raise the risk, not lower it."}]},
+  {id:"fu_fw_2",label:"Choosing a post hoc test",prompt:"Unequal group sizes, and you want all pairwise comparisons. Which method?",hint:"Slide 28 lists methods by design.",
+   options:[{t:"Tukey",tag:"posthoc_balance",fb:"Tukey is for equal group sizes."},{t:"Tukey-Kramer or Scheffé",tag:"correct",fb:"Both handle unequal group sizes."},{t:"Separate t tests",tag:"multiple_testing",fb:"That inflates family-wise error."}]}],"Every extra test adds false-positive risk; post hoc methods control it."),
+ fu_ftest:()=>JR("fu_ftest","Quick review: what F tells you","Let's check what an ANOVA result does and doesn't say.",[
+  {id:"fu_f_1",label:"A significant F",prompt:"One-way ANOVA, 4 groups, p = .003. What can you conclude?",hint:"The alternative is \"at least one differs.\"",
+   options:[{t:"All four groups differ.",tag:"all_means_differ",fb:"Only that at least one mean differs."},{t:"At least one group mean differs; post hoc tests show which.",tag:"correct",fb:"Right."},{t:"The group with the highest mean is best.",tag:"skip_posthoc",fb:"That needs pairwise comparisons."}]},
+  {id:"fu_f_2",label:"The null hypothesis",prompt:"Which is H<sub>0</sub> for 4 groups?",hint:"No difference, in the population.",
+   options:[{t:"x̄<sub>1</sub> = x̄<sub>2</sub> = x̄<sub>3</sub> = x̄<sub>4</sub>",tag:"sample_not_population",fb:"Use population means, μ."},{t:"μ<sub>1</sub> = μ<sub>2</sub> = μ<sub>3</sub> = μ<sub>4</sub>",tag:"correct",fb:"Right."},{t:"All four μ's are different",tag:"all_means_differ",fb:"That's not even the alternative."}]}],"A significant F means at least one mean differs, nothing more."),
+ fu_variance:()=>JR("fu_variance","Quick review: between and within","F comes down to one comparison. Two quick checks.",[
+  {id:"fu_v_1",label:"Reading spread",prompt:"Group means are far apart, and each group is tightly clustered. F will be…",hint:"Big between, small within.",
+   options:[{t:"Large",tag:"correct",fb:"Big between-group variation relative to within."},{t:"Small",tag:"within_between_confusion",fb:"Small within-group spread makes F larger."},{t:"About 1",tag:"f_misconception",fb:"F near 1 means between and within are similar."}]},
+  {id:"fu_v_2",label:"What F is",prompt:"F equals…",hint:"A ratio of two variances.",
+   options:[{t:"Between-group variance ÷ within-group variance",tag:"correct",fb:"Right."},{t:"The difference between the largest and smallest mean",tag:"f_misconception",fb:"That ignores spread within groups."},{t:"Within-group variance ÷ between-group variance",tag:"within_between_confusion",fb:"Upside down."}]}],"F = between-group variance ÷ within-group variance."),
+ fu_choose:()=>JR("fu_choose","Quick review: picking the right ANOVA","Let's sort a few designs.",[
+  {id:"fu_c_1",label:"Independent groups",prompt:"Blood pressure in 4 separate groups, normal outcome.",hint:"Separate people, one factor.",
+   options:[{t:"One-way ANOVA",tag:"correct",fb:"Right."},{t:"Repeated measures ANOVA",tag:"ignore_dependence",fb:"Different people in each group."},{t:"Kruskal-Wallis",tag:"wrong_anova_type",fb:"The outcome is normal."}]},
+  {id:"fu_c_2",label:"Same people over time",prompt:"Pain in the same patients at 3 visits.",hint:"Are the groups independent?",
+   options:[{t:"One-way ANOVA",tag:"ignore_dependence",fb:"The same patients appear at every visit."},{t:"Repeated measures ANOVA",tag:"correct",fb:"Right."},{t:"Two-way ANOVA",tag:"wrong_anova_type",fb:"There's one factor, time, measured within patients."}]},
+  {id:"fu_c_3",label:"Two factors",prompt:"Recovery score by treatment (2 types) and sex.",hint:"How many factors?",
+   options:[{t:"One-way ANOVA with 4 groups",tag:"lose_factor_structure",fb:"That can't test the interaction."},{t:"Two-way ANOVA",tag:"correct",fb:"Right."},{t:"Two t tests",tag:"multiple_testing",fb:"Misses the interaction."}]}],"Count the factors and check whether the same people appear in more than one group."),
+ fu_interaction:()=>JR("fu_interaction","Quick review: interactions","Interactions trip up a lot of people. Two quick ones.",[
+  {id:"fu_i_1",label:"Parallel lines",prompt:"On an interaction plot, the two lines are parallel. That suggests…",hint:"Is the gap between lines the same at each point?",
+   options:[{t:"No interaction",tag:"correct",fb:"Same effect at every level of the other factor."},{t:"A strong interaction",tag:"interaction_misread",fb:"Interaction shows up as non-parallel lines."},{t:"No main effects",tag:"main_effect_only",fb:"Parallel lines can still be far apart."}]},
+  {id:"fu_i_2",label:"Meaning of interaction",prompt:"A significant interaction means…",hint:"It's about how one effect changes.",
+   options:[{t:"Both factors have significant main effects",tag:"main_effect_only",fb:"Main effects and interactions are separate."},{t:"The effect of one factor depends on the level of the other",tag:"correct",fb:"Right."},{t:"All groups differ",tag:"all_means_differ",fb:"Not what an interaction tests."}]}],"Check the interaction first; non-parallel lines are the visual clue.")
+};
+const FU_MAP={multiple_testing:"fu_familywise",posthoc_balance:"fu_familywise",all_means_differ:"fu_ftest",skip_posthoc:"fu_ftest",sample_not_population:"fu_ftest",swapped_hypotheses:"fu_ftest",threshold_misread:"fu_ftest",p_as_prob_null:"fu_ftest",proof_overclaim:"fu_ftest",
+  within_between_confusion:"fu_variance",f_misconception:"fu_variance",ignore_dependence:"fu_choose",wrong_anova_type:"fu_choose",lose_factor_structure:"fu_choose",interaction_misread:"fu_interaction",main_effect_only:"fu_interaction",outcome_misread:"fu_choose",id_as_factor:"fu_choose",numeric_as_factor:"fu_choose",no_factor:"fu_choose",no_design:"fu_choose",false_repeated:"fu_choose",extra_factor:"fu_choose"};
+
+/* ---------- clues found in each room ---------- */
+function dict(rows){return `<p><strong>Data dictionary</strong></p>`+tbl("","",["Variable","What it is"],rows.map(r=>[`<code>${r[0]}</code>`,r[1]]));}
+const CLUES=[
+ {idx:0,id:"n_board",name:"Study whiteboard",x:2,y:4,html:l=>`<p><strong>Diet study</strong></p><p>Each patient was randomly assigned to <strong>one</strong> of three diets: low-carb, Mediterranean, or low-fat. LDL was measured at the start and after 12 weeks. ${l?12:15} patients per diet.</p>`},
+ {idx:0,id:"n_dict",name:"Data dictionary",x:6,y:3,html:()=>dict([["patient_id","Patient ID"],["diet","Diet assigned: low-carb, Mediterranean, low-fat"],["ldl_change","Change in LDL after 12 weeks (mg/dL)"],["age","Age in years"],["clinic_site","Clinic site: North or South"]])},
+ {idx:1,id:"d_sheet",name:"Enrollment sheet",x:8,y:3,html:l=>`<p><strong>Enrollment</strong></p>`+tbl("","",["Program","Patients"],(l?[48,40,30]:[51,42,35]).map((v,i)=>[["Usual care","Group classes","Phone app"][i],v]))},
+ {idx:1,id:"d_poster",name:"Evaluation poster",x:14,y:3,html:()=>`<p><strong>Evaluation questions</strong></p><p>1. Do the three programs differ in HbA1c change?</p><p>2. If so, <strong>which</strong> programs differ from each other?</p>`},
+ {idx:2,id:"r_log",name:"Walk test log",x:16,y:3,html:l=>l?`<p><strong>6-minute walk log</strong></p><p>Entries: P01 week 0, P01 week 6, P01 week 12, P02 week 0, P02 week 6, P02 week 12, … continuing through P10.</p>`:`<p><strong>6-minute walk log</strong></p><p>The <strong>same 12 patients</strong> walked at weeks 0, 6, and 12.</p>`},
+ {idx:2,id:"r_dict",name:"Data dictionary",x:22,y:3,html:()=>dict([["patient_id","Patient ID"],["visit","Visit: week 0, 6, or 12"],["walk_distance","6-minute walk distance (m)"],["age","Age in years"],["sex","Sex: female or male"]])},
+ {idx:3,id:"u_board",name:"Pilot whiteboard",x:6,y:12,html:()=>`<p><strong>Teach-back pilot</strong></p><p>Each patient got <strong>either</strong> standard discharge teaching <strong>or</strong> teach-back. Questions: Does teach-back improve medication knowledge? Does its effect differ for patients <strong>under 65</strong> versus <strong>65 and older</strong>?</p>`},
+ {idx:3,id:"u_dict",name:"Data dictionary",x:11,y:11,html:()=>dict([["patient_id","Patient ID"],["teaching_method","Standard or teach-back"],["age_group","Under 65 or 65 and older"],["knowledge_score","Medication knowledge score (0 to 100)"],["bed_number","Bed number on the unit"]])}
+];
+function roomClues(idx){return CLUES.filter(c=>c.idx===idx);}
+function analysisName(b,vars){const f=b.factors;if(!f.length)return "No analysis (no factor chosen)";
+  if(f.length===1){const lv=(vars.find(v=>v[0]===f[0])||[])[3]||3;return b.repeated?"One-way repeated measures ANOVA":lv===2?"Independent-samples t test":"One-way ANOVA";}
+  return b.repeated?"Mixed design ANOVA":"Two-way ANOVA";}
+function evalBuild(spec,b){
+  const type=v=>(spec.vars.find(x=>x[0]===v)||[])[2];
+  if(b.outcomes.length!==1||b.outcomes[0]!==spec.outcome)return "outcome_misread";
+  if(b.factors.some(f=>type(f)==="ID"))return "id_as_factor";
+  if(b.factors.some(f=>type(f)==="numeric"))return "numeric_as_factor";
+  if(!b.factors.length)return "no_factor";
+  if(b.repeated===null)return "no_design";
+  if(b.repeated!==spec.repeated)return spec.repeated?"ignore_dependence":"false_repeated";
+  const want=spec.factors,have=b.factors;
+  if(have.length<want.length&&have.every(f=>want.includes(f)))return "lose_factor_structure";
+  if(have.length!==want.length||!want.every(f=>have.includes(f)))return "extra_factor";
+  return "correct";}
+const BUILD_MSG={outcome_misread:"Pick exactly one outcome: the numeric measurement the team wants to compare. Check your notes.",
+  id_as_factor:"An ID number just labels people or beds; it isn't a grouping the team is comparing.",
+  numeric_as_factor:"A factor is a categorical grouping. That variable is numeric.",
+  no_factor:"You need at least one factor: the grouping being compared.",
+  no_design:"Answer the design question: was anyone measured more than once?",
+  false_repeated:"Check your notes: was anyone actually in more than one group?",
+  ignore_dependence:"Check your notes: are these separate people, or the same people measured again?",
+  lose_factor_structure:"You're missing a factor the team asked about. Check the questions in your notes.",
+  extra_factor:"That factor wasn't part of the team's question. Check your notes."};
+
+/* ============================================================
+   HOSPITAL MAP
+   ============================================================ */
+const COLS=24,ROWS=15,TS=40;
+const ROOMS=[{id:"nutrition",name:"Nutrition Clinic",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"diabetes",name:"Diabetes Education",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"rehab",name:"Cardiac Rehab",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
+  {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"unit",name:"Unit 4B",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"ed",name:"Emergency",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
+const NPCS=[
+  {id:"aisha",room:"Nutrition Clinic",x:3,y:2,name:"Aisha Rahman, RD",role:"dietitian",initials:"AR",color:"#B5572D",kind:"core",idx:0},
+  {id:"luis",room:"Diabetes Education",x:11,y:2,name:"Luis Ortega",role:"diabetes program manager",initials:"LO",color:"#2D6FA3",kind:"core",idx:1},
+  {id:"grace",room:"Cardiac Rehab",x:19,y:2,name:"Grace Kim, PT",role:"cardiac rehab lead",initials:"GK",color:"#A33B5A",kind:"core",idx:2},
+  {id:"sam",room:"Unit 4B",x:8,y:12,name:"Sam Patel, RN",role:"nurse manager",initials:"SP",color:"#2F7D4F",kind:"core",idx:3},
+  {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
+  {id:"noah",room:"Emergency",x:14,y:12,name:"Dr. Noah Fischer",role:"emergency physician (optional)",initials:"NF",color:"#9A6B12",kind:"expert"},
+  {id:"helen",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
+const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
+const GRID=(()=>{const g=[];for(let y=0;y<ROWS;y++){g.push([]);for(let x=0;x<COLS;x++)g[y].push(x===0||y===0||x===COLS-1||y===ROWS-1?"#":".");}
+  ROOMS.forEach(r=>{for(let y=r.y0;y<=r.y1;y++)for(let x=r.x0;x<=r.x1;x++)if(x===r.x0||x===r.x1||y===r.y0||y===r.y1)g[y][x]="#";g[r.door[1]][r.door[0]]=".";});return g;})();
+
+let S=null;
+function newState(av){return {seed:Math.floor(Math.random()*2147483647),phase:"map",pos:[1,7],clues:[],lock:{},done:[],level:0,path:{},pendingFU:null,fuDone:[],expDone:[],results:{},cred:50,hints:0,started:Date.now(),avatar:av};}
+function save(){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
+function loadSaved(){try{const s=localStorage.getItem(CONFIG.storageKey);return s?JSON.parse(s):null;}catch(e){return null;}}
+function clearSaved(){try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
+function coreRng(i){return makeRng((S.seed+i*1013+7)>>>0);}
+function valueOf(rec){if(!rec||rec.first==null)return "";if(rec.first==="correct")return rec.hintBefore?"correct_hint":"correct";return rec.first;}
+function title(){return S.cred>=75?"Lead analyst":S.cred>=50?"Analyst":"Analyst in training";}
+
+if(typeof document!=="undefined"){
+const app=document.getElementById("app");
+const PREVIEW=new URLSearchParams(location.search).has("preview");
+let walking=null,lastStep=0,mapActive=false;
+
+function setBar(text){document.getElementById("progress").textContent=text||"";const c=S?S.cred:50;document.getElementById("credv").textContent=c;document.getElementById("meterFill").style.width=c+"%";document.getElementById("meter").setAttribute("aria-label","Reputation "+c+" out of 100");}
+function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);}
+function signText(){return `Sign-offs ${S.done.length}/4`;}
+
+function renderIntro(){
+  const saved=loadSaved();setBar("");mapActive=false;
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Rounds with the statistics team</h1>
+   <p class="lede">The quarterly quality report is due. Walk the floor, help four teams make sense of their data, and get each team's sign-off. Then bring the report to Dr. Brooks in the Quality Office.</p>
+   <p>This week: ANOVA. Look around each room for clues before talking to the staff member; you'll need them to set up the analysis. About 20 to 25 minutes. Practice pilot, not graded.</p>
+   <fieldset><legend>Pick your badge color</legend><div class="swatches">${AVATARS.map((a,i)=>`<label><input type="radio" name="av" value="${a[0]}" ${i===0?"checked":""}><span class="swatch" style="background:${a[0]}"></span>${a[1]}</label>`).join("")}</div></fieldset>
+   <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap anywhere on the map. Walk into someone or something to interact. You can also use the list under the map.</p>
+   <div class="actions">${saved&&(saved.done.length||saved.fuDone.length||saved.phase==="done")?`<button class="primary" id="resume">Resume</button><button class="quiet" id="start">Start over</button>`:`<button class="primary" id="start">Start rounds</button>`}</div>`;
+  app.querySelector("h1").focus();
+  document.getElementById("start").onclick=()=>{if(document.getElementById("resume")&&!confirm("Start over? Saved progress will be erased."))return;clearSaved();S=newState(app.querySelector('input[name="av"]:checked').value);save();renderMap();toast(`Start with anyone who has a <strong>!</strong> above them.`);};
+  const rs=document.getElementById("resume");if(rs)rs.onclick=()=>{S=saved;S.phase==="done"?renderSummary():renderMap();};
+}
+
+function npcStatus(p){
+  if(p.kind==="core")return S.done.includes(p.idx)?"done":"need";
+  if(p.kind==="stats")return S.pendingFU?"need":"wait";
+  if(p.kind==="expert")return S.expDone.length?"done":"need";
+  return S.done.length===4?"need":"wait";
+}
+function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return s==="need"?"Wants to see you":"Available";if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";return s==="done"?"Signed off":"Needs help";}
+function toast(html){const t=document.getElementById("toast");if(t)t.innerHTML=html;}
+
+function mapSvg(){
+  let s=`<rect x="0" y="0" width="${COLS*TS}" height="${ROWS*TS}" class="m-corr"/>`;
+  ROOMS.forEach(r=>{s+=`<rect x="${r.x0*TS}" y="${r.y0*TS}" width="${(r.x1-r.x0+1)*TS}" height="${(r.y1-r.y0+1)*TS}" class="${r.c}"/>`;});
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(GRID[y][x]==="#")s+=`<rect x="${x*TS}" y="${y*TS}" width="${TS}" height="${TS}" class="m-wall"/>`;
+  ROOMS.forEach(r=>{const top=r.y0===0;s+=`<text class="m-label" x="${(r.x0+1)*TS+8}" y="${top?(r.y0+1)*TS+22:(r.y0+1)*TS+22}">${r.name}</text>`;
+});
+  s+=`<text class="m-label" x="${9*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text>`;
+  CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
+    s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
+  NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
+    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
+    if(st!=="wait")s+=`<g transform="translate(${cx+14},${cy-22})"><circle r="10" class="${st==="need"?"mk-need":"mk-done"}"/><text class="mk-t" y="5" text-anchor="middle">${st==="need"?"!":"✓"}</text></g>`;
+    s+=`</g>`;});
+  s+=`<g id="player" style="transition:transform .11s linear" transform="translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})"><circle r="16" fill="${S.avatar}" stroke="#fff" stroke-width="3"/><text class="m-init" y="4" text-anchor="middle">You</text></g>`;
+  return s;
+}
+function renderMap(){
+  mapActive=true;setBar(signText());
+  const quest=S.done.length<4?`Get sign-offs from 4 teams (${S.done.length} of 4 so far), then report to Dr. Brooks.`:"All 4 sign-offs collected. Take the report to Dr. Brooks in the Quality Office.";
+  app.innerHTML=`<h1 class="sr" tabindex="-1">Hospital map</h1><p class="quest"><strong>Task:</strong> ${quest}</p>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <div class="map-wrap"><svg id="mapsvg" viewBox="0 0 ${COLS*TS} ${ROWS*TS}" tabindex="0" role="application" aria-label="Hospital map. Use arrow keys to walk. The staff list below the map is an alternative.">${mapSvg()}</svg></div>
+    <div class="controls">
+      <div class="dpad" aria-label="Movement buttons"><button class="up" data-d="0,-1" aria-label="Up">▲</button><button class="left" data-d="-1,0" aria-label="Left">◀</button><button class="down" data-d="0,1" aria-label="Down">▼</button><button class="right" data-d="1,0" aria-label="Right">▶</button></div>
+      <div class="dir" id="dir">${dirHtml()}</div>
+    </div>`;
+  const svg=document.getElementById("mapsvg");
+  svg.addEventListener("click",ev=>{const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());const tx=Math.floor(q.x/TS),ty=Math.floor(q.y/TS);
+    const npc=NPCS.find(p=>p.x===tx&&p.y===ty)||CLUES.find(c=>c.x===tx&&c.y===ty);if(npc)goTo(npc);else walkTo(tx,ty,null);});
+  app.querySelectorAll(".dpad button").forEach(b=>b.onclick=()=>{const [dx,dy]=b.dataset.d.split(",").map(Number);step(dx,dy);});
+  bindDir();
+  if(S.pendingFU)toast(`Jordan from Statistics wants a quick word. Head to the <strong>Statistics</strong> office.`);
+  focusMap();
+}
+function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
+function bindDir(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>goTo(NPCS.find(p=>p.id===b.dataset.go)));app.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>goTo(CLUES.find(c=>c.id===b.dataset.clue)));}
+function refreshMap(){const svg=document.getElementById("mapsvg");if(!svg)return;const pos=S.pos;svg.innerHTML=mapSvg();document.getElementById("dir").innerHTML=dirHtml();bindDir();}
+function inspect(c){
+  if(S.lock[c.idx]==null)S.lock[c.idx]=S.level;
+  const room=NPCS.find(p=>p.idx===c.idx).room,isNew=!S.clues.includes(c.id);if(isNew)S.clues.push(c.id);
+  toast(`<p class="fb-head">${c.name}, ${room}</p>${c.html(S.lock[c.idx])}<p class="where">${isNew?"Added to your notes.":"Already in your notes."}</p>`);
+  save();refreshMap();
+}
+function focusMap(){const s=document.getElementById("mapsvg");if(s)s.focus({preventScroll:true});}
+function movePlayer(){const p=document.getElementById("player");if(p)p.setAttribute("transform",`translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})`);}
+function free(x,y){return x>=0&&y>=0&&x<COLS&&y<ROWS&&GRID[y][x]==="."&&!NPCS.some(p=>p.x===x&&p.y===y)&&!CLUES.some(c=>c.x===x&&c.y===y);}
+function step(dx,dy){
+  if(!mapActive)return;walking=null;const nx=S.pos[0]+dx,ny=S.pos[1]+dy;const npc=NPCS.find(p=>p.x===nx&&p.y===ny);
+  if(npc)return interact(npc);const cl=CLUES.find(c=>c.x===nx&&c.y===ny);if(cl)return inspect(cl);if(free(nx,ny)){S.pos=[nx,ny];movePlayer();}
+}
+function bfs(targets){
+  const key=(x,y)=>x+","+y,prev={},q=[S.pos];prev[key(...S.pos)]=null;
+  while(q.length){const [x,y]=q.shift();if(targets.some(t=>t[0]===x&&t[1]===y)){const path=[];let k=key(x,y);while(prev[k]){path.unshift(k.split(",").map(Number));k=prev[k];}return path;}
+    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{const nx=x+dx,ny=y+dy,k=key(nx,ny);if(!(k in prev)&&free(nx,ny)){prev[k]=key(x,y);q.push([nx,ny]);}});}
+  return null;
+}
+function walkTo(tx,ty,npc){
+  const targets=npc?[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>[npc.x+dx,npc.y+dy]).filter(t=>free(t[0],t[1])):[[tx,ty]];
+  const path=bfs(targets);if(!path)return;const token={};walking=token;const act=o=>o.html?inspect(o):interact(o);
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tick=()=>{if(walking!==token||!mapActive)return;if(!path.length){walking=null;if(npc)act(npc);return;}S.pos=path.shift();movePlayer();setTimeout(tick,reduce?15:95);};tick();
+}
+function goTo(npc){walkTo(null,null,npc);}
+document.addEventListener("keydown",ev=>{
+  if(!mapActive||ev.target.closest("button,input,textarea,select,a"))return;
+  const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]}[ev.key];
+  if(!d)return;ev.preventDefault();const now=Date.now();if(now-lastStep<85)return;lastStep=now;step(...d);
+});
+
+function interact(p){
+  const first=p.name.split(" ")[0]==="Dr."?p.name.split(",")[0]:p.name.split(" ")[0];
+  if(p.kind==="stats"){if(S.pendingFU)return startUnit(FOLLOWUPS[S.pendingFU](),"fu",null,p);return toast(`<strong>Jordan:</strong> "Nothing for now. If you get stuck in a consult, call me for a hint."`);}
+  if(p.kind==="admin"){if(S.done.length<4)return toast(`<strong>Dr. Brooks:</strong> "I need all four sign-offs for the report. You have ${S.done.length} of 4."`);return finalReport();}
+  if(S.pendingFU)return toast(`<strong>${first}:</strong> "Jordan from Statistics was looking for you. Go see them first."`);
+  if(p.kind==="expert"){if(S.expDone.length)return toast(`<strong>${first}:</strong> "Thanks again for the help with those skewed stays!"`);return startUnit(expertCase(),"expert",null,p);}
+  if(S.done.includes(p.idx))return toast(`<strong>${first}:</strong> "Thanks again! You already have my sign-off."`);
+  const missing=roomClues(p.idx).filter(c=>!S.clues.includes(c.id));
+  if(missing.length)return toast(`<strong>${first}:</strong> "Hi! Before we sit down, look around the room. Check the ${missing.map(c=>c.name.toLowerCase()).join(" and the ")}."`);
+  const lvl=S.lock[p.idx]??S.level;startUnit(CORE[p.idx](coreRng(p.idx),lvl),"core",lvl,p);
+}
+
+function startUnit(unit,kind,lvl,npc){
+  mapActive=false;walking=null;setBar(signText());
+  app.innerHTML=`<div class="talk-head">${portrait(npc)}<div><p class="where">${npc.room}</p><h1 tabindex="-1">${unit.title}</h1><p class="who">${npc.name}, ${npc.role}</p></div></div>
+    <div class="bubble">${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!unit.steps[0].spec?unit.viz:""}</div><div id="steps"></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  showStep(unit,0,kind,lvl);
+}
+function showStep(unit,i,kind,lvl){
+  const box=document.getElementById("steps");if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
+  const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
+  let hintUsed=false,done=false,wrongs=0;
+  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
+    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr><th scope="row"><code>${v[0]}</code><br><span class="where">${v[1]}</span></th><td><span class="typ">${v[2]}</span></td><td><select data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option></select></td></tr>`).join("")}</tbody></table>
+    <fieldset><legend>Was anyone measured more than once (in more than one group)?</legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>
+    <button class="quiet" id="runB">Run analysis</button>`:""}
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div id="hintArea"><button class="linkish" id="hintBtn">Call Jordan for a hint (costs 3 reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
+  if(st.init)st.init();
+  const pr=box.querySelector(".prompt");if(i>0){pr.scrollIntoView({behavior:"smooth",block:"start"});pr.focus({preventScroll:true});}
+  const fb=document.getElementById("fb");
+  document.getElementById("hintBtn").onclick=()=>{hintUsed=true;S.hints++;cred(-3);document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan, on the phone</p><p>${st.hint}</p></div>`;};
+  if(st.type==="build"){
+    document.getElementById("runB").onclick=()=>{
+      if(done)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
+      const b={outcomes:sel.filter(x=>x.value==="outcome").map(x=>x.dataset.var),factors:sel.filter(x=>x.value==="factor").map(x=>x.dataset.var),repeated:r?r.value==="yes":null};
+      const tag=evalBuild(st.spec,b),name=analysisName(b,st.spec.vars);
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(tag==="correct"){done=true;if(wrongs===0)cred(hintUsed?5:10);
+        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">Analysis runs: ${name}.</p><p>${st.spec.ok} The results are shown above.</p></div>`;document.getElementById("vizSlot").innerHTML=unit.viz||"";
+        box.querySelectorAll("select,input,#runB").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+        document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">Next</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+      }else{wrongs++;cred(-4);const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag];
+        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">${tag==="no_design"||tag==="outcome_misread"&&!b.outcomes.length?"Not ready to run.":`You ran: ${name}. Something's off.`}</p>${m.trim().startsWith("<")?m:`<p>${m}</p>`}<p>Adjust your setup and run it again.</p></div>`;}
+    };
+  }
+  box.querySelectorAll(".opt").forEach(btn=>{btn.onclick=()=>{
+    if(done||btn.getAttribute("aria-disabled")==="true")return;const o=st.options[+btn.dataset.k];
+    if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
+    const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
+    if(o.tag==="correct"){done=true;btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
+      box.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");});
+      if(wrongs===0)cred(hintUsed?5:10);fb.innerHTML=`<div class="fb-box good"><p class="fb-head">${wrongs===0?"Good call.":"That's the one."}</p>${inner}</div>`;
+      const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+      document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;
+      document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+    }else{wrongs++;cred(-4);btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";
+      fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">Not quite. Try another reply.</p>${inner}</div>`;}
+  };});
+}
+function showOutro(unit,kind,lvl){
+  const g=id=>valueOf(S.results[id]).replace("correct_hint","correct"),oc=unit.outro(g),box=document.getElementById("steps");
+  box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
+    <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">Back to the hallway</button></div></div>`;
+  const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("cont").onclick=()=>unitDone(unit,kind,lvl);document.getElementById("cont").focus({preventScroll:true});
+}
+function unitDone(unit,kind,lvl){
+  let msg="";
+  if(kind==="core"){const idx=+unit.id.slice(1)-1;S.done.push(idx);S.path[idx]=lvl;
+    const ids=unit.steps.map(s=>s.id),misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct"),hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
+    if(misses.length===0&&hinted.length===0)S.level=1;else if(misses.length>=2)S.level=0;
+    if(S.fuDone.length<2)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
+    msg=`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
+  }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;msg="Jordan's done with you. Back to the consults.";}
+  else{S.expDone.push(unit.id);msg="Nice work on the optional consult.";}
+  save();renderMap();if(!S.pendingFU)toast(msg);
+}
+function finalReport(){
+  mapActive=false;const p=NPCS.find(q=>q.id==="helen");
+  app.innerHTML=`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
+    <div class="bubble"><p>All four sign-offs, and the analyses hold up. Nice rounds, ${title().toLowerCase()}.</p></div>
+    <div class="actions"><button class="primary" id="file">File the report and see my results</button><button class="quiet" id="back">Not yet, back to the floor</button></div>`;
+  app.querySelector("h1").focus();
+  document.getElementById("file").onclick=()=>{S.phase="done";save();renderSummary();};
+  document.getElementById("back").onclick=()=>renderMap();
+}
+function buildPayload(){
+  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`case levels ${[0,1,2,3].map(i=>S.path[i]??"-").join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
+  const add=(u,name)=>u.steps.forEach(st=>{const v=valueOf(S.results[st.id]);if(v)parts.push(`${name}, ${st.label}: ${v}`);});
+  CORE.forEach((c,i)=>{if(S.done.includes(i)){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
+  S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
+  if(S.expDone.length)add(expertCase(),"Optional (Skewed stays in the ED)");
+  return {results:parts.join(" | ").replace(/α/g,"alpha").replace(/μ/g,"mu")};
+}
+function renderSummary(){
+  mapActive=false;setBar("Results");
+  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0)),coreSteps=units.flatMap(u=>u.steps);
+  const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
+  const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">First try</span>`:v==="correct_hint"?`<span class="st ok">First try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
+  const payload=buildPayload(),configured=!!CONFIG.qualtricsUrl;
+  app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>
+    <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
+    <ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
+    <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  const sb=document.getElementById("submit");if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);u.searchParams.set("results",payload.results);location.href=u.toString();};
+  document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased."))return;clearSaved();S=null;renderIntro();};
+}
+renderIntro();
+}
+</script>
+</body>
+</html>
