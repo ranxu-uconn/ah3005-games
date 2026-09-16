@@ -117,7 +117,7 @@ main>h2{margin-top:1.8rem}
    ============================================================ */
 const CONFIG = {
   mission: 4,
-  version: "1.1",
+  version: "1.2",
   // Paste your Qualtrics survey link between the quotes, e.g.
   // "https://uconn.co1.qualtrics.com/jfe/form/SV_xxxxxxxxxxxx"
   qualtricsUrl: "https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
@@ -538,7 +538,7 @@ function renderIntro(){
    <h1 tabindex="-1">You've joined the Evidence Review Team</h1>
    <p class="lede">Clinicians and managers bring you questions about their data. Your recommendations change what happens on their units, so think each decision through.</p>
    <p>This week's cases are about hypothesis testing and t tests. Expect about 25 to 30 minutes: five cases, plus a short review if one would help. Good calls raise the team's credibility, and asking the senior statistician for a hint costs a little of it.</p>
-   <p>Credit is for finishing and submitting your results, not for a perfect score. Wrong choices are part of how the game teaches, so don't look answers up. Your progress saves after each case on this device.</p>
+   <p>This is a new practice game being tried out in our class, and it doesn't count toward your grade. Wrong choices are part of how it teaches, so don't look answers up. At the end, please submit your results through a short anonymous survey; it helps shape Thursday's class. Your progress saves after each case on this device.</p>
    <div class="actions">${saved&&saved.phase!=="play"||saved&&(saved.coreIdx>0||saved.fuDone.length)?`<button class="primary" id="resume">Resume where you left off</button><button class="quiet" id="start">Start over</button>`:`<button class="primary" id="start">Start the first case</button>`}</div>`;
   app.querySelector("h1").focus();
   const st=document.getElementById("start");
@@ -670,7 +670,7 @@ function renderExpertOffer(){
   setBar("Optional");
   app.innerHTML=`<p class="where">Optional</p><h1 tabindex="-1">Two expert cases are waiting</h1>
     <p class="lede">You've finished the required cases. There are two optional cases for anyone who wants a harder challenge: a small, skewed sample, and a comparison of groups that patients chose for themselves.</p>
-    <p>They take about 5 minutes and don't affect your credit either way.</p>
+    <p>They take about 5 minutes and are completely optional.</p>
     <div class="actions"><button class="primary" id="play">Take the expert cases</button><button class="quiet" id="skip">Skip to my results</button></div>`;
   focusTop(app.querySelector("h1"));
   document.getElementById("play").onclick=()=>{S.phase="expert";save();nextUnit();};
@@ -684,7 +684,7 @@ function buildPayload(){
   CORE.forEach((c,i)=>{if(i<S.path.length){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
   S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
   EXPERT.map(f=>f()).filter(u=>S.expDone.includes(u.id)).forEach(u=>add(u,u.title));
-  return {results:parts.join(" | ")};
+  return {results:parts.join(" | ").replace(/α/g,"alpha")};
 }
 
 function renderSummary(){
@@ -702,7 +702,7 @@ function renderSummary(){
     <div class="stat"><b>${S.cred}</b><span>team credibility</span></div>
     <div class="stat"><b>${S.hints}</b><span>hints used</span></div></div>
     <div class="submit-box">${configured
-      ?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results are sent along automatically, without your name.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
+      ?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results are sent along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish</strong>, or your results won't be recorded.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
       :`<h2>Instructor preview</h2><p>No results survey is connected yet, so nothing is sent. The values below are what a student's submission would contain.</p>`}</div>
     ${units.map(list).join("")}${fus.map(list).join("")}${exps.map(list).join("")}
     ${(!configured||PREVIEW)?`<h2>What gets sent to the survey</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
