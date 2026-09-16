@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission 4: Hypothesis testing | AH/STAT 3005</title>
+<style>
+:root{
+  --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB;
+  --teal:#15656C; --teal-deep:#0C474C; --teal-wash:#E1EEEF; --on-teal:#FFFFFF;
+  --good:#256A40; --good-wash:#E3F1E7; --bad:#9E2F28; --bad-wash:#F7E4E2;
+  --amber:#7F500B; --amber-wash:#F7EDDA;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F181C; --card:#162228; --ink:#E2EBEE; --muted:#9DAEB5; --line:#2C3C43;
+    --teal:#6DBAC1; --teal-deep:#96D2D7; --teal-wash:#173338; --on-teal:#08181B;
+    --good:#86CD9E; --good-wash:#1A3224; --bad:#F29A92; --bad-wash:#3A211F;
+    --amber:#E6B96C; --amber-wash:#382C17;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--sans)}
+.bar{position:sticky;top:0;z-index:5;background:var(--teal-deep);color:#fff;border-bottom:3px solid var(--teal)}
+@media (prefers-color-scheme: dark){.bar{background:#0B2427;color:var(--ink)}}
+.bar-in{max-width:780px;margin:0 auto;padding:.55rem 1.1rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar-title{font-family:var(--serif);font-size:1.02rem;font-weight:600}
+.bar-meta{display:flex;gap:1.1rem;align-items:center;font-size:.86rem}
+.meter{display:flex;align-items:center;gap:.45rem}
+.meter-track{width:92px;height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+.meter-fill{height:100%;background:#9FE0C0;transition:width .35s ease}
+main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
+h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
+h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
+p{margin:0 0 .9rem;max-width:68ch}
+.where{color:var(--muted);font-size:.92rem;margin:0}
+.lede{font-size:1.1rem}
+.memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
+.memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
+.memo p{max-width:none}
+.output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
+.output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
+.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:.86rem;min-width:100%}
+th,td{padding:.35rem .55rem;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+thead th{border-bottom:2px solid var(--ink);font-weight:700;vertical-align:bottom;white-space:normal;min-width:4.2rem}
+tbody th{text-align:left;font-weight:600}
+thead th:first-child{text-align:left}
+.step{border-top:1px solid var(--line);padding-top:1.2rem;margin-top:.6rem}
+.step-count{color:var(--muted);font-size:.9rem;margin-bottom:.3rem}
+.prompt{font-size:1.18rem}
+.opts{display:grid;gap:.55rem;margin:.9rem 0}
+.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:.75rem .9rem;cursor:pointer}
+.opt:hover:not([aria-disabled="true"]){border-color:var(--teal)}
+.opt-mark{flex:0 0 1.35rem;height:1.35rem;border-radius:50%;border:1.5px solid var(--muted);margin-top:.12rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.opt.wrong{background:var(--bad-wash);border-color:var(--bad);cursor:default}
+.opt.wrong .opt-mark{border-color:var(--bad);color:var(--bad)}
+.opt.wrong .opt-mark::after{content:"\2715"}
+.opt.right{background:var(--good-wash);border-color:var(--good)}
+.opt.right .opt-mark{border-color:var(--good);background:var(--good);color:var(--card)}
+.opt.right .opt-mark::after{content:"\2713"}
+.opt.locked:not(.right):not(.wrong){opacity:.55;cursor:default}
+.fb{margin:.3rem 0 .8rem}
+.fb-box{border-radius:8px;padding:.8rem 1rem .1rem;border:1px solid}
+.fb-box.good{background:var(--good-wash);border-color:var(--good)}
+.fb-box.bad{background:var(--bad-wash);border-color:var(--bad)}
+.fb-head{font-weight:700;margin-bottom:.3rem}
+.hint{background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.75rem 1rem .1rem;margin:.4rem 0 .8rem}
+.hint .fb-head{color:var(--amber)}
+button{font:inherit}
+.primary{background:var(--teal);color:var(--on-teal);border:0;border-radius:8px;padding:.7rem 1.25rem;font-weight:600;cursor:pointer}
+.primary:hover{background:var(--teal-deep)}
+@media (prefers-color-scheme: dark){.primary:hover{background:var(--teal-deep)}}
+.quiet{background:transparent;color:var(--teal-deep);border:1.5px solid var(--teal);border-radius:8px;padding:.6rem 1.05rem;font-weight:600;cursor:pointer}
+.linkish{background:none;border:0;color:var(--teal-deep);text-decoration:underline;cursor:pointer;padding:.3rem 0;font-size:.95rem}
+.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+:focus-visible{outline:3px solid #E0A526;outline-offset:2px}
+.outro{border-top:1px solid var(--line);margin-top:1rem;padding-top:1.2rem}
+.takeaway{background:var(--teal-wash);border-radius:8px;padding:.8rem 1rem}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 .8rem;padding:.6rem .9rem .7rem;background:var(--card)}
+legend{font-weight:600;padding:0 .3rem}
+.radios{display:flex;gap:1.2rem;flex-wrap:wrap}
+.radios label{display:flex;gap:.4rem;align-items:center;cursor:pointer}
+.stats{display:flex;gap:2rem;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.stat b{display:block;font-family:var(--serif);font-size:2rem;line-height:1.1;font-weight:600}
+.stat span{color:var(--muted);font-size:.9rem}
+.review{margin:0 0 1.2rem;padding:0;list-style:none}
+.review li{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.review .st{white-space:nowrap;font-weight:600}
+.st.ok{color:var(--good)} .st.retry{color:var(--amber)}
+main>h2{margin-top:1.8rem}
+.submit-box{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){body{font-size:16px}h1{font-size:1.65rem}.bar-meta{gap:.7rem}.meter-track{width:60px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div class="bar-title">Mission 4: Hypothesis testing</div>
+  <div class="bar-meta">
+    <span id="progress"></span>
+    <span class="meter" role="img" id="meter" aria-label="Team credibility">Credibility
+      <span class="meter-track"><span class="meter-fill" id="meterFill" style="width:50%"></span></span>
+      <span id="credv">50</span></span>
+  </div>
+</div></header>
+<main id="app" tabindex="-1"></main>
+
+<script>
+/* ============================================================
+   SETTINGS (instructor)
+   ============================================================ */
+const CONFIG = {
+  mission: 4,
+  version: "1.0",
+  // Paste your Qualtrics survey link between the quotes, e.g.
+  // "https://uconn.co1.qualtrics.com/jfe/form/SV_xxxxxxxxxxxx"
+  qualtricsUrl: "",
+  storageKey: "ahstat3005-mission4-v1"
+};
+
+/* ============================================================
+   STATISTICS HELPERS
+   ============================================================ */
+function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
+function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
+function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
+function tcdf(t,df){const x=df/(df+t*t);const tail=0.5*betai(df/2,0.5,x);return t>=0?1-tail:tail;}
+function tinv(p,df){let lo=-80,hi=80;for(let i=0;i<200;i++){const m=(lo+hi)/2;if(tcdf(m,df)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+function zinv(p){let lo=-10,hi=10;for(let i=0;i<100;i++){const m=(lo+hi)/2;if(ncdf(m)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function twoSidedP(t,df){return 2*(1-tcdf(Math.abs(t),df));}
+function power2(d,n,alpha){return ncdf(d*Math.sqrt(n/2)-zinv(1-alpha/2));}
+function welchDf(s1,n1,s2,n2){const a=s1*s1/n1,b=s2*s2/n2;return (a+b)*(a+b)/(a*a/(n1-1)+b*b/(n2-1));}
+
+function makeRng(seed){let a=seed>>>0;const next=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  return {u:next,uni:(lo,hi)=>lo+(hi-lo)*next(),int:(lo,hi)=>lo+Math.floor(next()*(hi-lo+1)),
+    normal:(m,s)=>{let u=0,v=0;while(u===0)u=next();while(v===0)v=next();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}};}
+
+function fx(x,d=2){const r=Number(x).toFixed(d);return r==="-0."+"0".repeat(d)?(0).toFixed(d):r;}
+function fP(p){return p<0.001?"&lt;.001":p.toFixed(3).replace(/^0\./,".");}
+function fPtext(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+function tbl(title,note,heads,rows){
+  return `<figure class="output"><figcaption>${title}${note?`<span class="out-note">${note}</span>`:""}</figcaption><div class="scroll"><table><thead><tr>${heads.map(h=>`<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>i===0?`<th scope="row">${c}</th>`:`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
+}
+const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
+
+/* ============================================================
+   CONTENT: CORE CASES
+   Every step id must be the same at both levels.
+   Option tag "correct" = right answer; any other tag names the
+   misconception, and that tag is what gets sent to Qualtrics.
+   ============================================================ */
+
+function case1(R,level){
+  const n=R.int(36,44), sd=+R.uni(10,14).toFixed(1), tT=R.uni(-1.55,-1.1);
+  const mean=+(60+tT*sd/Math.sqrt(n)).toFixed(1);
+  const se=sd/Math.sqrt(n), t=(mean-60)/se, df=n-1;
+  const p2=twoSidedP(t,df), p1=p2/2, diff=mean-60, tq=tinv(.975,df);
+  const out1=tbl("One-Sample Statistics","",["","N","Mean","Std. Deviation","Std. Error Mean"],[["Door-to-needle (min)",n,fx(mean),fx(sd),fx(se)]]);
+  const out2=tbl("One-Sample Test","Test Value = 60",["","t","df","One-Sided p","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],[["Door-to-needle (min)",fx(t,3),df,fP(p1),fP(p2),fx(diff),fx(diff-tq*se),fx(diff+tq*se)]]);
+  return {id:"c1",title:"Are we beating 60 minutes?",from:"Dr. Priya Nair, stroke program director",
+    message:`<p>Our stroke team has worked hard on door-to-needle time, the minutes from arrival until a patient receives clot-busting medication. The national target is 60 minutes or less.</p><p>I'd like our annual report to say our average is under 60. I pulled the last ${n} eligible patients. Do the data support that claim? Use α = 0.05.</p>`,
+    briefing:"",
+    steps:[
+      {id:"c1s1",label:"Writing the hypotheses",prompt:"Which pair of hypotheses matches Dr. Nair's question?",
+       hint:"Which statement is the claim the team hopes to support? And is that claim about one direction, or either direction?",
+       options:[
+        {t:`${H0}: μ = 60 &nbsp; ${HA}: μ &lt; 60`,tag:"correct",fb:"Her claim is directional (under 60), so it goes in the alternative. The null holds the status quo that you'd need evidence to reject."},
+        {t:`${H0}: μ &lt; 60 &nbsp; ${HA}: μ ≥ 60`,tag:"swapped_hypotheses",fb:"This flips them. The claim the team hopes to support belongs in the alternative; the null is what you assume until the data say otherwise."},
+        {t:`${H0}: μ = 60 &nbsp; ${HA}: μ ≠ 60`,tag:"two_sided_for_directional",fb:"A two-sided alternative asks whether the mean differs in either direction. Dr. Nair only wants to claim it's under 60, so a one-sided alternative fits her question."},
+        {t:`${H0}: x̄ = 60 &nbsp; ${HA}: x̄ &lt; 60`,tag:"sample_not_population",fb:"Hypotheses are about the population mean μ, meaning all eligible patients, not the sample mean x̄. You can already see the sample mean; the question is what it says about μ."}]},
+      {id:"c1s2",label:"Choosing the test",prompt:"Which test fits this question?",
+       hint:"How many groups are there, and what is being compared? Do we know the population standard deviation?",
+       options:[
+        {t:"Independent-samples t test",tag:"wrong_test_one_sample",fb:"There's only one group of patients. The comparison is with a fixed benchmark (60 minutes), not with a second group."},
+        {t:"One-sample t test",tag:"correct",fb:"One group, compared with a fixed value, with the population SD unknown and estimated from the sample."},
+        {t:"One-sample z test",tag:"z_without_sigma",fb:"A z test needs the population standard deviation to be known. We only have the sample SD, so the t distribution applies."},
+        {t:"Paired t test",tag:"wrong_test_one_sample",fb:"A paired test needs two linked measurements per patient, like before and after. Each patient here has one time."}]},
+      {id:"c1s3",label:"Picking the right p-value",show:out1+out2,prompt:"Here's the output. Which value matches your hypotheses?",
+       hint:"Go back to the alternative hypothesis you chose. Does it look in one direction or both?",
+       options:[
+        {t:`Two-Sided p = ${fP(p2)}`,tag:"wrong_tail_p",fb:`The two-sided p-value goes with ${HA}: μ ≠ 60. It counts extreme results in both directions, which isn't the question here.`},
+        {t:`Mean Difference = ${fx(diff)}`,tag:"output_misread",fb:"The mean difference is how far the sample mean is from 60. It's an estimate of the effect, not a p-value."},
+        {t:`One-Sided p = ${fP(p1)}`,tag:"correct",fb:`Your alternative is μ &lt; 60, and t is negative (the sample mean is below 60), so the one-sided p-value is the one that matches.`},
+        {t:`1 − One-Sided p = ${fP(1-p1)}`,tag:"wrong_tail_p",fb:"That would be the p-value for the opposite alternative, μ &gt; 60."}]},
+      {id:"c1s4",label:"Drawing the conclusion",prompt:`With α = 0.05 and one-sided p = ${fP(p1)}, what should the report say?`,
+       hint:"Compare p with α first. Then ask what a result that isn't significant does and doesn't tell you.",
+       options:[
+        {t:"Reject H<sub>0</sub>. The average door-to-needle time is under 60 minutes.",tag:"threshold_misread",fb:`Rejecting requires p ≤ α. Here p = ${fP(p1)}, which is above 0.05.`},
+        {t:"Accept H<sub>0</sub>. The unit's average is 60 minutes or more.",tag:"accept_null",fb:"A result that isn't significant doesn't prove the null. The true mean might be under 60; this sample just isn't strong enough evidence either way."},
+        {t:`The average is under 60, because the sample mean was ${fx(mean,1)} minutes.`,tag:"sample_mean_proof",fb:"The sample mean is under 60, but samples vary. The test asks whether a gap this size could easily happen by chance if the true mean were 60, and here it could."},
+        {t:"Fail to reject H<sub>0</sub>. The data don't provide enough evidence that the average is under 60 minutes.",tag:"correct",fb:"p is above 0.05, so the evidence falls short. That isn't the same as showing the unit misses the target. It means this sample can't support the claim yet."}]}
+    ],
+    outro:g=>g("c1s4")==="correct"
+      ?`<p>Your summary goes to Dr. Nair as written. She keeps the improvement project going and plans to recheck after another quarter of patients, instead of announcing a success the data can't support yet.</p>`
+      :`<p>Your first draft said the target was met. Dr. Nair caught it before the report went out, knowing the accreditation reviewer would ask for the analysis. The final version says the evidence isn't there yet, and the improvement project continues.</p>`,
+    takeaway:"A sample mean below the benchmark isn't enough. The test tells you whether the gap is bigger than chance would easily produce."};
+}
+
+function case2(R,level){
+  const n=level?22:18;
+  const m1=+R.uni(6.2,6.9).toFixed(2), sB=R.uni(1.5,1.8), sA=R.uni(1.5,1.9), r=R.uni(.85,.9);
+  const tInd=R.uni(1.15,1.45), dm=+(tInd*Math.sqrt((sB*sB+sA*sA)/n)).toFixed(2);
+  const m2=+(m1-dm).toFixed(2), sD=Math.sqrt(sB*sB+sA*sA-2*r*sB*sA);
+  const seP=sD/Math.sqrt(n), tP=dm/seP, dfP=n-1, pP=twoSidedP(tP,dfP), tqP=tinv(.975,dfP);
+  const seI=Math.sqrt((sB*sB+sA*sA)/n), tI=dm/seI, dfI=2*n-2, pI=twoSidedP(tI,dfI);
+  const rows=[];for(let i=1;i<=5;i++){const b=Math.max(2,Math.min(10,Math.round(R.normal(m1,sB))));const a=Math.max(0,Math.min(10,b-Math.round(R.normal(dm,sD))));rows.push([`Patient ${i}`,b,a]);}
+  const brief=tbl(`Pain ratings, first 5 of ${n} patients`,"0 = no pain, 10 = worst pain",["","First visit","Last visit"],rows);
+  const outInd=tbl("Independent Samples Test (first-visit vs. last-visit scores)","",["","t","df","Two-Sided p","Mean Difference"],[["Pain",fx(tI,3),dfI,fP(pI),fx(dm)]]);
+  const outPair=tbl("Paired Samples Test (first visit − last visit)","",["","Mean","Std. Deviation","Std. Error Mean","t","df","Two-Sided p","95% CI Lower","95% CI Upper"],[["Pain",fx(dm),fx(sD),fx(seP),fx(tP,3),dfP,fP(pP),fx(dm-tqP*seP),fx(dm+tqP*seP)]]);
+  const message=level
+    ?`<p>We trialed a new 4-week exercise protocol after knee replacement. I have pain ratings (0 to 10) from our ${n} patients, one column from their first visit and one from their last visit.</p><p>Did pain change over the protocol? Use α = 0.05.</p>`
+    :`<p>We tried a new 4-week exercise protocol for patients after knee replacement. The same ${n} patients rated their pain (0 to 10) at the start of the protocol and again at the end.</p><p>Did pain change? Use α = 0.05.</p>`;
+  return {id:"c2",title:"Did the new protocol change pain?",from:"Marcus Bell, PT, outpatient rehabilitation lead",message,briefing:brief,
+    steps:[
+      {id:"c2s1",label:"Matching the test to the design",prompt:"How should these data be analyzed?",
+       hint:"Look at the table. Are the first-visit and last-visit scores from different people, or the same people?",
+       options:[
+        {t:"Independent-samples t test comparing first-visit and last-visit scores",tag:"paired_vs_independent",fb:`${outInd}<p>With this analysis, p = ${fP(pI)}. Marcus reads that as no change and starts drafting a note to shelve the protocol. But these aren't two separate groups. They're the same patients measured twice.</p>`},
+        {t:"Paired t test on each patient's change in pain",tag:"correct",fb:"Each patient contributes two linked scores, so the analysis uses each patient's own change."},
+        {t:"One-sample t test comparing last-visit scores with 0",tag:"wrong_test_one_sample",fb:"That asks whether final pain is zero, which isn't the question. The question is about change within patients."},
+        {t:"Paired z test",tag:"z_without_sigma",fb:"A z test needs a known population SD for the differences. We only have the sample, so the paired t test applies."}]},
+      {id:"c2s2",label:"Writing the hypotheses",prompt:"Let μ<sub>D</sub> be the population mean change (first visit − last visit). Which hypotheses fit Marcus's question?",
+       hint:"Marcus asked whether pain changed, not whether it went down. And hypotheses describe the population, not this sample.",
+       options:[
+        {t:`${H0}: d̄ = 0 &nbsp; ${HA}: d̄ ≠ 0`,tag:"sample_not_population",fb:"d̄ is the sample mean change, which you can already compute. Hypotheses are about the population mean change, μ<sub>D</sub>."},
+        {t:`${H0}: μ<sub>D</sub> ≠ 0 &nbsp; ${HA}: μ<sub>D</sub> = 0`,tag:"swapped_hypotheses",fb:"This flips them. The null is the no-change statement; the alternative is the change you'd need evidence for."},
+        {t:`${H0}: μ<sub>D</sub> = 0 &nbsp; ${HA}: μ<sub>D</sub> ≠ 0`,tag:"correct",fb:"No change in the null, and a change in either direction in the alternative, since Marcus asked whether pain changed."},
+        {t:`${H0}: μ<sub>D</sub> = 0 &nbsp; ${HA}: the change is within a 95% confidence level`,tag:"alt_confidence",fb:"The confidence level isn't part of a hypothesis. Hypotheses are statements about a population parameter, here μ<sub>D</sub>."}]},
+      {id:"c2s3",label:"Interpreting the result",show:outPair,prompt:"Here's the paired analysis. What can you conclude?",
+       hint:"Compare p with α. Then check the mean difference to see which direction pain moved and by how much.",
+       options:[
+        {t:"Fail to reject H<sub>0</sub>, because the p-value is very small.",tag:"threshold_misread",fb:"It's the reverse. A p-value below α is evidence against the null, so we reject it."},
+        {t:`Reject H<sub>0</sub>. Pain changed: on average, it dropped by about ${fx(dm)} points.`,tag:"correct",fb:"The p-value is below 0.05 and the mean difference (first − last) is positive, so pain went down."},
+        {t:`There's ${pP<0.001?"less than a 0.1%":"only a "+fx(pP*100,1)+"%"} chance that the protocol has no effect.`,tag:"p_as_prob_null",fb:"The p-value is calculated assuming the null is true. It's the probability of data this extreme if there were no change, not the probability that there's no change."},
+        {t:"Accept H<sub>A</sub>. The protocol reduces pain for every patient.",tag:"proof_overclaim",fb:"The test is about the average change. Some patients may not improve, and a significant result is strong evidence, not proof."}]},
+      {id:"c2s4",label:"Why the design mattered",show:`<p>Compare the two analyses of the same scores: the independent test gave p = ${fP(pI)}, and the paired test gave ${fPtext(pP)}.</p>`,prompt:"Why did the two tests give such different answers?",
+       hint:"Think about how much patients differ from one another in pain, compared with how much each patient changed.",
+       options:[
+        {t:"The independent test uses a stricter α.",tag:"power_misconception",fb:"Both used α = 0.05. The difference comes from how each test handles variation."},
+        {t:"The independent test was based on fewer patients.",tag:"power_misconception",fb:"Both used exactly the same scores. What changed is whether each patient is compared with themselves."},
+        {t:"Paired tests produce more false positives, so the independent result is more trustworthy.",tag:"paired_vs_independent",fb:"When data are truly paired, the paired test is the correct one, and its Type I error rate is still α. The independent test is the wrong model for these data."},
+        {t:"Patients differ a lot from one another. Pairing removes that variation, so the test has more power to detect the change.",tag:"correct",fb:"Some patients hurt more than others throughout. Comparing each patient with themselves strips that out, leaving the change easier to see."}]}
+    ],
+    outro:g=>g("c2s1")==="correct"
+      ?`<p>The protocol expands to two more clinics, with pain tracked the same way so each patient serves as their own comparison.</p>`
+      :`<p>Your first analysis nearly shelved a protocol that works. Switching to the paired test showed a clear drop in pain, and the protocol expands to two more clinics.</p>`,
+    takeaway:"Match the test to the design. The same numbers can give very different answers when pairing is ignored."};
+}
+
+function case3(R,level){
+  let n1,n2,s1,s2,lp;
+  if(level){n1=18;n2=14;s1=R.uni(6,8);s2=R.uni(13,15);lp=R.uni(.004,.03);}
+  else{n1=15;n2=15;s1=R.uni(9,11);s2=s1*R.uni(.9,1.1);lp=R.uni(.35,.85);}
+  s1=+s1.toFixed(2);s2=+s2.toFixed(2);
+  const sp=Math.sqrt(((n1-1)*s1*s1+(n2-1)*s2*s2)/(n1+n2-2)), seP=sp*Math.sqrt(1/n1+1/n2), dfP=n1+n2-2;
+  const seW=Math.sqrt(s1*s1/n1+s2*s2/n2), dfW=welchDf(s1,n1,s2,n2);
+  const tT=R.uni(-1.35,-1.05), seC=level?seW:seP;
+  const mP=+R.uni(-3,-1).toFixed(2), diff=+(tT*seC).toFixed(2), mD=+(mP+diff).toFixed(2);
+  const d=mD-mP, tPo=d/seP, tWe=d/seW, pPo=twoSidedP(tPo,dfP), pWe=twoSidedP(tWe,dfW);
+  const tqP=tinv(.975,dfP), tqW=tinv(.975,dfW);
+  const pc=level?pWe:pPo, lo=level?d-tqW*seW:d-tqP*seP, hi=level?d+tqW*seW:d+tqP*seP;
+  const F=Math.pow(tinv(1-lp/2,n1+n2-2),2);
+  const grp=tbl("Group Statistics","Change in systolic BP after 8 weeks (mmHg); negative = BP went down",["Group","N","Mean","Std. Deviation","Std. Error Mean"],[["New drug",n1,fx(mD),fx(s1),fx(s1/Math.sqrt(n1))],["Placebo",n2,fx(mP),fx(s2),fx(s2/Math.sqrt(n2))]]);
+  const ind=tbl("Independent Samples Test","Mean difference = new drug − placebo",["","Levene's F","Levene's Sig.","t","df","One-Sided p","Two-Sided p","Mean Difference","Std. Error Difference","95% CI Lower","95% CI Upper"],
+    [["Equal variances assumed",fx(F,3),fP(lp),fx(tPo,3),dfP,fP(pPo/2),fP(pPo),fx(d),fx(seP,3),fx(d-tqP*seP),fx(d+tqP*seP)],
+     ["Equal variances not assumed","","",fx(tWe,3),fx(dfW,3),fP(pWe/2),fP(pWe),fx(d),fx(seW,3),fx(d-tqW*seW),fx(d+tqW*seW)]]);
+  const rowOpts=level?[
+    {t:"Equal variances assumed, because patients were randomized",tag:"ignore_levene",fb:"Randomization balances groups on average, but the spread of outcomes can still differ, and Levene's test says it does here."},
+    {t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Choosing the row by its p-value means picking the answer you like, which inflates false positives. Levene's test decides the row before you look at the t test."},
+    {t:`Equal variances not assumed, because Levene's p = ${fP(lp)} is below 0.05`,tag:"correct",fb:"Levene's test is significant, so the variances look unequal and the second row applies."},
+    {t:`Neither. Levene's p = ${fP(lp)} is significant, so the drug worked.`,tag:"levene_as_effect",fb:"Levene's test is about whether the group variances are equal, not whether the means differ."}]
+   :[
+    {t:"Equal variances not assumed, because the two SDs aren't identical",tag:"ignore_levene",fb:"Sample SDs almost never match exactly. Levene's test checks whether the difference is bigger than chance would produce, and here it isn't."},
+    {t:`Equal variances assumed, because Levene's p = ${fP(lp)} is above 0.05`,tag:"correct",fb:"Levene's test isn't significant, so there's no evidence the variances differ and the first row applies."},
+    {t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Choosing the row by its p-value means picking the answer you like, which inflates false positives. Levene's test decides the row before you look at the t test."},
+    {t:`Neither. Levene's p = ${fP(lp)} is the p-value for the drug effect.`,tag:"levene_as_effect",fb:"Levene's test is about whether the group variances are equal, not whether the means differ."}];
+  return {id:"c3",title:"Does the new drug work?",from:"Dr. Elena Ruiz, cardiology, pharmacy and therapeutics committee",
+    message:`<p>We ran a small randomized pilot of a new blood pressure medication against placebo: ${n1} patients on the drug and ${n2} on placebo. The outcome is the change in systolic BP over 8 weeks.</p><p>Did the drug change BP compared with placebo? Use α = 0.05. Honestly, I'm expecting to report that it doesn't work.</p>`,
+    briefing:grp,
+    steps:[
+      {id:"c3s1",label:"Writing the hypotheses",prompt:"Which hypotheses fit Dr. Ruiz's question?",
+       hint:"The null is a specific, testable statement about population means. Chance and confidence levels belong to the testing process, not the hypotheses.",
+       options:[
+        {t:`${H0}: there are differences by chance &nbsp; ${HA}: there are differences`,tag:"null_as_chance",fb:"The null isn't a statement about chance. It's a precise claim about the population: the mean change is the same in both groups."},
+        {t:`${H0}: μ<sub>drug</sub> − μ<sub>placebo</sub> = 0 &nbsp; ${HA}: μ<sub>drug</sub> − μ<sub>placebo</sub> ≠ 0`,tag:"correct",fb:"No difference in population means under the null, and a difference in either direction under the alternative."},
+        {t:`${H0}: x̄<sub>drug</sub> = x̄<sub>placebo</sub> &nbsp; ${HA}: x̄<sub>drug</sub> ≠ x̄<sub>placebo</sub>`,tag:"sample_not_population",fb:"The sample means are already known, and they do differ. Hypotheses are about the population means."},
+        {t:`${H0}: μ<sub>drug</sub> = μ<sub>placebo</sub> &nbsp; ${HA}: the difference is within a 95% confidence level`,tag:"alt_confidence",fb:"The confidence level isn't part of a hypothesis. The alternative should state how the population means relate."}]},
+      {id:"c3s2",label:"Reading the variance test",show:ind,prompt:"Which row of this output should you use?",
+       hint:"Levene's test has its own null hypothesis: the two population variances are equal.",
+       options:rowOpts},
+      {id:"c3s3",label:"Responding to the physician",prompt:`Using that row, the two-sided p = ${fP(pc)}. Dr. Ruiz writes: "The drug doesn't work." What do you tell her?`,
+       hint:"What does failing to reject actually mean? And how many patients were in this study?",
+       options:[
+        {t:"That's right. A p-value above 0.05 shows the drug has no effect.",tag:"accept_null",fb:"A result that isn't significant isn't evidence of no effect. It means this study couldn't distinguish a difference from chance."},
+        {t:`There's a ${fx((1-pc)*100,0)}% chance the drug doesn't work.`,tag:"p_as_prob_null",fb:"The p-value isn't the probability that either hypothesis is true, and subtracting it from 1 doesn't produce one either."},
+        {t:`We fail to reject H<sub>0</sub>, so this pilot didn't show a difference. With only ${n1} and ${n2} patients per group, it may have been too small to detect a real effect, so it isn't evidence that the drug doesn't work.`,tag:"correct",fb:"Small studies have low power. \"Not significant\" here means inconclusive, not ineffective."},
+        {t:"Rerun the analysis with α = 0.25 so the result is significant.",tag:"alpha_shopping",fb:"α has to be set before the analysis. Raising it after seeing the result defeats its purpose and increases the risk of a Type I error."}]},
+      {id:"c3s4",label:"Using the confidence interval",prompt:`The 95% CI for the difference (drug − placebo) runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg. What does it add?`,
+       hint:"Does the interval include 0? And what's the largest reduction it still allows?",
+       options:[
+        {t:"Because the interval includes 0, the true difference is 0.",tag:"accept_null",fb:"0 is one plausible value, but so is every other value in the interval, including meaningful reductions."},
+        {t:`95% of patients had a BP change between ${fx(lo,1)} and ${fx(hi,1)} mmHg.`,tag:"ci_misread",fb:"The interval is about the population mean difference between groups, not the range of individual patients' changes."},
+        {t:"The interval includes 0 but p isn't significant, so the output contradicts itself.",tag:"ci_misread",fb:"They agree. A two-sided 95% CI that includes 0 goes together with p &gt; 0.05."},
+        {t:`It includes 0, which matches the non-significant result. But it also includes reductions as large as ${fx(Math.abs(lo),1)} mmHg, which would matter clinically, so this study is too imprecise to rule out a useful effect.`,tag:"correct",fb:"The interval shows why the pilot is inconclusive: it's consistent with no effect and with a clinically important one."}]}
+    ],
+    outro:g=>g("c3s3")==="correct"
+      ?`<p>Dr. Ruiz changes her summary to "inconclusive," and the committee funds a larger trial. Eight months later, with 120 patients per group, the drug shows a clear reduction in systolic BP.</p>`
+      :`<p>Your first reply agreed that the drug doesn't work, and the committee nearly dropped it. After you corrected the summary to "inconclusive," they funded a larger trial. With 120 patients per group, the drug showed a clear reduction in systolic BP.</p>`,
+    takeaway:"Failing to reject H<sub>0</sub> isn't evidence of no effect, especially in a small study. The confidence interval shows how much uncertainty is left."};
+}
+
+function case4(R,level){
+  const d=level?0.3:0.4, ns=level?[50,100,180]:[25,50,100];
+  const s1=level
+    ?{prompt:"Suppose the pilot finds no significant difference, but in reality the alert does shorten time to antibiotics. What kind of error is that?",
+      options:[
+       {t:"A Type I error",tag:"type_error_mixup",fb:"A Type I error is a false positive: rejecting a null that's true. Here the null was false and we missed it."},
+       {t:"A Type II error",tag:"correct",fb:"A false negative: failing to reject a null hypothesis that's actually false."},
+       {t:"Both kinds of error",tag:"type_error_mixup",fb:"A single decision can only be one kind of error. Here we failed to reject a false null."},
+       {t:"No error, because α = 0.05 guards against mistakes",tag:"alpha_protects",fb:"α controls the Type I error rate. It doesn't prevent missing a real effect."}]}
+    :{prompt:"Suppose the pilot concludes the alert shortens time to antibiotics, but in reality it makes no difference. What kind of error is that?",
+      options:[
+       {t:"A Type I error",tag:"correct",fb:"A false positive: rejecting a null hypothesis that's actually true."},
+       {t:"A Type II error",tag:"type_error_mixup",fb:"A Type II error is a false negative: missing a real effect. Here we claimed an effect that doesn't exist."},
+       {t:"Both kinds of error",tag:"type_error_mixup",fb:"A single decision can only be one kind of error. Here we rejected a true null."},
+       {t:"No error, because α = 0.05 guards against mistakes",tag:"alpha_protects",fb:"α sets how often this kind of error happens when the null is true. It limits the risk; it doesn't remove it."}]};
+  return {id:"c4",title:"Setting up the sepsis alert pilot",from:"Dana Okafor, RN, nurse manager, sepsis quality program",
+    message:`<p>IT built an electronic alert that flags patients who may be developing sepsis. Before turning it on hospital-wide, we want a pilot comparing time to first antibiotic dose with and without the alert.</p><p>If we adopt an alert that doesn't help, nurses get alarm fatigue for nothing. If we skip one that works, patients lose. Help me set this up so we get a trustworthy answer.</p>`,
+    briefing:"",
+    steps:[
+      {id:"c4s1",label:"Naming the error",prompt:s1.prompt,hint:"Type I is a false positive (rejecting a true null). Type II is a false negative (missing a real effect).",options:s1.options},
+      {id:"c4s2",label:"Changing α",prompt:"A colleague suggests using α = 0.10 instead of 0.05 for the pilot. What changes?",
+       hint:"A larger α makes it easier to reject H<sub>0</sub>. Think about what that does when H<sub>0</sub> is true, and when it's false.",
+       options:[
+        {t:"Both kinds of error become less likely.",tag:"lower_alpha_power",fb:"There's a trade-off. Making it easier to reject lowers the chance of missing a real effect but raises the chance of a false positive."},
+        {t:"Power goes down.",tag:"alpha_change_power",fb:"A larger α makes rejecting easier, so power goes up, not down."},
+        {t:"Power goes up, but so does the risk of a Type I error: adopting an alert that doesn't help.",tag:"correct",fb:"That's the trade-off. A less conservative α buys power at the cost of more false positives."},
+        {t:"The risk of a Type II error goes up.",tag:"type_error_mixup",fb:"A larger α makes rejecting easier, so the Type II error risk goes down. It's the Type I risk that rises."}]},
+      {id:"c4s3",label:"Designing for power",type:"design",d,ns,alphas:[0.01,0.05,0.10],
+       prompt:`Design the pilot. If the alert works, it produces a moderate improvement (effect size d = ${d}). The budget covers up to ${ns[2]} patients per group. The team wants at least an 80% chance of detecting a real benefit, without raising the risk of adopting a useless alert.`,
+       hint:"The lecture listed three ways to increase power: a bigger effect, a larger α, and a larger sample. You can't change the effect, and the team doesn't want a larger α."}
+    ],
+    outro:g=>g("c4s3")==="correct"
+      ?`<p>Your design goes to the quality committee as proposed. The pilot will have enough patients to give a real answer, and α stays at 0.05.</p>`
+      :`<p>It took more than one try, but the final design keeps α at 0.05 and uses enough patients for about 80% power. The quality committee approves it.</p>`,
+    takeaway:"A larger sample raises power without increasing the risk of a false positive. Loosening α buys power at exactly that cost."};
+}
+
+function case5(R,level){
+  const d=+R.uni(0.8,1.2).toFixed(2), p=+R.uni(.018,.042).toFixed(3), df=22;
+  const t=tinv(1-p/2,df), se=d/t, tq=tinv(.975,df), lo=d-tq*se, hi=d+tq*se;
+  const pp=fx(p*100,1), L=fx(lo,2), U=fx(hi,2);
+  const s2=level
+    ?{prompt:`The 95% CI for the reduction is ${L} to ${U} falls per 1,000 patient-days. Tom asks whether the interval and the p-value tell the same story.`,
+      options:[
+       {t:"No. The interval describes individual patients, while the p-value describes units.",tag:"ci_misread",fb:"Both are about the same population mean difference. The interval gives a range of plausible values for it."},
+       {t:"Yes, and since both are significant, the reduction must be large.",tag:"significance_as_size",fb:"Significance shows a reduction is likely, not that it's large. The interval allows a reduction as small as "+L+"."},
+       {t:`Yes. The interval excludes 0, which matches p &lt; 0.05. It also shows the reduction could be as small as ${L} or as large as ${U}.`,tag:"correct",fb:"A two-sided 95% CI excluding 0 goes with p &lt; 0.05, and the interval adds how big the effect plausibly is."},
+       {t:"No. If the interval excludes 0, the p-value should be above 0.05.",tag:"ci_misread",fb:"It's the other way around: a 95% CI that excludes 0 goes with p &lt; 0.05."}]}
+    :{prompt:`The 95% CI for the reduction is ${L} to ${U} falls per 1,000 patient-days. How should Tom describe it?`,
+      options:[
+       {t:`95% of units will see a reduction between ${L} and ${U}.`,tag:"ci_misread",fb:"The interval is about the average reduction across units like these, not a range that individual units will fall in."},
+       {t:`The true reduction is exactly ${fx(d)}, the middle of the interval.`,tag:"ci_misread",fb:"The middle is the best single estimate, but the interval shows the true value could be anywhere in that range."},
+       {t:`The true average reduction for units like ours is plausibly anywhere from about ${L} to ${U} falls per 1,000 patient-days.`,tag:"correct",fb:"The interval is a range of plausible values for the population mean difference."},
+       {t:"Because the interval excludes 0, the reduction must be large.",tag:"significance_as_size",fb:`Excluding 0 shows a reduction is likely, not that it's large. The lower end, ${L}, is a small effect.`}]};
+  return {id:"c5",title:"Explaining the falls result",from:"Tom Walsh, director of nursing, medical-surgical units",
+    message:`<p>We randomized 24 of our units: 12 started hourly rounding and 12 continued usual care. After six months, rounding units averaged ${fx(d)} fewer falls per 1,000 patient-days (p = ${fP(p)}).</p><p>I have to explain this at the staff meeting, and I want to get it right.</p>`,
+    briefing:"",
+    steps:[
+      {id:"c5s1",label:"Explaining the p-value",prompt:`Which explanation of p = ${fP(p)} is accurate?`,
+       hint:"A p-value is calculated by assuming the null hypothesis is true. What is it the probability of?",
+       options:[
+        {t:`There's a ${pp}% chance that rounding has no effect.`,tag:"p_as_prob_null",fb:"The p-value assumes the null is true, so it can't be the probability that the null is true."},
+        {t:`There's a ${fx(100-p*100,1)}% chance that rounding works.`,tag:"p_as_prob_true",fb:"The p-value doesn't give the probability that the alternative is true, and neither does 1 minus it."},
+        {t:`If rounding truly made no difference, a gap this large or larger would show up in only about ${pp}% of studies like this one, so chance alone is an unlikely explanation.`,tag:"correct",fb:"That's what a p-value measures: how surprising the data would be if the null were true."},
+        {t:`Rounding prevented ${pp}% of falls.`,tag:"p_as_effect",fb:"The p-value isn't the size of the effect. The effect is the difference in falls: "+fx(d)+" per 1,000 patient-days."}]},
+      {id:"c5s2",label:"Explaining the confidence interval",prompt:s2.prompt,hint:"A confidence interval is a range of plausible values for a population parameter, here the average difference between rounding and usual-care units.",options:s2.options}
+    ],
+    outro:g=>g("c5s1")==="correct"
+      ?`<p>Tom's explanation lands well. Staff hear that the result is unlikely to be chance, and how big the benefit realistically might be. Hourly rounding expands to all medical-surgical units, with falls tracked for another year.</p>`
+      :`<p>Your first draft would have told staff the wrong thing about the p-value. After revising, Tom's explanation is accurate, and hourly rounding expands to all medical-surgical units.</p>`,
+    takeaway:"A p-value describes the data, assuming the null is true. It isn't the probability that a hypothesis is true, and it isn't the size of the effect."};
+}
+
+const CORE=[case1,case2,case3,case4,case5];
+
+/* ============================================================
+   CONTENT: FOLLOW-UP REVIEWS (shown only when triggered)
+   ============================================================ */
+const FOLLOWUPS={
+ fu_design:()=>({id:"fu_design",title:"Quick review: matching the test to the design",from:"Jordan Lee, senior statistician",
+   message:"<p>Before the next case, let's sort a few study designs. Pick the test that fits each one.</p>",briefing:"",
+   steps:[
+    {id:"fu_design_1",label:"Before and after in the same patients",prompt:"HbA1c is measured in 40 patients at enrollment and again at 6 months.",hint:"Are the two measurements linked to the same people?",
+     options:[{t:"Independent-samples t test",tag:"paired_vs_independent",fb:"Both measurements come from the same patients, so they're linked."},{t:"Paired t test",tag:"correct",fb:"Two measurements per patient, so analyze each patient's change."},{t:"One-sample t test",tag:"wrong_test_one_sample",fb:"There are two linked measurements per patient, not one sample compared with a fixed value."}]},
+    {id:"fu_design_2",label:"Two separate groups",prompt:"LDL cholesterol is compared between 35 smokers and 42 nonsmokers.",hint:"Could any person be in both groups?",
+     options:[{t:"Paired t test",tag:"paired_vs_independent",fb:"Different people are in each group, so there's nothing to pair."},{t:"One-sample t test",tag:"wrong_test_one_sample",fb:"There are two groups being compared with each other."},{t:"Independent-samples t test",tag:"correct",fb:"Two separate groups of different people."}]},
+    {id:"fu_design_3",label:"One group and a benchmark",prompt:"Resting heart rate in your clinic's 60 patients is compared with a reference value of 72 bpm. The population SD is unknown.",hint:"One group, a fixed value, and an unknown σ.",
+     options:[{t:"One-sample z test",tag:"z_without_sigma",fb:"A z test needs a known population SD. With σ unknown, use t."},{t:"One-sample t test",tag:"correct",fb:"One group compared with a fixed value, with σ estimated from the sample."},{t:"Paired t test",tag:"wrong_test_one_sample",fb:"Each patient has one measurement. The comparison is with a fixed reference value."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"Ask two questions: how many groups, and are the measurements linked?"}),
+ fu_hypotheses:()=>({id:"fu_hypotheses",title:"Quick review: writing hypotheses",from:"Jordan Lee, senior statistician",
+   message:"<p>Hypotheses trip up a lot of people. Two quick ones before the next case.</p>",briefing:"",
+   steps:[
+    {id:"fu_hyp_1",label:"Choosing the null",prompt:"Research question: does a low-sodium diet change systolic BP? Let μ<sub>D</sub> be the population mean change. Which is the null hypothesis?",hint:"The null is a precise, no-change statement about a population parameter.",
+     options:[{t:"There's a change by chance",tag:"null_as_chance",fb:"The null is a statement about the population, not about chance."},{t:"x̄<sub>D</sub> = 0",tag:"sample_not_population",fb:"That's the sample mean. Hypotheses are about μ<sub>D</sub>."},{t:"μ<sub>D</sub> = 0",tag:"correct",fb:"No change in the population mean."},{t:"μ<sub>D</sub> ≠ 0",tag:"swapped_hypotheses",fb:"That's the alternative."}]},
+    {id:"fu_hyp_2",label:"Choosing the alternative",prompt:"A charge nurse suspects mean hemoglobin on her unit is below 12 g/dL. Which is the alternative hypothesis?",hint:"Her suspicion has a direction.",
+     options:[{t:"μ ≠ 12",tag:"two_sided_for_directional",fb:"Her suspicion is specifically 'below 12', so a one-sided alternative fits."},{t:"μ &lt; 12",tag:"correct",fb:"The suspected direction goes in the alternative."},{t:"μ ≥ 12",tag:"swapped_hypotheses",fb:"That's the null (the status quo)."},{t:"x̄ &lt; 12",tag:"sample_not_population",fb:"Hypotheses are about μ, not x̄."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"The null is the no-effect statement about a population parameter. The alternative is what you'd need evidence for, with a direction only if the question has one."}),
+ fu_failreject:()=>({id:"fu_failreject",title:"Quick review: reject or fail to reject",from:"Jordan Lee, senior statistician",
+   message:"<p>Let's practice turning a p-value into a conclusion.</p>",briefing:"",
+   steps:[
+    {id:"fu_fr_1",label:"A large p-value",prompt:"A study of music therapy for pre-surgery anxiety finds p = .40 (α = 0.05). Which statement is best?",hint:"Is p above or below α? And what does that allow you to say?",
+     options:[{t:"Accept H<sub>0</sub>: music therapy has no effect.",tag:"accept_null",fb:"Not significant isn't the same as no effect, just like 'not guilty' isn't the same as innocent."},{t:"Reject H<sub>0</sub>, since .40 is greater than .05.",tag:"threshold_misread",fb:"We reject only when p ≤ α."},{t:"Fail to reject H<sub>0</sub>. There isn't enough evidence of an effect, which doesn't show there's no effect.",tag:"correct",fb:"That's the careful conclusion."},{t:"The music group's mean anxiety was lower, so it works.",tag:"sample_mean_proof",fb:"A sample difference this size could easily be chance."}]},
+    {id:"fu_fr_2",label:"A small p-value",prompt:"Another study finds p = .004 with α = 0.01. Which statement is best?",hint:"Compare .004 with .01.",
+     options:[{t:"Reject H<sub>0</sub>. The data provide strong evidence of an effect.",tag:"correct",fb:".004 is below .01, so we reject."},{t:"Fail to reject H<sub>0</sub>, because α is strict.",tag:"threshold_misread",fb:"Even with the stricter α, .004 is below .01."},{t:"Reject H<sub>0</sub>. The effect is proven for every patient.",tag:"proof_overclaim",fb:"Strong evidence about an average isn't proof about every individual."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"p ≤ α: reject H<sub>0</sub>. p &gt; α: fail to reject, which means insufficient evidence, not proof of no effect."}),
+ fu_pvalue:()=>({id:"fu_pvalue",title:"Quick review: what a p-value means",from:"Jordan Lee, senior statistician",
+   message:"<p>The p-value is one of the most misread numbers in health research. Two quick checks.</p>",briefing:"",
+   steps:[
+    {id:"fu_pv_1",label:"Meaning of a p-value",prompt:"Two wound dressings are compared, and p = .02. What does that mean?",hint:"A p-value is calculated assuming the null is true.",
+     options:[{t:"There's a 2% chance the dressings are equally effective.",tag:"p_as_prob_null",fb:"The calculation assumes they're equal, so it can't give the probability that they are."},{t:"If the dressings truly healed equally on average, a difference this large or larger would show up about 2% of the time.",tag:"correct",fb:"That's the definition in plain language."},{t:"There's a 98% chance the new dressing is better.",tag:"p_as_prob_true",fb:"A p-value isn't the probability that the alternative is true."},{t:"The new dressing heals 2% faster.",tag:"p_as_effect",fb:"The p-value isn't the size of the effect."}]},
+    {id:"fu_pv_2",label:"Significance versus size",prompt:"Study A (5,000 patients) finds a 0.3 mmHg drop in BP, p = .001. Study B (80 patients) finds an 8 mmHg drop, p = .04. Which found the larger effect?",hint:"Where is the effect size reported: the p-value or the difference?",
+     options:[{t:"Study A, because its p-value is smaller",tag:"significance_as_size",fb:"Very large studies can make tiny effects significant. The p-value doesn't measure size."},{t:"Study B, because its drop is larger",tag:"correct",fb:"Effect size comes from the difference, not the p-value."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"A p-value measures how surprising the data are if H<sub>0</sub> is true. Effect size is a separate question."}),
+ fu_errors:()=>({id:"fu_errors",title:"Quick review: Type I and Type II errors",from:"Jordan Lee, senior statistician",
+   message:"<p>These two get mixed up all the time. Here's a quick check.</p>",briefing:"",
+   steps:[
+    {id:"fu_err_1",label:"After rejecting",prompt:"If you reject H<sub>0</sub>, you might be making:",hint:"Rejecting is only a mistake if H<sub>0</sub> was actually true.",
+     options:[{t:"A Type II error, if H<sub>0</sub> was false",tag:"type_error_mixup",fb:"If H<sub>0</sub> was false, rejecting it was correct."},{t:"A Type I error, if H<sub>0</sub> was true",tag:"correct",fb:"Rejecting a true null is a false positive."},{t:"A Type I error, if H<sub>0</sub> was false",tag:"type_error_mixup",fb:"If H<sub>0</sub> was false, rejecting it was correct."},{t:"A Type II error, if H<sub>0</sub> was true",tag:"type_error_mixup",fb:"A Type II error happens when you fail to reject, not when you reject."}]},
+    {id:"fu_err_2",label:"After failing to reject",prompt:"If you fail to reject H<sub>0</sub>, you might be making:",hint:"Failing to reject is only a mistake if H<sub>0</sub> was actually false.",
+     options:[{t:"A Type I error, if H<sub>0</sub> was true",tag:"type_error_mixup",fb:"If H<sub>0</sub> was true, failing to reject it was correct."},{t:"A Type II error, if H<sub>0</sub> was true",tag:"type_error_mixup",fb:"If H<sub>0</sub> was true, failing to reject it was correct."},{t:"A Type II error, if H<sub>0</sub> was false",tag:"correct",fb:"Missing a real effect is a false negative."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"Type I: rejecting a true H<sub>0</sub> (false positive). Type II: failing to reject a false H<sub>0</sub> (false negative)."}),
+ fu_output:()=>({id:"fu_output",title:"Quick review: reading output",from:"Jordan Lee, senior statistician",
+   message:"<p>Two quick checks on reading t test output.</p>",briefing:"",
+   steps:[
+    {id:"fu_out_1",label:"Choosing the row",prompt:"In an independent-samples test, Levene's Sig. = .02. Which row do you use?",hint:"Levene's null hypothesis is that the variances are equal.",
+     options:[{t:"Equal variances assumed",tag:"ignore_levene",fb:".02 is below .05, so there's evidence the variances differ."},{t:"Equal variances not assumed",tag:"correct",fb:"Levene's test is significant, so don't assume equal variances."},{t:"Whichever row gives the smaller p-value",tag:"row_by_smaller_p",fb:"Choose the row from Levene's test, not from the result you prefer."}]},
+    {id:"fu_out_2",label:"Choosing the p-value",prompt:"H<sub>A</sub>: μ &gt; 100. The output shows t = 2.10, one-sided p = .021, and two-sided p = .042. Which p-value matches?",hint:"The alternative has a direction, and t is in that direction.",
+     options:[{t:".021",tag:"correct",fb:"A one-sided alternative with t in the predicted direction uses the one-sided p-value."},{t:".042",tag:"wrong_tail_p",fb:"The two-sided p goes with μ ≠ 100."},{t:"2.10",tag:"output_misread",fb:"That's the t statistic, not a p-value."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"Use Levene's test to pick the row, and match the p-value to your alternative hypothesis."}),
+ fu_power:()=>({id:"fu_power",title:"Quick review: power and α",from:"Jordan Lee, senior statistician",
+   message:"<p>Let's check the trade-offs behind study design.</p>",briefing:"",
+   steps:[
+    {id:"fu_pow_1",label:"Raising power",prompt:"Which change increases power without increasing the risk of a Type I error?",hint:"Two of these change α.",
+     options:[{t:"Lower α to 0.01",tag:"lower_alpha_power",fb:"A stricter α lowers power."},{t:"Raise α to 0.10",tag:"alpha_shopping",fb:"That raises power, but also the Type I error risk."},{t:"Increase the sample size",tag:"correct",fb:"More data make real effects easier to detect, with α unchanged."},{t:"Choose a one-sided test after seeing which way the data went",tag:"alpha_shopping",fb:"Choosing the test after looking at the data inflates the Type I error risk."}]},
+    {id:"fu_pow_2",label:"A stricter α",prompt:"Changing α from 0.05 to 0.01 does what?",hint:"A smaller α makes rejecting harder.",
+     options:[{t:"Fewer Type I errors and higher power",tag:"lower_alpha_power",fb:"Harder to reject means lower power."},{t:"Fewer Type I errors, but lower power",tag:"correct",fb:"That's the trade-off."},{t:"More Type I errors and lower power",tag:"alpha_change_power",fb:"A smaller α means fewer Type I errors."},{t:"Nothing changes for power, which depends only on sample size",tag:"power_misconception",fb:"Power depends on sample size, effect size, and α."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"Power rises with sample size, effect size, and α, but raising α means more false positives."}),
+ fu_ci:()=>({id:"fu_ci",title:"Quick review: confidence intervals",from:"Jordan Lee, senior statistician",
+   message:"<p>One quick check on interpreting a confidence interval.</p>",briefing:"",
+   steps:[
+    {id:"fu_ci_1",label:"Interpreting an interval",prompt:"The 95% CI for the mean change in hemoglobin during pregnancy is 0.4 to 1.1 g/dL. What does it mean?",hint:"A confidence interval is about a population parameter.",
+     options:[{t:"95% of women changed by between 0.4 and 1.1 g/dL.",tag:"ci_misread",fb:"Individuals vary much more than that. The interval is about the mean."},{t:"The population mean change is plausibly between 0.4 and 1.1 g/dL.",tag:"correct",fb:"A range of plausible values for the population mean."},{t:"There's a 95% chance the sample mean is in this interval.",tag:"ci_misread",fb:"The sample mean is always in the middle of the interval. It's the population mean the interval is about."}]}],
+   outro:()=>"<p>Now back to the case files.</p>",takeaway:"A confidence interval gives plausible values for a population parameter, not a range for individuals."})
+};
+const FU_MAP={
+  paired_vs_independent:"fu_design",wrong_test_one_sample:"fu_design",z_without_sigma:"fu_design",
+  swapped_hypotheses:"fu_hypotheses",null_as_chance:"fu_hypotheses",alt_confidence:"fu_hypotheses",sample_not_population:"fu_hypotheses",two_sided_for_directional:"fu_hypotheses",
+  accept_null:"fu_failreject",threshold_misread:"fu_failreject",sample_mean_proof:"fu_failreject",proof_overclaim:"fu_failreject",
+  p_as_prob_null:"fu_pvalue",p_as_prob_true:"fu_pvalue",p_as_effect:"fu_pvalue",significance_as_size:"fu_pvalue",
+  type_error_mixup:"fu_errors",alpha_protects:"fu_errors",
+  wrong_tail_p:"fu_output",output_misread:"fu_output",row_by_smaller_p:"fu_output",ignore_levene:"fu_output",levene_as_effect:"fu_output",
+  power_misconception:"fu_power",alpha_change_power:"fu_power",lower_alpha_power:"fu_power",alpha_shopping:"fu_power",underpowered:"fu_power",
+  ci_misread:"fu_ci"
+};
+
+/* ============================================================
+   CONTENT: OPTIONAL EXPERT CASES
+   ============================================================ */
+const EXPERT=[
+ ()=>({id:"e1",title:"Expert case: a skewed ICU sample",from:"Dr. Samuel Kim, ICU medical director",
+   message:"<p>We compared ICU length of stay for 9 patients on a new sedation protocol and 9 on the usual one. A couple of patients stayed a very long time. Which analysis should we use?</p>",
+   briefing:tbl("ICU length of stay (days)","",["Group","Patients' stays"],[["New protocol","2, 2, 3, 3, 4, 4, 5, 6, 19"],["Usual protocol","3, 4, 4, 5, 6, 7, 8, 11, 34"]]),
+   steps:[
+    {id:"e1s1",label:"Choosing a test for skewed data",prompt:"Which analysis fits best?",hint:"Look at the sample size and the shape of the data. Your lecture's test-selection chart has a row for this.",
+     options:[{t:"Independent-samples t test",tag:"ignore_distribution",fb:"With 9 per group and strongly skewed data, the normality assumption isn't reasonable, and one long stay can dominate the mean."},{t:"Wilcoxon signed-rank test",tag:"paired_vs_independent",fb:"That's the nonparametric test for paired data. These are two separate groups."},{t:"Wilcoxon rank-sum test",tag:"correct",fb:"Two independent groups, a small sample, and a clearly non-normal outcome: the rank-sum test compares them without assuming normality."},{t:"One-way ANOVA",tag:"wrong_test",fb:"ANOVA is for three or more groups, and it also assumes normality."}]},
+    {id:"e1s2",label:"Why sample size matters",prompt:"Why does sample size matter for this choice?",hint:"Think about how sampling distributions of means behave as n grows.",
+     options:[{t:"Nonparametric tests need large samples.",tag:"ignore_distribution",fb:"They're especially useful for small samples."},{t:"With large samples, the t test holds up reasonably well even when data are skewed. With small samples, it doesn't.",tag:"correct",fb:"The sampling distribution of the mean becomes approximately normal as samples grow, but not with 9 patients per group."},{t:"Sample size doesn't matter. Only the skewness does.",tag:"ignore_distribution",fb:"Both matter. The same skewness is much less of a problem with hundreds of patients."}]}],
+   outro:()=>"<p>Dr. Kim's team reports the rank-sum result, and notes that the sample is too small to draw firm conclusions.</p>",
+   takeaway:"When samples are small and the outcome is clearly non-normal, use a nonparametric test."}),
+ ()=>({id:"e2",title:"Expert case: patients who chose the portal",from:"Rachel Stein, director of outpatient services",
+   message:"<p>Patients with diabetes who chose to use our new patient portal had a lower average HbA1c than patients who didn't use it (independent t test, p &lt; .001).</p><p>I want to tell the board that the portal lowers HbA1c.</p>",briefing:"",
+   steps:[
+    {id:"e2s1",label:"Significance and causation",prompt:"What should you tell Rachel?",hint:"Who decided which patients were in each group?",
+     options:[{t:"p &lt; .001 proves the portal lowers HbA1c.",tag:"causation_from_observational",fb:"A significant difference shows the groups differ, not why they differ."},{t:"The difference is unlikely to be chance, but patients chose whether to use the portal. Users may differ in age, income, health literacy, or access to care, so the portal may not be the cause.",tag:"correct",fb:"Without randomization, other differences between the groups could explain the result."},{t:"A t test isn't valid for observational data, so there's no real difference.",tag:"causation_from_observational",fb:"The test is fine for comparing the groups. The problem is interpreting the difference as caused by the portal."},{t:"A paired t test should have been used.",tag:"paired_vs_independent",fb:"Users and non-users are different patients, so the groups are independent."}]},
+    {id:"e2s2",label:"What to check first",prompt:"What would you check first?",hint:"If the groups differ in other ways, what would reveal that?",
+     options:[{t:"Rerun the test with α = 0.01",tag:"alpha_shopping",fb:"The result is already significant at that level. The issue is what's causing the difference."},{t:"Compare the two groups' characteristics, such as age, income, and access to care",tag:"correct",fb:"If portal users differ in other ways, those differences could explain the HbA1c gap."},{t:"Collect a larger sample",tag:"causation_from_observational",fb:"More patients won't fix the fact that people chose their own group."}]}],
+   outro:()=>"<p>Rachel presents the finding to the board as a promising association, and the team plans to compare users and non-users on their characteristics before making any claims about the portal itself.</p>",
+   takeaway:"A significant difference between groups people chose for themselves doesn't show what caused the difference."})
+];
+
+/* All field names sent to Qualtrics, in order */
+function allFields(){
+  const f=["mission","version","path","credibility","hints","minutes","followups","expert"];
+  CORE.forEach((c,i)=>c(makeRng(1),0).steps.forEach(s=>f.push(s.id)));
+  Object.values(FOLLOWUPS).forEach(fn=>fn().steps.forEach(s=>f.push(s.id)));
+  EXPERT.forEach(fn=>fn().steps.forEach(s=>f.push(s.id)));
+  return f;
+}
+
+/* ============================================================
+   GAME ENGINE
+   ============================================================ */
+let S=null;
+function newState(){return {seed:Math.floor(Math.random()*2147483647),phase:"play",coreIdx:0,level:0,path:[],pendingFU:null,fuDone:[],expDone:[],results:{},cred:50,hints:0,started:Date.now()};}
+function save(){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
+function loadSaved(){try{const s=localStorage.getItem(CONFIG.storageKey);return s?JSON.parse(s):null;}catch(e){return null;}}
+function clearSaved(){try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
+function coreRng(i){return makeRng((S.seed+i*1013+7)>>>0);}
+function valueOf(rec){if(!rec||rec.first==null)return "";if(rec.first==="correct")return rec.hintBefore?"correct_hint":"correct";return rec.first;}
+
+if(typeof document!=="undefined"){
+const app=document.getElementById("app");
+const PREVIEW=new URLSearchParams(location.search).has("preview");
+
+function setBar(text){
+  document.getElementById("progress").textContent=text||"";
+  const c=S?S.cred:50;
+  document.getElementById("credv").textContent=c;
+  document.getElementById("meterFill").style.width=c+"%";
+  document.getElementById("meter").setAttribute("aria-label","Team credibility "+c+" out of 100");
+}
+function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);}
+function focusTop(el){window.scrollTo(0,0);(el||app).focus({preventScroll:true});}
+
+function renderIntro(){
+  const saved=loadSaved();
+  setBar("");
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p>
+   <h1 tabindex="-1">You've joined the Evidence Review Team</h1>
+   <p class="lede">Clinicians and managers bring you questions about their data. Your recommendations change what happens on their units, so think each decision through.</p>
+   <p>This week's cases are about hypothesis testing and t tests. Expect about 25 to 30 minutes: five cases, plus a short review if one would help. Good calls raise the team's credibility, and asking the senior statistician for a hint costs a little of it.</p>
+   <p>Credit is for finishing and submitting your results, not for a perfect score. Wrong choices are part of how the game teaches, so don't look answers up. Your progress saves after each case on this device.</p>
+   <div class="actions">${saved&&saved.phase!=="play"||saved&&(saved.coreIdx>0||saved.fuDone.length)?`<button class="primary" id="resume">Resume where you left off</button><button class="quiet" id="start">Start over</button>`:`<button class="primary" id="start">Start the first case</button>`}</div>`;
+  app.querySelector("h1").focus();
+  const st=document.getElementById("start");
+  st.onclick=()=>{if(document.getElementById("resume")&&!confirm("Start over? Your saved progress will be erased."))return;clearSaved();S=newState();save();nextUnit();};
+  const rs=document.getElementById("resume");
+  if(rs)rs.onclick=()=>{S=saved;nextUnit();};
+}
+
+function nextUnit(){
+  if(S.phase==="done")return renderSummary();
+  if(S.phase==="expertOffer")return renderExpertOffer();
+  if(S.phase==="expert"){const i=S.expDone.length;if(i<EXPERT.length)return playUnit(EXPERT[i](),"expert",null,`Expert case ${i+1} of ${EXPERT.length}`);S.phase="done";save();return renderSummary();}
+  if(S.pendingFU)return playUnit(FOLLOWUPS[S.pendingFU](),"fu",null,"Quick review");
+  if(S.coreIdx<CORE.length){const lvl=S.level;return playUnit(CORE[S.coreIdx](coreRng(S.coreIdx),lvl),"core",lvl,`Case ${S.coreIdx+1} of ${CORE.length}`);}
+  S.phase="expertOffer";save();renderExpertOffer();
+}
+
+function playUnit(unit,kind,lvl,barText){
+  setBar(barText);
+  app.innerHTML=`<p class="where">${barText}</p><h1 tabindex="-1">${unit.title}</h1>
+    <div class="memo"><p class="memo-from">From ${unit.from}</p>${unit.message}</div>
+    ${unit.briefing||""}<div id="steps"></div>`;
+  focusTop(app.querySelector("h1"));
+  showStep(unit,0,kind,lvl);
+}
+
+function showStep(unit,i,kind,lvl){
+  const box=document.getElementById("steps");
+  if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
+  const st=unit.steps[i];
+  const rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false});
+  const n=unit.steps.length;
+  let hintUsed=false,done=false,wrongs=0;
+  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.show||""}
+    <h2 class="prompt" tabindex="-1">${st.prompt}</h2>
+    <div id="body"></div>
+    <div id="hintArea"><button class="linkish" id="hintBtn">Ask the senior statistician for a hint (costs 3 credibility)</button></div>
+    <div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
+  const prompt=box.querySelector(".prompt");
+  if(i>0){prompt.scrollIntoView({behavior:"smooth",block:"start"});prompt.focus({preventScroll:true});}
+  const fb=document.getElementById("fb"), body=document.getElementById("body");
+  document.getElementById("hintBtn").onclick=()=>{
+    hintUsed=true;S.hints++;cred(-3);
+    document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan Lee, senior statistician</p><p>${st.hint}</p></div>`;
+  };
+  const finish=()=>{
+    done=true;
+    const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+    const last=i===n-1;
+    document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${last?"See what happens":"Next decision"}</button>`;
+    document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+  };
+
+  if(st.type==="design"){
+    body.innerHTML=`<fieldset><legend>Patients per group</legend><div class="radios">${st.ns.map((v,k)=>`<label><input type="radio" name="n" value="${v}" ${k===0?"checked":""}> ${v}</label>`).join("")}</div></fieldset>
+      <fieldset><legend>Significance level (α)</legend><div class="radios">${st.alphas.map(a=>`<label><input type="radio" name="a" value="${a}" ${a===0.05?"checked":""}> ${a.toFixed(2)}</label>`).join("")}</div></fieldset>
+      <button class="quiet" id="run">Run the pilot</button>`;
+    const simR=makeRng((S.seed+99991)>>>0);
+    document.getElementById("run").onclick=()=>{
+      if(done)return;
+      const nv=+body.querySelector('input[name="n"]:checked').value, av=+body.querySelector('input[name="a"]:checked').value;
+      const pw=power2(st.d,nv,av), pct=Math.round(pw*100);
+      const tag=av>0.05?"alpha_shopping":(pw>=0.8?"correct":"underpowered");
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      const sig=simR.u()<pw;
+      const sim=sig?"In this simulated pilot, the alert's benefit came out significant.":"In this simulated pilot, the difference wasn't significant, so the alert would be shelved even though it actually works. That's a Type II error.";
+      if(tag==="correct"){
+        if(wrongs===0)cred(hintUsed?5:10);
+        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">Good design.</p><p>With ${nv} patients per group and α = ${av.toFixed(2)}, power is about ${pct}%: the pilot detects a real benefit of this size about ${pct} times in 100. ${sim}</p><p>You kept the false-positive risk at 5% and got power from the sample size.</p></div>`;
+        body.querySelectorAll("input,button").forEach(e=>e.disabled=true);
+        finish();
+      }else{
+        wrongs++;cred(-4);
+        const msg=tag==="alpha_shopping"
+          ?`Power is about ${pct}%, but α = 0.10 means a 10% chance of adopting an alert that doesn't help when it truly doesn't. The team wants to keep that risk at 5% or lower. Find another way to get power.`
+          :`Power is about ${pct}%, so there's roughly a ${100-pct}% chance of missing a real benefit. ${sim}${av<0.05?" A stricter α also lowers power.":""}`;
+        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">This design falls short. Adjust it and run again.</p><p>${msg}</p></div>`;
+      }
+    };
+    return;
+  }
+
+  body.innerHTML=`<div class="opts" role="group" aria-label="Answer choices">${st.options.map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>`;
+  body.querySelectorAll(".opt").forEach(btn=>{
+    btn.onclick=()=>{
+      if(done||btn.getAttribute("aria-disabled")==="true")return;
+      const o=st.options[+btn.dataset.k];
+      if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
+      if(o.tag==="correct"){
+        btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
+        body.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");});
+        if(wrongs===0)cred(hintUsed?5:10);
+        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">${wrongs===0?"Good call.":"That's the one."}</p><p>${o.fb}</p></div>`;
+        finish();
+      }else{
+        wrongs++;cred(-4);
+        btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";
+        const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
+        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">Not quite. Pick another option.</p>${inner}</div>`;
+      }
+    };
+  });
+}
+
+function showOutro(unit,kind,lvl){
+  const g=id=>valueOf(S.results[id]).replace("correct_hint","correct");
+  const box=document.getElementById("steps");
+  box.innerHTML=`<div class="outro"><h2 tabindex="-1">What happened</h2>${unit.outro(g)}<p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">Continue</button></div></div>`;
+  const h=box.querySelector("h2");h.scrollIntoView({behavior:"smooth",block:"start"});h.focus({preventScroll:true});
+  document.getElementById("cont").onclick=()=>unitDone(unit,kind,lvl);
+}
+
+function unitDone(unit,kind,lvl){
+  if(kind==="core"){
+    const ids=unit.steps.map(s=>s.id);
+    const misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct");
+    const hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
+    S.path.push(lvl);
+    if(misses.length===0&&hinted.length===0)S.level=1;
+    else if(misses.length>=2)S.level=0;
+    for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
+    S.coreIdx++;
+  }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;}
+  else if(kind==="expert"){S.expDone.push(unit.id);}
+  save();nextUnit();
+}
+
+function renderExpertOffer(){
+  setBar("Optional");
+  app.innerHTML=`<p class="where">Optional</p><h1 tabindex="-1">Two expert cases are waiting</h1>
+    <p class="lede">You've finished the required cases. There are two optional cases for anyone who wants a harder challenge: a small, skewed sample, and a comparison of groups that patients chose for themselves.</p>
+    <p>They take about 5 minutes and don't affect your credit either way.</p>
+    <div class="actions"><button class="primary" id="play">Take the expert cases</button><button class="quiet" id="skip">Skip to my results</button></div>`;
+  focusTop(app.querySelector("h1"));
+  document.getElementById("play").onclick=()=>{S.phase="expert";save();nextUnit();};
+  document.getElementById("skip").onclick=()=>{S.phase="done";save();renderSummary();};
+}
+
+function buildPayload(){
+  const p={mission:CONFIG.mission,version:CONFIG.version,path:S.path.join(""),credibility:S.cred,hints:S.hints,
+    minutes:Math.round((Date.now()-S.started)/60000),followups:S.fuDone.join("|"),expert:S.expDone.join("|")};
+  allFields().slice(8).forEach(id=>{p[id]=valueOf(S.results[id]);});
+  return p;
+}
+
+function renderSummary(){
+  setBar("Results");
+  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0));
+  const fus=S.fuDone.map(id=>FOLLOWUPS[id]()), exps=EXPERT.map(f=>f()).filter(u=>S.expDone.includes(u.id));
+  const coreSteps=units.flatMap(u=>u.steps);
+  const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
+  const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">Right on the first try</span>`:v==="correct_hint"?`<span class="st ok">Right on the first try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
+  const list=(u)=>`<h2>${u.title}</h2><ul class="review">${u.steps.map(s=>`<li><span>${s.label}</span>${status(s.id)}</li>`).join("")}</ul>`;
+  const payload=buildPayload();
+  const configured=!!CONFIG.qualtricsUrl;
+  app.innerHTML=`<p class="where">Results</p><h1 tabindex="-1">Case files closed</h1>
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>decisions right on the first try</span></div>
+    <div class="stat"><b>${S.cred}</b><span>team credibility</span></div>
+    <div class="stat"><b>${S.hints}</b><span>hints used</span></div></div>
+    <div class="submit-box">${configured
+      ?`<h2>Submit your results for credit</h2><p>You'll go to a short UConn survey and sign in with your NetID. Your game results are sent along automatically.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
+      :`<h2>Instructor preview</h2><p>No results survey is connected yet, so nothing is sent. The values below are what a student's submission would contain.</p>`}</div>
+    ${units.map(list).join("")}${fus.map(list).join("")}${exps.map(list).join("")}
+    ${(!configured||PREVIEW)?tbl("Values sent to the survey","Blank = not played",["Field","Value"],Object.entries(payload).map(([k,v])=>[k,String(v)])):""}
+    <div class="actions"><button class="linkish" id="restart">Start the mission over</button></div>`;
+  focusTop(app.querySelector("h1"));
+  const sb=document.getElementById("submit");
+  if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);Object.entries(payload).forEach(([k,v])=>u.searchParams.set(k,v));location.href=u.toString();};
+  document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased. If you've already submitted, that submission is kept."))return;clearSaved();S=null;renderIntro();};
+}
+
+renderIntro();
+}
+</script>
+</body>
+</html>
