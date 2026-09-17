@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission 4: Hypothesis testing | AH/STAT 3005</title>
+<title>Mission 4: Hypothesis testing rounds | AH/STAT 3005</title>
 <style>
+
 :root{
   --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB;
   --teal:#15656C; --teal-deep:#0C474C; --teal-wash:#E1EEEF; --on-teal:#FFFFFF;
@@ -94,39 +95,167 @@ legend{font-weight:600;padding:0 .3rem}
 .st.ok{color:var(--good)} .st.retry{color:var(--amber)}
 main>h2{margin-top:1.8rem}
 .submit-box{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem}
+.kpis{display:flex;gap:.6rem;flex-wrap:wrap;margin:0 0 .9rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.45rem .85rem;min-width:7rem}
+.kpi b{display:block;font-family:var(--serif);font-size:1.3rem;line-height:1.25}
+.kpi span{font-size:.8rem;color:var(--muted)}
+.vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
+.viz{display:block;width:100%;height:auto}
+.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.viz text{font:12px var(--sans);fill:var(--muted)}
+.viz .v-strong{fill:var(--ink);font-weight:600}
+.viz .v-reflab{fill:var(--amber);font-weight:600}
+.viz .v-altlab{fill:var(--teal);font-weight:600}
+.viz .v-t1lab{fill:var(--bad);font-weight:600}
+.v-axis,.v-grid{stroke:var(--line);stroke-width:1}
+.v-dot{fill:var(--teal);opacity:.85}
+.v-ref{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}
+.v-down{stroke:var(--teal);stroke-width:1.6;opacity:.65}
+.v-up{stroke:var(--bad);stroke-width:1.8;opacity:.8}
+.v-flat{stroke:var(--muted);stroke-width:1.4;opacity:.6}
+.v-curve{fill:none;stroke:var(--ink);stroke-width:2}
+.v-shade{fill:var(--teal);opacity:.4}
+.v-null{fill:none;stroke:var(--muted);stroke-width:2}
+.v-alt{fill:none;stroke:var(--teal);stroke-width:2.5}
+.v-pow{fill:var(--teal);opacity:.28}
+.v-t1{fill:var(--bad);opacity:.45}
+.v-bar{stroke:var(--teal);stroke-width:7;stroke-linecap:round}
+.v-est{fill:var(--card);stroke:var(--teal);stroke-width:3}
+.v-mean{stroke:var(--ink);stroke-width:3}
+.status{display:flex;gap:.8rem;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--good);border-radius:4px 10px 10px 4px;padding:.75rem 1rem .1rem;margin-bottom:.9rem}
+.status.mixed{border-left-color:var(--amber)}
+.status-icon{font-size:1.35rem;line-height:1.3;font-weight:700;color:var(--good)}
+.status.mixed .status-icon{color:var(--amber)}
+.status-title{font-weight:700;margin-bottom:.15rem}
+.react{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin:.3rem 0 .8rem}
+.react.good{border-left:5px solid var(--good)}.react.bad{border-left:5px solid var(--amber)}.react.pending{border-left:5px solid var(--line)}
+.react-head{display:flex;gap:.7rem;align-items:center}
+.react-name{font-weight:700;margin:0;font-size:.88rem;color:var(--muted)}
+.react-line{margin:0;font-size:1.06rem}
+.react-body{margin-top:.55rem}
+.react-note{border-top:1px solid var(--line);margin-top:.6rem;padding-top:.5rem}
+.react-action{margin:0 0 .2rem;color:var(--muted);font-style:italic}
+.typing{margin:0}.typing span{display:inline-block;width:7px;height:7px;margin-right:4px;border-radius:50%;background:var(--muted);animation:rvblink 1s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes rvblink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.opt.chosen{border-color:var(--amber);background:var(--amber-wash)}
+.delta{margin-left:.35rem;font-weight:700;animation:rvpop 1.3s ease forwards}
+@keyframes rvpop{0%{opacity:0;transform:translateY(4px)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.typing span,.delta{animation:none}}
+.draft{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9rem 1.1rem;margin:.8rem 0;font-family:var(--serif);font-size:1.05rem;line-height:2}
+.draft-title{font-family:var(--sans);font-size:.85rem;font-weight:700;color:var(--muted);margin:0 0 .2rem;line-height:1.4}
+.draft p{margin:0}
+.sent{font:inherit;background:none;border:0;border-bottom:2px dotted var(--muted);color:var(--ink);cursor:pointer;padding:0 .15rem;text-align:left;display:inline;line-height:1.7}
+.sent:hover:not([aria-disabled="true"]){background:var(--amber-wash)}
+.sent.chosen,.ecard.chosen,.pick.chosen,.pickpanel.chosen{background:var(--amber-wash);border-color:var(--amber)}
+.sent.wrong{background:var(--bad-wash);text-decoration:line-through}.sent.right{background:var(--good-wash);border-bottom:2px solid var(--good)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem;margin:.8rem 0}
+.ecard{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.75rem .85rem;min-height:5.5rem;cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink)}
+.ecard:hover:not([aria-disabled="true"]){border-color:var(--teal);transform:translateY(-1px)}
+.etag{display:block;font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--teal-deep);margin-bottom:.3rem}
+.ecard.wrong{background:var(--bad-wash);border-color:var(--bad)}.ecard.right{background:var(--good-wash);border-color:var(--good)}
+.pick{font:inherit;background:none;border:1.5px dashed var(--teal);border-radius:5px;padding:.05rem .35rem;cursor:pointer;color:var(--ink)}
+.pick:hover:not([aria-disabled="true"]){background:var(--teal-wash)}
+.pick.wrong,.pickpanel.wrong{background:var(--bad-wash);border-color:var(--bad)}.pick.right,.pickpanel.right{background:var(--good-wash);border-color:var(--good);border-style:solid}
+.pickpanel{display:block;width:100%;text-align:left;background:none;border:2px dashed var(--teal);border-radius:10px;padding:.35rem .5rem;margin:.2rem 0 .5rem;cursor:pointer;font:inherit;color:var(--ink)}
+.pickpanel .vizfig{margin:.2rem 0}
+.tiles{display:flex;flex-wrap:wrap;gap:.45rem}
+.tile{font:inherit;font-size:.95rem;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:.35rem .85rem;cursor:pointer;color:var(--ink)}
+.tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
+.claim{font-size:1.05rem}
+.thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
+.thread.email{border-top:5px solid var(--teal);border-radius:6px}
+.mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
+.msgs{display:flex;flex-direction:column;gap:.45rem}
+.msg{max-width:88%;padding:.5rem .8rem;border-radius:14px;background:var(--teal-wash);align-self:flex-start}
+.msg.you{align-self:flex-end;background:var(--amber-wash)}
+.email .msg{max-width:100%;border-radius:6px}
+.msg-who{display:block;font-size:.72rem;font-weight:700;color:var(--muted)}
+.asks{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0 .2rem}
+.ask{font:inherit;font-size:.92rem;border:1.5px solid var(--teal);background:var(--card);color:var(--teal-deep);border-radius:999px;padding:.3rem .85rem;cursor:pointer}
+.ask:disabled{opacity:.45;cursor:default}
+.compose{border-top:1px solid var(--line);margin-top:.7rem;padding-top:.5rem}
+.slotrow{margin:.45rem 0}
+.slotlab{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:.2rem}
+.draftmsg{background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:.5rem .8rem;margin:.6rem 0;min-height:2.4rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:560px){body{font-size:16px}h1{font-size:1.65rem}.bar-meta{gap:.7rem}.meter-track{width:60px}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.viz .v-null2{fill:none;stroke:var(--muted);stroke-width:2.5;stroke-dasharray:7 5}.viz .v-alt2{fill:none;stroke:var(--teal);stroke-width:3}
+
+.map-wrap{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.4rem;margin:.6rem 0}
+#mapsvg{display:block;width:100%;height:auto;touch-action:manipulation;cursor:pointer;border-radius:6px}
+#mapsvg:focus-visible{outline:3px solid #E0A526}
+.m-floor{fill:#E9EEF0}.m-corr{fill:#DCE4E7}.m-wall{fill:#34474F}
+.r1{fill:#F3E6DA}.r2{fill:#E2EEF6}.r3{fill:#F6E3E6}.r4{fill:#E8E4F3}.r5{fill:#E3F1E6}.r6{fill:#F6EFD9}.r7{fill:#E1EEEF}
+.m-label{font:600 15px var(--sans);fill:#34474F}
+.m-name{font:600 11px var(--sans);fill:#34474F}
+.m-init{font:700 12px var(--sans);fill:#fff}
+.m-deco{fill:#34474F;opacity:.12}
+.mk-need{fill:#E0A526}.mk-done{fill:#2E7D4F}.mk-wait{fill:#9AA8AE}
+.mk-t{font:800 15px var(--sans);fill:#fff}
+@media (prefers-color-scheme: dark){.m-floor{fill:#223239}.m-corr{fill:#1B292F}.m-wall{fill:#0A1215}.r1{fill:#3A2E25}.r2{fill:#23323D}.r3{fill:#3B2A2E}.r4{fill:#2D2A3B}.r5{fill:#23352A}.r6{fill:#3A3422}.r7{fill:#1F3538}.m-label,.m-name{fill:#D5E0E4}}
+.toast{min-height:2.9rem;background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.55rem .9rem;margin:.4rem 0;font-size:.95rem}
+.toast:empty{background:transparent;border-color:transparent}
+.quest{font-size:.95rem;margin:.2rem 0 .3rem}
+.controls{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.5rem}
+.dpad{display:grid;grid-template-columns:repeat(3,3rem);grid-template-rows:repeat(2,3rem);gap:.3rem}
+.dpad button{font-size:1.2rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
+.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}
+.dir{flex:1;min-width:15rem}
+.dir h2{font-size:1.05rem;margin:.1rem 0 .4rem}
+.dir ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.dir button{width:100%;text-align:left;font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem}
+.dir .tag{font-size:.78rem;font-weight:700;white-space:nowrap}
+.tag.need{color:var(--amber)}.tag.done{color:var(--good)}.tag.wait{color:var(--muted)}
+.talk-head{display:flex;gap:1rem;align-items:center;margin:.3rem 0 .6rem}
+.talk-head h1{margin:0 0 .15rem}
+.who{margin:0;color:var(--muted)}
+.bubble{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem .1rem;margin:.4rem 0 1rem}
+.bubble::before{content:"";position:absolute;top:-9px;left:28px;width:16px;height:16px;background:var(--card);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.slider{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0}
+.slider input{width:100%}
+.swatches{display:flex;gap:.8rem;margin:.4rem 0 1rem}
+.swatches label{display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;font-size:.85rem}
+.swatch{width:2.4rem;height:2.4rem;border-radius:50%;border:3px solid transparent}
+.swatches input{position:absolute;opacity:0}
+.swatches input:checked+.swatch{border-color:var(--ink)}
+.swatches input:focus-visible+.swatch{outline:3px solid #E0A526}
+ .m-clue{fill:#FFFFFF;stroke:#34474F;stroke-width:2}.m-clue-l{stroke:#34474F;stroke-width:2}
+.build{width:100%;border-collapse:collapse;margin:.4rem 0 .8rem;font-size:.92rem}
+.build th,.build td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);white-space:normal}
+.build code{font-weight:700}
+.build select{font:inherit;padding:.3rem;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.typ{font-size:.75rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;background:var(--teal-wash);color:var(--teal-deep);white-space:nowrap}
+.notes{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .9rem;margin:0 0 1rem}
+.notes summary{font-weight:700;cursor:pointer}
+.note{border-top:1px solid var(--line);padding-top:.5rem;margin-top:.5rem}
+.clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
+.dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
+.toast table{font-size:.82rem;min-width:0}
+.notes td,.toast td,.notes th,.toast th{text-align:left;white-space:normal}.notes figcaption:empty,.toast figcaption:empty{display:none}
+.side{display:grid;grid-template-columns:1fr;gap:.2rem}
+@media (max-width:620px){.side{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="bar"><div class="bar-in">
-  <div class="bar-title">Mission 4: Hypothesis testing</div>
+  <div class="bar-title">Mission 4: Hypothesis testing rounds</div>
   <div class="bar-meta">
     <span id="progress"></span>
-    <span class="meter" role="img" id="meter" aria-label="Team credibility">Credibility
+    <span class="meter" role="img" id="meter" aria-label="Reputation">Reputation
       <span class="meter-track"><span class="meter-fill" id="meterFill" style="width:50%"></span></span>
       <span id="credv">50</span></span>
   </div>
 </div></header>
 <main id="app" tabindex="-1"></main>
-
 <script>
-/* ============================================================
-   SETTINGS (instructor)
-   ============================================================ */
-const CONFIG = {
-  mission: 4,
-  version: "1.2",
-  // Paste your Qualtrics survey link between the quotes, e.g.
-  // "https://uconn.co1.qualtrics.com/jfe/form/SV_xxxxxxxxxxxx"
-  qualtricsUrl: "https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
-  storageKey: "ahstat3005-mission4-v1"
-};
-
-/* ============================================================
-   STATISTICS HELPERS
-   ============================================================ */
+const CONFIG={mission:4,version:"7.1",
+  // Qualtrics survey link (same survey for all missions)
+  qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
+  storageKey:"ahstat3005-mission4-v7"};
 function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
 function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
 function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
@@ -151,250 +280,356 @@ function tbl(title,note,heads,rows){
 }
 const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
 
-/* ============================================================
-   CONTENT: CORE CASES
-   Every step id must be the same at both levels.
-   Option tag "correct" = right answer; any other tag names the
-   misconception, and that tag is what gets sent to Qualtrics.
-   ============================================================ */
+function pT(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
 
-function case1(R,level){
-  const n=R.int(36,44), sd=+R.uni(10,14).toFixed(1), tT=R.uni(-1.55,-1.1);
-  const mean=+(60+tT*sd/Math.sqrt(n)).toFixed(1);
-  const se=sd/Math.sqrt(n), t=(mean-60)/se, df=n-1;
-  const p2=twoSidedP(t,df), p1=p2/2, diff=mean-60, tq=tinv(.975,df);
-  const out1=tbl("One-Sample Statistics","",["","N","Mean","Std. Deviation","Std. Error Mean"],[["Door-to-needle (min)",n,fx(mean),fx(sd),fx(se)]]);
-  const out2=tbl("One-Sample Test","Test Value = 60",["","t","df","One-Sided p","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],[["Door-to-needle (min)",fx(t,3),df,fP(p1),fP(p2),fx(diff),fx(diff-tq*se),fx(diff+tq*se)]]);
-  return {id:"c1",title:"Are we beating 60 minutes?",from:"Dr. Priya Nair, stroke program director",
-    message:`<p>Our stroke team has worked hard on door-to-needle time, the minutes from arrival until a patient receives clot-busting medication. The national target is 60 minutes or less.</p><p>I'd like our annual report to say our average is under 60. I pulled the last ${n} eligible patients. Do the data support that claim? Use α = 0.05.</p>`,
-    briefing:"",
+/* ============================================================
+   SEASON SAVE (identical in every week's game)
+   ============================================================ */
+const SEASON_KEY="riverbend-season-v1";
+const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
+// Append new flags at the END only, so older career codes keep working.
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction"];
+const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
+let SEASON=seasonDefault(),MODE="nosave";
+function storageOK(){try{localStorage.setItem("__rv_t","1");localStorage.removeItem("__rv_t");return true;}catch(e){return false;}}
+function seasonNormalize(d){const b=seasonDefault();return {...b,...d,trust:{...b.trust,...(d.trust||{})},flags:{...b.flags,...(d.flags||{})}};}
+function seasonLoad(){try{const s=localStorage.getItem(SEASON_KEY);return s?seasonNormalize(JSON.parse(s)):null;}catch(e){return null;}}
+function seasonSave(){if(MODE!=="season")return;try{localStorage.setItem(SEASON_KEY,JSON.stringify(SEASON));}catch(e){}}
+function b32sum(p){let c=0;for(let i=0;i<p.length;i++)c=(c+(i+1)*(B32.indexOf(p[i])+7))%1024;return B32[c>>5]+B32[c&31];}
+function encodeCareer(d){
+  let v=0n;const put=(val,bits)=>{v=(v<<BigInt(bits))|(BigInt(val)&((1n<<BigInt(bits))-1n));};
+  put(1,3);let wm=0;d.weeks.forEach(w=>{if(w>=1&&w<=15)wm|=1<<(w-1);});put(wm,15);
+  put(Math.max(0,Math.min(100,Math.round(d.rep))),7);
+  CAST_IDS.forEach(k=>put(Math.max(1,Math.min(3,d.trust[k]||1))-1,2));
+  let fm=0n;FLAG_BITS.forEach((f,i)=>{if(d.flags[f])fm|=1n<<BigInt(i);});v=(v<<32n)|fm;
+  put(Math.max(0,DANA_N.indexOf(d.danaN)),2);put(Math.max(0,DANA_A.indexOf(d.danaA)),2);
+  let p="";for(let i=14;i>=0;i--)p+=B32[Number((v>>BigInt(5*i))&31n)];
+  return `RIV-${p.slice(0,5)}-${p.slice(5,10)}-${p.slice(10)}${b32sum(p)}`;
+}
+function decodeCareer(code){
+  const s=String(code||"").trim().toUpperCase().replace(/^RIV/,"").replace(/[^0-9A-Z]/g,"").replace(/O/g,"0").replace(/[IL]/g,"1");
+  if(s.length!==17||[...s].some(ch=>B32.indexOf(ch)<0))return null;
+  const p=s.slice(0,15);if(b32sum(p)!==s.slice(15))return null;
+  let v=0n;for(const ch of p)v=(v<<5n)|BigInt(B32.indexOf(ch));
+  const take=bits=>{const x=Number(v&((1n<<BigInt(bits))-1n));v>>=BigInt(bits);return x;};
+  const d=seasonDefault();d.danaA=DANA_A[take(2)]??0.05;d.danaN=DANA_N[take(2)]??100;
+  const fm=v&0xFFFFFFFFn;v>>=32n;d.flags={};FLAG_BITS.forEach((f,i)=>{d.flags[f]=Number((fm>>BigInt(i))&1n);});
+  [...CAST_IDS].reverse().forEach(k=>{d.trust[k]=take(2)+1;});d.rep=take(7);
+  const wm=take(15);d.weeks=[];for(let w=1;w<=15;w++)if(wm&(1<<(w-1)))d.weeks.push(w);
+  if(take(3)!==1)return null;return d;
+}
+function seasonTitle(rep){return rep>=75?"Lead analyst":rep>=50?"Analyst":"Analyst in training";}
+const GREET={jordan:"Back again? Good. Coffee's fresh.",brooks:"Good. You're here.",nair:"There's my favorite analyst!",marcus:"Good to see you. Pull up a stool.",dana:"Good, it's you. I need someone who gets it right.",ruiz:"Ah, the careful one. Sit down.",greg:"My favorite skeptic. Fine, have a look."};
+const BACKSTORY={jordan:"(Jordan once switched to decaf for a week. They still call it the worst week of their career.)",brooks:"(Brooks was an ICU nurse for twelve years before this job. She has seen what bad data does.)",nair:"(Nair trained at a hospital with the slowest stroke times in the state. She swore never again.)",marcus:"(Marcus became a PT after rehab for his own knee.)",dana:"(Dana worked nights on this floor for fifteen years. She still hears alarms in her sleep.)",ruiz:"(Ruiz's first trial was stopped over a false positive. She has been careful ever since.)",greg:"(Greg started here as a billing clerk. He says every dollar has a patient attached.)"};
+function npcLine(p){const cb=(WEEK.callbacks[p.id]||(()=>""))(SEASON),t=SEASON.trust[p.id]||1;let h="";
+  if(cb)h+=`<p>${cb}</p>`;else if(t>=2&&GREET[p.id])h+=`<p>${GREET[p.id]}</p>`;if(t>=3&&BACKSTORY[p.id])h+=`<p class="where">${BACKSTORY[p.id]}</p>`;return h;}
+function hintCost(){return (SEASON.trust.jordan||1)>=3?2:3;}
+function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:0;}
+
+/* ============================================================
+   WEEK 4 STORY (from the Riverbend Story Bible)
+   ============================================================ */
+const WEEK={num:4,title:"First rounds",
+  pitch:"It's your first day as an analyst at Riverbend. Four teams want sign-offs on claims they plan to make, and the chief quality officer is watching.",
+  topicLine:"This week: hypothesis testing and t tests. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  opening:[["brooks","Welcome to Riverbend. The state reviewers arrive in December, so every claim we make needs to hold up. Get me sign-offs from four teams this week."],
+           ["jordan","Coffee's in Statistics if you need me. Look around each room before you start analyzing. Show me the design first."]],
+  previously:null,callbacks:{},cameo:{},
+  keyFlags:S=>{const f={w4_nair_honest:firstRight("c1s3"),w4_marcus_paired:firstRight("c2s1"),w4_ruiz_inconclusive:S.done.includes(2)?firstRight("c3s3"):1,w4_greg_portal:firstRight("e2s1")};
+    const t=[];if(f.w4_nair_honest)t.push("nair");if(f.w4_marcus_paired)t.push("marcus");if(S.done.includes(2)&&firstRight("c3s3"))t.push("ruiz");if(firstRight("c4s3"))t.push("dana");if(f.w4_greg_portal)t.push("greg");
+    if([firstRight("c1s3"),firstRight("c2s1"),firstRight("c3s3"),firstRight("c4s3")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");if(S.fuDone.length===0)t.push("jordan");
+    return {flags:f,trust:t,dana:S.danaDesign||null};},
+  finale:S=>({id:"fin",npc:"brooks",title:"The quality committee",message:"<p>Before these go in the quarterly report, the committee has three questions. Answer each with your strongest evidence.</p>",
     steps:[
-      {id:"c1s1",label:"Writing the hypotheses",prompt:"Which pair of hypotheses matches Dr. Nair's question?",
-       hint:"Which statement is the claim the team hopes to support? And is that claim about one direction, or either direction?",
-       options:[
-        {t:`${H0}: μ = 60 &nbsp; ${HA}: μ &lt; 60`,tag:"correct",fb:"Her claim is directional (under 60), so it goes in the alternative. The null holds the status quo that you'd need evidence to reject."},
-        {t:`${H0}: μ &lt; 60 &nbsp; ${HA}: μ ≥ 60`,tag:"swapped_hypotheses",fb:"This flips them. The claim the team hopes to support belongs in the alternative; the null is what you assume until the data say otherwise."},
-        {t:`${H0}: μ = 60 &nbsp; ${HA}: μ ≠ 60`,tag:"two_sided_for_directional",fb:"A two-sided alternative asks whether the mean differs in either direction. Dr. Nair only wants to claim it's under 60, so a one-sided alternative fits her question."},
-        {t:`${H0}: x̄ = 60 &nbsp; ${HA}: x̄ &lt; 60`,tag:"sample_not_population",fb:"Hypotheses are about the population mean μ, meaning all eligible patients, not the sample mean x̄. You can already see the sample mean; the question is what it says about μ."}]},
-      {id:"c1s2",label:"Choosing the test",prompt:"Which test fits this question?",
-       hint:"How many groups are there, and what is being compared? Do we know the population standard deviation?",
-       options:[
-        {t:"Independent-samples t test",tag:"wrong_test_one_sample",fb:"There's only one group of patients. The comparison is with a fixed benchmark (60 minutes), not with a second group."},
-        {t:"One-sample t test",tag:"correct",fb:"One group, compared with a fixed value, with the population SD unknown and estimated from the sample."},
-        {t:"One-sample z test",tag:"z_without_sigma",fb:"A z test needs the population standard deviation to be known. We only have the sample SD, so the t distribution applies."},
-        {t:"Paired t test",tag:"wrong_test_one_sample",fb:"A paired test needs two linked measurements per patient, like before and after. Each patient here has one time."}]},
-      {id:"c1s3",label:"Picking the right p-value",show:out1+out2,prompt:"Here's the output. Which value matches your hypotheses?",
-       hint:"Go back to the alternative hypothesis you chose. Does it look in one direction or both?",
-       options:[
-        {t:`Two-Sided p = ${fP(p2)}`,tag:"wrong_tail_p",fb:`The two-sided p-value goes with ${HA}: μ ≠ 60. It counts extreme results in both directions, which isn't the question here.`},
-        {t:`Mean Difference = ${fx(diff)}`,tag:"output_misread",fb:"The mean difference is how far the sample mean is from 60. It's an estimate of the effect, not a p-value."},
-        {t:`One-Sided p = ${fP(p1)}`,tag:"correct",fb:`Your alternative is μ &lt; 60, and t is negative (the sample mean is below 60), so the one-sided p-value is the one that matches.`},
-        {t:`1 − One-Sided p = ${fP(1-p1)}`,tag:"wrong_tail_p",fb:"That would be the p-value for the opposite alternative, μ &gt; 60."}]},
-      {id:"c1s4",label:"Drawing the conclusion",prompt:`With α = 0.05 and one-sided p = ${fP(p1)}, what should the report say?`,
-       hint:"Compare p with α first. Then ask what a result that isn't significant does and doesn't tell you.",
-       options:[
-        {t:"Reject H<sub>0</sub>. The average door-to-needle time is under 60 minutes.",tag:"threshold_misread",fb:`Rejecting requires p ≤ α. Here p = ${fP(p1)}, which is above 0.05.`},
-        {t:"Accept H<sub>0</sub>. The unit's average is 60 minutes or more.",tag:"accept_null",fb:"A result that isn't significant doesn't prove the null. The true mean might be under 60; this sample just isn't strong enough evidence either way."},
-        {t:`The average is under 60, because the sample mean was ${fx(mean,1)} minutes.`,tag:"sample_mean_proof",fb:"The sample mean is under 60, but samples vary. The test asks whether a gap this size could easily happen by chance if the true mean were 60, and here it could."},
-        {t:"Fail to reject H<sub>0</sub>. The data don't provide enough evidence that the average is under 60 minutes.",tag:"correct",fb:"p is above 0.05, so the evidence falls short. That isn't the same as showing the unit misses the target. It means this sample can't support the claim yet."}]}
+     {id:"fin1",label:"The Stroke Center claim",type:"cards",claim:`<strong>Committee member:</strong> "Can the Stroke Center report that it beats the 60-minute target?"`,prompt:"Play your strongest evidence.",hint:"What did the one-sided test show?",
+      cards:[{k:"Output",t:"The one-sided p-value is above 0.05",tag:"correct",fb:"So the report says the target isn't shown yet."},{k:"Data",t:"The sample average is under 60 minutes",tag:"sample_mean_proof",fb:"A sample average under 60 could easily be chance."},{k:"Output",t:"The t statistic is negative",tag:"output_misread",fb:"A negative t only means the sample mean is below 60, not significantly below."}]},
+     {id:"fin2",label:"Dr. Ruiz's drug",type:"cards",claim:`<strong>Committee member:</strong> "The pilot wasn't significant. Should we stop developing Dr. Ruiz's drug?"`,prompt:"Play your strongest evidence.",hint:"What range of effects is still plausible?",
+      cards:[{k:"Output",t:"The pilot's p-value is above 0.05",tag:"accept_null",fb:"That's the reason for the question, not an answer to it."},{k:"Chart",t:"The confidence interval still includes meaningful reductions",tag:"correct",fb:"So stopping now could throw away a useful drug. A full trial can settle it."},{k:"Output",t:"Levene's test wasn't significant",tag:"output_misread",fb:"That's about spread, not whether the drug works."}]},
+     {id:"fin3",label:"Marcus's protocol",type:"cards",claim:`<strong>Committee member:</strong> "Did Marcus's knee protocol actually reduce pain?"`,prompt:"Play your strongest evidence.",hint:"Which analysis matched the design?",
+      cards:[{k:"Analysis",t:"An independent-samples test wasn't significant",tag:"paired_vs_independent",fb:"That analysis ignored that the same patients were measured twice."},{k:"Story",t:"Patients told Marcus they felt better",tag:"proof_overclaim",fb:"That's encouraging, but the committee needs the analysis."},{k:"Analysis",t:"A paired test on each patient's change was significant",tag:"correct",fb:"The right test for the design, and it shows pain dropped."}]}],
+    outro:g=>({ok:true,title:"Committee decisions",text:[g("fin1")==="correct"?"Stroke Center report: \"target not yet shown\"":"Stroke Center report: revised to \"target not yet shown\" after questions",g("fin2")==="correct"?"Dr. Ruiz's drug: moves to a full trial":"Dr. Ruiz's drug: moves to a full trial after a second look",g("fin3")==="correct"?"Knee protocol: expands to two more clinics":"Knee protocol: expands once the paired analysis was explained"].map(x=>"• "+x).join("<br>")+`<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
+    takeaway:"Good evidence answers the question asked, and claims no more than the data allow."}),
+  hidden:()=>({id:"hid",npc:"jordan",title:"The 20 subgroups",
+    message:"<p>Off the books: Dr. Nair's team re-ran the stroke analysis 20 different ways (by shift, weekday, age group…). One came out significant: weekend arrivals, p = .04. She wants to publish it.</p>",
+    steps:[
+     {id:"hid1",label:"Testing on pure noise",type:"reply",channel:"chat",
+      show:`<div class="slider"><p><strong>Try it.</strong> Run 20 tests on data where nothing real is going on, then answer Jordan.</p><button class="quiet" id="simBtn">Run 20 tests on data with no real differences</button><div id="simOut" aria-live="polite" style="margin-top:.6rem"></div></div>`,
+      init:()=>{const b=document.getElementById("simBtn");b.onclick=()=>{const ps=[...Array(20)].map(()=>Math.random());const k=ps.filter(p=>p<0.05).length;
+        document.getElementById("simOut").innerHTML=`<p><strong>${k} of 20</strong> came out significant by chance.</p><p>${ps.map(p=>`<span style="display:inline-block;margin:.12rem;padding:.1rem .4rem;border-radius:4px;font-size:.8rem;background:${p<0.05?"var(--bad-wash)":"var(--teal-wash)"}">${p<0.001?"&lt;.001":p.toFixed(3).replace(/^0/,"")}</span>`).join("")}</p>`;b.textContent="Run 20 more";};},
+      prompt:"Jordan texted you. Build your reply.",hint:"Each test has a 5% false-positive rate. What's 5% of 20?",
+      thread:["If none of those 20 subgroups had any real effect, how many significant results should Nair expect anyway?"],
+      slots:[
+       {label:"By chance alone",options:[{t:"About 1 of 20 would come out significant,",tag:"correct"},{t:"None would come out significant,",tag:"multiple_testing",fb:"Each test still has a 5% chance of a false positive. Run the simulation a few times."},{t:"About half would come out significant,",tag:"multiple_testing",fb:"That's far more than a 5% false-positive rate would produce."}]},
+       {label:"So",options:[{t:"so one p = .04 among 20 tests is exactly what noise looks like.",tag:"correct"},{t:"so p = .04 proves weekends are faster.",tag:"multiple_testing",fb:"One significant result out of 20 is what you'd expect with no real effect at all."}]}],
+      okFb:"Right. Test enough subgroups and something will come out \"significant.\""},
+     {id:"hid2",label:"Checking Nair's abstract",type:"spot",prompt:"Click the sentence in Dr. Nair's draft abstract that the analysis doesn't support.",hint:"Which sentence ignores how many tests were run?",draftTitle:"Draft abstract: Stroke Center",
+      draft:[{t:"We compared door-to-needle times across 20 patient subgroups.",tag:"multiple_testing",fb:"That's an honest description of what was done."},
+       {t:"Weekend arrivals had the shortest average time (p = .04).",tag:"multiple_testing",fb:"That's accurate as a raw result."},
+       {t:"Weekend staffing is therefore the key to fast stroke care.",tag:"correct",fb:"With 20 tests and no correction, one p = .04 is likely a false positive, and a subgroup comparison can't show what causes faster care."},
+       {t:"The other 19 subgroups showed no significant differences.",tag:"multiple_testing",fb:"That's accurate, and it's important context."}]}],
+    outro:()=>({ok:true,title:"Hidden problem solved",text:"Jordan: \"Nair will want to argue. But you'd make a good reviewer.\""}),
+    takeaway:"Run enough tests and something will be significant by chance. Report how many comparisons you made."}),
+  ending:f=>f.w4_nair_honest?"You told a director her headline wasn't ready. That's exactly what I need from this role.":"You fixed the report before it went out. Next time, get it right before I see it.",
+  teaser:"Greg has scheduled a budget meeting for Friday. He wants data on which programs to cut."};
+
+const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
+function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
+function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
+function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
+function ticks(lo,hi,k=6){const s0=(hi-lo)/k,m=Math.pow(10,Math.floor(Math.log10(s0)));const st=[1,2,5,10].map(v=>v*m).find(v=>v>=s0);const o=[];for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9;v+=st)o.push(+v.toFixed(6));return o;}
+function axis(x,lo,hi,y,x0,x1){return `<line class="v-axis" x1="${x0}" x2="${x1}" y1="${y}" y2="${y}"/>`+ticks(lo,hi).map(v=>`<line class="v-axis" x1="${x(v)}" x2="${x(v)}" y1="${y}" y2="${y+5}"/><text x="${x(v)}" y="${y+18}" text-anchor="middle">${v}</text>`).join("");}
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length;}
+function sdv(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/(a.length-1));}
+function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1));const mu=mean(x),sd=sdv(x);return x.map(v=>m+(v-mu)/sd*s);}
+function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
+
+
+/* ---------- ANOVA calculations ---------- */
+function dotPlot(vals,ref,refLab,xlab){
+  const lo=Math.min(...vals,ref)-3,hi=Math.max(...vals,ref)+3,x=sc(lo,hi,30,620);const cnt={};
+  const dots=vals.map(v=>{const k=Math.round(v);cnt[k]=(cnt[k]||0)+1;return `<circle class="v-dot" cx="${x(k)}" cy="${104-cnt[k]*9}" r="4"/>`;}).join("");
+  return vz(650,150,`Dot plot of ${vals.length} ${xlab}; dashed line marks ${refLab}.`,`${dots}<line class="v-ref" x1="${x(ref)}" x2="${x(ref)}" y1="14" y2="108"/><text class="v-reflab" x="${x(ref)+6}" y="22">${refLab}</text>${axis(x,lo,hi,110,30,620)}<text x="325" y="146" text-anchor="middle">${xlab}</text>`,"Each dot is one patient.");
+}
+function slopeChart(pairs,connect){
+  const y=sc(0,10,225,20),x1=110,x2=290;let down=0,body="";
+  pairs.forEach(([b,a],i)=>{const j=((i*37)%9-4)*0.04;if(a<b)down++;
+    if(connect)body+=`<line class="${a<b?"v-down":a>b?"v-up":"v-flat"}" x1="${x1}" x2="${x2}" y1="${y(b+j)}" y2="${y(a+j)}"/>`;
+    const jx=connect?0:((i*53)%11-5)*3;body+=`<circle class="v-dot" cx="${x1+jx}" cy="${y(b+j)}" r="3.5"/><circle class="v-dot" cx="${x2+jx}" cy="${y(a+j)}" r="3.5"/>`;});
+  const yt=[0,5,10].map(v=>`<text x="62" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="70" x2="330" y1="${y(v)}" y2="${y(v)}"/>`).join("");
+  const note=connect?`<text class="v-strong" x="350" y="110">${down} of ${pairs.length}</text><text x="350" y="128">patients' pain</text><text x="350" y="144">went down</text>`:"";
+  return vz(520,260,connect?`Slope chart: each line connects one patient's first and last pain rating; ${down} of ${pairs.length} went down.`:`Two columns of pain ratings, first visit and last visit, ${pairs.length} ratings each.`,
+    `${yt}<text x="20" y="${y(5)+4}" transform="rotate(-90 20 ${y(5)})" text-anchor="middle">Pain (0 to 10)</text>${body}<text x="${x1}" y="250" text-anchor="middle">First visit</text><text x="${x2}" y="250" text-anchor="middle">Last visit</text>${note}`,
+    connect?"Each line is one patient.":"Each dot is one rating.");
+}
+function groupDots(g1,g2,n1,n2,xlab){
+  const all=[...g1,...g2,0],lo=Math.min(...all)-3,hi=Math.max(...all)+3,x=sc(lo,hi,120,620);
+  const row=(g,yc,name)=>`<text class="v-strong" x="10" y="${yc+4}">${name}</text>`+g.map((v,i)=>`<circle class="v-dot" cx="${x(v)}" cy="${yc+((i*29)%7-3)*3}" r="4"/>`).join("")+`<line class="v-mean" x1="${x(mean(g))}" x2="${x(mean(g))}" y1="${yc-16}" y2="${yc+16}"/>`;
+  return vz(650,175,`Dot plots of BP change for ${n1} and ${n2}; dashed line at zero, dark bars mark group means.`,
+    `<line class="v-ref" x1="${x(0)}" x2="${x(0)}" y1="10" y2="132"/><text class="v-reflab" x="${x(0)+6}" y="18">0 = no change</text>${row(g1,50,n1)}${row(g2,105,n2)}${axis(x,lo,hi,134,120,620)}<text x="370" y="172" text-anchor="middle">${xlab}</text>`,"Each dot is one patient; the dark bar is the group mean.");
+}
+function tdens(v,df){return Math.exp(lgamma((df+1)/2)-lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+v*v/df,-(df+1)/2);}
+function tCurve(t,df,tails){
+  const x=sc(-4.5,4.5,30,620),y=sc(0,0.42,160,18);const pts=[];for(let v=-4.5;v<=4.501;v+=0.05)pts.push([v,tdens(v,df)]);
+  const area=(a,b)=>{const p=pts.filter(q=>q[0]>=a&&q[0]<=b);return `<path class="v-shade" d="M${x(a)},${y(0)} ${p.map(q=>`L${x(q[0])},${y(q[1])}`).join(" ")} L${x(b)},${y(0)}Z"/>`;};
+  const at=Math.abs(t);let sh="";if(tails==="lower"||tails==="both")sh+=area(-4.5,-at);if(tails==="upper"||tails==="both")sh+=area(at,4.5);
+  const desc=tails==="both"?"both tails":tails==="lower"?"lower tail":"upper tail";
+  return vz(650,195,`t distribution with the ${desc} beyond t = ${fx(t,2)} shaded; the shaded area is the p-value.`,
+    `${sh}<path class="v-curve" d="M${pts.map(q=>`${x(q[0])},${y(q[1])}`).join(" L")}"/><line class="v-ref" x1="${x(t)}" x2="${x(t)}" y1="30" y2="160"/><text class="v-reflab" x="${x(t)+(t<0?-6:6)}" y="40" text-anchor="${t<0?"end":"start"}">t = ${fx(t,2)}</text>${axis(x,-4.5,4.5,160,30,620)}<text class="v-strong" x="620" y="30" text-anchor="end">Shaded area = p-value</text>`,
+    tails==="both"?"Two-sided: both tails count.":"One-sided: only the tail in the direction of H<sub>A</sub> counts.");
+}
+function ciBar(lo,hi,est,xlab){
+  const a=Math.min(lo,0),b=Math.max(hi,0),pad=(b-a)*0.15,x=sc(a-pad,b+pad,30,620);
+  return vz(650,130,`95% confidence interval from ${fx(lo,1)} to ${fx(hi,1)}, estimate ${fx(est,1)}; dashed line at zero.`,
+    `<line class="v-ref" x1="${x(0)}" x2="${x(0)}" y1="12" y2="84"/><text class="v-reflab" x="${x(0)+6}" y="20">0 = no difference</text><line class="v-bar" x1="${x(lo)}" x2="${x(hi)}" y1="55" y2="55"/><circle class="v-est" cx="${x(est)}" cy="55" r="7"/><text class="v-strong" x="${x(lo)}" y="40" text-anchor="middle">${fx(lo,1)}</text><text class="v-strong" x="${x(hi)}" y="40" text-anchor="middle">${fx(hi,1)}</text>${axis(x,a-pad,b+pad,88,30,620)}<text x="325" y="126" text-anchor="middle">${xlab}</text>`,"The bar is the 95% CI; the circle is the estimate.");
+}
+function powerViz(d,n,alpha){
+  const del=d*Math.sqrt(n/2),z=zinv(1-alpha/2),x=sc(-4.5,7,34,620),y=sc(0,0.42,160,34),pw=Math.round(power2(d,n,alpha)*100);
+  const pdf=v=>Math.exp(-v*v/2)/Math.sqrt(2*Math.PI);const curve=(m)=>{const p=[];for(let v=-4.5;v<=7.001;v+=0.05)p.push(`${x(v)},${y(pdf(v-m))}`);return "M"+p.join(" L");};
+  const area=(m,a,b)=>{const p=[];for(let v=a;v<=b+0.001;v+=0.05)p.push(`L${x(v)},${y(pdf(v-m))}`);return `M${x(a)},${y(0)} ${p.join(" ")} L${x(b)},${y(0)}Z`;};
+  return vz(650,215,`Two curves: no effect, and a real effect that shifts right as sample size grows. Power is about ${pw} percent; Type I risk is ${alpha}.`,
+    `<path class="v-pow" d="${area(del,z,7)}"/><path class="v-t1" d="${area(0,z,7)}"/><path class="v-t1" d="${area(0,-4.5,-z)}"/><path class="v-null" d="${curve(0)}"/><path class="v-alt" d="${curve(del)}"/><line class="v-ref" x1="${x(z)}" x2="${x(z)}" y1="60" y2="160"/><text class="v-reflab" x="${x(z)+6}" y="72">cutoff</text><text x="${x(0)}" y="${y(0.4)-6}" text-anchor="middle">If no effect</text><text class="v-altlab" x="${x(del)}" y="${y(0.4)-20}" text-anchor="middle">If the alert works</text>${axis(x,-4,7,160,34,620)}<text class="v-strong" x="34" y="206">Power ≈ ${pw}%</text><text class="v-t1lab" x="250" y="206">Type I risk (red) = ${alpha.toFixed(2)}</text>`,
+    "Teal shaded area = power. Red shaded areas = chance of a false positive.");
+}
+
+function oneway(groups){const all=groups.flat(),N=all.length,k=groups.length,g=mean(all);
+  const SSB=groups.reduce((s,a)=>s+a.length*(mean(a)-g)**2,0),SSW=groups.reduce((s,a)=>{const m=mean(a);return s+a.reduce((t,v)=>t+(v-m)**2,0);},0);
+  const dfB=k-1,dfW=N-k,MSB=SSB/dfB,MSW=SSW/dfW,F=MSB/MSW;return {N,k,SSB,SSW,dfB,dfW,MSB,MSW,F,p:fSurv(F,dfB,dfW)};}
+function scheffe(groups,names,a){const out=[];for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++){
+  const d=mean(groups[i])-mean(groups[j]),Fp=(d*d/(a.MSW*(1/groups[i].length+1/groups[j].length)))/(a.k-1);
+  out.push({a:names[i],b:names[j],d,p:fSurv(Fp,a.k-1,a.dfW)});}return out;}
+function aovRows(a,label){return [["Between Groups",fx(a.SSB,3),a.dfB,fx(a.MSB,3),fx(a.F,3),fP(a.p)],["Within Groups",fx(a.SSW,3),a.dfW,fx(a.MSW,3),"",""],["Total",fx(a.SSB+a.SSW,3),a.N-1,"","",""]];}
+
+/* ---------- more charts ---------- */
+function stripK(groups,xlab,rng){
+  const all=groups.flatMap(g=>g.vals),lo=rng?rng[0]:Math.min(...all),hi=rng?rng[1]:Math.max(...all),pad=rng?0:Math.max((hi-lo)*0.08,1),x=sc(lo-pad,hi+pad,130,620),H=groups.length*50+56;
+  const rows=groups.map((g,i)=>{const yc=34+i*50;return `<text class="v-strong" x="10" y="${yc+4}">${g.name}</text>`+g.vals.map((v,j)=>`<circle class="v-dot" cx="${x(v)}" cy="${yc+((j*29)%7-3)*3}" r="3.8"/>`).join("")+`<line class="v-mean" x1="${x(mean(g.vals))}" x2="${x(mean(g.vals))}" y1="${yc-16}" y2="${yc+16}"/>`;}).join("");
+  return vz(650,H,`Dot plots of ${xlab} for ${groups.map(g=>g.name).join(", ")}; dark bars mark group means.`,`${rows}${axis(x,lo-pad,hi+pad,H-40,130,620)}<text x="375" y="${H-6}" text-anchor="middle">${xlab}</text>`,"Each dot is one patient; the dark bar is the group mean.");
+}
+function spaghetti(data,labels,connect,ylab){
+  const all=data.flat(),lo=Math.min(...all)-15,hi=Math.max(...all)+15,y=sc(lo,hi,230,20),xs=labels.map((_,i)=>150+i*170);
+  let body="";data.forEach((r,i)=>{const jx=connect?0:((i*53)%11-5)*3;if(connect)body+=`<path class="v-down" fill="none" d="M${r.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`;body+=r.map((v,t)=>`<circle class="v-dot" cx="${xs[t]+jx}" cy="${y(v)}" r="3.5"/>`).join("");});
+  const mu=labels.map((_,t)=>mean(data.map(r=>r[t])));
+  body+=`<path class="v-mean" fill="none" d="M${mu.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`+mu.map((v,t)=>`<rect x="${xs[t]-5}" y="${y(v)-5}" width="10" height="10" fill="var(--ink)"/>`).join("");
+  const yt=ticks(lo,hi,4).map(v=>`<text x="70" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="78" x2="530" y1="${y(v)}" y2="${y(v)}"/>`).join("");
+  return vz(600,262,connect?`Line chart: each thin line is one patient across ${labels.join(", ")}; the dark line is the average.`:`Dots for each visit, ${data.length} patients; the dark line is the average.`,
+    `${yt}${body}${labels.map((l,t)=>`<text x="${xs[t]}" y="252" text-anchor="middle">${l}</text>`).join("")}<text x="20" y="125" transform="rotate(-90 20 125)" text-anchor="middle">${ylab}</text>`,
+    connect?"Each thin line is one patient; the dark line is the average.":"Each dot is one measurement; the dark line is the average.");
+}
+function interactionPlot(cm,aN,bN,ylab){
+  const all=cm.flat(),lo=Math.floor(Math.min(...all)/5)*5-5,hi=Math.ceil(Math.max(...all)/5)*5+5,y=sc(lo,hi,220,24),xs=[170,400];
+  const line=(i,cls,mk)=>`<path class="${cls}" d="M${xs[0]},${y(cm[i][0])} L${xs[1]},${y(cm[i][1])}"/>`+cm[i].map((v,j)=>mk==="c"?`<circle cx="${xs[j]}" cy="${y(v)}" r="6" class="v-est"/>`:`<rect x="${xs[j]-6}" y="${y(v)-6}" width="12" height="12" fill="var(--ink)"/>`).join("")+`<text class="v-strong" x="${xs[1]+14}" y="${y(cm[i][1])+4}">${aN[i]} (${fx(cm[i][1],0)})</text><text x="${xs[0]-12}" y="${y(cm[i][0])+4+(Math.abs(cm[0][0]-cm[1][0])<4?(cm[i][0]>=cm[1-i][0]?-8:8):0)}" text-anchor="end">${fx(cm[i][0],0)}</text>`;
+  const yt=ticks(lo,hi,4).map(v=>`<text x="62" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="70" x2="420" y1="${y(v)}" y2="${y(v)}"/>`).join("");
+  return vz(600,262,`Interaction plot of mean ${ylab} by ${bN.join(" and ")}, one line for each of ${aN.join(" and ")}.`,
+    `${yt}${line(0,"v-null2","s")}${line(1,"v-alt2","c")}${bN.map((b,j)=>`<text x="${xs[j]}" y="248" text-anchor="middle">${b}</text>`).join("")}<text x="18" y="122" transform="rotate(-90 18 122)" text-anchor="middle">${ylab}</text>`,
+    "Each point is a group mean. Parallel lines = no interaction.");
+}
+function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
+
+/* ============================================================
+   CASES
+   ============================================================ */
+function case1(R,level){
+  let v,n,m,s,t,df,p1,p2;
+  for(let k=0;k<60;k++){n=R.int(36,44);const sd0=R.uni(10,14),tT=R.uni(-1.55,-1.1);
+    v=exactSample(R,n,60+tT*sd0/Math.sqrt(n),sd0).map(q=>Math.max(25,Math.round(q)));
+    m=mean(v);s=sdv(v);df=n-1;t=(m-60)/(s/Math.sqrt(n));p2=twoSidedP(t,df);p1=p2/2;if(t<0&&p1>0.05&&p1<0.16)break;}
+  const se=s/Math.sqrt(n),diff=m-60,tq=tinv(.975,df);
+  const out=tbl("One-Sample Test","Test Value = 60",["","t","df","One-Sided p","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],[["Door-to-needle (min)",pk(fx(t,3),"t"),pk(df,"df"),pk(fP(p1),"p1"),pk(fP(p2),"p2"),pk(fx(diff),"diff"),pk(fx(diff-tq*se),"lo"),pk(fx(diff+tq*se),"hi")]]);
+  return {id:"c1",npc:"nair",title:"Are we beating 60 minutes?",from:"Dr. Priya Nair, stroke program director",
+    message:`<p>Thanks for looking around. Do our data back up what I want to put in the report? α = 0.05.</p>`,
+    cards:[[n,"recent patients"],[fx(m,1)+" min","sample mean"]],
+    viz:dotPlot(v,60,"60-minute target","Door-to-needle time (minutes)"),
+    steps:[
+      {id:"c1s1",label:"Telling Dr. Nair your plan",type:"reply",channel:"chat",prompt:"Dr. Nair wants to know your plan. Build your reply.",
+       hint:"Check the report whiteboard: what is the average compared with, and does the claim have a direction?",
+       thread:["Quick question before you start: what exactly are you going to test?"],
+       slots:[
+        {label:"Compare",options:[{t:"I'll compare our average door-to-needle time",tag:"correct"},{t:"I'll compare this year's times with last year's",tag:"wrong_test_one_sample",fb:"Dr. Nair's claim is about the 60-minute target, not last year."}]},
+        {label:"Against",options:[{t:"with the fixed 60-minute target",tag:"correct"},{t:"between day and night shifts",tag:"extra_factor",fb:"Shifts aren't part of her claim."}]},
+        {label:"Using",options:[{t:"using a one-sided one-sample t test.",tag:"correct"},{t:"using a two-sided one-sample t test.",tag:"two_sided_for_directional",fb:"Her claim is \"under 60,\" which has a direction."},{t:"using an independent-samples t test.",tag:"wrong_test_one_sample",fb:"There's one group of patients compared with a fixed number."}]}],
+       okFb:"One group against a fixed benchmark, one-sided because the claim is \"under 60.\""},
+      {id:"c1s2",label:"Picking the right p-value",type:"point",show:out,prompt:"Click the p-value that matches Dr. Nair's claim.",
+       hint:"Her claim has a direction: under 60. Which p-value looks in only that direction?",
+       picks:{p1:{tag:"correct",fb:`Only the lower tail counts for μ &lt; 60:${tCurve(t,df,"lower")}`},
+        p2:{tag:"wrong_tail_p",fb:`That counts both tails, which goes with μ ≠ 60:${tCurve(t,df,"both")}`},
+        t:{tag:"output_misread",fb:"t is the test statistic, not a p-value."},df:{tag:"output_misread",fb:"Degrees of freedom aren't a p-value."},
+        diff:{tag:"output_misread",fb:"That's the effect estimate, not a p-value."},
+        lo:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."},hi:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."}}},
+      {id:"c1s3",label:"Checking the draft report",type:"spot",prompt:"Dr. Nair drafted her report paragraph. Click the sentence the data don't support.",
+       hint:"Compare the one-sided p-value with α = 0.05. Which sentence claims more than that allows?",draftTitle:"Stroke Center annual report (draft)",
+       draft:[
+        {t:`Our last ${n} eligible patients averaged ${fx(m,1)} minutes from arrival to treatment.`,tag:"threshold_misread",fb:"That sentence only describes the sample, and it's accurate."},
+        {t:`A one-sided t test against the 60-minute target gave p = ${fP(p1)}.`,tag:"threshold_misread",fb:"That's the right test and the right p-value."},
+        {t:"This shows our stroke team beats the national target.",tag:"correct",fb:`p = ${fP(p1)} is above 0.05, so the data don't show the average is under 60. The honest wording is "not yet shown."`},
+        {t:"We will keep tracking times next quarter.",tag:"threshold_misread",fb:"That's a plan, not a claim about the data."}]}
     ],
-    outro:g=>g("c1s4")==="correct"
-      ?`<p>Your summary goes to Dr. Nair as written. She keeps the improvement project going and plans to recheck after another quarter of patients, instead of announcing a success the data can't support yet.</p>`
-      :`<p>Your first draft said the target was met. Dr. Nair caught it before the report went out, knowing the accreditation reviewer would ask for the analysis. The final version says the evidence isn't there yet, and the improvement project continues.</p>`,
-    takeaway:"A sample mean below the benchmark isn't enough. The test tells you whether the gap is bigger than chance would easily produce."};
+    outro:g=>g("c1s3")==="correct"?{ok:true,title:"Dr. Nair signs off",text:"\"Not yet significant? Fine. Better you than the reviewers.\""}:{ok:false,title:"Dr. Nair signs off after a correction",text:"\"You're telling me I almost published that? Good catch, second time around.\""},
+    takeaway:"A sample mean below the target isn't enough; the test asks whether the gap is bigger than chance."};
 }
 
 function case2(R,level){
-  const n=level?22:18;
-  const m1=+R.uni(6.2,6.9).toFixed(2), sB=R.uni(1.5,1.8), sA=R.uni(1.5,1.9), r=R.uni(.85,.9);
-  const tInd=R.uni(1.15,1.45), dm=+(tInd*Math.sqrt((sB*sB+sA*sA)/n)).toFixed(2);
-  const m2=+(m1-dm).toFixed(2), sD=Math.sqrt(sB*sB+sA*sA-2*r*sB*sA);
-  const seP=sD/Math.sqrt(n), tP=dm/seP, dfP=n-1, pP=twoSidedP(tP,dfP), tqP=tinv(.975,dfP);
-  const seI=Math.sqrt((sB*sB+sA*sA)/n), tI=dm/seI, dfI=2*n-2, pI=twoSidedP(tI,dfI);
-  const rows=[];for(let i=1;i<=5;i++){const b=Math.max(2,Math.min(10,Math.round(R.normal(m1,sB))));const a=Math.max(0,Math.min(10,b-Math.round(R.normal(dm,sD))));rows.push([`Patient ${i}`,b,a]);}
-  const brief=tbl(`Pain ratings, first 5 of ${n} patients`,"0 = no pain, 10 = worst pain",["","First visit","Last visit"],rows);
-  const outInd=tbl("Independent Samples Test (first-visit vs. last-visit scores)","",["","t","df","Two-Sided p","Mean Difference"],[["Pain",fx(tI,3),dfI,fP(pI),fx(dm)]]);
-  const outPair=tbl("Paired Samples Test (first visit − last visit)","",["","Mean","Std. Deviation","Std. Error Mean","t","df","Two-Sided p","95% CI Lower","95% CI Upper"],[["Pain",fx(dm),fx(sD),fx(seP),fx(tP,3),dfP,fP(pP),fx(dm-tqP*seP),fx(dm+tqP*seP)]]);
-  const message=level
-    ?`<p>We trialed a new 4-week exercise protocol after knee replacement. I have pain ratings (0 to 10) from our ${n} patients, one column from their first visit and one from their last visit.</p><p>Did pain change over the protocol? Use α = 0.05.</p>`
-    :`<p>We tried a new 4-week exercise protocol for patients after knee replacement. The same ${n} patients rated their pain (0 to 10) at the start of the protocol and again at the end.</p><p>Did pain change? Use α = 0.05.</p>`;
-  return {id:"c2",title:"Did the new protocol change pain?",from:"Marcus Bell, PT, outpatient rehabilitation lead",message,briefing:brief,
+  const n=level?22:18;let pairs,dm,sD,tP,pP,tI,pI,s1,s2,m1,m2;
+  for(let k=0;k<300;k++){
+    const mu=R.uni(6.2,6.9),sB=R.uni(1.5,1.8),dd=R.uni(0.7,0.95),noise=R.uni(0.55,0.75);
+    pairs=[];for(let i=0;i<n;i++){const b=Math.max(1,Math.min(10,Math.round(R.normal(mu,sB))));const a=Math.max(0,Math.min(10,Math.round(b-dd+R.normal(0,noise))));pairs.push([b,a]);}
+    const B=pairs.map(q=>q[0]),A=pairs.map(q=>q[1]),D=pairs.map(q=>q[0]-q[1]);
+    m1=mean(B);m2=mean(A);dm=mean(D);sD=sdv(D);s1=sdv(B);s2=sdv(A);
+    tP=dm/(sD/Math.sqrt(n));pP=twoSidedP(tP,n-1);tI=dm/Math.sqrt((s1*s1+s2*s2)/n);pI=twoSidedP(tI,2*n-2);
+    if(pI>0.08&&pP<0.01&&dm>0)break;if(k>250&&pI>0.06&&pP<0.03&&dm>0)break;}
+  const seP=sD/Math.sqrt(n),tq=tinv(.975,n-1);
+  const outInd=tbl("Independent Samples Test","",["","t","df","Two-Sided p","Mean Difference"],[["Pain",fx(tI,3),2*n-2,fP(pI),fx(dm)]]);
+  const outPair=tbl("Paired Samples Test (first − last)","",["","Mean","Std. Deviation","t","df","Two-Sided p","95% CI Lower","95% CI Upper"],[["Pain",pk(fx(dm),"mean"),pk(fx(sD),"sd"),pk(fx(tP,3),"t"),pk(n-1,"df"),pk(fP(pP),"p"),pk(fx(dm-tq*seP),"lo"),pk(fx(dm+tq*seP),"hi")]]);
+  return {id:"c2",npc:"marcus",title:"Did the new protocol change pain?",from:"Marcus Bell, PT, rehabilitation lead",
+    message:`<p>Since the new knee protocol started, we log patients' pain in routine care. Did pain change? α = 0.05.</p>`,
+    cards:[[n,"patients"],[fx(m1,1)+" → "+fx(m2,1),"mean pain, first → last"]],
+    viz:slopeChart(pairs,!level),
     steps:[
-      {id:"c2s1",label:"Matching the test to the design",prompt:"How should these data be analyzed?",
-       hint:"Look at the table. Are the first-visit and last-visit scores from different people, or the same people?",
-       options:[
-        {t:"Independent-samples t test comparing first-visit and last-visit scores",tag:"paired_vs_independent",fb:`${outInd}<p>With this analysis, p = ${fP(pI)}. Marcus reads that as no change and starts drafting a note to shelve the protocol. But these aren't two separate groups. They're the same patients measured twice.</p>`},
-        {t:"Paired t test on each patient's change in pain",tag:"correct",fb:"Each patient contributes two linked scores, so the analysis uses each patient's own change."},
-        {t:"One-sample t test comparing last-visit scores with 0",tag:"wrong_test_one_sample",fb:"That asks whether final pain is zero, which isn't the question. The question is about change within patients."},
-        {t:"Paired z test",tag:"z_without_sigma",fb:"A z test needs a known population SD for the differences. We only have the sample, so the paired t test applies."}]},
-      {id:"c2s2",label:"Writing the hypotheses",prompt:"Let μ<sub>D</sub> be the population mean change (first visit − last visit). Which hypotheses fit Marcus's question?",
-       hint:"Marcus asked whether pain changed, not whether it went down. And hypotheses describe the population, not this sample.",
-       options:[
-        {t:`${H0}: d̄ = 0 &nbsp; ${HA}: d̄ ≠ 0`,tag:"sample_not_population",fb:"d̄ is the sample mean change, which you can already compute. Hypotheses are about the population mean change, μ<sub>D</sub>."},
-        {t:`${H0}: μ<sub>D</sub> ≠ 0 &nbsp; ${HA}: μ<sub>D</sub> = 0`,tag:"swapped_hypotheses",fb:"This flips them. The null is the no-change statement; the alternative is the change you'd need evidence for."},
-        {t:`${H0}: μ<sub>D</sub> = 0 &nbsp; ${HA}: μ<sub>D</sub> ≠ 0`,tag:"correct",fb:"No change in the null, and a change in either direction in the alternative, since Marcus asked whether pain changed."},
-        {t:`${H0}: μ<sub>D</sub> = 0 &nbsp; ${HA}: the change is within a 95% confidence level`,tag:"alt_confidence",fb:"The confidence level isn't part of a hypothesis. Hypotheses are statements about a population parameter, here μ<sub>D</sub>."}]},
-      {id:"c2s3",label:"Interpreting the result",show:outPair,prompt:"Here's the paired analysis. What can you conclude?",
-       hint:"Compare p with α. Then check the mean difference to see which direction pain moved and by how much.",
-       options:[
-        {t:"Fail to reject H<sub>0</sub>, because the p-value is very small.",tag:"threshold_misread",fb:"It's the reverse. A p-value below α is evidence against the null, so we reject it."},
-        {t:`Reject H<sub>0</sub>. Pain changed: on average, it dropped by about ${fx(dm)} points.`,tag:"correct",fb:"The p-value is below 0.05 and the mean difference (first − last) is positive, so pain went down."},
-        {t:`There's ${pP<0.001?"less than a 0.1%":"only a "+fx(pP*100,1)+"%"} chance that the protocol has no effect.`,tag:"p_as_prob_null",fb:"The p-value is calculated assuming the null is true. It's the probability of data this extreme if there were no change, not the probability that there's no change."},
-        {t:"Accept H<sub>A</sub>. The protocol reduces pain for every patient.",tag:"proof_overclaim",fb:"The test is about the average change. Some patients may not improve, and a significant result is strong evidence, not proof."}]},
-      {id:"c2s4",label:"Why the design mattered",show:`<p>Compare the two analyses of the same scores: the independent test gave p = ${fP(pI)}, and the paired test gave ${fPtext(pP)}.</p>`,prompt:"Why did the two tests give such different answers?",
-       hint:"Think about how much patients differ from one another in pain, compared with how much each patient changed.",
-       options:[
-        {t:"The independent test uses a stricter α.",tag:"power_misconception",fb:"Both used α = 0.05. The difference comes from how each test handles variation."},
-        {t:"The independent test was based on fewer patients.",tag:"power_misconception",fb:"Both used exactly the same scores. What changed is whether each patient is compared with themselves."},
-        {t:"Paired tests produce more false positives, so the independent result is more trustworthy.",tag:"paired_vs_independent",fb:"When data are truly paired, the paired test is the correct one, and its Type I error rate is still α. The independent test is the wrong model for these data."},
-        {t:"Patients differ a lot from one another. Pairing removes that variation, so the test has more power to detect the change.",tag:"correct",fb:"Some patients hurt more than others throughout. Comparing each patient with themselves strips that out, leaving the change easier to see."}]}
+      {id:"c2s1",label:"Building the analysis",type:"build",prompt:"Set up Marcus's analysis from your notes, then run it.",
+       hint:"Look at the sign-in log. Who rated their pain at each visit?",
+       spec:{mode:"t",outcome:"pain_score",factors:["visit"],compare:"same",
+        vars:[["patient_id","Patient ID","ID"],["visit","Visit (first or last)","categorical",2],["pain_score","Pain rating (0 to 10)","numeric"],["age","Age (years)","numeric"],["knee","Knee replaced (left or right)","categorical",2]],
+        msgs:{paired_vs_independent:`${outInd}<p>This says p = ${fP(pI)}, so Marcus starts drafting a note to shelve the protocol. Check the sign-in log: who rated pain at each visit?</p>`,
+         extra_factor:"Which knee was replaced isn't Marcus's question; he asked whether pain changed between visits."},
+        ok:"The same patients at two visits, so a paired t test on each patient's change."}},
+      {id:"c2s2",label:"Pointing at the evidence",type:"point",show:outPair,prompt:"Click the number in this output that shows pain changed by more than chance would explain.",
+       hint:"You want a value you'd compare with α = 0.05, or an interval you'd check against 0.",
+       picks:{mean:{tag:"output_misread",fb:"That's how much pain changed on average, not whether the change could be chance."},
+        sd:{tag:"output_misread",fb:"That's how much the changes vary from patient to patient."},
+        t:{tag:"output_misread",fb:"t is the test statistic. The p-value beside it is what you compare with α."},
+        df:{tag:"output_misread",fb:"Degrees of freedom reflect the sample size, not the strength of evidence."},
+        p:{tag:"correct",fb:`${fPtext(pP)} is below 0.05, so pain really changed: it dropped by about ${fx(dm,1)} points on average.`},
+        lo:{tag:"correct",fb:`The 95% CI (${fx(dm-tq*seP,2)} to ${fx(dm+tq*seP,2)}) sits entirely above 0, so pain dropped on average.`},
+        hi:{tag:"correct",fb:`The 95% CI (${fx(dm-tq*seP,2)} to ${fx(dm+tq*seP,2)}) sits entirely above 0, so pain dropped on average.`}}}
     ],
-    outro:g=>g("c2s1")==="correct"
-      ?`<p>The protocol expands to two more clinics, with pain tracked the same way so each patient serves as their own comparison.</p>`
-      :`<p>Your first analysis nearly shelved a protocol that works. Switching to the paired test showed a clear drop in pain, and the protocol expands to two more clinics.</p>`,
-    takeaway:"Match the test to the design. The same numbers can give very different answers when pairing is ignored."};
+    outro:g=>g("c2s1")==="correct"?{ok:true,title:"Marcus signs off",text:"\"That matches what I've seen in the gym. Maybe I'll trust the math.\""}:{ok:false,title:"Marcus signs off, relieved",text:"\"First you said nothing changed. I knew these patients improved.\""},
+    takeaway:"Match the test to the design; ignoring pairing can hide a real effect."};
 }
 
 function case3(R,level){
-  let n1,n2,s1,s2,lp;
-  if(level){n1=18;n2=14;s1=R.uni(6,8);s2=R.uni(13,15);lp=R.uni(.004,.03);}
-  else{n1=15;n2=15;s1=R.uni(9,11);s2=s1*R.uni(.9,1.1);lp=R.uni(.35,.85);}
-  s1=+s1.toFixed(2);s2=+s2.toFixed(2);
-  const sp=Math.sqrt(((n1-1)*s1*s1+(n2-1)*s2*s2)/(n1+n2-2)), seP=sp*Math.sqrt(1/n1+1/n2), dfP=n1+n2-2;
-  const seW=Math.sqrt(s1*s1/n1+s2*s2/n2), dfW=welchDf(s1,n1,s2,n2);
-  const tT=R.uni(-1.35,-1.05), seC=level?seW:seP;
-  const mP=+R.uni(-3,-1).toFixed(2), diff=+(tT*seC).toFixed(2), mD=+(mP+diff).toFixed(2);
-  const d=mD-mP, tPo=d/seP, tWe=d/seW, pPo=twoSidedP(tPo,dfP), pWe=twoSidedP(tWe,dfW);
-  const tqP=tinv(.975,dfP), tqW=tinv(.975,dfW);
-  const pc=level?pWe:pPo, lo=level?d-tqW*seW:d-tqP*seP, hi=level?d+tqW*seW:d+tqP*seP;
-  const F=Math.pow(tinv(1-lp/2,n1+n2-2),2);
-  const grp=tbl("Group Statistics","Change in systolic BP after 8 weeks (mmHg); negative = BP went down",["Group","N","Mean","Std. Deviation","Std. Error Mean"],[["New drug",n1,fx(mD),fx(s1),fx(s1/Math.sqrt(n1))],["Placebo",n2,fx(mP),fx(s2),fx(s2/Math.sqrt(n2))]]);
-  const ind=tbl("Independent Samples Test","Mean difference = new drug − placebo",["","Levene's F","Levene's Sig.","t","df","One-Sided p","Two-Sided p","Mean Difference","Std. Error Difference","95% CI Lower","95% CI Upper"],
-    [["Equal variances assumed",fx(F,3),fP(lp),fx(tPo,3),dfP,fP(pPo/2),fP(pPo),fx(d),fx(seP,3),fx(d-tqP*seP),fx(d+tqP*seP)],
-     ["Equal variances not assumed","","",fx(tWe,3),fx(dfW,3),fP(pWe/2),fP(pWe),fx(d),fx(seW,3),fx(d-tqW*seW),fx(d+tqW*seW)]]);
+  let n1,n2,g1,g2,s1,s2,mD,mP,d,lp,pPo,pWe,tPo,tWe,seP,seW,dfP,dfW,pc,lo,hi;
+  for(let k=0;k<300;k++){
+    if(level){n1=18;n2=14;s1=R.uni(6,8);s2=R.uni(13,15);}else{n1=15;n2=15;s1=R.uni(9,11);s2=s1*R.uni(.9,1.1);}
+    const base=R.uni(-3,-1),se0=level?Math.sqrt(s1*s1/n1+s2*s2/n2):Math.sqrt(((n1-1)*s1*s1+(n2-1)*s2*s2)/(n1+n2-2))*Math.sqrt(1/n1+1/n2);
+    g1=exactSample(R,n1,base+R.uni(-1.35,-1.05)*se0,s1).map(Math.round);g2=exactSample(R,n2,base,s2).map(Math.round);
+    mD=mean(g1);mP=mean(g2);s1=sdv(g1);s2=sdv(g2);d=mD-mP;dfP=n1+n2-2;
+    seP=Math.sqrt(((n1-1)*s1*s1+(n2-1)*s2*s2)/dfP)*Math.sqrt(1/n1+1/n2);seW=Math.sqrt(s1*s1/n1+s2*s2/n2);dfW=welchDf(s1,n1,s2,n2);
+    tPo=d/seP;tWe=d/seW;pPo=twoSidedP(tPo,dfP);pWe=twoSidedP(tWe,dfW);
+    const z1=g1.map(q=>Math.abs(q-mD)),z2=g2.map(q=>Math.abs(q-mP)),zs=Math.sqrt(((n1-1)*sdv(z1)**2+(n2-1)*sdv(z2)**2)/dfP)*Math.sqrt(1/n1+1/n2);
+    lp=twoSidedP((mean(z1)-mean(z2))/zs,dfP);
+    pc=level?pWe:pPo;const se=level?seW:seP,tq=tinv(.975,level?dfW:dfP);lo=d-tq*se;hi=d+tq*se;
+    if((level?lp<0.05:lp>0.2)&&pc>0.12&&pc<0.4&&lo<-6)break;}
+  const F=Math.pow(tinv(1-lp/2,dfP),2),tqP=tinv(.975,dfP),tqW=tinv(.975,dfW);
+  const ind=tbl("Independent Samples Test","Mean difference = drug − placebo",["","Levene's F","Levene's Sig.","t","df","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],
+    [[pk("Equal variances assumed","eq"),fx(F,3),pk(fP(lp),"lev"),fx(tPo,3),dfP,pk(fP(pPo),"p1"),fx(d),fx(d-tqP*seP),fx(d+tqP*seP)],
+     [pk("Equal variances not assumed","neq"),"","",fx(tWe,3),fx(dfW,2),pk(fP(pWe),"p2"),fx(d),fx(d-tqW*seW),fx(d+tqW*seW)]]);
+  const smaller={t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Picking the row by its result inflates false positives; Levene's test decides."};
   const rowOpts=level?[
-    {t:"Equal variances assumed, because patients were randomized",tag:"ignore_levene",fb:"Randomization balances groups on average, but the spread of outcomes can still differ, and Levene's test says it does here."},
-    {t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Choosing the row by its p-value means picking the answer you like, which inflates false positives. Levene's test decides the row before you look at the t test."},
-    {t:`Equal variances not assumed, because Levene's p = ${fP(lp)} is below 0.05`,tag:"correct",fb:"Levene's test is significant, so the variances look unequal and the second row applies."},
-    {t:`Neither. Levene's p = ${fP(lp)} is significant, so the drug worked.`,tag:"levene_as_effect",fb:"Levene's test is about whether the group variances are equal, not whether the means differ."}]
+    {t:"Equal variances assumed, since patients were randomized",tag:"ignore_levene",fb:"Randomization doesn't guarantee equal spread, and Levene's test says the spreads differ."},smaller,
+    {t:`Equal variances not assumed, since Levene's p = ${fP(lp)} &lt; 0.05`,tag:"correct",fb:"Levene's test is significant, so use the second row. The dot plot shows the spread difference too."},
+    {t:"Neither: a significant Levene's test means the drug worked",tag:"levene_as_effect",fb:"Levene's test compares spreads, not means."}]
    :[
-    {t:"Equal variances not assumed, because the two SDs aren't identical",tag:"ignore_levene",fb:"Sample SDs almost never match exactly. Levene's test checks whether the difference is bigger than chance would produce, and here it isn't."},
-    {t:`Equal variances assumed, because Levene's p = ${fP(lp)} is above 0.05`,tag:"correct",fb:"Levene's test isn't significant, so there's no evidence the variances differ and the first row applies."},
-    {t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Choosing the row by its p-value means picking the answer you like, which inflates false positives. Levene's test decides the row before you look at the t test."},
-    {t:`Neither. Levene's p = ${fP(lp)} is the p-value for the drug effect.`,tag:"levene_as_effect",fb:"Levene's test is about whether the group variances are equal, not whether the means differ."}];
-  return {id:"c3",title:"Does the new drug work?",from:"Dr. Elena Ruiz, cardiology, pharmacy and therapeutics committee",
-    message:`<p>We ran a small randomized pilot of a new blood pressure medication against placebo: ${n1} patients on the drug and ${n2} on placebo. The outcome is the change in systolic BP over 8 weeks.</p><p>Did the drug change BP compared with placebo? Use α = 0.05. Honestly, I'm expecting to report that it doesn't work.</p>`,
-    briefing:grp,
+    {t:"Equal variances not assumed, since the SDs aren't identical",tag:"ignore_levene",fb:"Sample SDs never match exactly; Levene's test says this gap is within chance."},
+    {t:`Equal variances assumed, since Levene's p = ${fP(lp)} &gt; 0.05`,tag:"correct",fb:"No evidence the spreads differ, so use the first row."},smaller,
+    {t:`Neither: Levene's p is the p-value for the drug effect`,tag:"levene_as_effect",fb:"Levene's test compares spreads, not means."}];
+  return {id:"c3",npc:"ruiz",title:"Does the new drug work?",from:"Dr. Elena Ruiz, cardiology",
+    message:`<p>Can you look at our pilot results? α = 0.05. Honestly, I'm expecting to report that the drug doesn't work.</p>`,
+    cards:[[fx(d,1)+" mmHg","difference in mean BP change"]],
+    viz:groupDots(g1,g2,"Drug","Placebo","Change in systolic BP over 8 weeks (mmHg)"),
     steps:[
-      {id:"c3s1",label:"Writing the hypotheses",prompt:"Which hypotheses fit Dr. Ruiz's question?",
-       hint:"The null is a specific, testable statement about population means. Chance and confidence levels belong to the testing process, not the hypotheses.",
-       options:[
-        {t:`${H0}: there are differences by chance &nbsp; ${HA}: there are differences`,tag:"null_as_chance",fb:"The null isn't a statement about chance. It's a precise claim about the population: the mean change is the same in both groups."},
-        {t:`${H0}: μ<sub>drug</sub> − μ<sub>placebo</sub> = 0 &nbsp; ${HA}: μ<sub>drug</sub> − μ<sub>placebo</sub> ≠ 0`,tag:"correct",fb:"No difference in population means under the null, and a difference in either direction under the alternative."},
-        {t:`${H0}: x̄<sub>drug</sub> = x̄<sub>placebo</sub> &nbsp; ${HA}: x̄<sub>drug</sub> ≠ x̄<sub>placebo</sub>`,tag:"sample_not_population",fb:"The sample means are already known, and they do differ. Hypotheses are about the population means."},
-        {t:`${H0}: μ<sub>drug</sub> = μ<sub>placebo</sub> &nbsp; ${HA}: the difference is within a 95% confidence level`,tag:"alt_confidence",fb:"The confidence level isn't part of a hypothesis. The alternative should state how the population means relate."}]},
-      {id:"c3s2",label:"Reading the variance test",show:ind,prompt:"Which row of this output should you use?",
-       hint:"Levene's test has its own null hypothesis: the two population variances are equal.",
-       options:rowOpts},
-      {id:"c3s3",label:"Responding to the physician",prompt:`Using that row, the two-sided p = ${fP(pc)}. Dr. Ruiz writes: "The drug doesn't work." What do you tell her?`,
-       hint:"What does failing to reject actually mean? And how many patients were in this study?",
-       options:[
-        {t:"That's right. A p-value above 0.05 shows the drug has no effect.",tag:"accept_null",fb:"A result that isn't significant isn't evidence of no effect. It means this study couldn't distinguish a difference from chance."},
-        {t:`There's a ${fx((1-pc)*100,0)}% chance the drug doesn't work.`,tag:"p_as_prob_null",fb:"The p-value isn't the probability that either hypothesis is true, and subtracting it from 1 doesn't produce one either."},
-        {t:`We fail to reject H<sub>0</sub>, so this pilot didn't show a difference. With only ${n1} and ${n2} patients per group, it may have been too small to detect a real effect, so it isn't evidence that the drug doesn't work.`,tag:"correct",fb:"Small studies have low power. \"Not significant\" here means inconclusive, not ineffective."},
-        {t:"Rerun the analysis with α = 0.25 so the result is significant.",tag:"alpha_shopping",fb:"α has to be set before the analysis. Raising it after seeing the result defeats its purpose and increases the risk of a Type I error."}]},
-      {id:"c3s4",label:"Using the confidence interval",prompt:`The 95% CI for the difference (drug − placebo) runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg. What does it add?`,
-       hint:"Does the interval include 0? And what's the largest reduction it still allows?",
-       options:[
-        {t:"Because the interval includes 0, the true difference is 0.",tag:"accept_null",fb:"0 is one plausible value, but so is every other value in the interval, including meaningful reductions."},
-        {t:`95% of patients had a BP change between ${fx(lo,1)} and ${fx(hi,1)} mmHg.`,tag:"ci_misread",fb:"The interval is about the population mean difference between groups, not the range of individual patients' changes."},
-        {t:"The interval includes 0 but p isn't significant, so the output contradicts itself.",tag:"ci_misread",fb:"They agree. A two-sided 95% CI that includes 0 goes together with p &gt; 0.05."},
-        {t:`It includes 0, which matches the non-significant result. But it also includes reductions as large as ${fx(Math.abs(lo),1)} mmHg, which would matter clinically, so this study is too imprecise to rule out a useful effect.`,tag:"correct",fb:"The interval shows why the pilot is inconclusive: it's consistent with no effect and with a clinically important one."}]}
+      {id:"c3s1",label:"Interviewing Dr. Ruiz",type:"interview",reveal:true,prompt:"Ask Dr. Ruiz what you need, then tell her your plan.",
+       hint:"Ask how patients ended up in each group.",
+       thread:["What do you need to know about the pilot?"],
+       questions:[
+        {q:"How were patients assigned?",a:"Randomly. Each patient got either the new drug or placebo, never both.",key:true},
+        {q:"What did you measure?",a:"Each patient's change in systolic blood pressure over 8 weeks. One number per patient.",key:true},
+        {q:"Which clinic sites took part?",a:"Three sites, but that's not what I'm asking about.",key:false},
+        {q:"What's the drug's brand name?",a:"It doesn't have one yet. Why would that matter?",key:false}],
+       slots:[
+        {label:"Compare",options:[{t:"I'll compare the change in systolic BP",tag:"correct"},{t:"I'll compare blood pressure at enrollment",tag:"outcome_misread",fb:"The outcome is the change over 8 weeks."}]},
+        {label:"Between",options:[{t:"between the drug and placebo groups",tag:"correct"},{t:"across the three clinic sites",tag:"extra_factor",fb:"Sites aren't Dr. Ruiz's question."}]},
+        {label:"Using",options:[{t:"using an independent-samples t test.",tag:"correct"},{t:"using a paired t test.",tag:"paired_vs_independent",fb:"Each patient was in one group only, so there's nothing to pair."},{t:"using a one-sample t test.",tag:"wrong_test_one_sample",fb:"There are two groups to compare."}]}],
+       okFb:"Two separate randomized groups, one outcome each: an independent-samples t test. Her group data are shown above."},
+      {id:"c3s2",label:"Reading the variance test",type:"point",show:ind,prompt:"Click the row of this output you should use.",
+       hint:"Levene's test decides the row. Its null hypothesis is that the two groups have equal variances.",
+       picks:{eq:level?{tag:"ignore_levene",fb:`Levene's ${pT(lp)} is below 0.05, so the spreads differ. Use the other row.`}:{tag:"correct",fb:`Levene's ${pT(lp)} is above 0.05: no evidence the spreads differ, so this row applies.`},
+        neq:level?{tag:"correct",fb:`Levene's ${pT(lp)} is below 0.05, so the spreads differ and this row applies. The dot plot shows it too.`}:{tag:"ignore_levene",fb:`Levene's ${pT(lp)} is above 0.05, so there's no evidence the spreads differ. Use the other row.`},
+        lev:{tag:"output_misread",fb:"That's Levene's p-value. It tells you which row to use; now click that row."},
+        p1:{tag:"row_by_smaller_p",fb:"Pick the row from Levene's test, not from the result you prefer."},p2:{tag:"row_by_smaller_p",fb:"Pick the row from Levene's test, not from the result you prefer."}}},
+      {id:"c3s3",label:"Answering Dr. Ruiz",type:"cards",claim:`<strong>Dr. Ruiz:</strong> "p = ${fP(pc)}. The drug doesn't work. I'm writing that down."`,prompt:"Play the evidence that best answers her.",
+       hint:"Which evidence shows what size of effect is still possible, or why the pilot could miss one?",
+       cards:[
+        {k:"Output",t:`p = ${fP(pc)}, above 0.05`,tag:"accept_null",fb:"That's her point, not an answer to it. Not significant isn't the same as no effect."},
+        {k:"Chart",t:`The 95% CI runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg`,tag:"correct",fb:`<p>The interval includes 0, but also reductions up to ${fx(Math.abs(lo),0)} mmHg. Inconclusive, not ineffective.</p>${ciBar(lo,hi,d,"Difference in BP change, drug − placebo (mmHg)")}`},
+        {k:"Clue",t:`Only ${n1} and ${n2} patients per group`,tag:"correct",fb:`<p>A pilot this small has low power and can easily miss a real effect. The confidence interval shows how large that effect could be:</p>${ciBar(lo,hi,d,"Difference in BP change, drug − placebo (mmHg)")}`},
+        {k:"Output",t:`Levene's test ${pT(lp)}`,tag:"output_misread",fb:"Levene's test is about the spread of each group, not whether the drug works."}]}
     ],
-    outro:g=>g("c3s3")==="correct"
-      ?`<p>Dr. Ruiz changes her summary to "inconclusive," and the committee funds a larger trial. Eight months later, with 120 patients per group, the drug shows a clear reduction in systolic BP.</p>`
-      :`<p>Your first reply agreed that the drug doesn't work, and the committee nearly dropped it. After you corrected the summary to "inconclusive," they funded a larger trial. With 120 patients per group, the drug showed a clear reduction in systolic BP.</p>`,
-    takeaway:"Failing to reject H<sub>0</sub> isn't evidence of no effect, especially in a small study. The confidence interval shows how much uncertainty is left."};
+    outro:g=>g("c3s3")==="correct"?{ok:true,title:"Dr. Ruiz signs off",text:"\"Inconclusive. Yes. That's the honest word. I'll push for a full trial.\""}:{ok:false,title:"Dr. Ruiz signs off after a rethink",text:"\"So we nearly killed a drug over 30 patients. Let's run it properly.\""},
+    takeaway:"Failing to reject H<sub>0</sub> isn't evidence of no effect, especially in a small study."};
 }
 
 function case4(R,level){
   const d=level?0.3:0.4, ns=level?[50,100,180]:[25,50,100];
-  const s1=level
-    ?{prompt:"Suppose the pilot finds no significant difference, but in reality the alert does shorten time to antibiotics. What kind of error is that?",
-      options:[
-       {t:"A Type I error",tag:"type_error_mixup",fb:"A Type I error is a false positive: rejecting a null that's true. Here the null was false and we missed it."},
-       {t:"A Type II error",tag:"correct",fb:"A false negative: failing to reject a null hypothesis that's actually false."},
-       {t:"Both kinds of error",tag:"type_error_mixup",fb:"A single decision can only be one kind of error. Here we failed to reject a false null."},
-       {t:"No error, because α = 0.05 guards against mistakes",tag:"alpha_protects",fb:"α controls the Type I error rate. It doesn't prevent missing a real effect."}]}
-    :{prompt:"Suppose the pilot concludes the alert shortens time to antibiotics, but in reality it makes no difference. What kind of error is that?",
-      options:[
-       {t:"A Type I error",tag:"correct",fb:"A false positive: rejecting a null hypothesis that's actually true."},
-       {t:"A Type II error",tag:"type_error_mixup",fb:"A Type II error is a false negative: missing a real effect. Here we claimed an effect that doesn't exist."},
-       {t:"Both kinds of error",tag:"type_error_mixup",fb:"A single decision can only be one kind of error. Here we rejected a true null."},
-       {t:"No error, because α = 0.05 guards against mistakes",tag:"alpha_protects",fb:"α sets how often this kind of error happens when the null is true. It limits the risk; it doesn't remove it."}]};
-  return {id:"c4",title:"Setting up the sepsis alert pilot",from:"Dana Okafor, RN, nurse manager, sepsis quality program",
-    message:`<p>IT built an electronic alert that flags patients who may be developing sepsis. Before turning it on hospital-wide, we want a pilot comparing time to first antibiotic dose with and without the alert.</p><p>If we adopt an alert that doesn't help, nurses get alarm fatigue for nothing. If we skip one that works, patients lose. Help me set this up so we get a trustworthy answer.</p>`,
-    briefing:"",
+  return {id:"c4",npc:"dana",title:"Setting up the sepsis alert pilot",from:"Dana Okafor, RN, sepsis quality program",
+    message:`<p>You've seen the planning memo and the incident report. Help me set up the alert pilot so we get a trustworthy answer.</p>`,
     steps:[
-      {id:"c4s1",label:"Naming the error",prompt:s1.prompt,hint:"Type I is a false positive (rejecting a true null). Type II is a false negative (missing a real effect).",options:s1.options},
-      {id:"c4s2",label:"Changing α",prompt:"A colleague suggests using α = 0.10 instead of 0.05 for the pilot. What changes?",
-       hint:"A larger α makes it easier to reject H<sub>0</sub>. Think about what that does when H<sub>0</sub> is true, and when it's false.",
-       options:[
-        {t:"Both kinds of error become less likely.",tag:"lower_alpha_power",fb:"There's a trade-off. Making it easier to reject lowers the chance of missing a real effect but raises the chance of a false positive."},
-        {t:"Power goes down.",tag:"alpha_change_power",fb:"A larger α makes rejecting easier, so power goes up, not down."},
-        {t:"Power goes up, but so does the risk of a Type I error: adopting an alert that doesn't help.",tag:"correct",fb:"That's the trade-off. A less conservative α buys power at the cost of more false positives."},
-        {t:"The risk of a Type II error goes up.",tag:"type_error_mixup",fb:"A larger α makes rejecting easier, so the Type II error risk goes down. It's the Type I risk that rises."}]},
+      {id:"c4s2",label:"Changing alpha",type:"reply",channel:"email",subject:"Can we loosen α?",prompt:"Dana forwarded a colleague's idea. Build your reply.",
+       hint:"A larger α makes rejecting H<sub>0</sub> easier. What does that do when H<sub>0</sub> is true? Check the incident report.",
+       thread:["A colleague wants α = 0.10 so the pilot is more likely to find something. What should I tell her?"],
+       slots:[
+        {label:"Power would",options:[{t:"Power would go up,",tag:"correct"},{t:"Power would go down,",tag:"alpha_change_power",fb:"A larger α makes rejecting easier, so power goes up."}]},
+        {label:"But",options:[{t:"but false positives would become more likely,",tag:"correct"},{t:"and both kinds of error would shrink,",tag:"lower_alpha_power",fb:"It's a trade-off, not a win on both."}]},
+        {label:"So",options:[{t:"so let's keep α at 0.05 and add patients instead.",tag:"correct"},{t:"so α = 0.10 is fine for a pilot.",tag:"alpha_shopping",fb:"Check the incident report: leadership wants false positives at 5% or less."}]}],
+       okFb:"That's exactly what I'll send her."},
       {id:"c4s3",label:"Designing for power",type:"design",d,ns,alphas:[0.01,0.05,0.10],
-       prompt:`Design the pilot. If the alert works, it produces a moderate improvement (effect size d = ${d}). The budget covers up to ${ns[2]} patients per group. The team wants at least an 80% chance of detecting a real benefit, without raising the risk of adopting a useless alert.`,
-       hint:"The lecture listed three ways to increase power: a bigger effect, a larger α, and a larger sample. You can't change the effect, and the team doesn't want a larger α."}
+       prompt:"Design the pilot to meet the goals in your notes. Watch the chart as you change settings.",
+       hint:"You can't change the effect size, and the team won't accept a larger α. What's left?"}
     ],
-    outro:g=>g("c4s3")==="correct"
-      ?`<p>Your design goes to the quality committee as proposed. The pilot will have enough patients to give a real answer, and α stays at 0.05.</p>`
-      :`<p>It took more than one try, but the final design keeps α at 0.05 and uses enough patients for about 80% power. The quality committee approves it.</p>`,
-    takeaway:"A larger sample raises power without increasing the risk of a false positive. Loosening α buys power at exactly that cost."};
+    outro:g=>g("c4s3")==="correct"?{ok:true,title:"Dana signs off",text:"\"Enough patients and no extra false alarms. My nurses thank you.\""}:{ok:false,title:"Dana signs off after a redesign",text:"\"Second try's the one we'll use. Let's not tell the nurses about the first.\""},
+    takeaway:"Larger samples raise power without raising false-positive risk; a larger α doesn't."};
 }
 
-function case5(R,level){
-  const d=+R.uni(0.8,1.2).toFixed(2), p=+R.uni(.018,.042).toFixed(3), df=22;
-  const t=tinv(1-p/2,df), se=d/t, tq=tinv(.975,df), lo=d-tq*se, hi=d+tq*se;
-  const pp=fx(p*100,1), L=fx(lo,2), U=fx(hi,2);
-  const s2=level
-    ?{prompt:`The 95% CI for the reduction is ${L} to ${U} falls per 1,000 patient-days. Tom asks whether the interval and the p-value tell the same story.`,
-      options:[
-       {t:"No. The interval describes individual patients, while the p-value describes units.",tag:"ci_misread",fb:"Both are about the same population mean difference. The interval gives a range of plausible values for it."},
-       {t:"Yes, and since both are significant, the reduction must be large.",tag:"significance_as_size",fb:"Significance shows a reduction is likely, not that it's large. The interval allows a reduction as small as "+L+"."},
-       {t:`Yes. The interval excludes 0, which matches p &lt; 0.05. It also shows the reduction could be as small as ${L} or as large as ${U}.`,tag:"correct",fb:"A two-sided 95% CI excluding 0 goes with p &lt; 0.05, and the interval adds how big the effect plausibly is."},
-       {t:"No. If the interval excludes 0, the p-value should be above 0.05.",tag:"ci_misread",fb:"It's the other way around: a 95% CI that excludes 0 goes with p &lt; 0.05."}]}
-    :{prompt:`The 95% CI for the reduction is ${L} to ${U} falls per 1,000 patient-days. How should Tom describe it?`,
-      options:[
-       {t:`95% of units will see a reduction between ${L} and ${U}.`,tag:"ci_misread",fb:"The interval is about the average reduction across units like these, not a range that individual units will fall in."},
-       {t:`The true reduction is exactly ${fx(d)}, the middle of the interval.`,tag:"ci_misread",fb:"The middle is the best single estimate, but the interval shows the true value could be anywhere in that range."},
-       {t:`The true average reduction for units like ours is plausibly anywhere from about ${L} to ${U} falls per 1,000 patient-days.`,tag:"correct",fb:"The interval is a range of plausible values for the population mean difference."},
-       {t:"Because the interval excludes 0, the reduction must be large.",tag:"significance_as_size",fb:`Excluding 0 shows a reduction is likely, not that it's large. The lower end, ${L}, is a small effect.`}]};
-  return {id:"c5",title:"Explaining the falls result",from:"Tom Walsh, director of nursing, medical-surgical units",
-    message:`<p>We randomized 24 of our units: 12 started hourly rounding and 12 continued usual care. After six months, rounding units averaged ${fx(d)} fewer falls per 1,000 patient-days (p = ${fP(p)}).</p><p>I have to explain this at the staff meeting, and I want to get it right.</p>`,
-    briefing:"",
-    steps:[
-      {id:"c5s1",label:"Explaining the p-value",prompt:`Which explanation of p = ${fP(p)} is accurate?`,
-       hint:"A p-value is calculated by assuming the null hypothesis is true. What is it the probability of?",
-       options:[
-        {t:`There's a ${pp}% chance that rounding has no effect.`,tag:"p_as_prob_null",fb:"The p-value assumes the null is true, so it can't be the probability that the null is true."},
-        {t:`There's a ${fx(100-p*100,1)}% chance that rounding works.`,tag:"p_as_prob_true",fb:"The p-value doesn't give the probability that the alternative is true, and neither does 1 minus it."},
-        {t:`If rounding truly made no difference, a gap this large or larger would show up in only about ${pp}% of studies like this one, so chance alone is an unlikely explanation.`,tag:"correct",fb:"That's what a p-value measures: how surprising the data would be if the null were true."},
-        {t:`Rounding prevented ${pp}% of falls.`,tag:"p_as_effect",fb:"The p-value isn't the size of the effect. The effect is the difference in falls: "+fx(d)+" per 1,000 patient-days."}]},
-      {id:"c5s2",label:"Explaining the confidence interval",prompt:s2.prompt,hint:"A confidence interval is a range of plausible values for a population parameter, here the average difference between rounding and usual-care units.",options:s2.options}
-    ],
-    outro:g=>g("c5s1")==="correct"
-      ?`<p>Tom's explanation lands well. Staff hear that the result is unlikely to be chance, and how big the benefit realistically might be. Hourly rounding expands to all medical-surgical units, with falls tracked for another year.</p>`
-      :`<p>Your first draft would have told staff the wrong thing about the p-value. After revising, Tom's explanation is accurate, and hourly rounding expands to all medical-surgical units.</p>`,
-    takeaway:"A p-value describes the data, assuming the null is true. It isn't the probability that a hypothesis is true, and it isn't the size of the effect."};
-}
-
-const CORE=[case1,case2,case3,case4,case5];
-
-/* ============================================================
-   CONTENT: FOLLOW-UP REVIEWS (shown only when triggered)
-   ============================================================ */
+const CORE=[case1,case2,case3,case4];
 const FOLLOWUPS={
  fu_design:()=>({id:"fu_design",title:"Quick review: matching the test to the design",from:"Jordan Lee, senior statistician",
    message:"<p>Before the next case, let's sort a few study designs. Pick the test that fits each one.</p>",briefing:"",
@@ -472,9 +707,6 @@ const FU_MAP={
   ci_misread:"fu_ci"
 };
 
-/* ============================================================
-   CONTENT: OPTIONAL EXPERT CASES
-   ============================================================ */
 const EXPERT=[
  ()=>({id:"e1",title:"Expert case: a skewed ICU sample",from:"Dr. Samuel Kim, ICU medical director",
    message:"<p>We compared ICU length of stay for 9 patients on a new sedation protocol and 9 on the usual one. A couple of patients stayed a very long time. Which analysis should we use?</p>",
@@ -486,233 +718,471 @@ const EXPERT=[
      options:[{t:"Nonparametric tests need large samples.",tag:"ignore_distribution",fb:"They're especially useful for small samples."},{t:"With large samples, the t test holds up reasonably well even when data are skewed. With small samples, it doesn't.",tag:"correct",fb:"The sampling distribution of the mean becomes approximately normal as samples grow, but not with 9 patients per group."},{t:"Sample size doesn't matter. Only the skewness does.",tag:"ignore_distribution",fb:"Both matter. The same skewness is much less of a problem with hundreds of patients."}]}],
    outro:()=>"<p>Dr. Kim's team reports the rank-sum result, and notes that the sample is too small to draw firm conclusions.</p>",
    takeaway:"When samples are small and the outcome is clearly non-normal, use a nonparametric test."}),
- ()=>({id:"e2",title:"Expert case: patients who chose the portal",from:"Rachel Stein, director of outpatient services",
+ ()=>({id:"e2",title:"Expert case: patients who chose the portal",from:"Greg Walton, VP of finance",
    message:"<p>Patients with diabetes who chose to use our new patient portal had a lower average HbA1c than patients who didn't use it (independent t test, p &lt; .001).</p><p>I want to tell the board that the portal lowers HbA1c.</p>",briefing:"",
    steps:[
-    {id:"e2s1",label:"Significance and causation",prompt:"What should you tell Rachel?",hint:"Who decided which patients were in each group?",
-     options:[{t:"p &lt; .001 proves the portal lowers HbA1c.",tag:"causation_from_observational",fb:"A significant difference shows the groups differ, not why they differ."},{t:"The difference is unlikely to be chance, but patients chose whether to use the portal. Users may differ in age, income, health literacy, or access to care, so the portal may not be the cause.",tag:"correct",fb:"Without randomization, other differences between the groups could explain the result."},{t:"A t test isn't valid for observational data, so there's no real difference.",tag:"causation_from_observational",fb:"The test is fine for comparing the groups. The problem is interpreting the difference as caused by the portal."},{t:"A paired t test should have been used.",tag:"paired_vs_independent",fb:"Users and non-users are different patients, so the groups are independent."}]},
-    {id:"e2s2",label:"What to check first",prompt:"What would you check first?",hint:"If the groups differ in other ways, what would reveal that?",
+    {id:"e2s1",label:"Checking Greg's slide",type:"spot",prompt:"Click the sentence on Greg's slide that the data don't support.",hint:"Who decided which patients used the portal?",draftTitle:"Board slide: patient portal",
+   draft:[{t:"Patients who used the portal had lower average HbA1c than those who didn't (p < .001).",tag:"causation_from_observational",fb:"That sentence accurately describes the comparison."},
+    {t:"So the portal lowers HbA1c.",tag:"correct",fb:"Patients chose whether to use the portal. Users may differ in age, income, or health literacy, so the portal may not be the cause."},
+    {t:"Expanding it would cost under $5,000 a year.",tag:"causation_from_observational",fb:"That's a cost estimate, not a claim about the data."}]},
+  {id:"e2s2",label:"What to check first",prompt:"What would you check first?",hint:"If the groups differ in other ways, what would reveal that?",
      options:[{t:"Rerun the test with α = 0.01",tag:"alpha_shopping",fb:"The result is already significant at that level. The issue is what's causing the difference."},{t:"Compare the two groups' characteristics, such as age, income, and access to care",tag:"correct",fb:"If portal users differ in other ways, those differences could explain the HbA1c gap."},{t:"Collect a larger sample",tag:"causation_from_observational",fb:"More patients won't fix the fact that people chose their own group."}]}],
-   outro:()=>"<p>Rachel presents the finding to the board as a promising association, and the team plans to compare users and non-users on their characteristics before making any claims about the portal itself.</p>",
+   outro:()=>"<p>Greg presents the finding to the board as a promising association, and the team plans to compare users and non-users on their characteristics before making any claims about the portal itself.</p>",
    takeaway:"A significant difference between groups people chose for themselves doesn't show what caused the difference."})
 ];
 
-/* All field names sent to Qualtrics, in order */
-function allFields(){
-  const f=["mission","version","path","credibility","hints","minutes","followups","expert"];
-  CORE.forEach((c,i)=>c(makeRng(1),0).steps.forEach(s=>f.push(s.id)));
-  Object.values(FOLLOWUPS).forEach(fn=>fn().steps.forEach(s=>f.push(s.id)));
-  EXPERT.forEach(fn=>fn().steps.forEach(s=>f.push(s.id)));
-  return f;
-}
+
+const FU_M4=FOLLOWUPS;
+const FOLLOWUPS_W={};Object.keys(FU_M4).forEach(k=>{FOLLOWUPS_W[k]=()=>({...FU_M4[k](),npc:"jordan",outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."})});});
+Object.assign(FU_MAP,{outcome_misread:"fu_design",id_as_factor:"fu_design",numeric_as_factor:"fu_design",no_factor:"fu_design",no_design:"fu_design",extra_factor:"fu_design"});
+function expertCase(){const u=EXPERT[1]();return {...u,npc:"greg",title:"Greg's portal pitch",message:"<p>Portal users have lower HbA1c than non-users, p &lt; .001. The portal costs almost nothing, so I'm telling the board it works. Agreed?</p>",outro:g=>g("e2s1")==="correct"?{ok:true,title:"Greg backs off (for now)",text:"\"Confounders? Fine. But I'm writing that word down.\""}:{ok:false,title:"Greg backs off, eventually",text:"\"You had me convinced for a second there.\""}};}
+/* ---------- clues found in each room ---------- */
+function dict(rows){return `<p><strong>Data dictionary</strong></p>`+tbl("","",["Variable","What it is"],rows.map(r=>[`<code>${r[0]}</code>`,r[1]]));}
+const CLUES=[
+ {idx:0,id:"s_board",name:"Report whiteboard",x:2,y:4,html:()=>`<p><strong>Annual report goal</strong></p><p>Show that our average door-to-needle time is <strong>under</strong> the national target of <strong>60 minutes</strong>, using our most recent eligible patients.</p>`},
+ {idx:0,id:"s_dict",name:"Data dictionary",x:6,y:3,html:()=>dict([["patient_id","Patient ID"],["door_to_needle","Minutes from arrival to clot-busting medication"],["arrival_shift","Day, evening, or night"],["age","Age in years"]])},
+ {idx:1,id:"p_log",name:"Sign-in log",x:8,y:3,html:l=>l?`<p><strong>Pain rating sign-in log</strong></p><p>Entries: K01 first visit, K01 last visit, K02 first visit, K02 last visit, … continuing through K22.</p>`:`<p><strong>Pain rating sign-in log</strong></p><p>The <strong>same 18 patients</strong> rated their pain at their first visit and again at their last visit.</p>`},
+ {idx:1,id:"p_dict",name:"Data dictionary",x:14,y:3,html:()=>dict([["patient_id","Patient ID"],["visit","First or last visit"],["pain_score","Pain rating, 0 to 10"],["age","Age in years"],["knee","Left or right knee replaced"]])},
+ {idx:2,id:"b_board",name:"Trial whiteboard",x:16,y:3,html:l=>`<p><strong>Pilot trial</strong></p><p>Each patient was randomized to <strong>either</strong> the new drug <strong>or</strong> placebo. Outcome: change in systolic BP over 8 weeks. ${l?"18 on drug, 14 on placebo":"15 on drug, 15 on placebo"}.</p>`},
+ {idx:2,id:"b_dict",name:"Data dictionary",x:22,y:3,html:()=>dict([["patient_id","Patient ID"],["arm","Drug or placebo"],["sbp_change","Change in systolic BP (mmHg)"],["baseline_sbp","Systolic BP at enrollment"],["site","Clinic site: A, B, or C"]])},
+ {idx:3,id:"a_memo",name:"Planning memo",x:6,y:12,html:l=>`<p><strong>Alert pilot planning memo</strong></p><p>If the alert works, we expect a moderate benefit: effect size <strong>d = ${l?0.3:0.4}</strong>. Budget: up to <strong>${l?180:100} patients per group</strong>. Goal: at least <strong>80% power</strong>.</p>`},
+ {idx:3,id:"a_report",name:"Incident report",x:11,y:11,html:()=>`<p><strong>Alarm fatigue incident report</strong></p><p>Last year's unhelpful alert led nurses to ignore alarms. Leadership will only adopt a new alert if the chance of a false positive stays at <strong>5% or less</strong>.</p>`}
+];
+
+/* one clue per room: merge each room's clues into a single note */
+(()=>{const g={};CLUES.forEach(c=>{(g[c.idx]=g[c.idx]||[]).push(c);});const out=Object.values(g).map(list=>({...list[0],html:l=>list.map(c=>c.html(l)).join('<hr style="border:0;border-top:1px solid var(--line);margin:.6rem 0">')}));CLUES.length=0;out.forEach(c=>CLUES.push(c));})();
+function roomClues(idx){return CLUES.filter(c=>c.idx===idx);}
+function analysisName(b,vars,spec){
+  if(spec&&spec.mode==="t"){if(b.factors.length>1)return "Not a t test (too many grouping variables)";return b.compare==="benchmark"?"One-sample t test":b.compare==="groups"?"Independent-samples t test":b.compare==="same"?"Paired t test":"No analysis";}const f=b.factors;if(!f.length)return "No analysis (no factor chosen)";
+  if(f.length===1){const lv=(vars.find(v=>v[0]===f[0])||[])[3]||3;return b.repeated?"One-way repeated measures ANOVA":lv===2?"Independent-samples t test":"One-way ANOVA";}
+  return b.repeated?"Mixed design ANOVA":"Two-way ANOVA";}
+function evalBuild(spec,b){
+  const type=v=>(spec.vars.find(x=>x[0]===v)||[])[2];
+  if(spec.mode==="t"){
+    if(b.outcomes.length!==1||b.outcomes[0]!==spec.outcome)return "outcome_misread";
+    if(b.factors.some(f=>type(f)==="ID"))return "id_as_factor";
+    if(b.factors.some(f=>type(f)==="numeric"))return "numeric_as_factor";
+    if(!b.compare)return "no_design";
+    if(b.compare!==spec.compare){if(spec.compare==="benchmark"||b.compare==="benchmark")return "wrong_test_one_sample";return "paired_vs_independent";}
+    if(spec.compare==="benchmark")return b.factors.length?"extra_factor":"correct";
+    if(!b.factors.length)return "no_factor";
+    return (b.factors.length===1&&b.factors[0]===spec.factors[0])?"correct":"extra_factor";}
+  if(b.outcomes.length!==1||b.outcomes[0]!==spec.outcome)return "outcome_misread";
+  if(b.factors.some(f=>type(f)==="ID"))return "id_as_factor";
+  if(b.factors.some(f=>type(f)==="numeric"))return "numeric_as_factor";
+  if(!b.factors.length)return "no_factor";
+  if(b.repeated===null)return "no_design";
+  if(b.repeated!==spec.repeated)return spec.repeated?"ignore_dependence":"false_repeated";
+  const want=spec.factors,have=b.factors;
+  if(have.length<want.length&&have.every(f=>want.includes(f)))return "lose_factor_structure";
+  if(have.length!==want.length||!want.every(f=>have.includes(f)))return "extra_factor";
+  return "correct";}
+const BUILD_MSG={outcome_misread:"Pick exactly one outcome: the numeric measurement the team wants to compare. Check your notes.",
+  id_as_factor:"An ID number just labels people or beds; it isn't a grouping the team is comparing.",
+  numeric_as_factor:"A factor is a categorical grouping. That variable is numeric.",
+  no_factor:"You need at least one factor: the grouping being compared.",
+  no_design:"Answer the design question below the table.",wrong_test_one_sample:"Check your notes: what is the outcome being compared with?",paired_vs_independent:"Check your notes: separate people, or the same people measured again?",
+  false_repeated:"Check your notes: was anyone actually in more than one group?",
+  ignore_dependence:"Check your notes: are these separate people, or the same people measured again?",
+  lose_factor_structure:"You're missing a factor the team asked about. Check the questions in your notes.",
+  extra_factor:"That factor wasn't part of the team's question. Check your notes."};
 
 /* ============================================================
-   GAME ENGINE
+   HOSPITAL MAP
    ============================================================ */
+const COLS=24,ROWS=15,TS=40;
+const ROOMS=[{id:"stroke",name:"Stroke Center",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"rehabc",name:"Rehab Clinic",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"cardio",name:"Cardiology",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
+  {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"nursing",name:"Nursing Office",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"finance",name:"Finance Office",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
+const NPCS=[
+  {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director",initials:"PN",color:"#B5572D",kind:"core",idx:0},
+  {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead",initials:"MB",color:"#2D6FA3",kind:"core",idx:1},
+  {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist",initials:"ER",color:"#A33B5A",kind:"core",idx:2},
+  {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"sepsis quality nurse manager",initials:"DO",color:"#2F7D4F",kind:"core",idx:3},
+  {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
+  {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance (optional)",initials:"GW",color:"#9A6B12",kind:"expert"},
+  {id:"brooks",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
+const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
+const GRID=(()=>{const g=[];for(let y=0;y<ROWS;y++){g.push([]);for(let x=0;x<COLS;x++)g[y].push(x===0||y===0||x===COLS-1||y===ROWS-1?"#":".");}
+  ROOMS.forEach(r=>{for(let y=r.y0;y<=r.y1;y++)for(let x=r.x0;x<=r.x1;x++)if(x===r.x0||x===r.x1||y===r.y0||y===r.y1)g[y][x]="#";g[r.door[1]][r.door[0]]=".";});return g;})();
+
 let S=null;
-function newState(){return {seed:Math.floor(Math.random()*2147483647),phase:"play",coreIdx:0,level:0,path:[],pendingFU:null,fuDone:[],expDone:[],results:{},cred:50,hints:0,started:Date.now()};}
-function save(){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
+function newState(av){return {seed:Math.floor(Math.random()*2147483647),phase:"map",pos:[1,7],clues:[],lock:{},done:[],level:0,path:{},pendingFU:null,fuDone:[],expDone:[],results:{},cred:SEASON.rep,hints:0,started:Date.now(),avatar:av};}
+function save(){if(MODE!=="season")return;try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
 function loadSaved(){try{const s=localStorage.getItem(CONFIG.storageKey);return s?JSON.parse(s):null;}catch(e){return null;}}
-function clearSaved(){try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
+function clearSaved(){if(MODE!=="season")return;try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
 function coreRng(i){return makeRng((S.seed+i*1013+7)>>>0);}
 function valueOf(rec){if(!rec||rec.first==null)return "";if(rec.first==="correct")return rec.hintBefore?"correct_hint":"correct";return rec.first;}
+function title(){return S.cred>=75?"Lead analyst":S.cred>=50?"Analyst":"Analyst in training";}
 
 if(typeof document!=="undefined"){
 const app=document.getElementById("app");
 const PREVIEW=new URLSearchParams(location.search).has("preview");
+let walking=null,lastStep=0,mapActive=false;
 
-function setBar(text){
-  document.getElementById("progress").textContent=text||"";
-  const c=S?S.cred:50;
-  document.getElementById("credv").textContent=c;
-  document.getElementById("meterFill").style.width=c+"%";
-  document.getElementById("meter").setAttribute("aria-label","Team credibility "+c+" out of 100");
+function setBar(text){document.getElementById("progress").textContent=text||"";const c=S?S.cred:50;document.getElementById("credv").textContent=c;document.getElementById("meterFill").style.width=c+"%";document.getElementById("meter").setAttribute("aria-label","Reputation "+c+" out of 100");}
+function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);const m=document.getElementById("meter");if(m&&d){const c=document.createElement("span");c.className="delta";c.setAttribute("aria-hidden","true");c.textContent=(d>0?"+":"")+d;m.appendChild(c);setTimeout(()=>c.remove(),1300);}}
+function signText(){return `Sign-offs ${S.done.length}/4`;}
+
+
+/* ---------- character feedback (reactions + short play-out on wrong moves) ---------- */
+const REACT_OK={
+  nair:["Yes! That's exactly what I needed.","Perfect. I can work with that.","Oh, that's clean. Good.","Right, right. Keep going.","I like how fast you saw that."],
+  marcus:["That matches what I see with patients.","Okay, that makes sense to me.","Good. Even I can follow that.","Yep. That's the one.","Huh. The math agrees with the gym."],
+  ruiz:["Correct. Precisely.","Yes. That's defensible.","Good. No overreach.","That holds up.","Exactly the careful answer."],
+  dana:["Good. That won't waste my nurses' time.","Right call.","That's practical. I like it.","Yes. Moving on.","Finally, someone who gets it."],
+  greg:["Fine. That's... fair.","Okay, I'll give you that one.","Hm. Hard to argue with.","Right. Write that down for the board.","Annoyingly correct."],
+  brooks:["Good. The board can use that.","That's the evidence I wanted.","Clear and defensible.","Exactly."],
+  nadia:["Oh good, that makes sense.","Yes, that's what I hoped you'd say.","Perfect. The night team will want to hear this.","That's clear. Thank you."],
+  jordan:["There it is.","Good. That's the idea.","Exactly. You've earned a coffee.","Yes. See how that works?","Nice. You're getting it."]};
+const REACT_NO={
+  nair:["Wait, are you sure? That sounds too good.","Hold on. Dr. Brooks would send that back.","Hmm. That doesn't match your notes.","That's not what I expected you to say."],
+  marcus:["That doesn't match what I've seen.","Hang on, that can't be right.","Hmm. My patients would disagree.","You lost me there."],
+  ruiz:["No. I don't think that holds up.","That's an overreach.","I wouldn't sign that.","Check that again."],
+  dana:["That would cause problems on the floor.","No. My nurses would pay for that.","That's not going to work.","Try again. Quickly."],
+  greg:["Great, so I'm right? ...Wait, you look unsure.","Brooks is going to question that.","That's what I said, and she didn't like it either.","Hmm. That sounds like my kind of number."],
+  brooks:["That won't hold up in the room.","That doesn't answer the question.","Greg will pounce on that.","Try another piece of evidence."],
+  nadia:["Hmm, that doesn't sound right to me.","Wait, would the charge nurse buy that?","I'm not sure that answers my question.","Can we look again?"],
+  jordan:["Hm. Walk me through that.","Not quite. Look again.","Close, but no.","Let's rethink that."]};
+function pickLine(a){return a[Math.floor(Math.random()*a.length)];}
+function unitNpc(unit){return NPCS.find(p=>p.id===unit.npc)||NPCS.find(p=>p.id==="jordan");}
+function firstName(p){return p.name.split(",")[0];}
+function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,40)}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p></div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
+function reactOk(fb,p,body){fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);}
+function playWrong(fb,p,action,body,onReact,onDone){
+  const quick=window.matchMedia("(prefers-reduced-motion: reduce)").matches,d1=quick?250:900,d2=quick?300:1300;
+  fb.innerHTML=`<div class="react pending"><p class="react-action">${action}</p><p class="typing" aria-hidden="true"><span></span><span></span><span></span></p></div>`;
+  setTimeout(()=>{fb.innerHTML=reactHtml(p,pickLine(REACT_NO[p.id]||REACT_NO.jordan),"bad","");if(onReact)onReact();
+    setTimeout(()=>{fb.querySelector(".react").insertAdjacentHTML("beforeend",`<div class="react-note"><p class="react-name">${p.id==="jordan"?"Jordan explains":"Jordan, on the phone"}</p>${body}<p class="where">Try again.</p></div>`);if(onDone)onDone();},d2);},d1);
 }
-function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);}
-function focusTop(el){window.scrollTo(0,0);(el||app).focus({preventScroll:true});}
 
 function renderIntro(){
-  const saved=loadSaved();
-  setBar("");
-  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p>
-   <h1 tabindex="-1">You've joined the Evidence Review Team</h1>
-   <p class="lede">Clinicians and managers bring you questions about their data. Your recommendations change what happens on their units, so think each decision through.</p>
-   <p>This week's cases are about hypothesis testing and t tests. Expect about 25 to 30 minutes: five cases, plus a short review if one would help. Good calls raise the team's credibility, and asking the senior statistician for a hint costs a little of it.</p>
-   <p>This is a new practice game being tried out in our class, and it doesn't count toward your grade. Wrong choices are part of how it teaches, so don't look answers up. At the end, please submit your results through a short anonymous survey; it helps shape Thursday's class. Your progress saves after each case on this device.</p>
-   <div class="actions">${saved&&saved.phase!=="play"||saved&&(saved.coreIdx>0||saved.fuDone.length)?`<button class="primary" id="resume">Resume where you left off</button><button class="quiet" id="start">Start over</button>`:`<button class="primary" id="start">Start the first case</button>`}</div>`;
+  const ok=storageOK(),found=ok?seasonLoad():null,wk=ok?loadSaved():null;setBar("");mapActive=false;
+  const wkHere=wk&&(wk.done.length||wk.fuDone.length||wk.phase==="done");
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Episode ${WEEK.num}: ${WEEK.title}</h1>
+   <p class="lede">${WEEK.pitch}</p><p>${WEEK.topicLine}</p>
+   <fieldset><legend>Pick your badge color</legend><div class="swatches">${AVATARS.map((a,i)=>`<label><input type="radio" name="av" value="${a[0]}" ${i===0?"checked":""}><span class="swatch" style="background:${a[0]}"></span>${a[1]}</label>`).join("")}</div></fieldset>
+   <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap the map. Walk into someone or something to interact. Everything is also reachable from the list under the map.</p>
+   <h2>Your season</h2>
+   ${ok?"":`<p class="toast">This browser isn't allowing saved data, so saving is off. You can still enter a career code, and nothing will be saved.</p>`}
+   <div class="actions">
+     ${wkHere&&found?`<button class="primary" id="resumeW">Resume this week</button>`:""}
+     ${found?`<button class="${wkHere?"quiet":"primary"}" id="cont">Continue my season</button>`:ok?`<button class="primary" id="startSave">Start saving my season</button>`:""}
+     <button class="quiet" id="nosave">Play without saving</button>
+   </div>
+   ${found?`<p class="where">Saved season on this browser: ${seasonTitle(found.rep)}, reputation ${found.rep}, ${found.weeks.length} episode${found.weeks.length===1?"":"s"} played. Not you? Enter your own code or play without saving.</p>`:""}
+   <p class="where">Playing without saving stores nothing on this device. If you close the tab, this week starts over.</p>
+   <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
   app.querySelector("h1").focus();
-  const st=document.getElementById("start");
-  st.onclick=()=>{if(document.getElementById("resume")&&!confirm("Start over? Your saved progress will be erased."))return;clearSaved();S=newState();save();nextUnit();};
-  const rs=document.getElementById("resume");
-  if(rs)rs.onclick=()=>{S=saved;nextUnit();};
+  const av=()=>app.querySelector('input[name="av"]:checked').value;
+  const begin=(mode,season)=>{
+    if(mode==="season"&&wkHere&&!confirm("Start this week over? Your in-progress week will be replaced."))return;
+    SEASON=season;MODE=mode;if(MODE==="season"){clearSaved();seasonSave();}
+    S=newState(av());S.mode=MODE;save();renderOpening();};
+  const g=id=>document.getElementById(id);
+  if(g("resumeW"))g("resumeW").onclick=()=>{SEASON=found;MODE="season";S=wk;S.phase==="done"?renderSummary():renderMap();};
+  if(g("cont"))g("cont").onclick=()=>begin("season",found);
+  if(g("startSave"))g("startSave").onclick=()=>begin("season",seasonDefault());
+  g("nosave").onclick=()=>begin("nosave",seasonDefault());
+  g("useCode").onclick=()=>{const d=decodeCareer(g("codeIn").value);if(!d){g("codeErr").textContent="That code isn't valid. Check for typos and try again.";return;}
+    if(ok&&!wkHere)begin("season",d);else if(ok){SEASON=d;MODE="season";seasonSave();clearSaved();S=newState(av());S.mode=MODE;save();renderOpening();}else begin("nosave",d);};
+}
+function renderOpening(){
+  mapActive=false;setBar("");const prev=WEEK.previously?WEEK.previously(SEASON):"";
+  app.innerHTML=`<p class="where">Episode ${WEEK.num}</p><h1 tabindex="-1">${WEEK.title}</h1>
+   ${prev?`<p class="lede"><strong>Previously at Riverbend:</strong> ${prev}</p>`:""}
+   ${WEEK.opening.map(([id,line])=>{const p=NPCS.find(q=>q.id===id);return `<div class="talk-head" style="align-items:flex-start">${portrait(p,52)}<div style="flex:1"><p class="who" style="margin-bottom:.2rem"><strong>${p.name.split(",")[0]}</strong></p><div class="bubble" style="margin:0 0 .6rem">${line}</div></div></div>`;}).join("")}
+   <div class="actions"><button class="primary" id="go">Head to the floor</button></div>`;
+  app.querySelector("h1").focus();document.getElementById("go").onclick=()=>{renderMap();toast(`Start with anyone who has a <strong>!</strong> above them. Check the <strong>?</strong> clues in their room first.`);};
+}
+function applySeason(){
+  if(S.seasonApplied)return;const k=WEEK.keyFlags(S);
+  Object.assign(SEASON.flags,k.flags);if(k.dana){SEASON.danaN=k.dana.n;SEASON.danaA=k.dana.a;}
+  k.trust.forEach(id=>{SEASON.trust[id]=Math.min(3,(SEASON.trust[id]||1)+1);});
+  if(!SEASON.weeks.includes(WEEK.num))SEASON.weeks.push(WEEK.num);SEASON.rep=S.cred;S.seasonApplied=true;seasonSave();
 }
 
-function nextUnit(){
-  if(S.phase==="done")return renderSummary();
-  if(S.phase==="expertOffer")return renderExpertOffer();
-  if(S.phase==="expert"){const i=S.expDone.length;if(i<EXPERT.length)return playUnit(EXPERT[i](),"expert",null,`Expert case ${i+1} of ${EXPERT.length}`);S.phase="done";save();return renderSummary();}
-  if(S.pendingFU)return playUnit(FOLLOWUPS[S.pendingFU](),"fu",null,"Quick review");
-  if(S.coreIdx<CORE.length){const lvl=S.level;return playUnit(CORE[S.coreIdx](coreRng(S.coreIdx),lvl),"core",lvl,`Case ${S.coreIdx+1} of ${CORE.length}`);}
-  S.phase="expertOffer";save();renderExpertOffer();
+function npcStatus(p){
+  if(p.kind==="core")return S.done.includes(p.idx)?"done":"need";
+  if(p.kind==="stats")return S.pendingFU||(S.hiddenUnlocked&&!S.hiddenDone)?"need":"wait";
+  if(p.kind==="expert")return S.expDone.length?"done":"need";
+  if(p.kind==="cameo")return "wait";
+  return S.done.length===4?"need":"wait";
+}
+function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return S.pendingFU?"Wants to see you":(S.hiddenUnlocked&&!S.hiddenDone?"★ Hidden problem":"Available");if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";if(p.kind==="cameo")return "No consult this week";return s==="done"?"Signed off":"Needs help";}
+function toast(html){const t=document.getElementById("toast");if(t)t.innerHTML=html;}
+
+function mapSvg(){
+  let s=`<rect x="0" y="0" width="${COLS*TS}" height="${ROWS*TS}" class="m-corr"/>`;
+  ROOMS.forEach(r=>{s+=`<rect x="${r.x0*TS}" y="${r.y0*TS}" width="${(r.x1-r.x0+1)*TS}" height="${(r.y1-r.y0+1)*TS}" class="${r.c}"/>`;});
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(GRID[y][x]==="#")s+=`<rect x="${x*TS}" y="${y*TS}" width="${TS}" height="${TS}" class="m-wall"/>`;
+  ROOMS.forEach(r=>{const top=r.y0===0;s+=`<text class="m-label" x="${(r.x0+1)*TS+8}" y="${top?(r.y0+1)*TS+22:(r.y0+1)*TS+22}">${r.name}</text>`;
+});
+  s+=`<text class="m-label" x="${4*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text><rect class="m-deco" x="${12*TS}" y="${6*TS+4}" width="${3*TS}" height="10" rx="4"/><text class="m-name" x="${13*TS+20}" y="${8*TS+28}" text-anchor="middle" opacity=".7">Guest desk</text>`;
+  CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
+    s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
+  NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
+    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
+    if(st!=="wait")s+=`<g transform="translate(${cx+14},${cy-22})"><circle r="10" class="${st==="need"?"mk-need":"mk-done"}"/><text class="mk-t" y="5" text-anchor="middle">${st==="need"?"!":"✓"}</text></g>`;
+    s+=`</g>`;});
+  s+=`<g id="player" style="transition:transform .11s linear" transform="translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})"><circle r="16" fill="${S.avatar}" stroke="#fff" stroke-width="3"/><text class="m-init" y="4" text-anchor="middle">You</text></g>`;
+  return s;
+}
+function renderMap(){
+  mapActive=true;setBar(signText());
+  const quest=S.done.length<4?`Get sign-offs from 4 teams (${S.done.length} of 4 so far), then report to Dr. Brooks.`:"All 4 sign-offs collected. Take the report to Dr. Brooks in the Quality Office.";
+  app.innerHTML=`<h1 class="sr" tabindex="-1">Hospital map</h1><p class="quest"><strong>Task:</strong> ${quest}</p>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <div class="map-wrap"><svg id="mapsvg" viewBox="0 0 ${COLS*TS} ${ROWS*TS}" tabindex="0" role="application" aria-label="Hospital map. Use arrow keys to walk. The staff list below the map is an alternative.">${mapSvg()}</svg></div>
+    <div class="controls">
+      <div class="dpad" aria-label="Movement buttons"><button class="up" data-d="0,-1" aria-label="Up">▲</button><button class="left" data-d="-1,0" aria-label="Left">◀</button><button class="down" data-d="0,1" aria-label="Down">▼</button><button class="right" data-d="1,0" aria-label="Right">▶</button></div>
+      <div class="dir" id="dir">${dirHtml()}</div>
+    </div>`;
+  const svg=document.getElementById("mapsvg");
+  svg.addEventListener("click",ev=>{const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());const tx=Math.floor(q.x/TS),ty=Math.floor(q.y/TS);
+    const npc=NPCS.find(p=>p.x===tx&&p.y===ty)||CLUES.find(c=>c.x===tx&&c.y===ty);if(npc)goTo(npc);else walkTo(tx,ty,null);});
+  app.querySelectorAll(".dpad button").forEach(b=>b.onclick=()=>{const [dx,dy]=b.dataset.d.split(",").map(Number);step(dx,dy);});
+  bindDir();
+  if(S.pendingFU)toast(`Jordan from Statistics wants a quick word. Head to the <strong>Statistics</strong> office.`);
+  focusMap();
+}
+function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
+function bindDir(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>goTo(NPCS.find(p=>p.id===b.dataset.go)));app.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>goTo(CLUES.find(c=>c.id===b.dataset.clue)));}
+function refreshMap(){const svg=document.getElementById("mapsvg");if(!svg)return;const pos=S.pos;svg.innerHTML=mapSvg();document.getElementById("dir").innerHTML=dirHtml();bindDir();}
+function inspect(c){
+  if(S.lock[c.idx]==null)S.lock[c.idx]=S.level;
+  const room=NPCS.find(p=>p.idx===c.idx).room,isNew=!S.clues.includes(c.id);if(isNew)S.clues.push(c.id);
+  toast(`<p class="fb-head">${c.name}, ${room}</p>${c.html(S.lock[c.idx])}<p class="where">${isNew?"Added to your notes.":"Already in your notes."}</p>`);
+  save();refreshMap();
+}
+function focusMap(){const s=document.getElementById("mapsvg");if(s)s.focus({preventScroll:true});}
+function movePlayer(){const p=document.getElementById("player");if(p)p.setAttribute("transform",`translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})`);}
+function free(x,y){return x>=0&&y>=0&&x<COLS&&y<ROWS&&GRID[y][x]==="."&&!NPCS.some(p=>p.x===x&&p.y===y)&&!CLUES.some(c=>c.x===x&&c.y===y);}
+function step(dx,dy){
+  if(!mapActive)return;walking=null;const nx=S.pos[0]+dx,ny=S.pos[1]+dy;const npc=NPCS.find(p=>p.x===nx&&p.y===ny);
+  if(npc)return interact(npc);const cl=CLUES.find(c=>c.x===nx&&c.y===ny);if(cl)return inspect(cl);if(free(nx,ny)){S.pos=[nx,ny];movePlayer();}
+}
+function bfs(targets){
+  const key=(x,y)=>x+","+y,prev={},q=[S.pos];prev[key(...S.pos)]=null;
+  while(q.length){const [x,y]=q.shift();if(targets.some(t=>t[0]===x&&t[1]===y)){const path=[];let k=key(x,y);while(prev[k]){path.unshift(k.split(",").map(Number));k=prev[k];}return path;}
+    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{const nx=x+dx,ny=y+dy,k=key(nx,ny);if(!(k in prev)&&free(nx,ny)){prev[k]=key(x,y);q.push([nx,ny]);}});}
+  return null;
+}
+function walkTo(tx,ty,npc){
+  const targets=npc?[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>[npc.x+dx,npc.y+dy]).filter(t=>free(t[0],t[1])):[[tx,ty]];
+  const path=bfs(targets);if(!path)return;const token={};walking=token;const act=o=>o.html?inspect(o):interact(o);
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tick=()=>{if(walking!==token||!mapActive)return;if(!path.length){walking=null;if(npc)act(npc);return;}S.pos=path.shift();movePlayer();setTimeout(tick,reduce?15:95);};tick();
+}
+function goTo(npc){walkTo(null,null,npc);}
+document.addEventListener("keydown",ev=>{
+  if(!mapActive||ev.target.closest("button,input,textarea,select,a"))return;
+  const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]}[ev.key];
+  if(!d)return;ev.preventDefault();const now=Date.now();if(now-lastStep<85)return;lastStep=now;step(...d);
+});
+
+function interact(p){
+  const first=p.name.split(" ")[0]==="Dr."?p.name.split(",")[0]:p.name.split(" ")[0];
+  if(p.kind==="cameo")return toast(`<strong>${first}:</strong> "${(WEEK.cameo[p.id]||(()=>"Busy week. Come find me later."))(SEASON)}"`);
+  if(p.kind==="stats"){if(!S.pendingFU&&S.hiddenUnlocked&&!S.hiddenDone&&WEEK.hidden)return startUnit(WEEK.hidden(),"hidden",null,p);if(S.pendingFU)return startUnit(FOLLOWUPS_W[S.pendingFU](),"fu",null,p);return toast(`<strong>Jordan:</strong> "Nothing for now. If you get stuck in a consult, call me for a hint."`);}
+  if(p.kind==="admin"){if(S.done.length<4)return toast(`<strong>Dr. Brooks:</strong> "I need all four sign-offs for the report. You have ${S.done.length} of 4."`);return finalReport();}
+  if(S.pendingFU)return toast(`<strong>${first}:</strong> "Jordan from Statistics was looking for you. Go see them first."`);
+  if(p.kind==="expert"){if(S.expDone.length)return toast(`<strong>${first}:</strong> "Thanks again for helping me with the board presentation!"`);return startUnit(expertCase(),"expert",null,p);}
+  if(S.done.includes(p.idx))return toast(`<strong>${first}:</strong> "Thanks again! You already have my sign-off."`);
+  const missing=roomClues(p.idx).filter(c=>!S.clues.includes(c.id));
+  if(missing.length)return toast(`<strong>${first}:</strong> "Hi! Before we sit down, take a look at the ${missing.map(c=>c.name.toLowerCase()).join(" and the ")} first."`);
+  const lvl=S.lock[p.idx]??S.level;startUnit(CORE[p.idx](coreRng(p.idx),lvl),"core",lvl,p);
 }
 
-function playUnit(unit,kind,lvl,barText){
-  setBar(barText);
-  app.innerHTML=`<p class="where">${barText}</p><h1 tabindex="-1">${unit.title}</h1>
-    <div class="memo"><p class="memo-from">From ${unit.from}</p>${unit.message}</div>
-    ${unit.briefing||""}<div id="steps"></div>`;
-  focusTop(app.querySelector("h1"));
+function startUnit(unit,kind,lvl,npc){
+  mapActive=false;walking=null;setBar(signText());
+  app.innerHTML=`<div class="talk-head">${portrait(npc)}<div><p class="where">${npc.room}</p><h1 tabindex="-1">${unit.title}</h1><p class="who">${npc.name}, ${npc.role}</p></div></div>
+    <div class="bubble">${npcLine(npc)}${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!(unit.steps[0].spec||unit.steps[0].reveal)?unit.viz:""}</div><div id="steps"></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
   showStep(unit,0,kind,lvl);
 }
-
 function showStep(unit,i,kind,lvl){
-  const box=document.getElementById("steps");
-  if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
-  const st=unit.steps[i];
-  const rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false});
-  const n=unit.steps.length;
+  const box=document.getElementById("steps");if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
+  const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
   let hintUsed=false,done=false,wrongs=0;
-  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.show||""}
-    <h2 class="prompt" tabindex="-1">${st.prompt}</h2>
-    <div id="body"></div>
-    <div id="hintArea"><button class="linkish" id="hintBtn">Ask the senior statistician for a hint (costs 3 credibility)</button></div>
-    <div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
-  const prompt=box.querySelector(".prompt");
-  if(i>0){prompt.scrollIntoView({behavior:"smooth",block:"start"});prompt.focus({preventScroll:true});}
-  const fb=document.getElementById("fb"), body=document.getElementById("body");
-  document.getElementById("hintBtn").onclick=()=>{
-    hintUsed=true;S.hints++;cred(-3);
-    document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan Lee, senior statistician</p><p>${st.hint}</p></div>`;
-  };
-  const finish=()=>{
-    done=true;
-    const hb=document.getElementById("hintBtn");if(hb)hb.remove();
-    const last=i===n-1;
-    document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${last?"See what happens":"Next decision"}</button>`;
-    document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
-  };
-
+  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
+    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr><th scope="row"><code>${v[0]}</code><br><span class="where">${v[1]}</span></th><td><span class="typ">${v[2]}</span></td><td><select data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">${st.spec.mode==="t"?"Grouping variable":"Factor"}</option></select></td></tr>`).join("")}</tbody></table>
+    ${st.spec.mode==="t"?`<fieldset><legend>What is the outcome compared with?</legend><div class="radios" style="flex-direction:column;gap:.4rem"><label><input type="radio" name="rep" value="benchmark"> A fixed benchmark value</label><label><input type="radio" name="rep" value="groups"> Two separate groups of patients</label><label><input type="radio" name="rep" value="same"> The same patients at two times</label></div></fieldset>`
+    :`<fieldset><legend>Was anyone measured more than once (in more than one group)?</legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>`}
+    <button class="quiet" id="runB">Run analysis</button>`:""}
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div id="hintArea"><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
+  if(st.init)st.init();
+  const pr=box.querySelector(".prompt");if(i>0){pr.scrollIntoView({behavior:"smooth",block:"start"});pr.focus({preventScroll:true});}
+  const fb=document.getElementById("fb");
+  document.getElementById("hintBtn").onclick=()=>{hintUsed=true;S.hints++;cred(-hintCost());document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan, on the phone</p><p>${st.hint}</p></div>`;};
   if(st.type==="design"){
-    body.innerHTML=`<fieldset><legend>Patients per group</legend><div class="radios">${st.ns.map((v,k)=>`<label><input type="radio" name="n" value="${v}" ${k===0?"checked":""}> ${v}</label>`).join("")}</div></fieldset>
+    box.querySelector(".opts").outerHTML=`<fieldset><legend>Patients per group</legend><div class="radios">${st.ns.map((v,k)=>`<label><input type="radio" name="n" value="${v}" ${k===0?"checked":""}> ${v}</label>`).join("")}</div></fieldset>
       <fieldset><legend>Significance level (α)</legend><div class="radios">${st.alphas.map(a=>`<label><input type="radio" name="a" value="${a}" ${a===0.05?"checked":""}> ${a.toFixed(2)}</label>`).join("")}</div></fieldset>
-      <button class="quiet" id="run">Run the pilot</button>`;
-    const simR=makeRng((S.seed+99991)>>>0);
-    document.getElementById("run").onclick=()=>{
-      if(done)return;
-      const nv=+body.querySelector('input[name="n"]:checked').value, av=+body.querySelector('input[name="a"]:checked').value;
-      const pw=power2(st.d,nv,av), pct=Math.round(pw*100);
-      const tag=av>0.05?"alpha_shopping":(pw>=0.8?"correct":"underpowered");
-      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
-      const sig=simR.u()<pw;
-      const sim=sig?"In this simulated pilot, the alert's benefit came out significant.":"In this simulated pilot, the difference wasn't significant, so the alert would be shelved even though it actually works. That's a Type II error.";
-      if(tag==="correct"){
-        if(wrongs===0)cred(hintUsed?5:10);
-        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">Good design.</p><p>With ${nv} patients per group and α = ${av.toFixed(2)}, power is about ${pct}%: the pilot detects a real benefit of this size about ${pct} times in 100. ${sim}</p><p>You kept the false-positive risk at 5% and got power from the sample size.</p></div>`;
-        body.querySelectorAll("input,button").forEach(e=>e.disabled=true);
-        finish();
-      }else{
-        wrongs++;cred(-4);
-        const msg=tag==="alpha_shopping"
-          ?`Power is about ${pct}%, but α = 0.10 means a 10% chance of adopting an alert that doesn't help when it truly doesn't. The team wants to keep that risk at 5% or lower. Find another way to get power.`
-          :`Power is about ${pct}%, so there's roughly a ${100-pct}% chance of missing a real benefit. ${sim}${av<0.05?" A stricter α also lowers power.":""}`;
-        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">This design falls short. Adjust it and run again.</p><p>${msg}</p></div>`;
-      }
+      <div id="pviz"></div><button class="quiet" id="runD">Run the pilot</button>`;
+    const val=nm=>+box.querySelector(`input[name="${nm}"]:checked`).value,drawP=()=>{document.getElementById("pviz").innerHTML=powerViz(st.d,val("n"),val("a"));};
+    box.querySelectorAll('input[name="n"],input[name="a"]').forEach(e=>e.addEventListener("change",drawP));drawP();
+    const simR=makeRng((S.seed+99991)>>>0);let busyD=false;
+    document.getElementById("runD").onclick=()=>{
+      if(done||busyD)return;const nv=val("n"),av=val("a"),pw=power2(st.d,nv,av),pct=Math.round(pw*100);
+      const tag=av>0.05?"alpha_shopping":(pw>=0.8?"correct":"underpowered");if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      const sim=simR.u()<pw?"In this simulated pilot, the alert's benefit came out significant.":"In this simulated pilot, the difference wasn't significant, so the alert would be shelved even though it works: a Type II error.";
+      if(tag==="correct"){done=true;S.danaDesign={n:nv,a:av};if(wrongs===0)cred(hintUsed?5:10);
+        reactOk(fb,unitNpc(unit),`<p><strong>Pilot results are in.</strong> Power is about ${pct}% with α = ${av.toFixed(2)}. ${sim}</p>`);
+        box.querySelectorAll("input,#runD").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+        document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+      }else{if(busyD)return;wrongs++;busyD=true;document.getElementById("runD").disabled=true;
+        const msg=tag==="alpha_shopping"?`Power is about ${pct}%, but α = 0.10 doubles the chance of adopting a useless alert. Check the incident report.`:`Power is about ${pct}%, so there's roughly a ${100-pct}% chance of missing a real benefit. ${sim}`;
+        playWrong(fb,unitNpc(unit),`Running the pilot with ${nv} patients per group…`,`<p>${msg}</p>`,()=>cred(-4),()=>{busyD=false;document.getElementById("runD").disabled=false;});}
     };
-    return;
+  }
+  if(st.type==="build"){let busyB=false;
+    document.getElementById("runB").onclick=()=>{
+      if(done||busyB)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
+      const b={outcomes:sel.filter(x=>x.value==="outcome").map(x=>x.dataset.var),factors:sel.filter(x=>x.value==="factor").map(x=>x.dataset.var),repeated:r?r.value==="yes":null,compare:r?r.value:null};
+      const tag=evalBuild(st.spec,b),name=analysisName(b,st.spec.vars,st.spec);
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(tag==="correct"){done=true;if(wrongs===0)cred(hintUsed?5:10);
+        reactOk(fb,unitNpc(unit),`<p><strong>Analysis runs: ${name}.</strong> ${st.spec.ok} The results are shown above.</p>`);document.getElementById("vizSlot").innerHTML=unit.viz||"";
+        box.querySelectorAll("select,input,#runB").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+        document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">Next</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+      }else{if(busyB)return;wrongs++;busyB=true;const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag],notReady=tag==="no_design"||tag==="outcome_misread"&&!b.outcomes.length;
+        document.getElementById("runB").disabled=true;
+        playWrong(fb,unitNpc(unit),notReady?"Checking your setup…":`Running ${name}…`,m.trim().startsWith("<")?m:`<p>${m}</p>`,()=>cred(-4),()=>{busyB=false;document.getElementById("runB").disabled=false;});}
+    };
+  }
+  let busy=false;const who=unitNpc(unit);
+  box.querySelectorAll(".opt").forEach(btn=>{btn.onclick=()=>{
+    if(done||busy||btn.getAttribute("aria-disabled")==="true")return;const o=st.options[+btn.dataset.k];
+    if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
+    const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
+    if(o.tag==="correct"){done=true;btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
+      box.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");b.classList.remove("chosen");});
+      if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,inner);
+      const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+      document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;
+      document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+    }else{wrongs++;busy=true;btn.classList.add("chosen");
+      playWrong(fb,who,`You give ${firstName(who)} your answer…`,inner,
+        ()=>{btn.classList.remove("chosen");btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";cred(-4);},
+        ()=>{busy=false;});}
+  };});
+
+  const mark=(el,cls)=>{el.classList.remove("chosen");el.classList.add(cls);};
+  const wrapP=t=>t.trim().startsWith("<")?t:`<p>${t}</p>`;
+  const okFinish=body=>{done=true;if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,body);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+    document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);};
+  const badFinish=(el,action,body)=>{wrongs++;busy=true;if(el)el.classList.add("chosen");
+    playWrong(fb,who,action,wrapP(body),()=>{cred(-4);if(el){mark(el,"wrong");el.setAttribute("aria-disabled","true");}},()=>{busy=false;});};
+  let lockAll=()=>{};
+  const choose=(el,item,action)=>{if(done||busy||el.getAttribute("aria-disabled")==="true")return;if(rec.first===null){rec.first=item.tag;rec.hintBefore=hintUsed;}
+    if(item.tag==="correct"){mark(el,"right");lockAll();okFinish(wrapP(item.fb));}else badFinish(el,action,item.fb);};
+  if(st.type==="spot"){
+    box.querySelector(".opts").outerHTML=`<div class="draft"><p class="draft-title">${st.draftTitle}</p><p>${st.draft.map((d,k)=>`<button class="sent" data-k="${k}">${d.t}</button>`).join(" ")}</p></div>`;
+    lockAll=()=>box.querySelectorAll(".sent").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
+  }
+  if(st.type==="cards"){
+    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
+  }
+  if(st.type==="point"){
+    lockAll=()=>box.querySelectorAll("[data-pick]").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{const it=st.picks[b.dataset.pick];if(it)choose(b,it,`You point it out to ${firstName(who)}…`);});
   }
 
-  body.innerHTML=`<div class="opts" role="group" aria-label="Answer choices">${st.options.map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>`;
-  body.querySelectorAll(".opt").forEach(btn=>{
-    btn.onclick=()=>{
-      if(done||btn.getAttribute("aria-disabled")==="true")return;
-      const o=st.options[+btn.dataset.k];
-      if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
-      if(o.tag==="correct"){
-        btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
-        body.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");});
-        if(wrongs===0)cred(hintUsed?5:10);
-        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">${wrongs===0?"Good call.":"That's the one."}</p><p>${o.fb}</p></div>`;
-        finish();
-      }else{
-        wrongs++;cred(-4);
-        btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";
-        const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
-        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">Not quite. Pick another option.</p>${inner}</div>`;
-      }
+  if(st.type==="reply"||st.type==="interview"){
+    const bub=(you,t)=>`<div class="msg ${you?"you":"them"}"><span class="msg-who">${you?"You":firstName(who)}</span>${t}</div>`;
+    box.querySelector(".opts").outerHTML=`<div class="thread ${st.channel||"chat"}">${st.channel==="email"?`<div class="mailhead"><span><strong>From:</strong> ${who.name}</span><span><strong>Subject:</strong> ${st.subject||""}</span></div>`:""}<div class="msgs" id="msgs" aria-live="polite">${(st.thread||[]).map(m=>bub(false,m)).join("")}</div>${st.type==="interview"?`<div class="asks"><span class="slotlab" style="width:100%">Ask ${firstName(who)}:</span>${st.questions.map((q,k)=>`<button class="ask" data-k="${k}">${q.q}</button>`).join("")}</div>`:""}<div id="composeHost"></div></div>`;
+    const msgs=document.getElementById("msgs"),addMsg=(you,t)=>msgs.insertAdjacentHTML("beforeend",bub(you,t));
+    const doCompose=()=>{
+      const host=document.getElementById("composeHost"),sel=st.slots.map(()=>null);
+      host.innerHTML=`<div class="compose"><span class="slotlab">Build your ${st.channel==="email"?"email":"reply"} from the pieces</span>${st.slots.map((sl,si)=>`<div class="slotrow"><span class="slotlab">${sl.label}</span><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></div>`).join("")}<div class="draftmsg" id="draftmsg">…</div><button class="primary" id="sendBtn">${st.channel==="email"?"Send email":"Send"}</button></div>`;
+      const txt=()=>sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ");
+      host.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy)return;const si=+b.dataset.s;sel[si]=+b.dataset.o;host.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));document.getElementById("draftmsg").textContent=txt();});
+      document.getElementById("sendBtn").onclick=()=>{
+        if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a piece from each row first.</p>`;return;}
+        addMsg(true,txt());const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+        if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+        if(!bad){host.querySelectorAll("button").forEach(b=>b.disabled=true);box.querySelectorAll(".ask").forEach(b=>b.disabled=true);if(st.reveal){const vs=document.getElementById("vizSlot");if(vs)vs.innerHTML=unit.viz||"";}okFinish(wrapP(st.okFb));}
+        else badFinish(null,`${firstName(who)} is typing…`,bad.fb);};
     };
-  });
+    if(st.type==="reply")doCompose();
+    else{let opened=false;box.querySelectorAll(".ask").forEach(b=>b.onclick=()=>{if(done||busy||b.disabled)return;const q=st.questions[+b.dataset.k];b.disabled=true;addMsg(true,q.q);addMsg(false,q.a);if(!q.key)cred(-1);if(q.key&&!opened){opened=true;doCompose();}});}
+  }
+  if(st.type==="tiles"){
+    const sel=st.slots.map(()=>null);
+    box.querySelector(".opts").outerHTML=`${st.slots.map((sl,si)=>`<fieldset><legend>${sl.label}</legend><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></fieldset>`).join("")}<p class="headline" id="hl" aria-live="polite">Pick one tile from each row to build the headline.</p><button class="quiet" id="present">Present the headline</button>`;
+    const upd=()=>{document.getElementById("hl").textContent=sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ")+(sel.every(x=>x!==null)?".":"");};
+    box.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy)return;const si=+b.dataset.s;sel[si]=+b.dataset.o;box.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));upd();});
+    document.getElementById("present").onclick=()=>{
+      if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a tile from each row first.</p>`;return;}
+      const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(!bad){box.querySelectorAll(".tile,#present").forEach(e=>e.disabled=true);okFinish(wrapP(st.okFb));}
+      else badFinish(null,`You present the headline to ${firstName(who)}…`,bad.fb);};
+  }
 }
-
 function showOutro(unit,kind,lvl){
-  const g=id=>valueOf(S.results[id]).replace("correct_hint","correct");
-  const box=document.getElementById("steps");
-  box.innerHTML=`<div class="outro"><h2 tabindex="-1">What happened</h2>${unit.outro(g)}<p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">Continue</button></div></div>`;
-  const h=box.querySelector("h2");h.scrollIntoView({behavior:"smooth",block:"start"});h.focus({preventScroll:true});
-  document.getElementById("cont").onclick=()=>unitDone(unit,kind,lvl);
+  const g=id=>valueOf(S.results[id]).replace("correct_hint","correct"),oc=unit.outro(g),box=document.getElementById("steps");
+  box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
+    <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">${kind==="finale"?"File the report and see my results":"Back to the hallway"}</button></div></div>`;
+  const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
 }
-
 function unitDone(unit,kind,lvl){
-  if(kind==="core"){
-    const ids=unit.steps.map(s=>s.id);
-    const misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct");
-    const hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
-    S.path.push(lvl);
-    if(misses.length===0&&hinted.length===0)S.level=1;
-    else if(misses.length>=2)S.level=0;
-    for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
-    S.coreIdx++;
-  }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;}
-  else if(kind==="expert"){S.expDone.push(unit.id);}
-  save();nextUnit();
+  let msg="";
+  if(kind==="core"){const idx=+unit.id.slice(1)-1;S.done.push(idx);S.path[idx]=lvl;
+    const ids=unit.steps.map(s=>s.id),misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct"),hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
+    if(misses.length===0&&hinted.length===0)S.level=1;else if(misses.length>=2)S.level=0;
+    if(S.fuDone.length<1)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
+    msg=`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
+    if(S.done.length===4&&!S.pendingFU&&WEEK.hidden&&!S.hiddenUnlocked&&CORE.every((c,ci)=>c(coreRng(ci),S.path[ci]).steps.every(st=>S.results[st.id]&&S.results[st.id].first==="correct"))){S.hiddenUnlocked=true;msg+=` ★ Jordan texts: "You didn't need me once this week. Come to Statistics. There's something strange in the data."`;}
+  }else if(kind==="hidden"){S.hiddenDone=true;msg="★ Hidden problem solved. Jordan is impressed.";
+  }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;msg="Jordan's done with you. Back to the consults.";}
+  else{S.expDone.push(unit.id);msg="Nice work on the optional consult.";}
+  save();renderMap();if(!S.pendingFU)toast(msg);
 }
-
-function renderExpertOffer(){
-  setBar("Optional");
-  app.innerHTML=`<p class="where">Optional</p><h1 tabindex="-1">Two expert cases are waiting</h1>
-    <p class="lede">You've finished the required cases. There are two optional cases for anyone who wants a harder challenge: a small, skewed sample, and a comparison of groups that patients chose for themselves.</p>
-    <p>They take about 5 minutes and are completely optional.</p>
-    <div class="actions"><button class="primary" id="play">Take the expert cases</button><button class="quiet" id="skip">Skip to my results</button></div>`;
-  focusTop(app.querySelector("h1"));
-  document.getElementById("play").onclick=()=>{S.phase="expert";save();nextUnit();};
-  document.getElementById("skip").onclick=()=>{S.phase="done";save();renderSummary();};
+function finalReport(){
+  if(WEEK.finale&&!S.finaleDone){const b=NPCS.find(q=>q.id==="brooks");return startUnit(WEEK.finale(S),"finale",null,b);}
+  mapActive=false;const p=NPCS.find(q=>q.id==="brooks");
+  app.innerHTML=`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
+    <div class="bubble"><p>${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}</p></div>
+    <div class="actions"><button class="primary" id="file">File the report and see my results</button><button class="quiet" id="back">Not yet, back to the floor</button></div>`;
+  app.querySelector("h1").focus();
+  document.getElementById("file").onclick=()=>{S.phase="done";applySeason();save();renderSummary();};
+  document.getElementById("back").onclick=()=>renderMap();
 }
-
 function buildPayload(){
-  /* Everything goes into ONE Qualtrics embedded data field named "results". */
-  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`case levels ${S.path.join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
+  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`save ${MODE==="season"?"on":"off"}`,`case levels ${[0,1,2,3].map(i=>S.path[i]??"-").join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
   const add=(u,name)=>u.steps.forEach(st=>{const v=valueOf(S.results[st.id]);if(v)parts.push(`${name}, ${st.label}: ${v}`);});
-  CORE.forEach((c,i)=>{if(i<S.path.length){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
-  S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
-  EXPERT.map(f=>f()).filter(u=>S.expDone.includes(u.id)).forEach(u=>add(u,u.title));
-  return {results:parts.join(" | ").replace(/α/g,"alpha")};
+  CORE.forEach((c,i)=>{if(S.done.includes(i)){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
+  if(WEEK.finale&&S.finaleDone){const u=WEEK.finale(S);add(u,u.title);}
+  if(S.hiddenDone&&WEEK.hidden){const u=WEEK.hidden();add(u,"Hidden problem ("+u.title+")");}
+  S.fuDone.forEach(id=>{const u=FOLLOWUPS_W[id]();add(u,u.title);});
+  if(S.expDone.length)add(expertCase(),"Optional ("+expertCase().title+")");
+  return {results:parts.join(" | ").replace(/α/g,"alpha").replace(/μ/g,"mu")};
 }
-
 function renderSummary(){
-  setBar("Results");
-  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0));
-  const fus=S.fuDone.map(id=>FOLLOWUPS[id]()), exps=EXPERT.map(f=>f()).filter(u=>S.expDone.includes(u.id));
-  const coreSteps=units.flatMap(u=>u.steps);
+  mapActive=false;setBar("Results");
+  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0)),coreSteps=units.flatMap(u=>u.steps);
   const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
-  const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">Right on the first try</span>`:v==="correct_hint"?`<span class="st ok">Right on the first try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
-  const list=(u)=>`<h2>${u.title}</h2><ul class="review">${u.steps.map(s=>`<li><span>${s.label}</span>${status(s.id)}</li>`).join("")}</ul>`;
-  const payload=buildPayload();
-  const configured=!!CONFIG.qualtricsUrl;
-  app.innerHTML=`<p class="where">Results</p><h1 tabindex="-1">Case files closed</h1>
-    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>decisions right on the first try</span></div>
-    <div class="stat"><b>${S.cred}</b><span>team credibility</span></div>
-    <div class="stat"><b>${S.hints}</b><span>hints used</span></div></div>
-    <div class="submit-box">${configured
-      ?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results are sent along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish</strong>, or your results won't be recorded.</p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`
-      :`<h2>Instructor preview</h2><p>No results survey is connected yet, so nothing is sent. The values below are what a student's submission would contain.</p>`}</div>
-    ${units.map(list).join("")}${fus.map(list).join("")}${exps.map(list).join("")}
-    ${(!configured||PREVIEW)?`<h2>What gets sent to the survey</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
-    <div class="actions"><button class="linkish" id="restart">Start the mission over</button></div>`;
-  focusTop(app.querySelector("h1"));
-  const sb=document.getElementById("submit");
-  if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);Object.entries(payload).forEach(([k,v])=>u.searchParams.set(k,v));location.href=u.toString();};
-  document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased. If you've already submitted, that submission is kept."))return;clearSaved();S=null;renderIntro();};
+  const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">First try</span>`:v==="correct_hint"?`<span class="st ok">First try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
+  const payload=buildPayload(),configured=!!CONFIG.qualtricsUrl;
+  const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>Your season is saved on this browser. To continue on another device, keep this code somewhere safe:</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
+    :`<div class="submit-box" style="margin:1rem 0"><h2>Played without saving</h2><p>Nothing was saved on this device.</p><p id="ccWrap"><button class="linkish" id="showc">Get a career code anyway</button></p></div>`;
+  app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this week's hidden problem.</p>`:""}
+    <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
+    <div class="bubble"><p><strong>Next week:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
+    <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  const cp=document.getElementById("copyc");if(cp)cp.onclick=()=>{const t=document.getElementById("ccode").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{cp.textContent="Copied";},()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("ccode"));getSelection().removeAllRanges();getSelection().addRange(r);cp.textContent="Selected: press Ctrl+C";});};
+  const shc=document.getElementById("showc");if(shc)shc.onclick=()=>{document.getElementById("ccWrap").innerHTML=`<code style="font-size:1.15rem">${encodeCareer(SEASON)}</code><br><span class="where">Enter it at the start of next week's game to keep your story.</span>`;};
+  const sb=document.getElementById("submit");if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);u.searchParams.set("results",payload.results);location.href=u.toString();};
+  document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased."))return;clearSaved();S=null;renderIntro();};
 }
-
 renderIntro();
 }
 </script>
