@@ -127,6 +127,58 @@ main>h2{margin-top:1.8rem}
 .status-icon{font-size:1.35rem;line-height:1.3;font-weight:700;color:var(--good)}
 .status.mixed .status-icon{color:var(--amber)}
 .status-title{font-weight:700;margin-bottom:.15rem}
+.react{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin:.3rem 0 .8rem}
+.react.good{border-left:5px solid var(--good)}.react.bad{border-left:5px solid var(--amber)}.react.pending{border-left:5px solid var(--line)}
+.react-head{display:flex;gap:.7rem;align-items:center}
+.react-name{font-weight:700;margin:0;font-size:.88rem;color:var(--muted)}
+.react-line{margin:0;font-size:1.06rem}
+.react-body{margin-top:.55rem}
+.react-note{border-top:1px solid var(--line);margin-top:.6rem;padding-top:.5rem}
+.react-action{margin:0 0 .2rem;color:var(--muted);font-style:italic}
+.typing{margin:0}.typing span{display:inline-block;width:7px;height:7px;margin-right:4px;border-radius:50%;background:var(--muted);animation:rvblink 1s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes rvblink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.opt.chosen{border-color:var(--amber);background:var(--amber-wash)}
+.delta{margin-left:.35rem;font-weight:700;animation:rvpop 1.3s ease forwards}
+@keyframes rvpop{0%{opacity:0;transform:translateY(4px)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.typing span,.delta{animation:none}}
+.draft{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9rem 1.1rem;margin:.8rem 0;font-family:var(--serif);font-size:1.05rem;line-height:2}
+.draft-title{font-family:var(--sans);font-size:.85rem;font-weight:700;color:var(--muted);margin:0 0 .2rem;line-height:1.4}
+.draft p{margin:0}
+.sent{font:inherit;background:none;border:0;border-bottom:2px dotted var(--muted);color:var(--ink);cursor:pointer;padding:0 .15rem;text-align:left;display:inline;line-height:1.7}
+.sent:hover:not([aria-disabled="true"]){background:var(--amber-wash)}
+.sent.chosen,.ecard.chosen,.pick.chosen,.pickpanel.chosen{background:var(--amber-wash);border-color:var(--amber)}
+.sent.wrong{background:var(--bad-wash);text-decoration:line-through}.sent.right{background:var(--good-wash);border-bottom:2px solid var(--good)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem;margin:.8rem 0}
+.ecard{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.75rem .85rem;min-height:5.5rem;cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink)}
+.ecard:hover:not([aria-disabled="true"]){border-color:var(--teal);transform:translateY(-1px)}
+.etag{display:block;font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--teal-deep);margin-bottom:.3rem}
+.ecard.wrong{background:var(--bad-wash);border-color:var(--bad)}.ecard.right{background:var(--good-wash);border-color:var(--good)}
+.pick{font:inherit;background:none;border:1.5px dashed var(--teal);border-radius:5px;padding:.05rem .35rem;cursor:pointer;color:var(--ink)}
+.pick:hover:not([aria-disabled="true"]){background:var(--teal-wash)}
+.pick.wrong,.pickpanel.wrong{background:var(--bad-wash);border-color:var(--bad)}.pick.right,.pickpanel.right{background:var(--good-wash);border-color:var(--good);border-style:solid}
+.pickpanel{display:block;width:100%;text-align:left;background:none;border:2px dashed var(--teal);border-radius:10px;padding:.35rem .5rem;margin:.2rem 0 .5rem;cursor:pointer;font:inherit;color:var(--ink)}
+.pickpanel .vizfig{margin:.2rem 0}
+.tiles{display:flex;flex-wrap:wrap;gap:.45rem}
+.tile{font:inherit;font-size:.95rem;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:.35rem .85rem;cursor:pointer;color:var(--ink)}
+.tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
+.claim{font-size:1.05rem}
+.thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
+.thread.email{border-top:5px solid var(--teal);border-radius:6px}
+.mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
+.msgs{display:flex;flex-direction:column;gap:.45rem}
+.msg{max-width:88%;padding:.5rem .8rem;border-radius:14px;background:var(--teal-wash);align-self:flex-start}
+.msg.you{align-self:flex-end;background:var(--amber-wash)}
+.email .msg{max-width:100%;border-radius:6px}
+.msg-who{display:block;font-size:.72rem;font-weight:700;color:var(--muted)}
+.asks{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0 .2rem}
+.ask{font:inherit;font-size:.92rem;border:1.5px solid var(--teal);background:var(--card);color:var(--teal-deep);border-radius:999px;padding:.3rem .85rem;cursor:pointer}
+.ask:disabled{opacity:.45;cursor:default}
+.compose{border-top:1px solid var(--line);margin-top:.7rem;padding-top:.5rem}
+.slotrow{margin:.45rem 0}
+.slotlab{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:.2rem}
+.draftmsg{background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:.5rem .8rem;margin:.6rem 0;min-height:2.4rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:560px){body{font-size:16px}h1{font-size:1.65rem}.bar-meta{gap:.7rem}.meter-track{width:60px}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -200,10 +252,10 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:5,version:"2.0",
+const CONFIG={mission:5,version:"6.1",
   // Qualtrics survey link (same survey as Mission 4)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
-  storageKey:"ahstat3005-mission5-v2"};
+  storageKey:"ahstat3005-mission5-v6"};
 function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
 function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
 function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
@@ -229,6 +281,101 @@ function tbl(title,note,heads,rows){
 const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
 
 function pT(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+
+/* ============================================================
+   SEASON SAVE (identical in every week's game)
+   ============================================================ */
+const SEASON_KEY="riverbend-season-v1";
+const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
+// Append new flags at the END only, so older career codes keep working.
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction"];
+const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
+let SEASON=seasonDefault(),MODE="nosave";
+function storageOK(){try{localStorage.setItem("__rv_t","1");localStorage.removeItem("__rv_t");return true;}catch(e){return false;}}
+function seasonNormalize(d){const b=seasonDefault();return {...b,...d,trust:{...b.trust,...(d.trust||{})},flags:{...b.flags,...(d.flags||{})}};}
+function seasonLoad(){try{const s=localStorage.getItem(SEASON_KEY);return s?seasonNormalize(JSON.parse(s)):null;}catch(e){return null;}}
+function seasonSave(){if(MODE!=="season")return;try{localStorage.setItem(SEASON_KEY,JSON.stringify(SEASON));}catch(e){}}
+function b32sum(p){let c=0;for(let i=0;i<p.length;i++)c=(c+(i+1)*(B32.indexOf(p[i])+7))%1024;return B32[c>>5]+B32[c&31];}
+function encodeCareer(d){
+  let v=0n;const put=(val,bits)=>{v=(v<<BigInt(bits))|(BigInt(val)&((1n<<BigInt(bits))-1n));};
+  put(1,3);let wm=0;d.weeks.forEach(w=>{if(w>=1&&w<=15)wm|=1<<(w-1);});put(wm,15);
+  put(Math.max(0,Math.min(100,Math.round(d.rep))),7);
+  CAST_IDS.forEach(k=>put(Math.max(1,Math.min(3,d.trust[k]||1))-1,2));
+  let fm=0n;FLAG_BITS.forEach((f,i)=>{if(d.flags[f])fm|=1n<<BigInt(i);});v=(v<<32n)|fm;
+  put(Math.max(0,DANA_N.indexOf(d.danaN)),2);put(Math.max(0,DANA_A.indexOf(d.danaA)),2);
+  let p="";for(let i=14;i>=0;i--)p+=B32[Number((v>>BigInt(5*i))&31n)];
+  return `RIV-${p.slice(0,5)}-${p.slice(5,10)}-${p.slice(10)}${b32sum(p)}`;
+}
+function decodeCareer(code){
+  const s=String(code||"").trim().toUpperCase().replace(/^RIV/,"").replace(/[^0-9A-Z]/g,"").replace(/O/g,"0").replace(/[IL]/g,"1");
+  if(s.length!==17||[...s].some(ch=>B32.indexOf(ch)<0))return null;
+  const p=s.slice(0,15);if(b32sum(p)!==s.slice(15))return null;
+  let v=0n;for(const ch of p)v=(v<<5n)|BigInt(B32.indexOf(ch));
+  const take=bits=>{const x=Number(v&((1n<<BigInt(bits))-1n));v>>=BigInt(bits);return x;};
+  const d=seasonDefault();d.danaA=DANA_A[take(2)]??0.05;d.danaN=DANA_N[take(2)]??100;
+  const fm=v&0xFFFFFFFFn;v>>=32n;d.flags={};FLAG_BITS.forEach((f,i)=>{d.flags[f]=Number((fm>>BigInt(i))&1n);});
+  [...CAST_IDS].reverse().forEach(k=>{d.trust[k]=take(2)+1;});d.rep=take(7);
+  const wm=take(15);d.weeks=[];for(let w=1;w<=15;w++)if(wm&(1<<(w-1)))d.weeks.push(w);
+  if(take(3)!==1)return null;return d;
+}
+function seasonTitle(rep){return rep>=75?"Lead analyst":rep>=50?"Analyst":"Analyst in training";}
+const GREET={jordan:"Back again? Good. Coffee's fresh.",brooks:"Good. You're here.",nair:"There's my favorite analyst!",marcus:"Good to see you. Pull up a stool.",dana:"Good, it's you. I need someone who gets it right.",ruiz:"Ah, the careful one. Sit down.",greg:"My favorite skeptic. Fine, have a look."};
+const BACKSTORY={jordan:"(Jordan once switched to decaf for a week. They still call it the worst week of their career.)",brooks:"(Brooks was an ICU nurse for twelve years before this job. She has seen what bad data does.)",nair:"(Nair trained at a hospital with the slowest stroke times in the state. She swore never again.)",marcus:"(Marcus became a PT after rehab for his own knee.)",dana:"(Dana worked nights on this floor for fifteen years. She still hears alarms in her sleep.)",ruiz:"(Ruiz's first trial was stopped over a false positive. She has been careful ever since.)",greg:"(Greg started here as a billing clerk. He says every dollar has a patient attached.)"};
+function npcLine(p){const cb=(WEEK.callbacks[p.id]||(()=>""))(SEASON),t=SEASON.trust[p.id]||1;let h="";
+  if(cb)h+=`<p>${cb}</p>`;else if(t>=2&&GREET[p.id])h+=`<p>${GREET[p.id]}</p>`;if(t>=3&&BACKSTORY[p.id])h+=`<p class="where">${BACKSTORY[p.id]}</p>`;return h;}
+function hintCost(){return (SEASON.trust.jordan||1)>=3?2:3;}
+function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:0;}
+
+/* ============================================================
+   WEEK 5 STORY (from the Riverbend Story Bible)
+   ============================================================ */
+const WEEK={num:5,title:"The budget meeting",
+  pitch:"Friday's board meeting decides staffing, program cuts, rehab funding, and teach-back. Four teams, including a guest from Women's Health, need their evidence ready.",
+  topicLine:"This week: ANOVA. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  opening:[["brooks","Friday's board agenda: night triage staffing, Greg's program cuts, cardiac rehab funding, and teach-back. Every item needs evidence that holds up."],
+           ["jordan","Same drill: clues first, then the analysis. And say hi to our guest from Women's Health at the guest desk."]],
+  previously:d=>"Last week, four teams brought their first claims to the new analyst. Now Greg is asking which programs the hospital can afford to cut."+(d.flags.w4_nair_honest?" Word got around that you told Dr. Nair her headline wasn't ready.":""),
+  callbacks:{
+    nadia:()=>"Hi, I'm Nadia from Women's Health. Jordan said you're the one to ask.",
+    greg:d=>d.flags.w4_greg_portal?"You again. Fine, check my numbers before the board does.":"So you're the new analyst. Let's see if you can keep up.",
+    marcus:d=>d.flags.w4_marcus_paired?"Remember my knee patients? This one might feel familiar.":"",
+    dana:d=>d.weeks.includes(4)?"The sepsis pilot is enrolling with the design you gave me. Now this.":"",
+    nair:d=>d.flags.w4_nair_honest?"Before I celebrate, I'm asking you first this time.":""},
+  cameo:{ruiz:d=>d.flags.w4_ruiz_inconclusive&&d.weeks.includes(4)?"The full drug trial is approved. I'll need you next week.":"I'm planning a full trial. I'll need you next week."},
+  keyFlags:S=>{const f={w5_greg_posthoc:firstRight("c2s2"),w5_marcus_repeated:firstRight("c3s1"),w5_dana_interaction:firstRight("c4s3")};
+    const t=[];if(f.w5_greg_posthoc)t.push("greg");if(f.w5_marcus_repeated)t.push("marcus");if(f.w5_dana_interaction)t.push("dana");if(firstRight("e1s1"))t.push("nair");
+    if([firstRight("c1s1"),firstRight("c2s2"),firstRight("c3s1"),firstRight("c4s3")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");if(S.fuDone.length===0)t.push("jordan");
+    return {flags:f,trust:t};},
+  finale:S=>({id:"fin",npc:"brooks",title:"The board meeting",message:"<p>The board is seated, and Greg has the first word. Answer each question with your strongest evidence.</p>",
+    steps:[
+     {id:"fin1",label:"Night triage staffing",type:"cards",claim:`<strong>Greg:</strong> "Night staff cost money. Is night shift really any different?"`,prompt:"Play your strongest evidence.",hint:"Which evidence goes beyond a single average?",
+      cards:[{k:"Data",t:"The night shift's average triage time is the highest",tag:"within_between_confusion",fb:"Averages alone could differ by chance; the test weighs spread within shifts too."},{k:"Analysis",t:"An ANOVA of the triage log shows times differ by shift",tag:"correct",fb:"Differences between shifts are large compared with the spread within them."},{k:"Story",t:"The night nurses say they feel swamped",tag:"proof_overclaim",fb:"That's why Nadia asked, but the board needs the data."}]},
+     {id:"fin2",label:"Group classes vs. the app",type:"cards",claim:`<strong>Greg:</strong> "Classes and the app weren't significantly different. So the app is just as good. Cut the classes."`,prompt:"Play your strongest evidence.",hint:"Does not significantly different mean equal?",
+      cards:[{k:"Analysis",t:"The ANOVA was significant, so all three programs differ",tag:"all_means_differ",fb:"A significant ANOVA means at least one differs, not all."},{k:"Reasoning",t:"No significant difference doesn't show the app is as good as classes",tag:"correct",fb:"Greg's comparison can't prove equivalence, so cutting classes on that basis is premature."},{k:"Analysis",t:"Group classes beat usual care",tag:"absence_as_equivalence",fb:"True, but it doesn't answer Greg's claim about the app."}]},
+     {id:"fin3",label:"Cardiac rehab funding",type:"cards",claim:`<strong>Board member:</strong> "Do cardiac rehab patients actually improve, or should we cut it?"`,prompt:"Play your strongest evidence.",hint:"Which analysis matched the design?",
+      cards:[{k:"Analysis",t:"A one-way ANOVA of the visits wasn't significant",tag:"ignore_dependence",fb:"That analysis ignored that the same patients were measured at every visit."},{k:"Story",t:"Every patient walked farther",tag:"proof_overclaim",fb:"Not every patient did; the evidence is about the average."},{k:"Analysis",t:"Repeated measures ANOVA: walking distance changed across visits",tag:"correct",fb:"The right analysis for the design, and it shows real change."}]}],
+    outro:g=>({ok:true,title:"Board decisions",text:[g("fin1")==="correct"?"Night triage staffing: approved":"Night triage staffing: approved after a second look at the analysis",g("fin2")==="correct"?"Group classes: kept, with the app offered alongside":"Group classes: nearly cut, then kept after Dr. Brooks objected",g("fin3")==="correct"?"Cardiac rehab: funded for another year":"Cardiac rehab: funded once the right analysis was explained","Teach-back: approved, based on Dana's headline"].map(x=>"• "+x).join("<br>")+`<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
+    takeaway:"In the boardroom, the strongest evidence is the analysis that matches the design and claims no more than the data show."}),
+  hidden:()=>({id:"hid",npc:"jordan",title:"The 900-minute patient",
+    message:"<p>Off the books: before Nadia's ANOVA goes to the board, look at the night-shift log. Something doesn't add up.</p>",
+    steps:[
+     {id:"hid1",label:"Finding the problem",type:"point",
+      show:tbl("Night shift triage log (first 10 entries)","Minutes from arrival to triage",["Patient","Minutes"],[["N01",pk("34","a")],["N02",pk("41","b")],["N03",pk("29","c")],["N04",pk("900","bad")],["N05",pk("38","d")],["N06",pk("52","e")],["N07",pk("35","f")],["N08",pk("44","g")],["N09",pk("31","h")],["N10",pk("39","i")]]),
+      prompt:"Click the entry that doesn't belong.",hint:"Triage in Labor & Delivery takes minutes, not hours.",
+      picks:Object.assign(Object.fromEntries(["a","b","c","d","e","f","g","h","i"].map(k=>[k,{tag:"data_quality",fb:"That's a plausible triage time."}])),{bad:{tag:"correct",fb:"900 minutes is 15 hours. It's almost certainly a typing error, maybe for 9.00. One value like that inflates the night-shift mean and the within-shift variance."}})},
+     {id:"hid2",label:"Deciding what to do",type:"reply",channel:"chat",prompt:"Jordan texted you. Build your reply.",hint:"Could the value be real? What would you check before changing anything?",
+      thread:["So what do we do about N04 before the board sees this?"],
+      slots:[
+       {label:"First",options:[{t:"First, check N04's original record,",tag:"correct"},{t:"Just delete N04,",tag:"data_quality",fb:"Deleting data without checking can hide real problems. Check the source first."}]},
+       {label:"Then",options:[{t:"and if it's a typo, correct it and rerun the ANOVA before Friday.",tag:"correct"},{t:"and leave it in, since ANOVA isn't affected by one value.",tag:"data_quality",fb:"One huge value shifts the mean and inflates the variance, which changes F."}]}],
+      okFb:"Exactly. Fix the data at the source, then rerun and report it."}],
+    outro:()=>({ok:true,title:"Hidden problem solved",text:"Jordan: \"The record says 9.00. Nadia's rerun still shows shifts differ. Good catch.\""}),
+    takeaway:"Check suspicious values against the original record before analyzing, and never delete data just because it's inconvenient."}),
+  ending:f=>f.w5_greg_posthoc?"Greg walked out of the board meeting without his cuts. Nicely done.":"The board got the right comparisons in the end. Greg will be back.",
+  teaser:"Dr. Ruiz's full trial is enrolling, but the two arms don't look alike at baseline."};
+
+const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -279,42 +426,35 @@ function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewB
    CASES (4 core, 3 decisions each)
    ============================================================ */
 function case1(R,level){
-  const n=level?12:15,names=["Low-carb","Mediterranean","Low-fat"],mus=level?[-10,-15,-18]:[-7,-14,-19];
+  const n=level?12:15,names=["Day","Evening","Night"],mus=level?[31,34,36]:[30,34,37];
   let E=names.map(()=>{const e=[];for(let i=0;i<n;i++)e.push(R.normal(0,1));const m=mean(e);return e.map(v=>v-m);});
   const ss=E.flat().reduce((s,v)=>s+v*v,0),kf=Math.sqrt((3*n-3)/ss);E=E.map(g=>g.map(v=>v*kf));
-  const mk=s=>names.map((nm,i)=>({name:nm,vals:E[i].map(v=>mus[i]+s*v)}));
+  const mk=s=>names.map((nm,i)=>({name:nm,vals:E[i].map(v=>Math.max(1,mus[i]+s*v))}));
   const g=mean(mus),SSB=n*mus.reduce((a,m)=>a+(m-g)**2,0),dfW=3*n-3,Fof=s=>(SSB/2)/(s*s),pof=s=>fSurv(Fof(s),2,dfW);
-  const tight=level?9:7,wide=level?15:17,aTight=R.u()<.5,sA=aTight?tight:wide,sB=aTight?wide:tight;
-  const lab="LDL change (mg/dL)";const all20=mk(20).flatMap(g=>g.vals),RNG=[Math.floor(Math.min(...all20)/5)*5,Math.ceil(Math.max(...all20)/5)*5];const wideAll=mk(wide).flatMap(g=>g.vals),RNG2=[Math.floor(Math.min(...wideAll)/5)*5,Math.ceil(Math.max(...wideAll)/5)*5];
-  return {id:"c1",npc:"aisha",title:"Three diets, one question",
-    message:`<p>Thanks for looking around. Can you set up the analysis for our diet study?</p>`,
+  const tight=4,wide=level?8:9,aTight=R.u()<.5,sA=aTight?tight:wide,sB=aTight?wide:tight;
+  const lab="Arrival to triage (minutes)";const all20=mk(10).flatMap(g=>g.vals),RNG=[Math.max(0,Math.floor(Math.min(...all20)/5)*5),Math.ceil(Math.max(...all20)/5)*5];const wideAll=mk(wide).flatMap(g=>g.vals),RNG2=[Math.max(0,Math.floor(Math.min(...wideAll)/5)*5),Math.ceil(Math.max(...wideAll)/5)*5];
+  return {id:"c1",npc:"nadia",title:"Is night shift slower?",
+    message:`<p>I'm asking the board for more night triage staff on Friday. Greg says that's too expensive unless the data show nights are different. Can you check?</p>`,
     steps:[
-      {id:"c1s1",label:"Building the analysis",type:"build",prompt:"Set up Aisha's analysis from your notes, then run it.",
-       hint:"What did the team measure? Which grouping are they comparing? Was anyone in more than one diet?",
-       spec:{outcome:"ldl_change",factors:["diet"],repeated:false,
-        vars:[["patient_id","Patient ID","ID"],["diet","Diet assigned (3 groups)","categorical",3],["ldl_change","LDL change at 12 weeks (mg/dL)","numeric"],["age","Age (years)","numeric"],["clinic_site","Clinic site (2 sites)","categorical",2]],
-        msgs:{extra_factor:"Clinic site wasn't part of Aisha's question; she wants to compare the diets.",false_repeated:"Each patient followed only one diet, so nobody is in more than one group."},
-        ok:"One factor with three independent groups and a numeric outcome."}},
-      {id:"c1s2",label:"Predicting the evidence",show:`<p>Two clinics ran this study and got the <strong>same group means</strong>.</p><div class="side"><div><p class="where">Clinic A</p>${stripK(mk(sA),lab,RNG2)}</div><div><p class="where">Clinic B</p>${stripK(mk(sB),lab,RNG2)}</div></div>`,
-       prompt:"Which clinic's data give stronger evidence that the diets differ?",
-       hint:"The means are identical. What else differs between the two charts?",
-       options:[
-        {t:"Clinic A",tag:aTight?"correct":"within_between_confusion",fb:aTight?`Tighter groups make the same mean differences stand out. Clinic A: F = ${fx(Fof(sA),1)}, ${pT(pof(sA))}. Clinic B: F = ${fx(Fof(sB),1)}, ${pT(pof(sB))}.`:"Clinic A's groups overlap a lot, which makes the mean differences less convincing."},
-        {t:"Clinic B",tag:aTight?"within_between_confusion":"correct",fb:aTight?"Clinic B's groups overlap a lot, which makes the mean differences less convincing.":`Tighter groups make the same mean differences stand out. Clinic B: F = ${fx(Fof(sB),1)}, ${pT(pof(sB))}. Clinic A: F = ${fx(Fof(sA),1)}, ${pT(pof(sA))}.`},
-        {t:"The same, because the means are the same",tag:"within_between_confusion",fb:"ANOVA also weighs the spread within groups, and that differs."},
-        {t:"You can't tell without running the test",tag:"f_misconception",fb:"You can get a good sense from the picture: compare spread between groups with spread within them."}]},
-      {id:"c1s3",label:"Between vs. within",show:`<div class="slider"><label for="spread">Spread within each diet group (SD): <strong id="sdlab">16</strong> mg/dL &nbsp; <span id="flab"></span></label><input type="range" id="spread" min="4" max="20" step="1" value="16"></div><div id="liveviz"></div>`,
+      {id:"c1s1",label:"Telling Nadia your plan",type:"reply",channel:"chat",prompt:"Nadia wants to know your plan. Build your reply.",
+       hint:"Check the triage log: what was measured, which grouping, and was anyone logged more than once?",
+       thread:["What will you run on my triage log?"],
+       slots:[
+        {label:"Compare",options:[{t:"I'll compare minutes from arrival to triage",tag:"correct"},{t:"I'll compare patients' ages",tag:"outcome_misread",fb:"Your question is about triage times, not ages."}]},
+        {label:"Across",options:[{t:"across day, evening, and night shifts",tag:"correct"},{t:"between first births and later births",tag:"extra_factor",fb:"That's not Nadia's question; she asked about shifts."}]},
+        {label:"Using",options:[{t:"using a one-way ANOVA.",tag:"correct"},{t:"using three separate t tests.",tag:"multiple_testing",fb:"Three tests push the false-positive risk to about 14%."},{t:"using a repeated measures ANOVA.",tag:"wrong_anova_type",fb:"Each patient was logged once, on one shift."}]}],
+       okFb:"One factor with three independent groups: a one-way ANOVA."},
+      {id:"c1s3",label:"Between vs. within",show:`<div class="slider"><label for="spread">Spread within each shift (SD): <strong id="sdlab">9</strong> minutes &nbsp; <span id="flab"></span></label><input type="range" id="spread" min="2" max="10" step="1" value="9"></div><div id="liveviz"></div>`,
        init:()=>{const el=document.getElementById("spread"),draw=()=>{const s=+el.value;document.getElementById("sdlab").textContent=s;document.getElementById("flab").innerHTML=`F = ${fx(Fof(s),2)}, ${pT(pof(s))}`;document.getElementById("liveviz").innerHTML=stripK(mk(s),lab,RNG);};el.addEventListener("input",draw);draw();},
-       prompt:"Drag the slider. The group means never move. Why does F shrink as the spread grows?",
+       type:"reply",channel:"chat",prompt:"Drag the slider, then answer Nadia.",
        hint:"F is a ratio. What's in the top, and what's in the bottom?",
-       options:[
-        {t:"The group means get closer together.",tag:"within_between_confusion",fb:"Watch the dark bars: the means stay put."},
-        {t:"The sample size gets smaller.",tag:"f_misconception",fb:"Every patient is still there; only the spread changes."},
-        {t:"F compares variation between groups with variation within groups, so more within-group spread shrinks it.",tag:"correct",fb:"F = between-group variance ÷ within-group variance."},
-        {t:"F only measures how far apart the means are.",tag:"f_misconception",fb:"If that were true, F wouldn't change here."}]}
+       thread:["When I drag the spread up, F drops, even though the averages never move. Why?"],
+       slots:[
+        {label:"Because F compares",options:[{t:"Because F compares variation between shifts with variation within shifts,",tag:"correct"},{t:"Because F compares only the shift averages,",tag:"f_misconception",fb:"If that were true, F wouldn't change when only the spread changes."}]},
+        {label:"So more spread within shifts",options:[{t:"more spread within shifts makes the same differences less convincing.",tag:"correct"},{t:"more spread moves the averages closer together.",tag:"within_between_confusion",fb:"Watch the dark bars: the averages stay put."}]}],
+       okFb:"F = between-group variance ÷ within-group variance."}
     ],
-    outro:g=>g("c1s1")==="correct"?{ok:true,title:"Aisha signs off",text:"She'll run a one-way ANOVA and report the spread in each group."}
-      :{ok:false,title:"Aisha signs off after a rethink",text:"She almost ran three t tests. One ANOVA it is."},
+    outro:g=>g("c1s1")==="correct"?{ok:true,title:"Nadia signs off",text:"\"One ANOVA, with the spread for each shift. That's what our moms deserve.\""}:{ok:false,title:"Nadia signs off after a rethink",text:"\"Glad we fixed that before I shared it with the unit.\""},
     takeaway:"ANOVA asks whether variation between group means is large compared with variation within groups."};
 }
 
@@ -326,24 +466,10 @@ function case2(R,level){
   const table=tbl("ANOVA","HbA1c change (%)",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(a));
   const post=tbl("Multiple Comparisons (Scheffé)","",["Comparison","Mean Difference","Sig."],ph.map(q=>[`${q.a} vs. ${q.b}`,fx(q.d,2),fP(q.p)]));
   const sigPairs=ph.filter(q=>q.p<.05).map(q=>`${q.a} vs. ${q.b}`);
-  return {id:"c2",npc:"luis",title:"Which program works?",
-    message:`<p>You've seen our enrollment sheet and poster. What can we say about the three programs? α = 0.05.</p>`,viz:stripK(names.map((nm,i)=>({name:nm,vals:G[i]})),"HbA1c change (%)"),
+  return {id:"c2",npc:"greg",title:"Which program works?",
+    message:`<p>On Friday I'm proposing we replace group classes with the phone app. It costs a tenth as much. Check my numbers. α = 0.05.</p>`,viz:stripK(names.map((nm,i)=>({name:nm,vals:G[i]})),"HbA1c change (%)")+table,
     steps:[
-      {id:"c2s1",label:"Writing the hypotheses",prompt:"Which hypotheses fit an overall ANOVA?",
-       hint:"The null says all population means are equal. What's the opposite of \"all equal\"?",
-       options:[
-        {t:`${H0}: μ<sub>usual</sub> = μ<sub>classes</sub> = μ<sub>app</sub> &nbsp; ${HA}: all three means differ`,tag:"all_means_differ",fb:"The opposite of \"all equal\" is \"at least one differs,\" not \"all differ.\""},
-        {t:`${H0}: x̄<sub>usual</sub> = x̄<sub>classes</sub> = x̄<sub>app</sub> &nbsp; ${HA}: at least one differs`,tag:"sample_not_population",fb:"Hypotheses are about population means (μ), not sample means."},
-        {t:`${H0}: μ<sub>usual</sub> = μ<sub>classes</sub> = μ<sub>app</sub> &nbsp; ${HA}: at least one mean differs`,tag:"correct",fb:"The alternative only needs one mean to be different."},
-        {t:`${H0}: at least one mean differs &nbsp; ${HA}: all means are equal`,tag:"swapped_hypotheses",fb:"Flipped: \"no difference\" is the null."}]},
-      {id:"c2s2",label:"Reading the ANOVA table",show:table,prompt:"What can you conclude?",
-       hint:"Compare Sig. with α. Then ask: does F say which groups differ?",
-       options:[
-        {t:"All three programs differ from each other.",tag:"all_means_differ",fb:"A significant F shows at least one difference, not that every pair differs."},
-        {t:"Group classes work best, since they had the largest drop.",tag:"skip_posthoc",fb:"Largest sample mean isn't proof; you need pairwise comparisons."},
-        {t:"Reject H<sub>0</sub>: at least one program's mean differs, but the table doesn't say which.",tag:"correct",fb:"Next step: find where the differences are."},
-        {t:`There's a ${a.p<.001?"less than 0.1%":fx(a.p*100,1)+"%"} chance the programs work equally well.`,tag:"p_as_prob_null",fb:"p assumes the null is true; it isn't the probability the null is true."}]},
-      {id:"c2s3",label:"Following up",
+      {id:"c2s2",label:"Following up",
        show:`<div class="slider"><p><strong>Try it first.</strong> Suppose the three programs were truly identical. Each t test at α = 0.05 has a 5% chance of a false positive. Run the pairwise tests one at a time and watch the overall risk.</p>
          <button class="quiet" id="runT">Run t test 1: Usual care vs. Group classes</button>
          <div style="margin:.7rem 0 .2rem"><span id="fwText">Tests run: 0. Chance of at least one false positive: 0%</span></div>
@@ -353,16 +479,22 @@ function case2(R,level){
          btn.onclick=()=>{k++;const r=Math.round((1-Math.pow(.95,k))*100);document.getElementById("fwText").textContent=`Tests run: ${k}. Chance of at least one false positive: ${r}%`;
            document.getElementById("fwFill").style.width=r+"%";document.getElementById("fwBar").setAttribute("aria-label",`Chance of at least one false positive: ${r}%`);
            if(k<3)btn.textContent=`Run t test ${k+1}: ${pairs[k]}`;else{btn.disabled=true;btn.textContent="All 3 pairs tested";document.getElementById("fwMore").textContent="With 5 programs, you'd need 10 tests, and the risk would reach about 40%.";}};},
-       prompt:`Luis wants to answer his second question. Best approach? (Your notes may help.)`,
+       type:"reply",channel:"email",subject:"Just run t tests?",prompt:"After trying the meter, answer Greg's email.",
        hint:"Many comparisons raise the false-positive risk. Check the enrollment sheet: are the groups the same size?",
-       options:[
-        {t:"Three separate t tests at α = 0.05",tag:"multiple_testing",fb:"Across three tests, the chance of at least one false positive is about 1 − 0.95³ ≈ 14%."},
-        {t:"Tukey's test, since the design is balanced",tag:"posthoc_balance",fb:"The groups aren't equal in size, so the design isn't balanced."},
-        {t:"A post hoc test for unequal group sizes, such as Tukey-Kramer or Scheffé",tag:"correct",fb:`${post}<p>Significant difference${sigPairs.length>1?"s":""}: ${sigPairs.join("; ")}.</p>`},
-        {t:"No follow-up needed; the F test already shows the difference",tag:"skip_posthoc",fb:"The F test only says at least one mean differs."}]}
+       thread:["Can't you just run three t tests? It's faster, and the board likes simple."],
+       slots:[
+        {label:"Three t tests would",options:[{t:"Three t tests would raise the chance of a false positive to about 14%.",tag:"correct"},{t:"Three t tests would keep the false-positive risk at 5%.",tag:"multiple_testing",fb:"Look at the meter: each extra test adds risk."}]},
+        {label:"Instead, I'll use",options:[{t:"Instead, I'll use Tukey-Kramer or Scheffé, because the group sizes differ.",tag:"correct"},{t:"Instead, I'll use Tukey's test, because the groups are balanced.",tag:"posthoc_balance",fb:"Check the enrollment sheet: the groups aren't the same size."},{t:"Nothing more is needed; the F test already shows which differ.",tag:"skip_posthoc",fb:"The F test only says at least one mean differs."}]}],
+       okFb:`${post}<p>Significant difference${sigPairs.length>1?"s":""}: ${sigPairs.join("; ")}.</p>`},
+      {id:"c2s3",label:"Checking Greg's slide",type:"spot",prompt:"Greg drafted his board slide. Click the sentence the data don't support.",hint:"Does \"not significantly different\" mean \"the same\"?",draftTitle:"Board slide: diabetes education programs",
+       draft:[
+        {t:"The three programs differed in HbA1c change (ANOVA, p < .05).",tag:"absence_as_equivalence",fb:"That's what the ANOVA table showed."},
+        {t:`Group classes lowered HbA1c more than usual care (Scheffé ${pT(ph[0].p)}).`,tag:"absence_as_equivalence",fb:"That's a correct reading of the post hoc test."},
+        {t:`Classes versus the phone app: no significant difference (${pT(ph[2].p)}).`,tag:"absence_as_equivalence",fb:"That's accurate as stated."},
+        {t:"So the app works just as well as classes.",tag:"correct",fb:"Not significantly different isn't the same as equal. With these sample sizes, the app could still be meaningfully worse."},
+        {t:"Switching would save about $80,000 a year.",tag:"absence_as_equivalence",fb:"That's a cost figure, not a claim about the data."}]}
     ],
-    outro:g=>g("c2s3")==="correct"?{ok:true,title:"Luis signs off",text:`His report names the program pair${sigPairs.length>1?"s":""} that differ, with family-wise error controlled.`}
-      :{ok:false,title:"Luis signs off after a correction",text:"The report now uses a post hoc test instead of separate t tests."},
+    outro:g=>g("c2s2")==="correct"?{ok:true,title:"Greg holds off on cuts",text:"\"So the programs differ, but I need the right comparisons before Friday. I'll keep group classes for now.\""}:{ok:false,title:"Greg holds off, grudgingly",text:"\"Three t tests looked cleaner. Brooks says no. Fine.\""},
     takeaway:"A significant F means at least one mean differs; post hoc tests find which, while controlling family-wise error."};
 }
 
@@ -375,34 +507,40 @@ function case3(R,level){
     rm={SSt,SSe,dft,dfe,MSt:SSt/dft,MSe:SSe/dfe};rm.F=rm.MSt/rm.MSe;rm.p=fSurv(rm.F,dft,dfe);ow=oneway([0,1,2].map(t=>D.map(r=>r[t])));
     if(rm.p<.01&&ow.p>.1)break;}
   const table=tbl("Tests of Within-Subjects Effects","",["Source","Sum of Squares","df","Mean Square","F","Sig."],[["Time",fx(rm.SSt,1),rm.dft,fx(rm.MSt,1),fx(rm.F,3),fP(rm.p)],["Error",fx(rm.SSe,1),rm.dfe,fx(rm.MSe,1),"",""]]);
-  return {id:"c3",npc:"grace",title:"Are patients walking farther?",
-    message:`<p>Here are our walk distances. Is walking distance changing over the program? α = 0.05.</p>`,
+  return {id:"c3",npc:"marcus",title:"Are patients walking farther?",
+    message:`<p>Greg put cardiac rehab on his cut list. We record 6-minute walks in routine care. Can you show whether patients are actually improving? α = 0.05.</p>`,
     viz:spaghetti(D,labels,!level,"Distance (m)"),
     steps:[
-      {id:"c3s1",label:"Building the analysis",type:"build",prompt:"Set up Grace's analysis from your notes, then run it.",
-       hint:"Look at the walk test log. Are the three visits separate groups of people?",
-       spec:{outcome:"walk_distance",factors:["visit"],repeated:true,
-        vars:[["patient_id","Patient ID","ID"],["visit","Visit (week 0, 6, 12)","categorical",3],["walk_distance","6-minute walk distance (m)","numeric"],["age","Age (years)","numeric"],["sex","Sex (2 groups)","categorical",2]],
-        msgs:{ignore_dependence:`${tbl("ANOVA","Treating each visit as a separate group",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(ow))}<p>This says ${pT(ow.p)}. Grace frowns: "So rehab isn't working?" Check the walk test log: who was measured at each visit?</p>`,
-         extra_factor:"Sex wasn't part of Grace's question; she asked about change across visits."},
-        ok:"The same patients at three visits, so the analysis accounts for repeated measurements."}},
-      {id:"c3s2",label:"Reading the result",show:table,prompt:"What can you conclude?",
-       hint:"Compare Sig. with α. Does the overall test say which visits differ?",
-       options:[
-        {t:"Fail to reject H<sub>0</sub>, because F is large.",tag:"threshold_misread",fb:"A large F with a small p means reject."},
-        {t:"Distance improved between every pair of visits.",tag:"all_means_differ",fb:"The overall test doesn't say which visits differ; that needs follow-up comparisons."},
-        {t:"Reject H<sub>0</sub>: mean walking distance differs across at least two visits.",tag:"correct",fb:"Follow-up comparisons would show which visits differ."},
-        {t:"Every patient walked farther over time.",tag:"proof_overclaim",fb:"The test is about the average; check the chart for individual patients."}]},
-      {id:"c3s3",label:"Why the design matters",prompt:`Ignoring that these are the same patients, a one-way ANOVA gives ${pT(ow.p)}. Why so different?`,
-       hint:"Patients differ a lot from each other in how far they walk. Where does that variation go in each analysis?",
-       options:[
-        {t:"The repeated measures test uses a larger α.",tag:"f_misconception",fb:"Both used α = 0.05."},
-        {t:"Repeated measures removes differences between patients from the error, so the change over time stands out.",tag:"correct",fb:"That's why repeated measures designs are more powerful."},
-        {t:"The one-way ANOVA used more patients.",tag:"ignore_dependence",fb:"Same measurements, but treated as if they came from different people."},
-        {t:"Repeated measures ANOVA gives more false positives, so trust the one-way result.",tag:"ignore_dependence",fb:"For repeated data, repeated measures ANOVA is the correct model."}]}
+      {id:"c3s1",label:"Interviewing Marcus",type:"interview",reveal:true,prompt:"Ask Marcus what you need, then tell him your plan.",
+       hint:"Ask who walked at each visit.",
+       thread:["What do you need to know about the walk tests?"],
+       questions:[
+        {q:"Who walked at weeks 6 and 12?",a:level?"Here's the log: P01, P02, P03… the same IDs show up at every visit.":"The same patients walked at all three visits.",key:true},
+        {q:"How did patients end up at each visit?",a:"Nobody gets sorted. Every patient walks at weeks 0, 6, and 12.",key:true},
+        {q:"What shoes do patients wear?",a:"Their own sneakers, I guess? Not sure why that matters.",key:false},
+        {q:"Does the log record sex?",a:"It does, but I'm asking about change over the program.",key:false}],
+       slots:[
+        {label:"Compare",options:[{t:"I'll compare walking distance",tag:"correct"},{t:"I'll compare patients' ages",tag:"outcome_misread",fb:"Your question is about walking distance."}]},
+        {label:"Across",options:[{t:"across weeks 0, 6, and 12",tag:"correct"},{t:"between men and women",tag:"extra_factor",fb:"Sex isn't Marcus's question."}]},
+        {label:"Using",options:[{t:"using a one-way repeated measures ANOVA.",tag:"correct"},{t:"using a one-way ANOVA.",tag:"ignore_dependence",fb:`${tbl("ANOVA","Treating each visit as a separate group",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(ow))}<p>This says ${pT(ow.p)}, as if rehab weren't working. But these are the same patients at every visit.</p>`},{t:"using three paired t tests.",tag:"multiple_testing",fb:"Three tests inflate the false-positive risk; one analysis can compare all visits."}]}],
+       okFb:"The same patients at three visits: a repeated measures ANOVA. Their walks are shown above."},
+      {id:"c3s2",label:"Pointing at the evidence",type:"point",show:tbl("Tests of Within-Subjects Effects","",["Source","Sum of Squares","df","Mean Square","F","Sig."],[["Time",pk(fx(rm.SSt,1),"sst"),pk(rm.dft,"dft"),pk(fx(rm.MSt,1),"mst"),pk(fx(rm.F,3),"f"),pk(fP(rm.p),"sig")],["Error",pk(fx(rm.SSe,1),"sse"),pk(rm.dfe,"dfe"),pk(fx(rm.MSe,1),"mse"),"",""]]),
+       prompt:"Greg's cut list asks whether rehab patients improve. Click the number that shows walking distance changes across visits.",
+       hint:"Which value do you compare with α = 0.05?",
+       picks:{sig:{tag:"correct",fb:`${pT(rm.p)} is below 0.05, so mean walking distance differs across at least two visits.`},
+        f:{tag:"output_misread",fb:"F is the test statistic. Its p-value (Sig.) is what you compare with α."},
+        mst:{tag:"output_misread",fb:"That's the variance between visits, one ingredient of F."},mse:{tag:"output_misread",fb:"That's the error variance, after patient differences are removed."},
+        sst:{tag:"output_misread",fb:"A sum of squares measures variation, not evidence on its own."},sse:{tag:"output_misread",fb:"A sum of squares measures variation, not evidence on its own."},
+        dft:{tag:"output_misread",fb:"Degrees of freedom reflect the number of visits."},dfe:{tag:"output_misread",fb:"Degrees of freedom reflect the sample size."}}},
+      {id:"c3s3",label:"Explaining it to Marcus",type:"reply",channel:"chat",prompt:"Marcus texted you. Build your reply.",
+       hint:"Patients differ a lot in how far they walk. Where does that variation go in each analysis?",
+       thread:[`Before you got here, my assistant ran a one-way ANOVA that treated the three visits as separate groups of patients. It said ${pT(ow.p)}. Your repeated measures ANOVA says ${pT(rm.p)}. Same walks. Why the different answers?`],
+       slots:[
+        {label:"Because",options:[{t:"Patients differ a lot from one another in how far they walk,",tag:"correct"},{t:"The one-way ANOVA used a stricter α,",tag:"f_misconception",fb:"Both used α = 0.05."}]},
+        {label:"And",options:[{t:"and repeated measures removes those differences from the error.",tag:"correct"},{t:"and repeated measures gives more false positives.",tag:"ignore_dependence",fb:"For repeated data, it's the correct model, with Type I error still at α."}]}],
+       okFb:"That's why measuring the same people again gives more power."}
     ],
-    outro:g=>g("c3s1")==="correct"?{ok:true,title:"Grace signs off",text:"The rehab report will show walking distance changing over the program."}
-      :{ok:false,title:"Grace signs off after a rethink",text:"She'll use repeated measures ANOVA, since the same patients were measured three times."},
+    outro:g=>g("c3s1")==="correct"?{ok:true,title:"Marcus signs off",text:"\"Same people, measured again. That matches what I see in the gym.\""}:{ok:false,title:"Marcus signs off, relieved",text:"\"For a minute there you had rehab not working. I knew better.\""},
     takeaway:"For repeated measurements on the same people, repeated measures ANOVA separates patient differences from error, which adds power."};
 }
 
@@ -436,22 +574,38 @@ function case4(R,level){
       {t:"All four groups differ from each other.",tag:"all_means_differ",fb:"The table tests factors and their interaction, not every pair of groups."},
       {t:"Teach-back only works for older patients.",tag:"interaction_misread",fb:"Younger patients' effect is smaller, which isn't the same as zero."},
       {t:`The interaction is significant (${pT(res.AB.p)}): teach-back's benefit depends on age, with a much larger gain for patients 65 and older.`,tag:"correct",fb:"When the interaction is significant, describe the effect of one factor at each level of the other."}];
-  return {id:"c4",npc:"sam",title:"Does teach-back help everyone?",
-    message:`<p>You've seen the whiteboard. Let's work through our pilot results. α = 0.05.</p>`,viz:interactionPlot(cm,aN,bN,"Mean knowledge score"),
+  return {id:"c4",npc:"dana",title:"Does teach-back help everyone?",
+    message:`<p>Teach-back adds about ten minutes per discharge. The board wants to know whether it's worth my nurses' time, and for whom. α = 0.05.</p>`,viz:interactionPlot(cm,aN,bN,"Mean knowledge score"),
     steps:[
-      {id:"c4s1",label:"Building the analysis",type:"build",prompt:"Set up Sam's analysis from your notes, then run it.",
-       hint:"Reread the whiteboard: how many questions does Sam have, and which groupings do they involve?",
+      {id:"c4s1",label:"Building the analysis",type:"build",prompt:"Set up Dana's analysis from your notes, then run it.",
+       hint:"Reread the whiteboard: how many questions does Dana have, and which groupings do they involve?",
        spec:{outcome:"knowledge_score",factors:["teaching_method","age_group"],repeated:false,
         vars:[["patient_id","Patient ID","ID"],["teaching_method","Teaching method (2 groups)","categorical",2],["age_group","Age group (2 groups)","categorical",2],["knowledge_score","Medication knowledge score","numeric"],["bed_number","Bed number","ID"]],
-        msgs:{lose_factor_structure:"With one factor, you can't see whether teach-back works differently by age, which is one of Sam's questions.",false_repeated:"Each patient got only one teaching method."},
+        msgs:{lose_factor_structure:"With one factor, you can't see whether teach-back works differently by age, which is one of Dana's questions.",false_repeated:"Each patient got only one teaching method."},
         ok:"Two factors, so you can test both main effects and their interaction."}},
-      {id:"c4s2",label:"Reading the interaction plot",prompt:"Before the table: do the lines in the chart suggest an interaction?",
-       hint:"Interaction means the effect of one factor depends on the other. Are the lines parallel?",options:s2},
-      {id:"c4s3",label:"Reporting the result",show:table,prompt:"What's the right summary for Sam's report?",
-       hint:"Start with the Method × Age group row.",options:s3}
+      {id:"c4s2",label:"Reading the interaction plot",type:"reply",channel:"chat",prompt:"Dana texted you. Build your reply from the chart.",
+       hint:"Interaction means the effect of one factor depends on the other. Are the lines parallel?",
+       thread:["Before we look at the table: what do the lines tell you?"],
+       slots:level?[
+        {label:"The lines are",options:[{t:"The lines are roughly parallel,",tag:"correct"},{t:"The lines are not parallel,",tag:"interaction_misread",fb:`The gains are similar: about +${fx(gapY,0)} under 65 and +${fx(gapO,0)} for 65 and older.`},{t:"The lines are at different heights,",tag:"main_effect_only",fb:"Different heights show main effects. Interaction is about whether the lines are parallel."}]},
+        {label:"So teach-back's effect",options:[{t:"so teach-back's effect seems similar at every age.",tag:"correct"},{t:"so teach-back's effect seems to depend on age.",tag:"interaction_misread",fb:"Parallel lines mean a similar effect at each age."}]}]
+       :[
+        {label:"The lines are",options:[{t:"The lines are not parallel,",tag:"correct"},{t:"The lines are roughly parallel,",tag:"interaction_misread",fb:`The gain is +${fx(gapY,0)} under 65 but +${fx(gapO,0)} for 65 and older.`},{t:"The lines are at different heights,",tag:"main_effect_only",fb:"Different heights show main effects. Interaction is about whether the lines are parallel."}]},
+        {label:"So teach-back's effect",options:[{t:"so teach-back's effect seems to depend on age.",tag:"correct"},{t:"so teach-back's effect seems similar at every age.",tag:"interaction_misread",fb:"Non-parallel lines mean the effect differs by age."}]}],
+       okFb:level?`Parallel lines: about +${fx(gapY,0)} under 65 and +${fx(gapO,0)} for 65 and older.`:`Non-parallel lines: +${fx(gapY,0)} under 65 versus +${fx(gapO,0)} for 65 and older.`},
+      {id:"c4s3",label:"Building the board headline",type:"tiles",show:table,prompt:"Build Dana's one-line headline for the board from the tiles.",
+       hint:"Start with the Method × Age group row: does the teach-back effect depend on age?",
+       okFb:level?"Accurate and careful: no interaction, so the benefit is similar at every age, and age has its own main effect.":`Accurate and careful: the interaction is significant (${pT(res.AB.p)}), so the benefit depends on age.`,
+       slots:[
+        {label:"What happened",options:[{t:"Teach-back raised medication knowledge scores",tag:"correct"},{t:"Teach-back proved it prevents readmissions",tag:"proof_overclaim",fb:"The pilot measured knowledge scores, not readmissions, and a pilot doesn't prove anything."},{t:"Teaching method made no difference",tag:"main_effect_only",fb:`Check the Method row: ${pT(res.A.p)}.`}]},
+        {label:"For whom",options:level
+          ?[{t:"by about the same amount at every age",tag:"correct"},{t:"especially for patients 65 and older",tag:"interaction_misread",fb:`The interaction isn't significant (${pT(res.AB.p)}), and the lines are roughly parallel.`},{t:"only for patients under 65",tag:"interaction_misread",fb:"Both age groups gained by a similar amount."}]
+          :[{t:"especially for patients 65 and older",tag:"correct"},{t:"by about the same amount at every age",tag:"interaction_misread",fb:`The interaction is significant (${pT(res.AB.p)}); the lines aren't parallel.`},{t:"only for patients under 65",tag:"interaction_misread",fb:"It's the other way around, and younger patients' gain is smaller, not zero."}]},
+        {label:"And the analysis shows",options:level
+          ?[{t:"and older patients scored lower overall",tag:"correct"},{t:"and its effect depends on age",tag:"interaction_misread",fb:`That would need a significant interaction; ${pT(res.AB.p)}.`}]
+          :[{t:"and that difference by age is statistically significant",tag:"correct"},{t:"but age didn't matter",tag:"main_effect_only",fb:"The significant interaction means age changes how much teach-back helps."}]}]}
     ],
-    outro:g=>g("c4s3")==="correct"?{ok:true,title:"Sam signs off",text:level?"The unit rolls out teach-back for all ages.":"The unit prioritizes teach-back for older patients first."}
-      :{ok:false,title:"Sam signs off after a revision",text:"The summary now starts with the interaction."},
+    outro:g=>g("c4s3")==="correct"?{ok:true,title:"Dana signs off",text:level?"\"Teach-back helps at every age. We roll it out everywhere.\"":"\"Teach-back matters most for older patients. We start there.\""}:{ok:false,title:"Dana signs off after a revision",text:"\"Good thing the interaction came first in the final draft.\""},
     takeaway:"In a two-way ANOVA, check the interaction first: if it's significant, one factor's effect depends on the other."};
 }
 const CORE=[case1,case2,case3,case4];
@@ -459,15 +613,15 @@ const CORE=[case1,case2,case3,case4];
 /* ---------- optional expert case ---------- */
 function expertCase(){
   const G=[[2,3,3,4,4,5,7,19],[2,2,3,3,4,4,6,11],[3,4,5,5,6,8,12,31]],nm=["Protocol A","Protocol B","Protocol C"];
-  return {id:"e1",npc:"noah",title:"Skewed stays in the ED",
-    message:"<p>We compared ED length of stay under three triage protocols, 8 patients each. A few patients stayed a very long time. What should we do?</p>",
+  return {id:"e1",npc:"nair",title:"Skewed stays in the ED",
+    message:"<p>Three triage protocols, 8 patients each, and a few very long stays. I want to announce a winner! What should we run?</p>",
     viz:stripK(nm.map((n,i)=>({name:n,vals:G[i]})),"Length of stay (hours)"),
     steps:[
       {id:"e1s1",label:"Choosing a test for skewed data",prompt:"Which test fits best?",hint:"Small groups, long right tail, three independent groups. Check the test-selection chart.",
        options:[{t:"One-way ANOVA",tag:"ignore_distribution",fb:"With 8 per group and heavy skew, the normality and equal-variance assumptions don't hold."},{t:"Wilcoxon rank-sum test",tag:"wrong_anova_type",fb:"That compares two groups; there are three."},{t:"Kruskal-Wallis test",tag:"correct",fb:"The nonparametric test for 3+ independent groups."},{t:"Repeated measures ANOVA",tag:"ignore_dependence",fb:"These are different patients in each protocol."}]},
       {id:"e1s2",label:"Another option",prompt:"The lecture showed another way to handle unequal spread. Which?",hint:"Think about slide 17's cortisol example.",
        options:[{t:"Remove the longest stays",tag:"ignore_distribution",fb:"Those are real patients; dropping them biases the results."},{t:"Log-transform length of stay to stabilize the variance, then recheck assumptions",tag:"correct",fb:"A log transform often evens out spread in right-skewed data."},{t:"Run ANOVA anyway; assumptions don't matter",tag:"ignore_distribution",fb:"With small, uneven groups, violations can lead to wrong conclusions."}]}],
-    outro:()=>({ok:true,title:"Dr. Fischer thanks you",text:"He'll report a Kruskal-Wallis test and check a log-transformed ANOVA as a sensitivity analysis."}),
+    outro:g=>g("e1s1")==="correct"?{ok:true,title:"Dr. Nair holds the announcement",text:"\"I asked you first, and it paid off. Kruskal-Wallis it is.\""}:{ok:false,title:"Dr. Nair holds the announcement",text:"\"Fine, no ANOVA on those stays. I'm learning.\""},
     takeaway:"Small, skewed groups call for a nonparametric test like Kruskal-Wallis, or a transformation."};
 }
 
@@ -502,21 +656,24 @@ const FOLLOWUPS={
   {id:"fu_i_2",label:"Meaning of interaction",prompt:"A significant interaction means…",hint:"It's about how one effect changes.",
    options:[{t:"Both factors have significant main effects",tag:"main_effect_only",fb:"Main effects and interactions are separate."},{t:"The effect of one factor depends on the level of the other",tag:"correct",fb:"Right."},{t:"All groups differ",tag:"all_means_differ",fb:"Not what an interaction tests."}]}],"Check the interaction first; non-parallel lines are the visual clue.")
 };
-const FU_MAP={multiple_testing:"fu_familywise",posthoc_balance:"fu_familywise",all_means_differ:"fu_ftest",skip_posthoc:"fu_ftest",sample_not_population:"fu_ftest",swapped_hypotheses:"fu_ftest",threshold_misread:"fu_ftest",p_as_prob_null:"fu_ftest",proof_overclaim:"fu_ftest",
+const FU_MAP={absence_as_equivalence:"fu_ftest",output_misread:"fu_ftest",multiple_testing:"fu_familywise",posthoc_balance:"fu_familywise",all_means_differ:"fu_ftest",skip_posthoc:"fu_ftest",sample_not_population:"fu_ftest",swapped_hypotheses:"fu_ftest",threshold_misread:"fu_ftest",p_as_prob_null:"fu_ftest",proof_overclaim:"fu_ftest",
   within_between_confusion:"fu_variance",f_misconception:"fu_variance",ignore_dependence:"fu_choose",wrong_anova_type:"fu_choose",lose_factor_structure:"fu_choose",interaction_misread:"fu_interaction",main_effect_only:"fu_interaction",outcome_misread:"fu_choose",id_as_factor:"fu_choose",numeric_as_factor:"fu_choose",no_factor:"fu_choose",no_design:"fu_choose",false_repeated:"fu_choose",extra_factor:"fu_choose"};
 
 /* ---------- clues found in each room ---------- */
 function dict(rows){return `<p><strong>Data dictionary</strong></p>`+tbl("","",["Variable","What it is"],rows.map(r=>[`<code>${r[0]}</code>`,r[1]]));}
 const CLUES=[
- {idx:0,id:"n_board",name:"Study whiteboard",x:2,y:4,html:l=>`<p><strong>Diet study</strong></p><p>Each patient was randomly assigned to <strong>one</strong> of three diets: low-carb, Mediterranean, or low-fat. LDL was measured at the start and after 12 weeks. ${l?12:15} patients per diet.</p>`},
- {idx:0,id:"n_dict",name:"Data dictionary",x:6,y:3,html:()=>dict([["patient_id","Patient ID"],["diet","Diet assigned: low-carb, Mediterranean, low-fat"],["ldl_change","Change in LDL after 12 weeks (mg/dL)"],["age","Age in years"],["clinic_site","Clinic site: North or South"]])},
- {idx:1,id:"d_sheet",name:"Enrollment sheet",x:8,y:3,html:l=>`<p><strong>Enrollment</strong></p>`+tbl("","",["Program","Patients"],(l?[48,40,30]:[51,42,35]).map((v,i)=>[["Usual care","Group classes","Phone app"][i],v]))},
- {idx:1,id:"d_poster",name:"Evaluation poster",x:14,y:3,html:()=>`<p><strong>Evaluation questions</strong></p><p>1. Do the three programs differ in HbA1c change?</p><p>2. If so, <strong>which</strong> programs differ from each other?</p>`},
- {idx:2,id:"r_log",name:"Walk test log",x:16,y:3,html:l=>l?`<p><strong>6-minute walk log</strong></p><p>Entries: P01 week 0, P01 week 6, P01 week 12, P02 week 0, P02 week 6, P02 week 12, … continuing through P10.</p>`:`<p><strong>6-minute walk log</strong></p><p>The <strong>same 12 patients</strong> walked at weeks 0, 6, and 12.</p>`},
- {idx:2,id:"r_dict",name:"Data dictionary",x:22,y:3,html:()=>dict([["patient_id","Patient ID"],["visit","Visit: week 0, 6, or 12"],["walk_distance","6-minute walk distance (m)"],["age","Age in years"],["sex","Sex: female or male"]])},
+ {idx:0,id:"n_board",name:"Triage log summary",x:9,y:6,html:l=>`<p><strong>Labor &amp; Delivery triage log</strong></p><p>Each arriving patient is logged once, with the shift she arrived on: day, evening, or night. Last month: ${l?12:15} arrivals sampled per shift. Nadia is requesting more night triage staff at Friday's board meeting.</p>`},
+ {idx:0,id:"n_dict",name:"Data dictionary",x:15,y:6,html:()=>dict([["patient_id","Patient ID"],["shift","Arrival shift: day, evening, night"],["triage_minutes","Minutes from arrival to triage"],["first_birth","First birth: yes or no"],["age","Age in years"]])},
+ {idx:1,id:"d_sheet",name:"Enrollment sheet",x:13,y:11,html:l=>`<p><strong>Enrollment</strong></p>`+tbl("","",["Program","Patients"],(l?[48,40,30]:[51,42,35]).map((v,i)=>[["Usual care","Group classes","Phone app"][i],v]))},
+ {idx:1,id:"d_poster",name:"Cost memo",x:16,y:12,html:()=>`<p><strong>Greg's cost memo</strong></p><p>Friday's proposed cuts: replace group classes with the phone app, and review cardiac rehab. The app costs about a tenth as much as classes. Questions for the board: 1. Do the three programs differ in HbA1c change? 2. If so, <strong>which</strong> programs differ?</p>`},
+ {idx:2,id:"r_log",name:"Walk test log",x:8,y:3,html:l=>l?`<p><strong>6-minute walk log</strong></p><p>Entries: P01 week 0, P01 week 6, P01 week 12, P02 week 0, P02 week 6, P02 week 12, … continuing through P10.</p>`:`<p><strong>6-minute walk log</strong></p><p>The <strong>same 12 patients</strong> walked at weeks 0, 6, and 12.</p>`},
+ {idx:2,id:"r_dict",name:"Data dictionary",x:14,y:3,html:()=>dict([["patient_id","Patient ID"],["visit","Visit: week 0, 6, or 12"],["walk_distance","6-minute walk distance (m)"],["age","Age in years"],["sex","Sex: female or male"]])},
  {idx:3,id:"u_board",name:"Pilot whiteboard",x:6,y:12,html:()=>`<p><strong>Teach-back pilot</strong></p><p>Each patient got <strong>either</strong> standard discharge teaching <strong>or</strong> teach-back. Questions: Does teach-back improve medication knowledge? Does its effect differ for patients <strong>under 65</strong> versus <strong>65 and older</strong>?</p>`},
  {idx:3,id:"u_dict",name:"Data dictionary",x:11,y:11,html:()=>dict([["patient_id","Patient ID"],["teaching_method","Standard or teach-back"],["age_group","Under 65 or 65 and older"],["knowledge_score","Medication knowledge score (0 to 100)"],["bed_number","Bed number on the unit"]])}
 ];
+
+/* one clue per room: merge each room's clues into a single note */
+(()=>{const g={};CLUES.forEach(c=>{(g[c.idx]=g[c.idx]||[]).push(c);});const out=Object.values(g).map(list=>({...list[0],html:l=>list.map(c=>c.html(l)).join('<hr style="border:0;border-top:1px solid var(--line);margin:.6rem 0">')}));CLUES.length=0;out.forEach(c=>CLUES.push(c));})();
 function roomClues(idx){return CLUES.filter(c=>c.idx===idx);}
 function analysisName(b,vars){const f=b.factors;if(!f.length)return "No analysis (no factor chosen)";
   if(f.length===1){const lv=(vars.find(v=>v[0]===f[0])||[])[3]||3;return b.repeated?"One-way repeated measures ANOVA":lv===2?"Independent-samples t test":"One-way ANOVA";}
@@ -547,25 +704,26 @@ const BUILD_MSG={outcome_misread:"Pick exactly one outcome: the numeric measurem
    HOSPITAL MAP
    ============================================================ */
 const COLS=24,ROWS=15,TS=40;
-const ROOMS=[{id:"nutrition",name:"Nutrition Clinic",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"diabetes",name:"Diabetes Education",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"rehab",name:"Cardiac Rehab",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
-  {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"unit",name:"Unit 4B",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"ed",name:"Emergency",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
+const ROOMS=[{id:"stroke",name:"Stroke Center",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"rehabc",name:"Rehab Clinic",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"cardio",name:"Cardiology",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
+  {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"nursing",name:"Nursing Office",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"finance",name:"Finance Office",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
 const NPCS=[
-  {id:"aisha",room:"Nutrition Clinic",x:3,y:2,name:"Aisha Rahman, RD",role:"dietitian",initials:"AR",color:"#B5572D",kind:"core",idx:0},
-  {id:"luis",room:"Diabetes Education",x:11,y:2,name:"Luis Ortega",role:"diabetes program manager",initials:"LO",color:"#2D6FA3",kind:"core",idx:1},
-  {id:"grace",room:"Cardiac Rehab",x:19,y:2,name:"Grace Kim, PT",role:"cardiac rehab lead",initials:"GK",color:"#A33B5A",kind:"core",idx:2},
-  {id:"sam",room:"Unit 4B",x:8,y:12,name:"Sam Patel, RN",role:"nurse manager",initials:"SP",color:"#2F7D4F",kind:"core",idx:3},
+  {id:"nadia",room:"Guest desk",x:13,y:6,name:"Nadia Farouk, CNM",role:"nurse-midwife, Women's Health (guest)",initials:"NF",color:"#5A6FD6",kind:"core",idx:0},
+  {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist",initials:"ER",color:"#A33B5A",kind:"cameo"},
+  {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance",initials:"GW",color:"#9A6B12",kind:"core",idx:1},
+  {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead",initials:"MB",color:"#2D6FA3",kind:"core",idx:2},
+  {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"nurse manager",initials:"DO",color:"#2F7D4F",kind:"core",idx:3},
   {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
-  {id:"noah",room:"Emergency",x:14,y:12,name:"Dr. Noah Fischer",role:"emergency physician (optional)",initials:"NF",color:"#9A6B12",kind:"expert"},
-  {id:"helen",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
+  {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director (optional)",initials:"PN",color:"#B5572D",kind:"expert"},
+  {id:"brooks",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
 const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
 const GRID=(()=>{const g=[];for(let y=0;y<ROWS;y++){g.push([]);for(let x=0;x<COLS;x++)g[y].push(x===0||y===0||x===COLS-1||y===ROWS-1?"#":".");}
   ROOMS.forEach(r=>{for(let y=r.y0;y<=r.y1;y++)for(let x=r.x0;x<=r.x1;x++)if(x===r.x0||x===r.x1||y===r.y0||y===r.y1)g[y][x]="#";g[r.door[1]][r.door[0]]=".";});return g;})();
 
 let S=null;
-function newState(av){return {seed:Math.floor(Math.random()*2147483647),phase:"map",pos:[1,7],clues:[],lock:{},done:[],level:0,path:{},pendingFU:null,fuDone:[],expDone:[],results:{},cred:50,hints:0,started:Date.now(),avatar:av};}
-function save(){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
+function newState(av){return {seed:Math.floor(Math.random()*2147483647),phase:"map",pos:[1,7],clues:[],lock:{},done:[],level:0,path:{},pendingFU:null,fuDone:[],expDone:[],results:{},cred:SEASON.rep,hints:0,started:Date.now(),avatar:av};}
+function save(){if(MODE!=="season")return;try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
 function loadSaved(){try{const s=localStorage.getItem(CONFIG.storageKey);return s?JSON.parse(s):null;}catch(e){return null;}}
-function clearSaved(){try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
+function clearSaved(){if(MODE!=="season")return;try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
 function coreRng(i){return makeRng((S.seed+i*1013+7)>>>0);}
 function valueOf(rec){if(!rec||rec.first==null)return "";if(rec.first==="correct")return rec.hintBefore?"correct_hint":"correct";return rec.first;}
 function title(){return S.cred>=75?"Lead analyst":S.cred>=50?"Analyst":"Analyst in training";}
@@ -576,29 +734,95 @@ const PREVIEW=new URLSearchParams(location.search).has("preview");
 let walking=null,lastStep=0,mapActive=false;
 
 function setBar(text){document.getElementById("progress").textContent=text||"";const c=S?S.cred:50;document.getElementById("credv").textContent=c;document.getElementById("meterFill").style.width=c+"%";document.getElementById("meter").setAttribute("aria-label","Reputation "+c+" out of 100");}
-function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);}
+function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);const m=document.getElementById("meter");if(m&&d){const c=document.createElement("span");c.className="delta";c.setAttribute("aria-hidden","true");c.textContent=(d>0?"+":"")+d;m.appendChild(c);setTimeout(()=>c.remove(),1300);}}
 function signText(){return `Sign-offs ${S.done.length}/4`;}
 
+
+/* ---------- character feedback (reactions + short play-out on wrong moves) ---------- */
+const REACT_OK={
+  nair:["Yes! That's exactly what I needed.","Perfect. I can work with that.","Oh, that's clean. Good.","Right, right. Keep going.","I like how fast you saw that."],
+  marcus:["That matches what I see with patients.","Okay, that makes sense to me.","Good. Even I can follow that.","Yep. That's the one.","Huh. The math agrees with the gym."],
+  ruiz:["Correct. Precisely.","Yes. That's defensible.","Good. No overreach.","That holds up.","Exactly the careful answer."],
+  dana:["Good. That won't waste my nurses' time.","Right call.","That's practical. I like it.","Yes. Moving on.","Finally, someone who gets it."],
+  greg:["Fine. That's... fair.","Okay, I'll give you that one.","Hm. Hard to argue with.","Right. Write that down for the board.","Annoyingly correct."],
+  brooks:["Good. The board can use that.","That's the evidence I wanted.","Clear and defensible.","Exactly."],
+  nadia:["Oh good, that makes sense.","Yes, that's what I hoped you'd say.","Perfect. The night team will want to hear this.","That's clear. Thank you."],
+  jordan:["There it is.","Good. That's the idea.","Exactly. You've earned a coffee.","Yes. See how that works?","Nice. You're getting it."]};
+const REACT_NO={
+  nair:["Wait, are you sure? That sounds too good.","Hold on. Dr. Brooks would send that back.","Hmm. That doesn't match your notes.","That's not what I expected you to say."],
+  marcus:["That doesn't match what I've seen.","Hang on, that can't be right.","Hmm. My patients would disagree.","You lost me there."],
+  ruiz:["No. I don't think that holds up.","That's an overreach.","I wouldn't sign that.","Check that again."],
+  dana:["That would cause problems on the floor.","No. My nurses would pay for that.","That's not going to work.","Try again. Quickly."],
+  greg:["Great, so I'm right? ...Wait, you look unsure.","Brooks is going to question that.","That's what I said, and she didn't like it either.","Hmm. That sounds like my kind of number."],
+  brooks:["That won't hold up in the room.","That doesn't answer the question.","Greg will pounce on that.","Try another piece of evidence."],
+  nadia:["Hmm, that doesn't sound right to me.","Wait, would the charge nurse buy that?","I'm not sure that answers my question.","Can we look again?"],
+  jordan:["Hm. Walk me through that.","Not quite. Look again.","Close, but no.","Let's rethink that."]};
+function pickLine(a){return a[Math.floor(Math.random()*a.length)];}
+function unitNpc(unit){return NPCS.find(p=>p.id===unit.npc)||NPCS.find(p=>p.id==="jordan");}
+function firstName(p){return p.name.split(",")[0];}
+function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,40)}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p></div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
+function reactOk(fb,p,body){fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);}
+function playWrong(fb,p,action,body,onReact,onDone){
+  const quick=window.matchMedia("(prefers-reduced-motion: reduce)").matches,d1=quick?250:900,d2=quick?300:1300;
+  fb.innerHTML=`<div class="react pending"><p class="react-action">${action}</p><p class="typing" aria-hidden="true"><span></span><span></span><span></span></p></div>`;
+  setTimeout(()=>{fb.innerHTML=reactHtml(p,pickLine(REACT_NO[p.id]||REACT_NO.jordan),"bad","");if(onReact)onReact();
+    setTimeout(()=>{fb.querySelector(".react").insertAdjacentHTML("beforeend",`<div class="react-note"><p class="react-name">${p.id==="jordan"?"Jordan explains":"Jordan, on the phone"}</p>${body}<p class="where">Try again.</p></div>`);if(onDone)onDone();},d2);},d1);
+}
+
 function renderIntro(){
-  const saved=loadSaved();setBar("");mapActive=false;
-  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Rounds with the statistics team</h1>
-   <p class="lede">The quarterly quality report is due. Walk the floor, help four teams make sense of their data, and get each team's sign-off. Then bring the report to Dr. Brooks in the Quality Office.</p>
-   <p>This week: ANOVA. Look around each room for clues before talking to the staff member; you'll need them to set up the analysis. About 20 to 25 minutes. Practice pilot, not graded.</p>
+  const ok=storageOK(),found=ok?seasonLoad():null,wk=ok?loadSaved():null;setBar("");mapActive=false;
+  const wkHere=wk&&(wk.done.length||wk.fuDone.length||wk.phase==="done");
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Episode ${WEEK.num}: ${WEEK.title}</h1>
+   <p class="lede">${WEEK.pitch}</p><p>${WEEK.topicLine}</p>
    <fieldset><legend>Pick your badge color</legend><div class="swatches">${AVATARS.map((a,i)=>`<label><input type="radio" name="av" value="${a[0]}" ${i===0?"checked":""}><span class="swatch" style="background:${a[0]}"></span>${a[1]}</label>`).join("")}</div></fieldset>
-   <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap anywhere on the map. Walk into someone or something to interact. You can also use the list under the map.</p>
-   <div class="actions">${saved&&(saved.done.length||saved.fuDone.length||saved.phase==="done")?`<button class="primary" id="resume">Resume</button><button class="quiet" id="start">Start over</button>`:`<button class="primary" id="start">Start rounds</button>`}</div>`;
+   <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap the map. Walk into someone or something to interact. Everything is also reachable from the list under the map.</p>
+   <h2>Your season</h2>
+   ${ok?"":`<p class="toast">This browser isn't allowing saved data, so saving is off. You can still enter a career code, and nothing will be saved.</p>`}
+   <div class="actions">
+     ${wkHere&&found?`<button class="primary" id="resumeW">Resume this week</button>`:""}
+     ${found?`<button class="${wkHere?"quiet":"primary"}" id="cont">Continue my season</button>`:ok?`<button class="primary" id="startSave">Start saving my season</button>`:""}
+     <button class="quiet" id="nosave">Play without saving</button>
+   </div>
+   ${found?`<p class="where">Saved season on this browser: ${seasonTitle(found.rep)}, reputation ${found.rep}, ${found.weeks.length} episode${found.weeks.length===1?"":"s"} played. Not you? Enter your own code or play without saving.</p>`:""}
+   <p class="where">Playing without saving stores nothing on this device. If you close the tab, this week starts over.</p>
+   <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
   app.querySelector("h1").focus();
-  document.getElementById("start").onclick=()=>{if(document.getElementById("resume")&&!confirm("Start over? Saved progress will be erased."))return;clearSaved();S=newState(app.querySelector('input[name="av"]:checked').value);save();renderMap();toast(`Start with anyone who has a <strong>!</strong> above them.`);};
-  const rs=document.getElementById("resume");if(rs)rs.onclick=()=>{S=saved;S.phase==="done"?renderSummary():renderMap();};
+  const av=()=>app.querySelector('input[name="av"]:checked').value;
+  const begin=(mode,season)=>{
+    if(mode==="season"&&wkHere&&!confirm("Start this week over? Your in-progress week will be replaced."))return;
+    SEASON=season;MODE=mode;if(MODE==="season"){clearSaved();seasonSave();}
+    S=newState(av());S.mode=MODE;save();renderOpening();};
+  const g=id=>document.getElementById(id);
+  if(g("resumeW"))g("resumeW").onclick=()=>{SEASON=found;MODE="season";S=wk;S.phase==="done"?renderSummary():renderMap();};
+  if(g("cont"))g("cont").onclick=()=>begin("season",found);
+  if(g("startSave"))g("startSave").onclick=()=>begin("season",seasonDefault());
+  g("nosave").onclick=()=>begin("nosave",seasonDefault());
+  g("useCode").onclick=()=>{const d=decodeCareer(g("codeIn").value);if(!d){g("codeErr").textContent="That code isn't valid. Check for typos and try again.";return;}
+    if(ok&&!wkHere)begin("season",d);else if(ok){SEASON=d;MODE="season";seasonSave();clearSaved();S=newState(av());S.mode=MODE;save();renderOpening();}else begin("nosave",d);};
+}
+function renderOpening(){
+  mapActive=false;setBar("");const prev=WEEK.previously?WEEK.previously(SEASON):"";
+  app.innerHTML=`<p class="where">Episode ${WEEK.num}</p><h1 tabindex="-1">${WEEK.title}</h1>
+   ${prev?`<p class="lede"><strong>Previously at Riverbend:</strong> ${prev}</p>`:""}
+   ${WEEK.opening.map(([id,line])=>{const p=NPCS.find(q=>q.id===id);return `<div class="talk-head" style="align-items:flex-start">${portrait(p,52)}<div style="flex:1"><p class="who" style="margin-bottom:.2rem"><strong>${p.name.split(",")[0]}</strong></p><div class="bubble" style="margin:0 0 .6rem">${line}</div></div></div>`;}).join("")}
+   <div class="actions"><button class="primary" id="go">Head to the floor</button></div>`;
+  app.querySelector("h1").focus();document.getElementById("go").onclick=()=>{renderMap();toast(`Start with anyone who has a <strong>!</strong> above them. Check the <strong>?</strong> clues in their room first.`);};
+}
+function applySeason(){
+  if(S.seasonApplied)return;const k=WEEK.keyFlags(S);
+  Object.assign(SEASON.flags,k.flags);if(k.dana){SEASON.danaN=k.dana.n;SEASON.danaA=k.dana.a;}
+  k.trust.forEach(id=>{SEASON.trust[id]=Math.min(3,(SEASON.trust[id]||1)+1);});
+  if(!SEASON.weeks.includes(WEEK.num))SEASON.weeks.push(WEEK.num);SEASON.rep=S.cred;S.seasonApplied=true;seasonSave();
 }
 
 function npcStatus(p){
   if(p.kind==="core")return S.done.includes(p.idx)?"done":"need";
-  if(p.kind==="stats")return S.pendingFU?"need":"wait";
+  if(p.kind==="stats")return S.pendingFU||(S.hiddenUnlocked&&!S.hiddenDone)?"need":"wait";
   if(p.kind==="expert")return S.expDone.length?"done":"need";
+  if(p.kind==="cameo")return "wait";
   return S.done.length===4?"need":"wait";
 }
-function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return s==="need"?"Wants to see you":"Available";if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";return s==="done"?"Signed off":"Needs help";}
+function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return S.pendingFU?"Wants to see you":(S.hiddenUnlocked&&!S.hiddenDone?"★ Hidden problem":"Available");if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";if(p.kind==="cameo")return "No consult this week";return s==="done"?"Signed off":"Needs help";}
 function toast(html){const t=document.getElementById("toast");if(t)t.innerHTML=html;}
 
 function mapSvg(){
@@ -607,7 +831,7 @@ function mapSvg(){
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(GRID[y][x]==="#")s+=`<rect x="${x*TS}" y="${y*TS}" width="${TS}" height="${TS}" class="m-wall"/>`;
   ROOMS.forEach(r=>{const top=r.y0===0;s+=`<text class="m-label" x="${(r.x0+1)*TS+8}" y="${top?(r.y0+1)*TS+22:(r.y0+1)*TS+22}">${r.name}</text>`;
 });
-  s+=`<text class="m-label" x="${9*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text>`;
+  s+=`<text class="m-label" x="${4*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text><rect class="m-deco" x="${12*TS}" y="${6*TS+4}" width="${3*TS}" height="10" rx="4"/><text class="m-name" x="${13*TS+20}" y="${8*TS+28}" text-anchor="middle" opacity=".7">Guest desk</text>`;
   CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
     s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
   NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
@@ -672,20 +896,21 @@ document.addEventListener("keydown",ev=>{
 
 function interact(p){
   const first=p.name.split(" ")[0]==="Dr."?p.name.split(",")[0]:p.name.split(" ")[0];
-  if(p.kind==="stats"){if(S.pendingFU)return startUnit(FOLLOWUPS[S.pendingFU](),"fu",null,p);return toast(`<strong>Jordan:</strong> "Nothing for now. If you get stuck in a consult, call me for a hint."`);}
+  if(p.kind==="cameo")return toast(`<strong>${first}:</strong> "${(WEEK.cameo[p.id]||(()=>"Busy week. Come find me later."))(SEASON)}"`);
+  if(p.kind==="stats"){if(!S.pendingFU&&S.hiddenUnlocked&&!S.hiddenDone&&WEEK.hidden)return startUnit(WEEK.hidden(),"hidden",null,p);if(S.pendingFU)return startUnit(FOLLOWUPS[S.pendingFU](),"fu",null,p);return toast(`<strong>Jordan:</strong> "Nothing for now. If you get stuck in a consult, call me for a hint."`);}
   if(p.kind==="admin"){if(S.done.length<4)return toast(`<strong>Dr. Brooks:</strong> "I need all four sign-offs for the report. You have ${S.done.length} of 4."`);return finalReport();}
   if(S.pendingFU)return toast(`<strong>${first}:</strong> "Jordan from Statistics was looking for you. Go see them first."`);
   if(p.kind==="expert"){if(S.expDone.length)return toast(`<strong>${first}:</strong> "Thanks again for the help with those skewed stays!"`);return startUnit(expertCase(),"expert",null,p);}
   if(S.done.includes(p.idx))return toast(`<strong>${first}:</strong> "Thanks again! You already have my sign-off."`);
   const missing=roomClues(p.idx).filter(c=>!S.clues.includes(c.id));
-  if(missing.length)return toast(`<strong>${first}:</strong> "Hi! Before we sit down, look around the room. Check the ${missing.map(c=>c.name.toLowerCase()).join(" and the ")}."`);
+  if(missing.length)return toast(`<strong>${first}:</strong> "Hi! Before we sit down, take a look at the ${missing.map(c=>c.name.toLowerCase()).join(" and the ")} first."`);
   const lvl=S.lock[p.idx]??S.level;startUnit(CORE[p.idx](coreRng(p.idx),lvl),"core",lvl,p);
 }
 
 function startUnit(unit,kind,lvl,npc){
   mapActive=false;walking=null;setBar(signText());
   app.innerHTML=`<div class="talk-head">${portrait(npc)}<div><p class="where">${npc.room}</p><h1 tabindex="-1">${unit.title}</h1><p class="who">${npc.name}, ${npc.role}</p></div></div>
-    <div class="bubble">${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!unit.steps[0].spec?unit.viz:""}</div><div id="steps"></div>`;
+    <div class="bubble">${npcLine(npc)}${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!(unit.steps[0].spec||unit.steps[0].reveal)?unit.viz:""}</div><div id="steps"></div>`;
   window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
   showStep(unit,0,kind,lvl);
 }
@@ -698,70 +923,135 @@ function showStep(unit,i,kind,lvl){
     <fieldset><legend>Was anyone measured more than once (in more than one group)?</legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>
     <button class="quiet" id="runB">Run analysis</button>`:""}
     <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
-    <div id="hintArea"><button class="linkish" id="hintBtn">Call Jordan for a hint (costs 3 reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
+    <div id="hintArea"><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   const pr=box.querySelector(".prompt");if(i>0){pr.scrollIntoView({behavior:"smooth",block:"start"});pr.focus({preventScroll:true});}
   const fb=document.getElementById("fb");
-  document.getElementById("hintBtn").onclick=()=>{hintUsed=true;S.hints++;cred(-3);document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan, on the phone</p><p>${st.hint}</p></div>`;};
-  if(st.type==="build"){
+  document.getElementById("hintBtn").onclick=()=>{hintUsed=true;S.hints++;cred(-hintCost());document.getElementById("hintArea").innerHTML=`<div class="hint"><p class="fb-head">Jordan, on the phone</p><p>${st.hint}</p></div>`;};
+  if(st.type==="build"){let busyB=false;
     document.getElementById("runB").onclick=()=>{
-      if(done)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
+      if(done||busyB)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
       const b={outcomes:sel.filter(x=>x.value==="outcome").map(x=>x.dataset.var),factors:sel.filter(x=>x.value==="factor").map(x=>x.dataset.var),repeated:r?r.value==="yes":null};
       const tag=evalBuild(st.spec,b),name=analysisName(b,st.spec.vars);
       if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
       if(tag==="correct"){done=true;if(wrongs===0)cred(hintUsed?5:10);
-        fb.innerHTML=`<div class="fb-box good"><p class="fb-head">Analysis runs: ${name}.</p><p>${st.spec.ok} The results are shown above.</p></div>`;document.getElementById("vizSlot").innerHTML=unit.viz||"";
+        reactOk(fb,unitNpc(unit),`<p><strong>Analysis runs: ${name}.</strong> ${st.spec.ok} The results are shown above.</p>`);document.getElementById("vizSlot").innerHTML=unit.viz||"";
         box.querySelectorAll("select,input,#runB").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
         document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">Next</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
-      }else{wrongs++;cred(-4);const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag];
-        fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">${tag==="no_design"||tag==="outcome_misread"&&!b.outcomes.length?"Not ready to run.":`You ran: ${name}. Something's off.`}</p>${m.trim().startsWith("<")?m:`<p>${m}</p>`}<p>Adjust your setup and run it again.</p></div>`;}
+      }else{if(busyB)return;wrongs++;busyB=true;const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag],notReady=tag==="no_design"||tag==="outcome_misread"&&!b.outcomes.length;
+        document.getElementById("runB").disabled=true;
+        playWrong(fb,unitNpc(unit),notReady?"Checking your setup…":`Running ${name}…`,m.trim().startsWith("<")?m:`<p>${m}</p>`,()=>cred(-4),()=>{busyB=false;document.getElementById("runB").disabled=false;});}
     };
   }
+  let busy=false;const who=unitNpc(unit);
   box.querySelectorAll(".opt").forEach(btn=>{btn.onclick=()=>{
-    if(done||btn.getAttribute("aria-disabled")==="true")return;const o=st.options[+btn.dataset.k];
+    if(done||busy||btn.getAttribute("aria-disabled")==="true")return;const o=st.options[+btn.dataset.k];
     if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
     const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
     if(o.tag==="correct"){done=true;btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
-      box.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");});
-      if(wrongs===0)cred(hintUsed?5:10);fb.innerHTML=`<div class="fb-box good"><p class="fb-head">${wrongs===0?"Good call.":"That's the one."}</p>${inner}</div>`;
+      box.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");b.classList.remove("chosen");});
+      if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,inner);
       const hb=document.getElementById("hintBtn");if(hb)hb.remove();
       document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;
       document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
-    }else{wrongs++;cred(-4);btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";
-      fb.innerHTML=`<div class="fb-box bad"><p class="fb-head">Not quite. Try another reply.</p>${inner}</div>`;}
+    }else{wrongs++;busy=true;btn.classList.add("chosen");
+      playWrong(fb,who,`You give ${firstName(who)} your answer…`,inner,
+        ()=>{btn.classList.remove("chosen");btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";cred(-4);},
+        ()=>{busy=false;});}
   };});
+
+  const mark=(el,cls)=>{el.classList.remove("chosen");el.classList.add(cls);};
+  const wrapP=t=>t.trim().startsWith("<")?t:`<p>${t}</p>`;
+  const okFinish=body=>{done=true;if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,body);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+    document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);};
+  const badFinish=(el,action,body)=>{wrongs++;busy=true;if(el)el.classList.add("chosen");
+    playWrong(fb,who,action,wrapP(body),()=>{cred(-4);if(el){mark(el,"wrong");el.setAttribute("aria-disabled","true");}},()=>{busy=false;});};
+  let lockAll=()=>{};
+  const choose=(el,item,action)=>{if(done||busy||el.getAttribute("aria-disabled")==="true")return;if(rec.first===null){rec.first=item.tag;rec.hintBefore=hintUsed;}
+    if(item.tag==="correct"){mark(el,"right");lockAll();okFinish(wrapP(item.fb));}else badFinish(el,action,item.fb);};
+  if(st.type==="spot"){
+    box.querySelector(".opts").outerHTML=`<div class="draft"><p class="draft-title">${st.draftTitle}</p><p>${st.draft.map((d,k)=>`<button class="sent" data-k="${k}">${d.t}</button>`).join(" ")}</p></div>`;
+    lockAll=()=>box.querySelectorAll(".sent").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
+  }
+  if(st.type==="cards"){
+    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
+  }
+  if(st.type==="point"){
+    lockAll=()=>box.querySelectorAll("[data-pick]").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{const it=st.picks[b.dataset.pick];if(it)choose(b,it,`You point it out to ${firstName(who)}…`);});
+  }
+
+  if(st.type==="reply"||st.type==="interview"){
+    const bub=(you,t)=>`<div class="msg ${you?"you":"them"}"><span class="msg-who">${you?"You":firstName(who)}</span>${t}</div>`;
+    box.querySelector(".opts").outerHTML=`<div class="thread ${st.channel||"chat"}">${st.channel==="email"?`<div class="mailhead"><span><strong>From:</strong> ${who.name}</span><span><strong>Subject:</strong> ${st.subject||""}</span></div>`:""}<div class="msgs" id="msgs" aria-live="polite">${(st.thread||[]).map(m=>bub(false,m)).join("")}</div>${st.type==="interview"?`<div class="asks"><span class="slotlab" style="width:100%">Ask ${firstName(who)}:</span>${st.questions.map((q,k)=>`<button class="ask" data-k="${k}">${q.q}</button>`).join("")}</div>`:""}<div id="composeHost"></div></div>`;
+    const msgs=document.getElementById("msgs"),addMsg=(you,t)=>msgs.insertAdjacentHTML("beforeend",bub(you,t));
+    const doCompose=()=>{
+      const host=document.getElementById("composeHost"),sel=st.slots.map(()=>null);
+      host.innerHTML=`<div class="compose"><span class="slotlab">Build your ${st.channel==="email"?"email":"reply"} from the pieces</span>${st.slots.map((sl,si)=>`<div class="slotrow"><span class="slotlab">${sl.label}</span><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></div>`).join("")}<div class="draftmsg" id="draftmsg">…</div><button class="primary" id="sendBtn">${st.channel==="email"?"Send email":"Send"}</button></div>`;
+      const txt=()=>sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ");
+      host.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy)return;const si=+b.dataset.s;sel[si]=+b.dataset.o;host.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));document.getElementById("draftmsg").textContent=txt();});
+      document.getElementById("sendBtn").onclick=()=>{
+        if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a piece from each row first.</p>`;return;}
+        addMsg(true,txt());const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+        if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+        if(!bad){host.querySelectorAll("button").forEach(b=>b.disabled=true);box.querySelectorAll(".ask").forEach(b=>b.disabled=true);if(st.reveal){const vs=document.getElementById("vizSlot");if(vs)vs.innerHTML=unit.viz||"";}okFinish(wrapP(st.okFb));}
+        else badFinish(null,`${firstName(who)} is typing…`,bad.fb);};
+    };
+    if(st.type==="reply")doCompose();
+    else{let opened=false;box.querySelectorAll(".ask").forEach(b=>b.onclick=()=>{if(done||busy||b.disabled)return;const q=st.questions[+b.dataset.k];b.disabled=true;addMsg(true,q.q);addMsg(false,q.a);if(!q.key)cred(-1);if(q.key&&!opened){opened=true;doCompose();}});}
+  }
+  if(st.type==="tiles"){
+    const sel=st.slots.map(()=>null);
+    box.querySelector(".opts").outerHTML=`${st.slots.map((sl,si)=>`<fieldset><legend>${sl.label}</legend><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></fieldset>`).join("")}<p class="headline" id="hl" aria-live="polite">Pick one tile from each row to build the headline.</p><button class="quiet" id="present">Present the headline</button>`;
+    const upd=()=>{document.getElementById("hl").textContent=sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ")+(sel.every(x=>x!==null)?".":"");};
+    box.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy)return;const si=+b.dataset.s;sel[si]=+b.dataset.o;box.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));upd();});
+    document.getElementById("present").onclick=()=>{
+      if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a tile from each row first.</p>`;return;}
+      const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(!bad){box.querySelectorAll(".tile,#present").forEach(e=>e.disabled=true);okFinish(wrapP(st.okFb));}
+      else badFinish(null,`You present the headline to ${firstName(who)}…`,bad.fb);};
+  }
 }
 function showOutro(unit,kind,lvl){
   const g=id=>valueOf(S.results[id]).replace("correct_hint","correct"),oc=unit.outro(g),box=document.getElementById("steps");
   box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
-    <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">Back to the hallway</button></div></div>`;
+    <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">${kind==="finale"?"File the report and see my results":"Back to the hallway"}</button></div></div>`;
   const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
-  document.getElementById("cont").onclick=()=>unitDone(unit,kind,lvl);document.getElementById("cont").focus({preventScroll:true});
+  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
 }
 function unitDone(unit,kind,lvl){
   let msg="";
   if(kind==="core"){const idx=+unit.id.slice(1)-1;S.done.push(idx);S.path[idx]=lvl;
     const ids=unit.steps.map(s=>s.id),misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct"),hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
     if(misses.length===0&&hinted.length===0)S.level=1;else if(misses.length>=2)S.level=0;
-    if(S.fuDone.length<2)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
+    if(S.fuDone.length<1)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
     msg=`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
+    if(S.done.length===4&&!S.pendingFU&&WEEK.hidden&&!S.hiddenUnlocked&&CORE.every((c,ci)=>c(coreRng(ci),S.path[ci]).steps.every(st=>S.results[st.id]&&S.results[st.id].first==="correct"))){S.hiddenUnlocked=true;msg+=` ★ Jordan texts: "You didn't need me once this week. Come to Statistics. There's something strange in the data."`;}
+  }else if(kind==="hidden"){S.hiddenDone=true;msg="★ Hidden problem solved. Jordan is impressed.";
   }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;msg="Jordan's done with you. Back to the consults.";}
   else{S.expDone.push(unit.id);msg="Nice work on the optional consult.";}
   save();renderMap();if(!S.pendingFU)toast(msg);
 }
 function finalReport(){
-  mapActive=false;const p=NPCS.find(q=>q.id==="helen");
+  if(WEEK.finale&&!S.finaleDone){const b=NPCS.find(q=>q.id==="brooks");return startUnit(WEEK.finale(S),"finale",null,b);}
+  mapActive=false;const p=NPCS.find(q=>q.id==="brooks");
   app.innerHTML=`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
-    <div class="bubble"><p>All four sign-offs, and the analyses hold up. Nice rounds, ${title().toLowerCase()}.</p></div>
+    <div class="bubble"><p>${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}</p></div>
     <div class="actions"><button class="primary" id="file">File the report and see my results</button><button class="quiet" id="back">Not yet, back to the floor</button></div>`;
   app.querySelector("h1").focus();
-  document.getElementById("file").onclick=()=>{S.phase="done";save();renderSummary();};
+  document.getElementById("file").onclick=()=>{S.phase="done";applySeason();save();renderSummary();};
   document.getElementById("back").onclick=()=>renderMap();
 }
 function buildPayload(){
-  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`case levels ${[0,1,2,3].map(i=>S.path[i]??"-").join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
+  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`save ${MODE==="season"?"on":"off"}`,`case levels ${[0,1,2,3].map(i=>S.path[i]??"-").join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
   const add=(u,name)=>u.steps.forEach(st=>{const v=valueOf(S.results[st.id]);if(v)parts.push(`${name}, ${st.label}: ${v}`);});
   CORE.forEach((c,i)=>{if(S.done.includes(i)){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
+  if(WEEK.finale&&S.finaleDone){const u=WEEK.finale(S);add(u,u.title);}
+  if(S.hiddenDone&&WEEK.hidden){const u=WEEK.hidden();add(u,"Hidden problem ("+u.title+")");}
   S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
   if(S.expDone.length)add(expertCase(),"Optional (Skewed stays in the ED)");
   return {results:parts.join(" | ").replace(/α/g,"alpha").replace(/μ/g,"mu")};
@@ -772,13 +1062,17 @@ function renderSummary(){
   const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
   const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">First try</span>`:v==="correct_hint"?`<span class="st ok">First try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
   const payload=buildPayload(),configured=!!CONFIG.qualtricsUrl;
+  const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>Your season is saved on this browser. To continue on another device, keep this code somewhere safe:</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
+    :`<div class="submit-box" style="margin:1rem 0"><h2>Played without saving</h2><p>Nothing was saved on this device.</p><p id="ccWrap"><button class="linkish" id="showc">Get a career code anyway</button></p></div>`;
   app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
-    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this week's hidden problem.</p>`:""}
     <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
-    <ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    <div class="bubble"><p><strong>Next week:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
     ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
     <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
   window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  const cp=document.getElementById("copyc");if(cp)cp.onclick=()=>{const t=document.getElementById("ccode").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{cp.textContent="Copied";},()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("ccode"));getSelection().removeAllRanges();getSelection().addRange(r);cp.textContent="Selected: press Ctrl+C";});};
+  const shc=document.getElementById("showc");if(shc)shc.onclick=()=>{document.getElementById("ccWrap").innerHTML=`<code style="font-size:1.15rem">${encodeCareer(SEASON)}</code><br><span class="where">Enter it at the start of next week's game to keep your story.</span>`;};
   const sb=document.getElementById("submit");if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);u.searchParams.set("results",payload.results);location.href=u.toString();};
   document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased."))return;clearSaved();S=null;renderIntro();};
 }
