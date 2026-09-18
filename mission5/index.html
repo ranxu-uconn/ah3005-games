@@ -7,7 +7,7 @@
 <style>
 
 :root{
-  --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB;
+  --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB; --line-strong:#728891;
   --teal:#15656C; --teal-deep:#0C474C; --teal-wash:#E1EEEF; --on-teal:#FFFFFF;
   --good:#256A40; --good-wash:#E3F1E7; --bad:#9E2F28; --bad-wash:#F7E4E2;
   --amber:#7F500B; --amber-wash:#F7EDDA;
@@ -16,7 +16,7 @@
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --paper:#0F181C; --card:#162228; --ink:#E2EBEE; --muted:#9DAEB5; --line:#2C3C43;
+    --paper:#0F181C; --card:#162228; --ink:#E2EBEE; --muted:#9DAEB5; --line:#2C3C43; --line-strong:#6B8087;
     --teal:#6DBAC1; --teal-deep:#96D2D7; --teal-wash:#173338; --on-teal:#08181B;
     --good:#86CD9E; --good-wash:#1A3224; --bad:#F29A92; --bad-wash:#3A211F;
     --amber:#E6B96C; --amber-wash:#382C17;
@@ -55,7 +55,7 @@ thead th:first-child{text-align:left}
 .step-count{color:var(--muted);font-size:.9rem;margin-bottom:.3rem}
 .prompt{font-size:1.18rem}
 .opts{display:grid;gap:.55rem;margin:.9rem 0}
-.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:.75rem .9rem;cursor:pointer}
+.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line-strong);border-radius:8px;padding:.75rem .9rem;cursor:pointer}
 .opt:hover:not([aria-disabled="true"]){border-color:var(--teal)}
 .opt-mark{flex:0 0 1.35rem;height:1.35rem;border-radius:50%;border:1.5px solid var(--muted);margin-top:.12rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
 .opt.wrong{background:var(--bad-wash);border-color:var(--bad);cursor:default}
@@ -150,7 +150,7 @@ main>h2{margin-top:1.8rem}
 .sent.chosen,.ecard.chosen,.pick.chosen,.pickpanel.chosen{background:var(--amber-wash);border-color:var(--amber)}
 .sent.wrong{background:var(--bad-wash);text-decoration:line-through}.sent.right{background:var(--good-wash);border-bottom:2px solid var(--good)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem;margin:.8rem 0}
-.ecard{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.75rem .85rem;min-height:5.5rem;cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink)}
+.ecard{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;padding:.75rem .85rem;min-height:5.5rem;cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink)}
 .ecard:hover:not([aria-disabled="true"]){border-color:var(--teal);transform:translateY(-1px)}
 .etag{display:block;font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--teal-deep);margin-bottom:.3rem}
 .ecard.wrong{background:var(--bad-wash);border-color:var(--bad)}.ecard.right{background:var(--good-wash);border-color:var(--good)}
@@ -160,7 +160,7 @@ main>h2{margin-top:1.8rem}
 .pickpanel{display:block;width:100%;text-align:left;background:none;border:2px dashed var(--teal);border-radius:10px;padding:.35rem .5rem;margin:.2rem 0 .5rem;cursor:pointer;font:inherit;color:var(--ink)}
 .pickpanel .vizfig{margin:.2rem 0}
 .tiles{display:flex;flex-wrap:wrap;gap:.45rem}
-.tile{font:inherit;font-size:.95rem;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:.35rem .85rem;cursor:pointer;color:var(--ink)}
+.tile{font:inherit;font-size:.95rem;background:var(--card);border:1.5px solid var(--line-strong);border-radius:999px;padding:.35rem .85rem;cursor:pointer;color:var(--ink)}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
@@ -202,12 +202,12 @@ main>h2{margin-top:1.8rem}
 .quest{font-size:.95rem;margin:.2rem 0 .3rem}
 .controls{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.5rem}
 .dpad{display:grid;grid-template-columns:repeat(3,3rem);grid-template-rows:repeat(2,3rem);gap:.3rem}
-.dpad button{font-size:1.2rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
+.dpad button{font-size:1.2rem;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
 .dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}
 .dir{flex:1;min-width:15rem}
 .dir h2{font-size:1.05rem;margin:.1rem 0 .4rem}
 .dir ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
-.dir button{width:100%;text-align:left;font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem}
+.dir button{width:100%;text-align:left;font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1px solid var(--line-strong);border-radius:6px;padding:.4rem .6rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem}
 .dir .tag{font-size:.78rem;font-weight:700;white-space:nowrap}
 .tag.need{color:var(--amber)}.tag.done{color:var(--good)}.tag.wait{color:var(--muted)}
 .talk-head{display:flex;gap:1rem;align-items:center;margin:.3rem 0 .6rem}
@@ -227,7 +227,7 @@ main>h2{margin-top:1.8rem}
 .build{width:100%;border-collapse:collapse;margin:.4rem 0 .8rem;font-size:.92rem}
 .build th,.build td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);white-space:normal}
 .build code{font-weight:700}
-.build select{font:inherit;padding:.3rem;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.build select{font:inherit;padding:.3rem;border-radius:6px;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink)}
 .typ{font-size:.75rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;background:var(--teal-wash);color:var(--teal-deep);white-space:nowrap}
 .notes{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .9rem;margin:0 0 1rem}
 .notes summary{font-weight:700;cursor:pointer}
@@ -252,7 +252,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:5,version:"6.1",
+const CONFIG={mission:5,version:"6.2",
   // Qualtrics survey link (same survey as Mission 4)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission5-v6"};
@@ -276,7 +276,14 @@ function fx(x,d=2){const r=Number(x).toFixed(d);return r==="-0."+"0".repeat(d)?(
 function fP(p){return p<0.001?"&lt;.001":p.toFixed(3).replace(/^0\./,".");}
 function fPtext(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
 function tbl(title,note,heads,rows){
-  return `<figure class="output"><figcaption>${title}${note?`<span class="out-note">${note}</span>`:""}</figcaption><div class="scroll"><table><thead><tr>${heads.map(h=>`<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>i===0?`<th scope="row">${c}</th>`:`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
+  const txt=x=>String(x).replace(/<[^>]+>/g,"").replace(/&lt;/g,"less than ").replace(/&gt;/g,"greater than ").replace(/&nbsp;/g," ").replace(/"/g,"").trim();
+  const label=(c,i,rowHead)=>{
+    if(typeof c!=="string"||c.indexOf('class="pick"')<0||c.indexOf("aria-label")>=0)return c;
+    const head=txt(heads[i]),rh=txt(rowHead),val=txt(c);
+    const name=[head,rh].filter(Boolean).join(", ")+(val?": "+val:"");
+    return c.replace('<button class="pick"',`<button class="pick" aria-label="${name}"`);
+  };
+  return `<figure class="output"><figcaption>${title}${note?`<span class="out-note">${note}</span>`:""}</figcaption><div class="scroll"><table><thead><tr>${heads.map(h=>`<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>i===0?`<th scope="row">${c}</th>`:`<td>${label(c,i,r[0])}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
 }
 const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
 
@@ -785,7 +792,7 @@ function renderIntro(){
    </div>
    ${found?`<p class="where">Saved season on this browser: ${seasonTitle(found.rep)}, reputation ${found.rep}, ${found.weeks.length} episode${found.weeks.length===1?"":"s"} played. Not you? Enter your own code or play without saving.</p>`:""}
    <p class="where">Playing without saving stores nothing on this device. If you close the tab, this week starts over.</p>
-   <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
+   <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line-strong);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
   app.querySelector("h1").focus();
   const av=()=>app.querySelector('input[name="av"]:checked').value;
   const begin=(mode,season)=>{
@@ -919,7 +926,7 @@ function showStep(unit,i,kind,lvl){
   const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
   let hintUsed=false,done=false,wrongs=0;
   box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
-    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr><th scope="row"><code>${v[0]}</code><br><span class="where">${v[1]}</span></th><td><span class="typ">${v[2]}</span></td><td><select data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option></select></td></tr>`).join("")}</tbody></table>
+    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><br><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option></select></td></tr>`).join("")}</tbody></table>
     <fieldset><legend>Was anyone measured more than once (in more than one group)?</legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>
     <button class="quiet" id="runB">Run analysis</button>`:""}
     <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
