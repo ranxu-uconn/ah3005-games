@@ -252,7 +252,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:4,version:"7.2",
+const CONFIG={mission:4,version:"7.3",
   // Qualtrics survey link (same survey for all missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission4-v7"};
@@ -288,6 +288,10 @@ function tbl(title,note,heads,rows){
 const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
 
 function pT(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+
+/* --- visit counting (GoatCounter, no cookies, no personal data) --- */
+function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.count)
+  window.goatcounter.count({path:location.pathname.replace(/\/$/,"")+"/"+suffix,title:title});}catch(e){}}
 
 /* ============================================================
    SEASON SAVE (identical in every week's game)
@@ -899,7 +903,7 @@ function renderOpening(){
    ${prev?`<p class="lede"><strong>Previously at Riverbend:</strong> ${prev}</p>`:""}
    ${WEEK.opening.map(([id,line])=>{const p=NPCS.find(q=>q.id===id);return `<div class="talk-head" style="align-items:flex-start">${portrait(p,52)}<div style="flex:1"><p class="who" style="margin-bottom:.2rem"><strong>${p.name.split(",")[0]}</strong></p><div class="bubble" style="margin:0 0 .6rem">${line}</div></div></div>`;}).join("")}
    <div class="actions"><button class="primary" id="go">Head to the floor</button></div>`;
-  app.querySelector("h1").focus();document.getElementById("go").onclick=()=>{renderMap();toast(`Start with anyone who has a <strong>!</strong> above them. Check the <strong>?</strong> clues in their room first.`);};
+  app.querySelector("h1").focus();document.getElementById("go").onclick=()=>{gcount("started","Episode 4 started");renderMap();toast(`Start with anyone who has a <strong>!</strong> above them. Check the <strong>?</strong> clues in their room first.`);};
 }
 function applySeason(){
   if(S.seasonApplied)return;const k=WEEK.keyFlags(S);
@@ -1135,7 +1139,7 @@ function showOutro(unit,kind,lvl){
   box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
     <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">${kind==="finale"?"File the report and see my results":"Back to the hallway"}</button></div></div>`;
   const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
-  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
+  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();gcount("finished","Episode 4 finished");renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
 }
 function unitDone(unit,kind,lvl){
   let msg="";
@@ -1193,5 +1197,7 @@ function renderSummary(){
 renderIntro();
 }
 </script>
+<script data-goatcounter="https://ah3005.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
