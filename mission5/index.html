@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:5,version:"6.7",
+const CONFIG={mission:5,version:"6.9",
   // Qualtrics survey link (same survey as Mission 4)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission5-v6"};
@@ -454,7 +454,7 @@ const WEEK={num:5,title:"The budget meeting",
       show:tbl("Night shift triage log (first 10 entries)","Minutes from arrival to triage",["Patient","Minutes"],[["N01",pk("34","a")],["N02",pk("41","b")],["N03",pk("29","c")],["N04",pk("900","bad")],["N05",pk("38","d")],["N06",pk("52","e")],["N07",pk("35","f")],["N08",pk("44","g")],["N09",pk("31","h")],["N10",pk("39","i")]]),
       prompt:"Click the entry that doesn't belong.",hint:"Triage in Labor & Delivery takes minutes, not hours.",
       picks:Object.assign(Object.fromEntries(["a","b","c","d","e","f","g","h","i"].map(k=>[k,{tag:"data_quality",fb:"That's a plausible triage time."}])),{bad:{tag:"correct",fb:"900 minutes is 15 hours. It's almost certainly a typing error, maybe for 9.00. One value like that inflates the night-shift mean and the within-shift variance."}})},
-     {id:"hid2",label:"Deciding what to do",type:"reply",channel:"chat",prompt:"Jordan texted you. Build your reply.",hint:"Suspicious values get checked against the original record before anything is changed or deleted.",
+     {id:"hid2",label:"Deciding what to do",type:"reply",channel:"chat",show:`<p class="where">The log you just checked:</p>${tbl("Night shift triage log (first 10 entries)","Minutes from arrival to triage",["Patient","Minutes"],[["N01","34"],["N02","41"],["N03","29"],["N04","900"],["N05","38"],["N06","52"],["N07","35"],["N08","44"],["N09","31"],["N10","39"]])}`,prompt:"Jordan texted you. Build your reply.",hint:"Suspicious values get checked against the original record before anything is changed or deleted.",
       thread:["So what do we do about N04 before the board sees this?"],
       slots:[
        {label:"First",options:[{t:"First, check N04's original record,",tag:"correct"},{t:"Just delete N04,",tag:"data_quality",fb:"Deleting data without checking can hide real problems. Check the source first."}]},
@@ -466,6 +466,8 @@ const WEEK={num:5,title:"The budget meeting",
   teaser:"Dr. Ruiz's full trial is enrolling, but the two arms don't look alike at baseline."};
 
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
+/* the same output again on a later step, read-only (no clickable cells) */
+const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -579,7 +581,7 @@ function case2(R,level){
         {label:"Three t tests would",options:[{t:"Three t tests would raise the chance of a false positive to about 14%.",tag:"correct"},{t:"Three t tests would keep the false-positive risk at 5%.",tag:"multiple_testing",fb:"Look at the meter: each extra test adds risk."}]},
         {label:"Instead, I'll use",options:[{t:"Instead, I'll use Tukey-Kramer or Scheffé, because the group sizes differ.",tag:"correct"},{t:"Instead, I'll use Tukey's test, because the groups are balanced.",tag:"posthoc_balance",fb:"Check the enrollment sheet: the groups aren't the same size."},{t:"Nothing more is needed; the F test already shows which differ.",tag:"skip_posthoc",fb:"The F test only says at least one mean differs."}]}],
        okFb:`${post}<p>Significant difference${sigPairs.length>1?"s":""}: ${sigPairs.join("; ")}.</p>`},
-      {id:"c2s3",label:"Checking Greg's slide",type:"spot",prompt:"Greg drafted his board slide. Click the sentence the data don't support.",hint:["Look for the sentence that turns \"no significant difference\" into a claim that two programs are the same.","Not significantly different doesn't mean equal: a study this size can miss a real difference. The sentence saying the app works just as well as classes goes further than the data."],draftTitle:"Board slide: diabetes education programs",
+      {id:"c2s3",label:"Checking Greg's slide",type:"spot",show:`<p class="where">The post hoc results Greg is quoting:</p>${post}`,prompt:"Greg drafted his board slide. Click the sentence the data don't support.",hint:["Look for the sentence that turns \"no significant difference\" into a claim that two programs are the same.","Not significantly different doesn't mean equal: a study this size can miss a real difference. The sentence saying the app works just as well as classes goes further than the data."],draftTitle:"Board slide: diabetes education programs",
        draft:[
         {t:"The three programs differed in HbA1c change (ANOVA, p < .05).",tag:"absence_as_equivalence",fb:"That's what the ANOVA table showed."},
         {t:`Group classes lowered HbA1c more than usual care (Scheffé ${pT(ph[0].p)}).`,tag:"absence_as_equivalence",fb:"That's a correct reading of the post hoc test."},
@@ -628,7 +630,7 @@ function case3(R,level){
         mst:{tag:"output_misread",fb:"That's the variance between visits, one ingredient of F."},mse:{tag:"output_misread",fb:"That's the error variance, after patient differences are removed."},
         sst:{tag:"output_misread",fb:"A sum of squares measures variation, not evidence on its own."},sse:{tag:"output_misread",fb:"A sum of squares measures variation, not evidence on its own."},
         dft:{tag:"output_misread",fb:"Degrees of freedom reflect the number of visits."},dfe:{tag:"output_misread",fb:"Degrees of freedom reflect the sample size."}}},
-      {id:"c3s3",label:"Explaining it to Marcus",type:"reply",channel:"chat",prompt:"Marcus texted you. Build your reply.",
+      {id:"c3s3",label:"Explaining it to Marcus",type:"reply",channel:"chat",show:`<p class="where">Your repeated measures output:</p>${table}<p class="where">The assistant's one-way ANOVA on the same walks:</p>${tbl("ANOVA","Treating each visit as a separate group",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(ow))}`,prompt:"Marcus texted you. Build your reply.",
        hint:["Patients differ a lot from one another in how far they walk. Follow where that patient-to-patient variation ends up in each analysis.","A one-way ANOVA leaves those patient differences in the error term, which drowns out the change. Repeated measures compares each patient with themselves, so those differences come out of the error."],
        thread:[`Before you got here, my assistant ran a one-way ANOVA that treated the three visits as separate groups of patients. It said ${pT(ow.p)}. Your repeated measures ANOVA says ${pT(rm.p)}. Same walks. Why the different answers?`],
        slots:[
