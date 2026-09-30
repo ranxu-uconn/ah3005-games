@@ -328,7 +328,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:6,version:"1.7",
+const CONFIG={mission:6,version:"1.8",
   // Qualtrics survey link (same survey as Missions 4 and 5)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission6-v1"};
@@ -497,6 +497,8 @@ const WEEK={num:6,title:"What else could explain it?",
     takeaway:"Before believing a difference between groups, ask what else differs between them, and whether you measured it."})};
 
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
+/* the same output again on a later step, read-only (no clickable cells) */
+const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -690,8 +692,8 @@ function case1(R,level){ // Dr. Wei Zhang, Oncology (guest) - ANCOVA
     names.map((nm,i)=>[nm,fx(mean(G[i].x),1),fx(anc.raw[i],1),fx(anc.adj[i],1)]));
   const best=names[anc.adj.indexOf(Math.min(...anc.adj))];
   const step3=level
-    ? {id:"c1s3",label:"Telling Dr. Zhang",type:"reply",channel:"chat",prompt:"Build your reply.",
-       hint:["Go back to the Program \u00d7 Baseline fatigue row from the last decision. Its Sig. value decides whether one number per program is honest.","That row was significant: the slopes differ, so each program helps patients differently depending on how tired they started. One adjusted number would hide that."],
+    ? {id:"c1s3",label:"Telling Dr. Zhang",type:"reply",channel:"chat",show:`<p class="where">Your assumption check from the last decision:</p>${still(slopeTbl)}`,prompt:"Build your reply.",
+       hint:["Look at the Program \u00d7 Baseline fatigue row in the output above. Its Sig. value decides whether one number per program is honest.","That row was significant: the slopes differ, so each program helps patients differently depending on how tired they started. One adjusted number would hide that."],
        thread:["So can I report one number for how much each program helps?"],
        slots:[{label:"Your answer",options:[
         {t:"The slopes differ, so a single program effect would be misleading. I'll report how the effect changes with baseline fatigue instead.",tag:"correct"},
