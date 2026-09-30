@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:4,version:"7.6",
+const CONFIG={mission:4,version:"7.7",
   // Qualtrics survey link (same survey for all missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission4-v7"};
@@ -464,6 +464,8 @@ const WEEK={num:4,title:"First rounds",
   teaser:"Greg has scheduled a budget meeting for Friday. He wants data on which programs to cut."};
 
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
+/* the same output again on a later step, read-only (no clickable cells) */
+const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -586,7 +588,7 @@ function case1(R,level){
         t:{tag:"output_misread",fb:"t is the test statistic, not a p-value."},df:{tag:"output_misread",fb:"Degrees of freedom aren't a p-value."},
         diff:{tag:"output_misread",fb:"That's the effect estimate, not a p-value."},
         lo:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."},hi:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."}}},
-      {id:"c1s3",label:"Checking the draft report",type:"spot",prompt:"Dr. Nair drafted her report paragraph. Click the sentence the data don't support.",
+      {id:"c1s3",label:"Checking the draft report",type:"spot",show:`<p class="where">The output Dr. Nair is quoting:</p>${still(out)}`,prompt:"Dr. Nair drafted her report paragraph. Click the sentence the data don't support.",
        hint:[`Find the one-sided p-value in her paragraph (p = ${fP(p1)}) and compare it with α = 0.05.`,`p = ${fP(p1)} is above 0.05, so the data don't show the average is under 60. One sentence claims the team beats the target anyway.`],draftTitle:"Stroke Center annual report (draft)",
        draft:[
         {t:`Our last ${n} eligible patients averaged ${fx(m,1)} minutes from arrival to treatment.`,tag:"threshold_misread",fb:"That sentence only describes the sample, and it's accurate."},
@@ -689,7 +691,7 @@ function case3(R,level){
         neq:level?{tag:"correct",fb:`Levene's ${pT(lp)} is below 0.05, so the spreads differ and this row applies. The dot plot shows it too.`}:{tag:"ignore_levene",fb:`Levene's ${pT(lp)} is above 0.05, so there's no evidence the spreads differ. Use the other row.`},
         lev:{tag:"output_misread",fb:"That's Levene's p-value. It tells you which row to use; now click that row."},
         p1:{tag:"row_by_smaller_p",fb:"Pick the row from Levene's test, not from the result you prefer."},p2:{tag:"row_by_smaller_p",fb:"Pick the row from Levene's test, not from the result you prefer."}}},
-      {id:"c3s3",label:"Answering Dr. Ruiz",type:"cards",claim:`<strong>Dr. Ruiz:</strong> "p = ${fP(pc)}. The drug doesn't work. I'm writing that down."`,prompt:"Play the evidence that best answers her.",
+      {id:"c3s3",label:"Answering Dr. Ruiz",type:"cards",show:`<p class="where">Your output from the last decision:</p>${still(ind)}`,claim:`<strong>Dr. Ruiz:</strong> "p = ${fP(pc)}. The drug doesn't work. I'm writing that down."`,prompt:"Play the evidence that best answers her.",
        hint:["Dr. Ruiz is reading a non-significant p as proof the drug does nothing. Play evidence about how big an effect the pilot could still have missed.",`The 95% interval runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg: it includes 0 but also real reductions, and with only ${n1} and ${n2} patients a real effect is easy to miss.`],
        cards:[
         {k:"Output",t:`p = ${fP(pc)}, above 0.05`,tag:"accept_null",fb:"That's her point, not an answer to it. Not significant isn't the same as no effect."},
