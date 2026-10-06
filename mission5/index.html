@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:5,version:"6.9",
+const CONFIG={mission:5,version:"7.0",
   // Qualtrics survey link (same survey as Mission 4)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission5-v6"};
@@ -378,7 +378,7 @@ function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.coun
 const SEASON_KEY="riverbend-season-v1";
 const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
 // Append new flags at the END only, so older career codes keep working.
-const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction"];
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample"];
 const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
 let SEASON=seasonDefault(),MODE="nosave";
@@ -425,10 +425,10 @@ const WEEK={num:5,title:"The budget meeting",
   topicLine:"This week: ANOVA. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
   opening:[["brooks","Friday's board agenda: night triage staffing, Greg's program cuts, cardiac rehab funding, and teach-back. Every item needs evidence that holds up."],
            ["jordan","Same drill: clues first, then the analysis. And say hi to our guest from Women's Health at the guest desk."]],
-  previously:d=>"Last week, four teams brought their first claims to the new analyst. Now Greg is asking which programs the hospital can afford to cut."+(d.flags.w4_nair_honest?" Word got around that you told Dr. Nair her headline wasn't ready.":""),
+  previously:d=>"Last week, four teams brought you their first claims to test. Now Greg is asking which programs the hospital can afford to cut."+(d.flags.w4_nair_honest?" Word got around that you told Dr. Nair her headline wasn't ready.":""),
   callbacks:{
     nadia:()=>"Hi, I'm Nadia from Women's Health. Jordan said you're the one to ask.",
-    greg:d=>d.flags.w4_greg_portal?"You again. Fine, check my numbers before the board does.":"So you're the new analyst. Let's see if you can keep up.",
+    greg:d=>d.flags.w4_greg_portal?"You again. Fine, check my numbers before the board does.":d.weeks.some(w=>w<4)?"Back for more? Fine. Let's see if you can keep up.":"So you're the new analyst. Let's see if you can keep up.",
     marcus:d=>d.flags.w4_marcus_paired?"Remember my knee patients? This one might feel familiar.":"",
     dana:d=>d.weeks.includes(4)?"The sepsis pilot is enrolling with the design you gave me. Now this.":"",
     nair:d=>d.flags.w4_nair_honest?"Before I celebrate, I'm asking you first this time.":""},
