@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission 3: Twenty patients | AH/STAT 3005</title>
+<style>
+
+:root{
+  --paper:#F2F6F7; --card:#FFFFFF; --ink:#17252D; --muted:#53636B; --line:#CBD6DB; --line-strong:#728891;
+  --teal:#15656C; --teal-deep:#0C474C; --teal-wash:#E1EEEF; --on-teal:#FFFFFF;
+  --good:#256A40; --good-wash:#E3F1E7; --bad:#9E2F28; --bad-wash:#F7E4E2;
+  --amber:#7F500B; --amber-wash:#F7EDDA;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F181C; --card:#162228; --ink:#E2EBEE; --muted:#9DAEB5; --line:#2C3C43; --line-strong:#6B8087;
+    --teal:#6DBAC1; --teal-deep:#96D2D7; --teal-wash:#173338; --on-teal:#08181B;
+    --good:#86CD9E; --good-wash:#1A3224; --bad:#F29A92; --bad-wash:#3A211F;
+    --amber:#E6B96C; --amber-wash:#382C17;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--sans)}
+.bar{position:sticky;top:0;z-index:5;background:var(--teal-deep);color:#fff;border-bottom:3px solid var(--teal)}
+@media (prefers-color-scheme: dark){.bar{background:#0B2427;color:var(--ink)}}
+.bar-in{max-width:780px;margin:0 auto;padding:.55rem 1.1rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar-title{font-family:var(--serif);font-size:1.02rem;font-weight:600}
+.bar-meta{display:flex;gap:1.1rem;align-items:center;font-size:.86rem}
+.meter{display:flex;align-items:center;gap:.45rem}
+.meter-track{width:92px;height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+.meter-fill{height:100%;background:#9FE0C0;transition:width .35s ease}
+main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
+h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
+h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
+p{margin:0 0 .9rem;max-width:68ch}
+.where{color:var(--muted);font-size:.92rem;margin:0}
+.lede{font-size:1.1rem}
+.memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
+.memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
+.memo p{max-width:none}
+.output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
+.output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
+.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.scroll{overflow-x:auto}
+/* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
+.scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
+.scroll.more:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.scrollnote{font-size:.78rem;color:var(--muted);margin:.15rem 0 0}
+table{border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:.86rem;min-width:100%}
+@media (max-width:520px){.output table{font-size:.76rem}.output th,.output td{padding:.4rem .3rem}}
+th,td{padding:.35rem .55rem;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+thead th{border-bottom:2px solid var(--ink);font-weight:700;vertical-align:bottom;white-space:normal;min-width:4.2rem}
+tbody th{text-align:left;font-weight:600}
+thead th:first-child{text-align:left}
+.step{border-top:1px solid var(--line);padding-top:1.2rem;margin-top:.6rem}
+.step-count{color:var(--muted);font-size:.9rem;margin-bottom:.3rem}
+.prompt{font-size:1.18rem}
+.opts{display:grid;gap:.55rem;margin:.9rem 0}
+.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line-strong);border-radius:8px;padding:.75rem .9rem;cursor:pointer}
+.opt:hover:not([aria-disabled="true"]){border-color:var(--teal)}
+.opt-mark{flex:0 0 1.35rem;height:1.35rem;border-radius:50%;border:1.5px solid var(--muted);margin-top:.12rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.opt.wrong{background:var(--bad-wash);border-color:var(--bad);cursor:default}
+.opt.wrong .opt-mark{border-color:var(--bad);color:var(--bad)}
+.opt.wrong .opt-mark::after{content:"\2715"}
+.opt.right{background:var(--good-wash);border-color:var(--good)}
+.opt.right .opt-mark{border-color:var(--good);background:var(--good);color:var(--card)}
+.opt.right .opt-mark::after{content:"\2713"}
+.opt.locked:not(.right):not(.wrong){opacity:.55;cursor:default}
+.fb{margin:.3rem 0 .8rem}
+.fb-box{border-radius:8px;padding:.8rem 1rem .1rem;border:1px solid}
+.fb-box.good{background:var(--good-wash);border-color:var(--good)}
+.fb-box.bad{background:var(--bad-wash);border-color:var(--bad)}
+.fb-head{font-weight:700;margin-bottom:.3rem}
+.hint{background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.75rem 1rem .1rem;margin:.4rem 0 .8rem}
+.hint .fb-head{color:var(--amber)}
+button{font:inherit}
+.primary{background:var(--teal);color:var(--on-teal);border:0;border-radius:8px;padding:.7rem 1.25rem;font-weight:600;cursor:pointer}
+.primary:hover{background:var(--teal-deep)}
+@media (prefers-color-scheme: dark){.primary:hover{background:var(--teal-deep)}}
+.quiet{background:transparent;color:var(--teal-deep);border:1.5px solid var(--teal);border-radius:8px;padding:.6rem 1.05rem;font-weight:600;cursor:pointer}
+.linkish{background:none;border:0;color:var(--teal-deep);text-decoration:underline;cursor:pointer;padding:.3rem 0;font-size:.95rem}
+.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+:focus-visible{outline:3px solid #E0A526;outline-offset:2px}
+.outro{border-top:1px solid var(--line);margin-top:1rem;padding-top:1.2rem}
+.takeaway{background:var(--teal-wash);border-radius:8px;padding:.8rem 1rem}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 .8rem;padding:.6rem .9rem .7rem;background:var(--card)}
+legend{font-weight:600;padding:0 .3rem}
+.radios{display:flex;gap:1.2rem;flex-wrap:wrap}
+.radios label{display:flex;gap:.4rem;align-items:center;cursor:pointer}
+/* Two choices side by side: a bare radio sits 9px from its own text but only
+   19px from the NEXT option, so which text belongs to which button is ambiguous.
+   Each option gets its own box instead. */
+.seg{display:flex;gap:.6rem;flex-wrap:wrap;margin:.1rem 0 .6rem;position:relative}
+.seg input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.seg label{flex:1 1 9rem;display:flex;align-items:flex-start;gap:.5rem;
+  border:1.5px solid var(--line-strong);border-radius:9px;
+  padding:.6rem .7rem;cursor:pointer;background:var(--card);color:var(--ink);line-height:1.3}
+.seg label::before{content:"";flex:0 0 auto;width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--line-strong);margin-top:.12rem}
+.seg input:checked+label{border-color:var(--teal);border-width:2px;padding:calc(.6rem - .5px) calc(.7rem - .5px);
+  background:var(--teal-wash);font-weight:600}
+.seg input:checked+label::before{border-color:var(--teal);
+  background:radial-gradient(circle,var(--teal) 0 45%,transparent 47%)}
+.seg input:focus-visible+label{outline:2px solid var(--teal);outline-offset:2px}
+.stats{display:flex;gap:2rem;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.stat b{display:block;font-family:var(--serif);font-size:2rem;line-height:1.1;font-weight:600}
+.stat span{color:var(--muted);font-size:.9rem}
+.review{margin:0 0 1.2rem;padding:0;list-style:none}
+.review li{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.review .st{white-space:nowrap;font-weight:600}
+.st.ok{color:var(--good)} .st.retry{color:var(--amber)}
+main>h2{margin-top:1.8rem}
+.submit-box{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem}
+.kpis{display:flex;gap:.6rem;flex-wrap:wrap;margin:0 0 .9rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.45rem .85rem;min-width:7rem}
+.kpi b{display:block;font-family:var(--serif);font-size:1.3rem;line-height:1.25}
+.kpi span{font-size:.8rem;color:var(--muted)}
+.vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
+.viz{display:block;width:100%;height:auto}
+.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.viz text{font:12px var(--sans);fill:var(--muted)}
+.viz .v-strong{fill:var(--ink);font-weight:600}
+.viz .v-reflab{fill:var(--amber);font-weight:600}
+.viz .v-altlab{fill:var(--teal);font-weight:600}
+.viz .v-t1lab{fill:var(--bad);font-weight:600}
+.v-axis,.v-grid{stroke:var(--line);stroke-width:1}
+.v-dot{fill:var(--teal);opacity:.85}
+.v-ref{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}
+.v-down{stroke:var(--teal);stroke-width:1.6;opacity:.65}
+.v-up{stroke:var(--bad);stroke-width:1.8;opacity:.8}
+.v-flat{stroke:var(--muted);stroke-width:1.4;opacity:.6}
+.v-curve{fill:none;stroke:var(--ink);stroke-width:2}
+.v-shade{fill:var(--teal);opacity:.4}
+.v-null{fill:none;stroke:var(--muted);stroke-width:2}
+.v-alt{fill:none;stroke:var(--teal);stroke-width:2.5}
+.v-pow{fill:var(--teal);opacity:.28}
+.v-t1{fill:var(--bad);opacity:.45}
+.v-bar{stroke:var(--teal);stroke-width:7;stroke-linecap:round}
+.v-est{fill:var(--card);stroke:var(--teal);stroke-width:3}
+.v-mean{stroke:var(--ink);stroke-width:3}
+.status{display:flex;gap:.8rem;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--good);border-radius:4px 10px 10px 4px;padding:.75rem 1rem .1rem;margin-bottom:.9rem}
+.status.mixed{border-left-color:var(--amber)}
+.status-icon{font-size:1.35rem;line-height:1.3;font-weight:700;color:var(--good)}
+.status.mixed .status-icon{color:var(--amber)}
+.status-title{font-weight:700;margin-bottom:.15rem}
+.react{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin:.3rem 0 .8rem}
+.react.good{border-left:5px solid var(--good)}.react.bad{border-left:5px solid var(--amber)}.react.pending{border-left:5px solid var(--line)}
+.react-head{display:flex;gap:.7rem;align-items:center}
+.react-name{font-weight:700;margin:0;font-size:.88rem;color:var(--muted)}
+.react-line{margin:0;font-size:1.06rem}
+.react-body{margin-top:.55rem}
+.react-note{border-top:1px solid var(--line);margin-top:.6rem;padding-top:.5rem}
+.react-action{margin:0 0 .2rem;color:var(--muted);font-style:italic}
+.typing{margin:0}.typing span{display:inline-block;width:7px;height:7px;margin-right:4px;border-radius:50%;background:var(--muted);animation:rvblink 1s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes rvblink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.opt.chosen{border-color:var(--amber);background:var(--amber-wash)}
+.delta{margin-left:.35rem;font-weight:700;animation:rvpop 1.3s ease forwards}
+@keyframes rvpop{0%{opacity:0;transform:translateY(4px)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.typing span,.delta{animation:none}}
+.draft{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9rem 1.1rem;margin:.8rem 0;font-family:var(--serif);font-size:1.05rem;line-height:2}
+.draft-title{font-family:var(--sans);font-size:.85rem;font-weight:700;color:var(--muted);margin:0 0 .2rem;line-height:1.4}
+.draft p{margin:0}
+.sent{font:inherit;background:none;border:0;border-bottom:2px dotted var(--muted);color:var(--ink);cursor:pointer;padding:0 .15rem;text-align:left;display:inline;line-height:1.7}
+.sent:hover:not([aria-disabled="true"]){background:var(--amber-wash)}
+.sent.chosen,.ecard.chosen,.pick.chosen,.pickpanel.chosen{background:var(--amber-wash);border-color:var(--amber)}
+.sent.wrong{background:var(--bad-wash);text-decoration:line-through}.sent.right{background:var(--good-wash);border-bottom:2px solid var(--good)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem;margin:.8rem 0}
+.ecard{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;padding:.75rem .85rem;min-height:5.5rem;cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink)}
+.ecard:hover:not([aria-disabled="true"]){border-color:var(--teal);transform:translateY(-1px)}
+.etag{display:block;font-size:.72rem;font-weight:700;letter-spacing:.02em;color:var(--teal-deep);margin-bottom:.3rem}
+.ecard.wrong{background:var(--bad-wash);border-color:var(--bad)}.ecard.right{background:var(--good-wash);border-color:var(--good)}
+.pick{font:inherit;background:none;border:1.5px dashed var(--teal);border-radius:5px;padding:.05rem .35rem;cursor:pointer;color:var(--ink)}
+.pick:hover:not([aria-disabled="true"]){background:var(--teal-wash)}
+.pick.wrong,.pickpanel.wrong{background:var(--bad-wash);border-color:var(--bad)}.pick.right,.pickpanel.right{background:var(--good-wash);border-color:var(--good);border-style:solid}
+.pickpanel{display:block;width:100%;text-align:left;background:none;border:2px dashed var(--teal);border-radius:10px;padding:.35rem .5rem;margin:.2rem 0 .5rem;cursor:pointer;font:inherit;color:var(--ink)}
+.pickpanel .vizfig{margin:.2rem 0}
+.tiles{display:flex;flex-wrap:wrap;gap:.45rem}
+.tile{font:inherit;font-size:.95rem;background:var(--card);border:1.5px solid var(--line-strong);border-radius:999px;padding:.35rem .85rem;cursor:pointer;color:var(--ink)}
+.tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
+.claim{font-size:1.05rem}
+.thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
+.thread.email{border-top:5px solid var(--teal);border-radius:6px}
+.mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
+.msgs{display:flex;flex-direction:column;gap:.45rem}
+.msg{max-width:88%;padding:.5rem .8rem;border-radius:14px;background:var(--teal-wash);align-self:flex-start}
+.msg.you{align-self:flex-end;background:var(--amber-wash)}
+.email .msg{max-width:100%;border-radius:6px}
+.msg-who{display:block;font-size:.72rem;font-weight:700;color:var(--muted)}
+.asks{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0 .2rem}
+.ask{font:inherit;font-size:.92rem;border:1.5px solid var(--teal);background:var(--card);color:var(--teal-deep);border-radius:999px;padding:.3rem .85rem;cursor:pointer}
+.ask:disabled{opacity:.45;cursor:default}
+.compose{border-top:1px solid var(--line);margin-top:.7rem;padding-top:.5rem}
+.slotrow{margin:.45rem 0}
+/* per-row marking after a multi-part answer is sent */
+.rowstat{font-weight:700;margin-left:.4rem}
+.row-ok .rowstat{color:var(--good)}
+.row-bad .rowstat{color:var(--bad)}
+.row-ok{border-left:4px solid var(--good);padding-left:.55rem}
+.row-bad{border-left:4px solid var(--bad);padding-left:.55rem}
+.row-ok .tile[aria-pressed="true"]:disabled{opacity:1;cursor:default}
+.tile[hidden]{display:none}
+.build tr.row-ok,.build tr.row-bad{border-left:0;padding-left:0}
+.build tr.row-ok th{box-shadow:inset 4px 0 0 var(--good)}
+.build tr.row-bad th{box-shadow:inset 4px 0 0 var(--bad)}
+.build select:disabled{opacity:1;color:var(--ink)}
+.build th .where{display:block}
+.build th .rowstat{display:block;margin:0;font-size:.85rem}
+.build th .rowstat:empty{display:none}
+#hintText:empty{display:none}
+.slotlab{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:.2rem}
+.draftmsg{background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:.5rem .8rem;margin:.6rem 0;min-height:2.4rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){body{font-size:16px}h1{font-size:1.65rem}.bar-meta{gap:.7rem}.meter-track{width:60px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.viz .v-null2{fill:none;stroke:var(--muted);stroke-width:2.5;stroke-dasharray:7 5}.viz .v-alt2{fill:none;stroke:var(--teal);stroke-width:3}
+
+.map-wrap{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.4rem;margin:.6rem 0}
+#mapsvg{display:block;width:100%;height:auto;touch-action:manipulation;cursor:pointer;border-radius:6px}
+#mapsvg:focus-visible{outline:3px solid #E0A526}
+.m-floor{fill:#E9EEF0}.m-corr{fill:#DCE4E7}.m-wall{fill:#34474F}
+.r1{fill:#F3E6DA}.r2{fill:#E2EEF6}.r3{fill:#F6E3E6}.r4{fill:#E8E4F3}.r5{fill:#E3F1E6}.r6{fill:#F6EFD9}.r7{fill:#E1EEEF}
+.m-label{font:600 15px var(--sans);fill:#34474F}
+.m-name{font:600 11px var(--sans);fill:#34474F}
+.m-init{font:700 12px var(--sans);fill:#fff}
+.m-deco{fill:#34474F;opacity:.12}
+.mk-need{fill:#E0A526}.mk-done{fill:#2E7D4F}.mk-wait{fill:#9AA8AE}
+.mk-t{font:800 15px var(--sans);fill:#fff}
+@media (prefers-color-scheme: dark){.m-floor{fill:#223239}.m-corr{fill:#1B292F}.m-wall{fill:#0A1215}.r1{fill:#3A2E25}.r2{fill:#23323D}.r3{fill:#3B2A2E}.r4{fill:#2D2A3B}.r5{fill:#23352A}.r6{fill:#3A3422}.r7{fill:#1F3538}.m-label,.m-name{fill:#D5E0E4}}
+.toast{min-height:2.9rem;background:var(--amber-wash);border:1px solid var(--amber);border-radius:8px;padding:.55rem .9rem;margin:.4rem 0;font-size:.95rem}
+.toast:empty{background:transparent;border-color:transparent}
+.quest{font-size:.95rem;margin:.2rem 0 .3rem}
+.controls{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;margin-top:.5rem}
+.dpad{display:grid;grid-template-columns:repeat(3,3rem);grid-template-rows:repeat(2,3rem);gap:.3rem}
+.dpad button{font-size:1.2rem;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
+.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}
+.dir{flex:1;min-width:15rem}
+.dir h2{font-size:1.05rem;margin:.1rem 0 .4rem}
+.dir ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.dir button{width:100%;text-align:left;font:inherit;font-size:.9rem;background:var(--card);color:var(--ink);border:1px solid var(--line-strong);border-radius:6px;padding:.4rem .6rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem}
+.dir .tag{font-size:.78rem;font-weight:700;white-space:nowrap}
+.tag.need{color:var(--amber)}.tag.done{color:var(--good)}.tag.wait{color:var(--muted)}
+.talk-head{display:flex;gap:1rem;align-items:center;margin:.3rem 0 .6rem}
+.talk-head h1{margin:0 0 .15rem}
+.who{margin:0;color:var(--muted)}
+.bubble{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem .1rem;margin:.4rem 0 1rem}
+.bubble::before{content:"";position:absolute;top:-9px;left:28px;width:16px;height:16px;background:var(--card);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.slider{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0}
+.slider input{width:100%}
+.swatches{display:flex;gap:.8rem;margin:.4rem 0 1rem}
+.swatches label{display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;font-size:.85rem}
+.swatch{width:2.4rem;height:2.4rem;border-radius:50%;border:3px solid transparent}
+.swatches input{position:absolute;opacity:0}
+.swatches input:checked+.swatch{border-color:var(--ink)}
+.swatches input:focus-visible+.swatch{outline:3px solid #E0A526}
+ .m-clue{fill:#FFFFFF;stroke:#34474F;stroke-width:2}.m-clue-l{stroke:#34474F;stroke-width:2}
+.build{width:100%;border-collapse:collapse;margin:.4rem 0 .8rem;font-size:.92rem}
+.build th,.build td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);white-space:normal}
+.build code{font-weight:700}
+.build select{font:inherit;padding:.3rem;border-radius:6px;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink)}
+.typ{font-size:.75rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;background:var(--teal-wash);color:var(--teal-deep);white-space:nowrap}
+.notes{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .9rem;margin:0 0 1rem}
+.notes summary{font-weight:700;cursor:pointer}
+.note{border-top:1px solid var(--line);padding-top:.5rem;margin-top:.5rem}
+/* ---------- in-world notes: things you would actually find in the room ---------- */
+/* Patrick Hand, (c) 2010-2012 Patrick Wagesreiter, SIL Open Font License 1.1. Embedded so notes look the same on every device. */
+@font-face{font-family:"Patrick Hand";font-style:normal;font-weight:400;font-display:swap;src:url(data:font/woff2;base64,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) format("woff2")}
+.hand{font-family:"Patrick Hand","Segoe Print","Bradley Hand",cursive}
+.art{position:relative;margin:.9rem 0}
+.art p{margin:.3rem 0}
+.art svg{display:block;width:100%;height:auto;max-width:34rem;margin:.3rem 0}
+/* sticky note: paper stays yellow in dark mode, like a real one */
+.art-sticky{background:#FFF1A6;color:#2A2410;max-width:21rem;padding:.9rem .95rem .6rem;transform:rotate(var(--tilt,-1.5deg));box-shadow:0 4px 10px rgba(0,0,0,.2);border-radius:2px}
+.art-sticky p{font-size:1.18rem;line-height:1.32}
+.art-sticky .sig{text-align:right;font-size:.95rem}
+.art-sticky::before{content:"";position:absolute;top:-8px;left:50%;width:64px;height:17px;margin-left:-32px;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.08);transform:rotate(3deg)}
+/* whiteboard */
+.art-wb{background:#FDFEFE;color:#1D3F95;border:9px solid #B7BEC5;border-radius:6px;padding:.7rem .95rem;box-shadow:0 3px 8px rgba(0,0,0,.14)}
+.art-wb .mk,.art-wb h3{font-family:"Patrick Hand","Marker Felt","Chalkboard SE",cursive}
+.art-wb h3{font-size:1.45rem;font-weight:400;margin:0 0 .2rem;color:#1D3F95}
+.art-wb .mk{font-size:1.2rem}
+.mk-red{color:#B0261E}.mk-green{color:#1B6B39}
+/* printed memo or email */
+.art-memo{background:#FFFFFF;color:#222;border:1px solid #D5D5D5;box-shadow:3px 4px 0 #E4DFD3;padding:.8rem 1rem;max-width:36rem;overflow:hidden}
+.memo-head{display:grid;grid-template-columns:auto 1fr;gap:.05rem .6rem;font-size:.85rem;border-bottom:1px solid #DDD;padding-bottom:.45rem;margin:0 0 .5rem}
+.memo-head dt{font-weight:700;color:#555}.memo-head dd{margin:0}
+.art-memo.coffee::after{content:"";position:absolute;right:-34px;bottom:-40px;width:92px;height:92px;border-radius:50%;border:7px solid rgba(120,72,30,.16);pointer-events:none}
+/* poster or notice pinned to a board */
+.art-flyer{background:#FFFDF5;color:#1F2A2E;border:1px solid #E2DCCB;padding:1.05rem 1rem .8rem;box-shadow:0 3px 8px rgba(0,0,0,.13);max-width:32rem}
+.art-flyer::before{content:"";position:absolute;top:7px;left:50%;width:13px;height:13px;margin-left:-6px;border-radius:50%;background:#C0392B;box-shadow:inset -2px -2px 0 rgba(0,0,0,.25)}
+.flyer-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:#0C474C;margin:.2rem 0 .1rem}
+.flyer-sub{font-size:.85rem;color:#4A5A60;margin:0 0 .4rem}
+/* a peek at the data file: a screen, so it follows the theme */
+.art-sheet{border:1px solid var(--line-strong);border-radius:6px;overflow:hidden;background:var(--card);max-width:36rem}
+.sheet-bar{display:flex;justify-content:space-between;gap:.4rem;flex-wrap:wrap;background:#1B6B45;color:#FFFFFF;padding:.3rem .6rem;font-size:.82rem;font-family:var(--sans);margin:0}
+.sheet-file{font-weight:700}
+.art-sheet table{font-family:var(--sans);font-size:.84rem;border-collapse:collapse;min-width:100%;font-variant-numeric:tabular-nums;margin:0}
+.art-sheet table th,.art-sheet table td{border:1px solid var(--line);padding:.22rem .45rem;text-align:left;white-space:nowrap}
+@media (max-width:520px){.art-sheet table{font-size:.74rem}.art-sheet table th,.art-sheet table td{padding:.2rem .3rem}.art-sheet .rn{width:1.2rem}}
+.art-sheet thead th{background:var(--paper);min-width:0;border-bottom:1px solid var(--line-strong);vertical-align:bottom;white-space:normal}
+.art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
+.art-sheet tr.more td{color:var(--muted);font-style:italic}
+.toast .art-sheet table{min-width:100%}
+.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
+.dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
+.toast table{font-size:.82rem;min-width:0}
+.notes td,.toast td,.notes th,.toast th{text-align:left;white-space:normal}.notes figcaption:empty,.toast figcaption:empty{display:none}
+.side{display:grid;grid-template-columns:1fr;gap:.2rem}
+@media (max-width:620px){.side{grid-template-columns:1fr}}
+
+/* weeks 1-3: SPSS crosstabs and footnotes, the dashboard screen, paired figures, stacked design choices */
+.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.8rem;color:var(--muted);margin:.45rem 0 0;max-width:none}
+.xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
+.xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
+.xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
+@media (max-width:520px){.xt th[scope="rowgroup"]{white-space:normal;min-width:3.2rem}}
+.xt thead th[scope="colgroup"]{text-align:center;border-bottom:1px solid var(--line)}
+.art-dash{background:#17212B;color:#E6EDF3;border-radius:10px;padding:.6rem .7rem .7rem;max-width:36rem;box-shadow:0 3px 8px rgba(0,0,0,.18);font-family:Arial,Helvetica,sans-serif}
+.art-dash .dash-bar{font-size:.72rem;letter-spacing:.08em;color:#9FB0BF;margin:0 0 .45rem}
+.art-dash .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.5rem}
+.art-dash .dash-tile{background:#243240;border-radius:8px;padding:.5rem .6rem;border:2px solid transparent}
+.art-dash .dash-tile.warn{border-color:#E8A33D}
+.art-dash .dash-t{display:block;font-size:.8rem;color:#C9D4DE}
+.art-dash b{display:block;font-size:1.6rem;line-height:1.2;color:#FFFFFF}
+.art-dash .dash-s{display:block;font-size:.74rem;color:#9FB0BF}
+.pair{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-start}.pair>figure{flex:1 1 17rem;margin:0}
+.radios.stack{flex-direction:column;align-items:flex-start;gap:.5rem}
+.build select{max-width:100%}
+.build .typ{white-space:normal}
+.narr{font-style:italic;color:var(--muted);margin:.3rem 0 .8rem;font-size:.98rem}
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div class="bar-title">Mission 3: Twenty patients</div>
+  <div class="bar-meta">
+    <span id="progress"></span>
+    <span class="meter" role="img" id="meter" aria-label="Reputation">Reputation
+      <span class="meter-track"><span class="meter-fill" id="meterFill" style="width:50%"></span></span>
+      <span id="credv">50</span></span>
+  </div>
+</div></header>
+<main id="app" tabindex="-1"></main>
+<script>
+const CONFIG={mission:3,version:"1.1",
+  // Qualtrics survey link (same survey as the other missions)
+  qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
+  storageKey:"ahstat3005-mission3-v1"};
+function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
+function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
+function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
+function tcdf(t,df){const x=df/(df+t*t);const tail=0.5*betai(df/2,0.5,x);return t>=0?1-tail:tail;}
+function tinv(p,df){let lo=-80,hi=80;for(let i=0;i<200;i++){const m=(lo+hi)/2;if(tcdf(m,df)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+function zinv(p){let lo=-10,hi=10;for(let i=0;i<100;i++){const m=(lo+hi)/2;if(ncdf(m)<p)lo=m;else hi=m;}return (lo+hi)/2;}
+function twoSidedP(t,df){return 2*(1-tcdf(Math.abs(t),df));}
+function power2(d,n,alpha){return ncdf(d*Math.sqrt(n/2)-zinv(1-alpha/2));}
+function welchDf(s1,n1,s2,n2){const a=s1*s1/n1,b=s2*s2/n2;return (a+b)*(a+b)/(a*a/(n1-1)+b*b/(n2-1));}
+
+function makeRng(seed){let a=seed>>>0;const next=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  return {u:next,uni:(lo,hi)=>lo+(hi-lo)*next(),int:(lo,hi)=>lo+Math.floor(next()*(hi-lo+1)),
+    normal:(m,s)=>{let u=0,v=0;while(u===0)u=next();while(v===0)v=next();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}};}
+
+function fx(x,d=2){const r=Number(x).toFixed(d);return r==="-0."+"0".repeat(d)?(0).toFixed(d):r;}
+function fP(p){return p<0.001?"&lt;.001":p.toFixed(3).replace(/^0\./,".");}
+function fPtext(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+function tbl(title,note,heads,rows){
+  const txt=x=>String(x).replace(/<[^>]+>/g,"").replace(/&lt;/g,"less than ").replace(/&gt;/g,"greater than ").replace(/&nbsp;/g," ").replace(/"/g,"").trim();
+  const label=(c,i,rowHead)=>{
+    if(typeof c!=="string"||c.indexOf('class="pick"')<0||c.indexOf("aria-label")>=0)return c;
+    const head=txt(heads[i]),rh=txt(rowHead),val=txt(c);
+    const name=[head,rh].filter(Boolean).join(", ")+(val?": "+val:"");
+    return c.replace('<button class="pick"',`<button class="pick" aria-label="${name}"`);
+  };
+  return `<figure class="output"><figcaption>${title}${note?`<span class="out-note">${note}</span>`:""}</figcaption><div class="scroll"><table><thead><tr>${heads.map(h=>`<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>i===0?`<th scope="row">${c}</th>`:`<td>${label(c,i,r[0])}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
+}
+const H0="H<sub>0</sub>", HA="H<sub>A</sub>";
+/* Six-column SPSS tables cannot fit a phone, so they scroll. Mark the ones that
+   actually overflow: a shadow shows there is more, and tabindex makes the region
+   reachable by keyboard (WCAG 2.1.1). */
+function markScrollers(root){try{(root||document).querySelectorAll(".scroll").forEach(d=>{
+  const over=d.scrollWidth-d.clientWidth>2;d.classList.toggle("more",over);
+  if(over){d.setAttribute("tabindex","0");d.setAttribute("role","region");
+    if(!d.getAttribute("aria-label")){const f=d.closest(".output"),c=f&&f.querySelector("figcaption");
+      d.setAttribute("aria-label",(c?c.textContent.trim().slice(0,60):"Table")+" (scrolls sideways)");}}
+  else{d.removeAttribute("tabindex");d.removeAttribute("role");d.removeAttribute("aria-label");}});}catch(e){}}
+window.addEventListener("resize",()=>markScrollers());
+
+function pT(p){return p<0.001?"p &lt; .001":"p = "+fP(p);}
+
+/* --- visit counting (GoatCounter, no cookies, no personal data) --- */
+function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.count)
+  window.goatcounter.count({path:"mission"+CONFIG.mission+"-"+suffix,title:title,event:true});}catch(e){}}
+
+/* ============================================================
+   SEASON SAVE (identical in every week's game)
+   ============================================================ */
+const SEASON_KEY="riverbend-season-v1";
+const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
+// Append new flags at the END only, so older career codes keep working.
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample"];
+const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
+let SEASON=seasonDefault(),MODE="nosave";
+function storageOK(){try{localStorage.setItem("__rv_t","1");localStorage.removeItem("__rv_t");return true;}catch(e){return false;}}
+function seasonNormalize(d){const b=seasonDefault();return {...b,...d,trust:{...b.trust,...(d.trust||{})},flags:{...b.flags,...(d.flags||{})}};}
+function seasonLoad(){try{const s=localStorage.getItem(SEASON_KEY);return s?seasonNormalize(JSON.parse(s)):null;}catch(e){return null;}}
+function seasonSave(){if(MODE!=="season")return;try{localStorage.setItem(SEASON_KEY,JSON.stringify(SEASON));}catch(e){}}
+function b32sum(p){let c=0;for(let i=0;i<p.length;i++)c=(c+(i+1)*(B32.indexOf(p[i])+7))%1024;return B32[c>>5]+B32[c&31];}
+function encodeCareer(d){
+  let v=0n;const put=(val,bits)=>{v=(v<<BigInt(bits))|(BigInt(val)&((1n<<BigInt(bits))-1n));};
+  put(1,3);let wm=0;d.weeks.forEach(w=>{if(w>=1&&w<=15)wm|=1<<(w-1);});put(wm,15);
+  put(Math.max(0,Math.min(100,Math.round(d.rep))),7);
+  CAST_IDS.forEach(k=>put(Math.max(1,Math.min(3,d.trust[k]||1))-1,2));
+  let fm=0n;FLAG_BITS.forEach((f,i)=>{if(d.flags[f])fm|=1n<<BigInt(i);});v=(v<<32n)|fm;
+  put(Math.max(0,DANA_N.indexOf(d.danaN)),2);put(Math.max(0,DANA_A.indexOf(d.danaA)),2);
+  let p="";for(let i=14;i>=0;i--)p+=B32[Number((v>>BigInt(5*i))&31n)];
+  return `RIV-${p.slice(0,5)}-${p.slice(5,10)}-${p.slice(10)}${b32sum(p)}`;
+}
+function decodeCareer(code){
+  const s=String(code||"").trim().toUpperCase().replace(/^RIV/,"").replace(/[^0-9A-Z]/g,"").replace(/O/g,"0").replace(/[IL]/g,"1");
+  if(s.length!==17||[...s].some(ch=>B32.indexOf(ch)<0))return null;
+  const p=s.slice(0,15);if(b32sum(p)!==s.slice(15))return null;
+  let v=0n;for(const ch of p)v=(v<<5n)|BigInt(B32.indexOf(ch));
+  const take=bits=>{const x=Number(v&((1n<<BigInt(bits))-1n));v>>=BigInt(bits);return x;};
+  const d=seasonDefault();d.danaA=DANA_A[take(2)]??0.05;d.danaN=DANA_N[take(2)]??100;
+  const fm=v&0xFFFFFFFFn;v>>=32n;d.flags={};FLAG_BITS.forEach((f,i)=>{d.flags[f]=Number((fm>>BigInt(i))&1n);});
+  [...CAST_IDS].reverse().forEach(k=>{d.trust[k]=take(2)+1;});d.rep=take(7);
+  const wm=take(15);d.weeks=[];for(let w=1;w<=15;w++)if(wm&(1<<(w-1)))d.weeks.push(w);
+  if(take(3)!==1)return null;return d;
+}
+function seasonTitle(rep){return rep>=75?"Lead analyst":rep>=50?"Analyst":"Analyst in training";}
+const GREET={jordan:"Back again? Good. Coffee's fresh.",brooks:"Good. You're here.",nair:"There's my favorite analyst!",zhang:"You came. Thank you. Sit, please.",marcus:"Good to see you. Pull up a stool.",dana:"Good, it's you. I need someone who gets it right.",ruiz:"Ah, the careful one. Sit down.",greg:"My favorite skeptic. Fine, have a look."};
+const BACKSTORY={jordan:"(Jordan once switched to decaf for a week. They still call it the worst week of their career.)",brooks:"(Brooks was an ICU nurse for twelve years before this job. She has seen what bad data does.)",nair:"(Nair trained at a hospital with the slowest stroke times in the state. She swore never again.)",zhang:"(Zhang keeps a photograph of his first patient on his desk. He has never said why.)",marcus:"(Marcus became a PT after rehab for his own knee.)",dana:"(Dana worked nights on this floor for fifteen years. She still hears alarms in her sleep.)",ruiz:"(Ruiz's first trial was stopped over a false positive. She has been careful ever since.)",greg:"(Greg started here as a billing clerk. He says every dollar has a patient attached.)"};
+function npcLine(p){const cb=(WEEK.callbacks[p.id]||(()=>""))(SEASON),t=SEASON.trust[p.id]||1;let h="";
+  if(cb)h+=`<p>${cb}</p>`;else if(t>=2&&GREET[p.id])h+=`<p>${GREET[p.id]}</p>`;if(t>=3&&BACKSTORY[p.id])h+=`<p class="where">${BACKSTORY[p.id]}</p>`;return h;}
+function hintCost(){return (SEASON.trust.jordan||1)>=3?2:3;}
+function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:0;}
+
+/* ============================================================
+   WEEK 3 STORY (from the Riverbend Story Bible): Greg quotes a survey of 20 patients from one shift
+   ============================================================ */
+const PLAYED=w=>SEASON.weeks.includes(w);
+const WEEK={num:3,title:"Twenty patients",
+  scene:"Monday, 8:10 a.m. There's a sheet cake in the Quality Office with \"95% SATISFIED!\" piped across it in blue icing. Greg is cutting it himself.",
+  pitch:"Greg wants a patient-satisfaction number in the board report, and it came from twenty patients on one night shift. Dr. Ruiz needs a study design for a rare condition, Dr. Nair wants a narrower interval, and Dana's two auditors disagree.",
+  topicLine:"This week: populations and samples, study designs, sampling distributions and the central limit theorem, checking normality, and confidence intervals. Check the clue in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  opening:[["brooks","Greg wants a satisfaction number in the board report. Before it goes anywhere, I want to know exactly who it describes."],
+           ["jordan","Samples week. Every number you'll see came from a few people standing in for many more, so always ask who, and how they were picked. Clues first. And yes, you may have cake."]],
+  previously:d=>PLAYED(2)?"Last week you sorted out Dana's sepsis screen."+(d.flags.w2_dana_given?" Her nurses now say \"P(sepsis given flagged)\" to each other at the desk, which Jordan finds delightful.":" The word \"given\" is now underlined twice in her report."):"",
+  cameo:{},
+  expertThanks:"Thanks again. Before and after with no comparison group shows change, not cause. I'm finding a comparison group.",
+  callbacks:{
+    greg:d=>d.flags.w1_greg_median?"You saved me $400,000 two weeks ago. Today I bring good news, so please don't ruin it.":"I bring good news today. Please don't ruin it.",
+    ruiz:()=>PLAYED(2)?"My fellow redid his interval with t. Now he wants to prove a cause with a study that can't.":"Elena Ruiz, cardiology. My fellow wants to prove a cause with a study that can't.",
+    nair:()=>PLAYED(2)?"I put \"add or multiply\" on a mug, like I promised. Now I need a confidence interval, a narrow one!":"I need a confidence interval for the board, and I want it narrow!",
+    dana:d=>d.flags.w2_dana_given?"My nurses quote conditional probabilities now. It's adorable. Today: hand hygiene, and two auditors who disagree.":"Two auditors, two different numbers, and one very annoyed nurse manager.",
+    marcus:()=>PLAYED(2)?"My three hills are still on the wall. Now somebody wants to know if my balance class actually works.":"Somebody wants to know if my balance class actually works."},
+  keyFlags:S=>{const f={w3_greg_sample:firstRight("c1s1")};
+    const t=[];if(f.w3_greg_sample)t.push("greg");if(firstRight("c2s1"))t.push("ruiz");if(firstRight("c3s1"))t.push("nair");if(firstRight("c4s1"))t.push("dana");if(firstRight("e1s1"))t.push("marcus");
+    if([firstRight("c1s1"),firstRight("c2s1"),firstRight("c3s1"),firstRight("c4s1")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
+    if(S.fuDone.length===0)t.push("jordan");
+    return {flags:f,trust:t};},
+  ending:f=>f.w3_greg_sample?"The cake got eaten anyway, but the 95% never made it into the board report. You asked who was surveyed before anyone else did.":"The 95% came out of the board report before it was printed. Next time, ask who was surveyed first.",
+  teaser:"Next week the teams bring their first real claims to test, and I want sign-offs from four of them before the state reviewers see a single number.",
+  hidden:()=>{const R=makeRng((SEED()^0x2C2C)>>>0),pts=[];for(let i=0;i<22;i++){const c=R.uni(1,12);pts.push([c,Math.max(0,c*2.6-6+R.normal(0,4))]);}
+   const W=360,H=200,L=40,Rt=346,base=162,X=sc(0,13,L,Rt),Y=sc(0,34,base,12);
+   const sct=vz(W,H,"Scatter plot of 22 countries: chocolate eaten per person per year (kg) against Nobel laureates per 10 million people. The points rise from lower left to upper right.",
+     axis(X,0,13,base,L,Rt)+ticks(0,34,4).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${t}</text>`).join("")+pts.map(p=>`<circle class="v-dot" cx="${X(p[0])}" cy="${Y(p[1])}" r="4"/>`).join("")+`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">Chocolate per person per year (kg), by country</text>`,
+     "Each dot is a country. Up: Nobel laureates per 10 million people.");
+   return {id:"hid",npc:"jordan",title:"The chocolate study",
+    scene:"Jordan is eating a chocolate bar with great ceremony and a printout taped to the monitor.",
+    message:"<p>Off the books. My cousin sent me this from a medical journal: countries that eat more chocolate win more Nobel Prizes. He says he's eating his way to Stockholm. Talk him out of it.</p>",
+    steps:[
+     {id:"hid1",label:"What kind of study?",show:sct,prompt:"What kind of study produced this graph?",
+      hint:"Look at who was measured (whole countries) and whether anyone assigned the chocolate.",
+      options:[{t:"Observational: whole countries compared at one point in time",tag:"correct",fb:"Right. Nobody assigned chocolate, and the units are countries, not people."},
+       {t:"A randomized experiment",tag:"design_roles",fb:"Nobody randomized countries to eat chocolate."},
+       {t:"A case-control study",tag:"design_roles",fb:"Nobody was chosen for having won a prize and then compared with matched non-winners."}]},
+     {id:"hid2",label:"Talking him out of it",type:"reply",channel:"chat",prompt:"Build your reply to Jordan's cousin.",
+      hint:"Think about what else differs between countries that eat a lot of chocolate and countries that don't.",
+      thread:["Cousin: \"The line goes up! Chocolate makes you smarter. Prove me wrong.\""],
+      slots:[
+       {label:"The study",options:[{t:"The study compares countries, not people, and nobody was assigned chocolate,",tag:"correct"},{t:"The study proves chocolate makes people smarter,",tag:"causal_claim",fb:"It shows an association between countries, nothing about any one person."}]},
+       {label:"Likely",options:[{t:"and wealthier countries can afford both more chocolate and more research: a confounder.",tag:"correct"},{t:"and the Nobel committee probably likes chocolate.",tag:"causal_claim",fb:"Funny, but a third variable such as national wealth is the serious explanation."}]}],
+      okFb:"An association between groups, with a likely confounder, from a study where nobody assigned the exposure: no causal claim."}],
+    outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan breaks off a square of chocolate and hands it to you. "For morale, not for the Nobel."'}),
+    takeaway:"Observational associations, especially between whole countries, can come from confounders. Without assigning the exposure, be very careful about cause."};},
+  finale:S=>{const D=auditData();
+   return {id:"fin",npc:"brooks",title:"The board report",
+    scene:"The board report is on the table in draft, with three paragraphs highlighted in yellow. A slice of Greg's cake sits beside it, untouched.",
+    message:"<p>Three paragraphs in this report came from your consults this week. The board will read every word. Answer each question with your strongest evidence.</p>",
+    steps:[
+     {id:"fin1",label:"Patient satisfaction",type:"cards",claim:'<strong>Board member:</strong> "95% of our patients are satisfied. Can we print that?"',prompt:"Play your strongest evidence.",hint:"Think back to Greg: the survey came from volunteers on one night shift.",
+      cards:[{k:"Design",t:"No: those were 20 volunteers from one night shift, not a random sample of all our patients",tag:"correct",fb:"The number describes those 20 people. A random sample across every shift could describe all patients."},
+       {k:"Data",t:"Yes: 95% is so high that the sample can't be far off",tag:"biased_sample",fb:"A biased sample can be far off no matter how impressive its number looks."},
+       {k:"Design",t:"Yes, once Greg surveys 200 more night-shift patients",tag:"size_fixes_bias",fb:"More of the same patients shrinks the scatter, not the bias."}]},
+     {id:"fin2",label:"The SCAD study",type:"cards",claim:'<strong>Committee member:</strong> "Why didn\'t Dr. Ruiz just follow energy-drink users forward and count who gets SCAD?"',prompt:"Play your strongest evidence.",hint:"Think back to Dr. Ruiz: SCAD is rare.",
+      cards:[{k:"Design",t:"SCAD is rare: following thousands of people for years would find almost no cases. A case-control study starts from the cases",tag:"correct",fb:"Rare outcome, start from the cases: that's what case-control designs are for."},
+       {k:"Design",t:"Because case-control studies prove causation",tag:"causal_claim",fb:"They don't. They show association, more efficiently for rare outcomes."},
+       {k:"Design",t:"Because cohort studies can't measure energy drinks",tag:"design_roles",fb:"A cohort could measure them. It just wouldn't see enough SCAD."}]},
+     {id:"fin3",label:"Hand hygiene",type:"cards",claim:`<strong>Draft:</strong> "Compliance was ${pct(D.ph,0)} (95% CI ${pct(D.lo,1)} to ${pct(D.hi,1)}), so there is a 95% chance the true rate is in this range."`,prompt:"Play your strongest evidence.",hint:"Think back to Dana: the 95% describes the method that made the interval.",
+      cards:[{k:"Reasoning",t:"Reword it: if we repeated the audit many times, about 95% of the intervals built this way would contain the true rate",tag:"correct",fb:"The 95% belongs to the method. Any one interval either contains the true rate or doesn't."},
+       {k:"Reasoning",t:"Keep it: that's what 95% confidence means",tag:"ci_misread",fb:"The true rate is fixed. The 95% describes how often the method works."},
+       {k:"Reasoning",t:`Reword it: 95% of nurses comply between ${pct(D.lo,0)} and ${pct(D.hi,0)} of the time`,tag:"ci_misread",fb:"The interval estimates one overall rate, not a range for individual nurses."}]}],
+    outro:g=>({ok:true,title:"Board report",
+      text:[g("fin1")==="correct"?"Satisfaction: the 95% is out; a random survey across every shift is scheduled":"Satisfaction: the 95% is out, after some debate",
+            g("fin2")==="correct"?"SCAD study: approved as a matched case-control study":"SCAD study: approved, once the design was explained",
+            g("fin3")==="correct"?"Hand hygiene: interval reworded before printing":"Hand hygiene: interval reworded on the second pass"].map(x=>"• "+x).join("<br>")+
+        `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
+    takeaway:"A sample speaks for a population only if it was drawn fairly. A design limits what you can claim. A confidence level describes the method, not one interval."};}};
+
+/* ---------- WEEK 3 HELPERS ---------- */
+/* dots stacked along a percentage axis, with a reference line for the truth */
+function dotStrip(vals,o){const W=360,H=150,L=16,Rt=344,base=112,X=sc(o.lo,o.hi,L,Rt),bin=o.bin||1,stack={};let g="";
+  vals.forEach(v=>{const b=Math.round(v/bin);stack[b]=(stack[b]||0)+1;g+=`<circle class="v-dot" cx="${X(b*bin)}" cy="${base-5-(stack[b]-1)*7}" r="3"/>`;});
+  g+=axis(X,o.lo,o.hi,base,L,Rt)+`<line class="v-ref" x1="${X(o.truth)}" x2="${X(o.truth)}" y1="8" y2="${base}"/><text x="${X(o.truth)-5}" y="16" text-anchor="end" class="v-reflab">${o.truthLab}</text><text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">${o.xlab}</text>`;
+  const m=mean(vals);return vz(W,H,`${vals.length} repeated surveys. Their results center near ${fx(m,0)}% and range from ${fx(Math.min(...vals),0)}% to ${fx(Math.max(...vals),0)}%. The true rate, ${o.truth}%, is marked.`,g,o.cap);}
+/* Shapiro-Wilk W and p (Royston 1992, n from 12 to 5000) */
+function swTest(x){const n=x.length,s=[...x].sort((a,b)=>a-b),m=s.map((_,i)=>zinv((i+1-.375)/(n+.25))),mm=m.reduce((a,v)=>a+v*v,0),u=1/Math.sqrt(n);
+  const an=m[n-1]/Math.sqrt(mm)+.221157*u-.147981*u**2-2.07119*u**3+4.434685*u**4-2.706056*u**5,an1=m[n-2]/Math.sqrt(mm)+.042981*u-.293762*u**2-1.752461*u**3+5.682633*u**4-3.582633*u**5;
+  const phi=(mm-2*m[n-1]**2-2*m[n-2]**2)/(1-2*an**2-2*an1**2),a=m.map(v=>v/Math.sqrt(phi));a[n-1]=an;a[n-2]=an1;a[0]=-an;a[1]=-an1;
+  const mu=mean(s),W=a.reduce((t,v,i)=>t+v*s[i],0)**2/s.reduce((t,v)=>t+(v-mu)**2,0),ln=Math.log(n);
+  const mz=.0038915*ln**3-.083751*ln**2-.31082*ln-1.5861,sz=Math.exp(.0030302*ln**2-.082676*ln-.4803),z=(Math.log(1-W)-mz)/sz;return {W,p:1-ncdf(z)};}
+/* Kolmogorov-Smirnov with the Lilliefors correction; SPSS prints .200* when p is at least .2 */
+function ksTest(x){const n=x.length,s=[...x].sort((a,b)=>a-b),mu=mean(s),sd=sdv(s);let D=0;s.forEach((v,i)=>{const F=ncdf((v-mu)/sd);D=Math.max(D,(i+1)/n-F,F-i/n);});
+  const p=Math.exp(-7.01256*D*D*(n+2.78019)+2.99587*D*Math.sqrt(n+2.78019)-.122119+.974598/Math.sqrt(n)+1.67997/n);return {D,p,txt:p>.1?".200<sup>*</sup>":fP(p)};}
+function qqPlot(x,xlab){const W=300,H=220,L=40,Rt=290,base=184,n=x.length,s=[...x].sort((a,b)=>a-b),q=s.map((_,i)=>zinv((i+1-.375)/(n+.25))),mu=mean(s),sd=sdv(s);
+  const lo=Math.floor((s[0]-5)/10)*10,hi=Math.ceil((s[n-1]+5)/10)*10,X=sc(-3.2,3.2,L,Rt),Y=sc(lo,hi,base,10);
+  let g=ticks(lo,hi,4).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${t}</text>`).join("")+axis(X,-3,3,base,L,Rt);
+  g+=`<line x1="${X(-3.2)}" x2="${X(3.2)}" y1="${Y(mu-3.2*sd)}" y2="${Y(mu+3.2*sd)}" stroke="var(--amber)" stroke-width="2"/>`+s.map((v,i)=>`<circle class="v-dot" cx="${X(q[i])}" cy="${Y(v)}" r="2.6"/>`).join("");
+  g+=`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">Expected normal value (z)</text>`;
+  return vz(W,H,`Normal Q-Q plot of ${xlab}: the ${n} points follow the straight reference line closely, with only small wiggles at the ends.`,g,`Normal Q-Q plot of ${xlab}. Up: observed values. Line: where perfectly normal data would fall.`);}
+function nairData(level){const R=makeRng((SEED()^0x7A7A)>>>0);let v,sw,ks;
+  GEN_OK=0;for(let k=0;k<300;k++){v=exactSample(R,level?60:120,152+R.uni(-2,2),24+R.uni(-1.5,1.5)).map(Math.round);sw=swTest(v);ks=ksTest(v);if(sw.p>.25&&sw.p<.8&&ks.p>.1){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w3 nair");
+  return {v,n:v.length,m:mean(v),s:sdv(v),sw,ks};}
+function auditData(){const n=200,x=146,ph=x/n,me=1.96*Math.sqrt(ph*(1-ph)/n);return {n,x,ph,lo:ph-me,hi:ph+me};}
+function caseSketch(n){return `<svg viewBox="0 0 340 150" role="img" aria-label="Diagram of a matched case-control study: ${n} patients who had SCAD (cases) and ${2*n} patients of the same age and sex who did not (controls), all asked about energy drinks per week before the event.">
+  <rect x="200" y="14" width="132" height="44" rx="6" ${WBS}/><text x="266" y="33" text-anchor="middle" font-size="14" ${WBT}>${n} had SCAD</text><text x="266" y="50" text-anchor="middle" font-size="12" ${WBT}>(cases)</text>
+  <rect x="200" y="90" width="132" height="44" rx="6" ${WBS}/><text x="266" y="109" text-anchor="middle" font-size="14" ${WBT}>${2*n} without SCAD</text><text x="266" y="126" text-anchor="middle" font-size="12" ${WBT}>(same age and sex)</text>
+  <path d="M196 36 H122 M128 31 L122 36 L128 41 M196 112 H122 M128 107 L122 112 L128 117" ${WBS}/>
+  <rect x="8" y="50" width="108" height="48" rx="6" ${WBS}/><text x="62" y="70" text-anchor="middle" font-size="13" ${WBT}>Asked: energy</text><text x="62" y="87" text-anchor="middle" font-size="13" ${WBT}>drinks per week?</text>
+  <text x="158" y="76" text-anchor="middle" font-size="12" fill="#B0261E" font-family="Patrick Hand,Marker Felt,cursive">looking back</text></svg>`;}
+
+/* ============================================================
+   CASES
+   ============================================================ */
+function case1(R,level){ // Greg: population vs sample, bias vs sampling error
+  const shifts=[["Day",.45,.72],["Evening",.35,.68],["Night",.20,.90]],truth=Math.round(100*shifts.reduce((a,s)=>a+s[1]*s[2],0));
+  const sim=(n,plan)=>{const out=[];for(let r=0;r<40;r++){let y=0;for(let i=0;i<n;i++){let p;if(plan==="rand"){const u=R.u();p=u<.45?.72:u<.8?.68:.9;}else p=.93;if(R.u()<p)y++;}out.push(100*y/n);}return out;};
+  const plans={a:sim(20,"night"),b:sim(200,"night"),c:sim(200,"rand")};
+  const lab={a:"20 volunteers, one night shift",b:"200 volunteers, night shifts",c:"200 patients at random, every shift"};
+  return {id:"c1",npc:"greg",title:"Ninety-five percent satisfied",
+    scene:"Greg hands you a slice of cake on a paper plate before you can say anything. It's a strategy, and you both know it.",
+    message:"<p>Nineteen out of twenty patients said they were satisfied. Ninety-five percent! I want it on the first page of the board report, in a large font. Tell me I can.</p>",
+    steps:[
+      {id:"c1s1",label:"Interviewing Greg",type:"interview",prompt:"Ask Greg about his survey, then tell him what it can and can't say.",
+       hint:["Ask Greg who filled the survey out, and who the board report is about. Those are two different groups.","The population is every ED patient; the sample is 20 volunteers from one night shift. A sample that wasn't drawn at random from the population may not represent it."],
+       thread:["Ask away. The cake is real, and so is the number."],
+       questions:[
+        {q:"Who filled out the survey?",a:"The first 20 patients on Tuesday's night shift who agreed to. A few said no. Grumpy ones, mostly.",key:true},
+        {q:"Who is the board report about?",a:"Every ED patient this year. About 41,000 visits. The board wants one number for all of them.",key:true},
+        {q:"Who made the cake?",a:"I did. Lemon. Don't change the subject.",key:false}],
+       slots:[
+        {label:"The population",options:[{t:"Your population is every ED patient this year, but your sample is 20 volunteers from one night shift,",tag:"correct"},{t:"Your population is the 20 patients you surveyed,",tag:"pop_vs_sample",fb:"Those 20 are the sample. The board report is about all ED patients, which is the population."}]},
+        {label:"So",options:[{t:"so it may not represent all patients. Draw patients at random from every shift.",tag:"correct"},{t:"so it's fine: 95% is too high to be a fluke.",tag:"biased_sample",fb:"A high number from the wrong people is still the wrong number. Who was asked matters more than how impressive the answer looks."}]}],
+       okFb:"A sample can only speak for the population it was drawn from, fairly. One night shift of volunteers speaks for one night shift of volunteers."},
+      {id:"c1s2",label:"A bigger sample?",type:"reply",channel:"chat",narr:"Greg sets his fork down. \"Fine. Then I'll survey 200 people on night shifts. Bigger sample, problem solved.\"",
+       show:`<div class="slider"><p><strong>Try it.</strong> Each plan was run 40 times. Every dot is one survey's result. The dashed line is the true rate for all patients, ${truth}%.</p>
+         <div class="seg" role="group" aria-label="Survey plan">${Object.keys(lab).map((k,i)=>`<input type="radio" id="sv-${k}" name="svshow" value="${k}" ${i?"":"checked"}><label for="sv-${k}">${lab[k]}</label>`).join("")}</div><div id="svviz"></div></div>`,
+       init:()=>{const draw=()=>{const k=document.querySelector('input[name="svshow"]:checked').value;document.getElementById("svviz").innerHTML=dotStrip(plans[k],{lo:50,hi:100,bin:1,truth,truthLab:`true rate ${truth}%`,xlab:"% satisfied in one survey",cap:lab[k]+": 40 surveys."});};
+         document.querySelectorAll('input[name="svshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
+       prompt:"Greg wants to know whether 200 night-shift surveys would fix it. Build your reply.",
+       hint:["Compare the first two plans: watch whether the cloud of dots moves toward the dashed line or just gets tighter.","More of the same patients makes the results less scattered but leaves them centered in the wrong place. Only a random sample from every shift centers on the truth."],
+       thread:["Two hundred people! Surely that's enough?"],
+       slots:[
+        {label:"A bigger sample",options:[{t:"A bigger sample makes the results less scattered, but 200 night-shift volunteers still miss the day and evening patients,",tag:"correct"},{t:"A bigger sample fixes it: 200 is plenty,",tag:"size_fixes_bias",fb:"Look at the second plan: the dots bunch tightly, around the wrong value."}]},
+        {label:"Instead",options:[{t:"so pick patients at random from every shift, in proportion to how many each shift sees.",tag:"correct"},{t:"so survey only day-shift patients instead.",tag:"biased_sample",fb:"That just swaps one shift's bias for another's."}]}],
+       okFb:"Sample size controls random scatter; how you sample controls bias. Stratified random sampling by shift gives every patient a fair chance."},
+      {id:"c1s3",label:"Who gets a survey",type:"point",narr:"Greg pulls up last year's visit counts. \"Fine. Random, every shift. Three people sent me plans already.\"",
+       show:`<p class="where"><strong>Who comes to the ED:</strong> share of last year's visits on each shift</p>${kpis([["45%","day shift"],["35%","evening shift"],["20%","night shift"]])}`+
+         tbl("Proposed survey plans","200 surveys in all. Each cell: surveys on that shift (share of the 200).",["Plan","Day","Evening","Night"],
+         [[pk("Plan A","a"),"67 (33%)","67 (33%)","66 (33%)"],[pk("Plan B","b"),"90 (45%)","70 (35%)","40 (20%)"],[pk("Plan C","c"),"0 (0%)","0 (0%)","200 (100%)"]]),
+       prompt:"Greg: \"Which plan gives every shift its fair share of the 200 surveys, matching who actually comes to the ED?\" Click that plan.",
+       hint:["Compare the percentages in each plan's row with the three shares at the top: 45%, 35% and 20%.","Proportional stratified sampling gives each shift the same share of the surveys as its share of visits. Find the plan whose row reads 45%, 35%, 20%."],
+       picks:{b:{tag:"correct",fb:"Plan B: 90, 70 and 40 match the shifts' 45%, 35% and 20% of visits. Within each shift, patients are then picked at random."},
+        a:{tag:"biased_sample",fb:"Equal numbers per shift over-represent the quiet night shift and under-represent the busy day shift."},
+        c:{tag:"biased_sample",fb:"That's Greg's original plan, made bigger: every survey from the night shift."}}}],
+    outro:g=>g("c1s1")==="correct"
+      ?{ok:true,title:"The cake stays; the number goes",text:'<em>Greg looks at the cake, then at the dots, then back at the cake.</em> "Fine. Random patients, every shift. But I\'m keeping the icing."'}
+      :{ok:false,title:"The cake stays; the number goes",text:'<em>Greg scrapes the "95%" off the cake with a plastic knife.</em> "Who you ask matters. Noted, unhappily."'},
+    takeaway:"Know your population, then draw a sample that represents it. A bigger sample reduces random error, but only random selection removes bias."};
+}
+
+function case2(R,level){ // Dr. Ruiz: the builder (case-control design), then association vs cause
+  const n=level?40:45;
+  const vars=[["patient_id","Patient ID","C-101, C-102 …"],["scad","Had SCAD (yes or no)","yes, no, no …"],["energy_drinks","Energy drinks per week, in the year before","0, 6, 2, 14 …"],["age","Age (years)","38, 44, 51 …"],["sex","Sex","F, F, M …"]];
+  const want={patient_id:"none",scad:"outcome",energy_drinks:"exposure",age:"match",sex:"match"};
+  if(level){vars.push(["blood_type","Blood type","A, O, B …"]);want.blood_type="none";}
+  const why={patient_id:"is just a label.",scad:"decides who is a case and who is a control: it's the outcome.",energy_drinks:"is what you compare between cases and controls: the exposure.",
+    age:"could explain differences on its own, so controls are matched to cases on it.",sex:"could explain differences on its own, so controls are matched to cases on it.",blood_type:"isn't part of Dr. Ruiz's question, and her whiteboard doesn't list it for matching."};
+  const res=tbl("First look","Energy drinks per week in the year before SCAD (cases) or the same date (controls)",["Group","N","Mean","Std. Deviation"],[["Had SCAD (cases)",n,"6.1","5.2"],["No SCAD (controls)",2*n,"2.3","3.4"]]);
+  return {id:"c2",npc:"ruiz",title:"A rare question",
+    scene:"Dr. Ruiz has a single sheet of paper on her desk: a list of names, each with a date. \"Every SCAD case in our records,\" she says. \"It's not a long list.\"",
+    message:`<p>SCAD, a tear in a heart artery, is rare: we've seen ${n} cases in ten years. Several of those patients drank a lot of energy drinks. I want to know whether that's a pattern or a coincidence, and I want a design that can answer it before I retire.</p>`,
+    viz:`<div class="art art-wb"><span class="sr">Whiteboard: </span><h3>The SCAD study plan</h3>${caseSketch(n)}</div>`,
+    steps:[
+      {id:"c2s1",label:"Setting up the study",type:"build",show:`<p class="where"><strong>Outcome:</strong> the condition that decides who is a case and who is a control. <strong>Exposure:</strong> what you compare between them. <strong>Match on:</strong> traits the controls are chosen to share with the cases. <strong>Not used:</strong> not part of the question.</p>`,narr:"\"Lay it out for me,\" Dr. Ruiz says. \"Every variable has a job, or it has no job.\"",prompt:"Give each variable its role in Dr. Ruiz's study, answer the design question, then set up the study.",
+       hint:["Start with how the patients will be found: SCAD is so rare that waiting for new cases won't work.","SCAD decides who is a case: the outcome. Energy drinks are what you compare: the exposure. Age and sex are matched so cases and controls are alike. Start from the existing cases: a case-control study."],
+       spec:{name:"Matched case-control study",run:"Set up the study",okHead:"Study set up: a matched case-control study.",runText:"Setting up the study…",varHead:"Variable",typeHead:"Values in the file",roleHead:"Role",
+        roles:[["","Choose a role"],["outcome","Outcome"],["exposure","Exposure"],["match","Match on"],["none","Not used"]],
+        vars,want,why,tagOf:()=>"design_roles",repeated:true,designTag:"rare_cohort",designLab:"Finding the patients",
+        designQ:"SCAD is rare. How will you find enough people with it?",designYes:"Start from the patients who already had SCAD, then find similar patients who didn't",designNo:"Follow 5,000 adults who drink energy drinks for ten years and count new cases",
+        designWhy:"with only a handful of cases a decade, following people forward would find almost none. Start from the cases you already have.",
+        ok:"Cases chosen by outcome, controls matched on age and sex, exposure measured looking back."}},
+      {id:"c2s2",label:"Proof?",type:"reply",channel:"chat",narr:"The fellow appears in the doorway again, holding a printout like a trophy.",show:res,
+       prompt:"The fellow says this proves energy drinks cause SCAD. Build Dr. Ruiz's reply.",
+       hint:["Ask what kind of study this is, and whether anyone assigned the energy drinks.","A case-control study shows an association. Arguing for cause takes more: the drinking came first (temporality), more drinks go with higher risk (dose-response), and other studies agree (consistency)."],
+       thread:["Cases drank almost three times as much. That's causation, right?"],
+       slots:[
+        {label:"This study",options:[{t:"This shows an association: cases drank more than similar people without SCAD,",tag:"correct"},{t:"This proves energy drinks cause SCAD,",tag:"causal_claim",fb:"Nobody assigned the drinks, so something else could explain the difference."}]},
+        {label:"For a cause",options:[{t:"and to argue cause we'd check that the drinking came first, that heavier drinkers are more often cases, and that other studies agree.",tag:"correct"},{t:"and with more patients it would prove cause.",tag:"causal_claim",fb:"More patients make the association more precise, not causal. Nobody assigned the drinks."}]}],
+       okFb:"Observational designs show association. Causal arguments lean on criteria like temporality, dose-response and consistency, or on an experiment."}],
+    outro:g=>g("c2s1")==="correct"
+      ?{ok:true,title:"Dr. Ruiz approves",text:'<em>Dr. Ruiz signs the protocol and hands the fellow a copy of the Bradford Hill criteria.</em> "Read it twice. Then come back and tell me what you\'re allowed to say."'}
+      :{ok:false,title:"Dr. Ruiz approves",text:'<em>Dr. Ruiz signs the protocol.</em> "Start from the cases. With a disease this rare, there is no other way."'},
+    takeaway:"For a rare outcome, a case-control study starts from the cases and compares exposure with matched controls. It shows association, not cause."};
+}
+
+function case3(R,level){ // Dr. Nair: checking normality, and what changes a confidence interval's width
+  const N=nairData(level),x=N.v;
+  const tests=tbl("Tests of Normality",`Systolic BP on arrival, ${N.n} stroke patients. Explore output.`,["Test","Statistic","df","Sig."],
+    [["Kolmogorov-Smirnov<sup>a</sup>",pk(fx(N.ks.D,3),"ksd"),pk(N.n,"ksdf"),pk(N.ks.txt,"kss")],["Shapiro-Wilk",pk(fx(N.sw.W,3),"sww"),pk(N.n,"swdf"),pk(fP(N.sw.p),"sws")]])
+    .replace(/<\/figure>$/,`<p class="out-foot">*. This is a lower bound of the true significance.<br>a. Lilliefors Significance Correction</p></figure>`);
+  const pics=`<div class="pair">${histo(x,{lo:Math.floor(Math.min(...x)/10)*10,hi:Math.ceil(Math.max(...x)/10)*10,bw:10,xlab:"Systolic BP on arrival (mmHg)",h:180})}${qqPlot(x,"systolic BP")}</div>`;
+  const zc={90:1.645,95:1.96,99:2.576};
+  return {id:"c3",npc:"nair",title:"A narrower interval",
+    scene:"Dr. Nair has the board report open with a yellow highlighter in her hand, hovering over one number as if it might escape.",
+    message:`<p>I want to report our patients' average blood pressure on arrival with a confidence interval. Jordan says check that the data look normal first. Then I want the interval narrower. Much narrower!</p>`,
+    steps:[
+      {id:"c3s1",label:"Normal enough?",type:"point",narr:"Dr. Nair taps the Q-Q plot. \"The dots are on the line! That's good, right? I need a number for the report, though.\"",show:pics+tests,
+       prompt:"Dr. Nair: \"Which number in the table tells me whether the data could be normal?\" Click it.",
+       hint:["Each normality test reports a significance, Sig. Of the two tests, Shapiro-Wilk is the more powerful one.","Click Shapiro-Wilk's Sig. Above 0.05 means the data are not statistically different from a normal distribution."],
+       picks:{sws:{tag:"correct",fb:`${fP(N.sw.p)}, above 0.05: no evidence that blood pressure isn't normal, and the Q-Q plot agrees. Shapiro-Wilk is the more powerful of the two tests.`},
+        kss:{tag:"normality_ks",fb:"That test agrees here, but Shapiro-Wilk has more power to detect non-normality, so it's the one to report."},
+        sww:{tag:"normality_stat",fb:"That's the test statistic. The significance beside it is what you compare with 0.05."},ksd:{tag:"normality_stat",fb:"That's a test statistic. Look for a significance."},
+        swdf:{tag:"normality_stat",fb:"That's the degrees of freedom, the number of patients."},ksdf:{tag:"normality_stat",fb:"That's the degrees of freedom, the number of patients."}}},
+      {id:"c3s2",label:"Narrower, please",type:"reply",channel:"chat",narr:"Dr. Nair uncaps the highlighter. \"Now. Narrower.\"",
+       show:`<div class="slider"><p><strong>Try it.</strong> Change the confidence level and the number of patients. The sample mean and SD stay at ${fx(N.m,1)} and ${fx(N.s,1)}.</p>
+         <div class="seg" role="group" aria-label="Confidence level"><input type="radio" id="cl-90" name="clshow" value="90"><label for="cl-90">90%</label><input type="radio" id="cl-95" name="clshow" value="95" checked><label for="cl-95">95%</label><input type="radio" id="cl-99" name="clshow" value="99"><label for="cl-99">99%</label></div>
+         <label for="cin">Patients: <strong id="cinlab"></strong></label><input type="range" id="cin" min="30" max="480" step="30" value="${N.n}"><div id="civiz"></div><p id="cinote" class="where" aria-live="polite"></p></div>`,
+       init:()=>{const sl=document.getElementById("cin"),draw=()=>{const c=+document.querySelector('input[name="clshow"]:checked').value,n=+sl.value,E=zc[c]*N.s/Math.sqrt(n),lo=N.m-E,hi=N.m+E;
+           document.getElementById("cinlab").textContent=n;const W=360,H=80,X=sc(136,168,16,344);
+           document.getElementById("civiz").innerHTML=vz(W,H,`The ${c}% confidence interval with ${n} patients runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg.`,
+             axis(X,136,168,52,16,344)+`<line x1="${X(lo)}" x2="${X(hi)}" y1="26" y2="26" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/><circle cx="${X(N.m)}" cy="26" r="6" fill="var(--card)" stroke="var(--teal)" stroke-width="3"/>`);
+           document.getElementById("cinote").textContent=`${c}% CI: ${fx(lo,1)} to ${fx(hi,1)} mmHg (z = ${zc[c]}, margin of error ${fx(E,1)}).`;};
+         sl.addEventListener("input",draw);document.querySelectorAll('input[name="clshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
+       prompt:"Dr. Nair asks whether she can just switch to 90% to get a narrower interval. Build your reply.",
+       hint:["Try 90%, 95% and 99% with the same patients, then move the slider with the level fixed.","A lower confidence level narrows the interval by making you less sure. More patients narrows it at the same confidence."],
+       thread:["So, 90%? It's narrower, and nobody reads the small print."],
+       slots:[
+        {label:"Switching to 90%",options:[{t:"Switching to 90% does narrow it, but only because we'd be less confident: the method would miss the true mean more often,",tag:"correct"},{t:"Switching to 90% narrows it at no cost,",tag:"ci_free_lunch",fb:"The cost is confidence: a 90% method misses the true mean twice as often as a 95% one."}]},
+        {label:"The honest way",options:[{t:"and the honest way to narrow it at 95% is more patients.",tag:"correct"},{t:"and the honest way is to drop the patients farthest from the mean.",tag:"outlier_delete",fb:"Dropping real patients doesn't narrow the truth, only the interval."}]}],
+       okFb:"Higher confidence means a wider interval; a larger sample means a narrower one. Only the sample size narrows it for free."}],
+    outro:g=>g("c3s1")==="correct"
+      ?{ok:true,title:"Dr. Nair's interval",text:'<em>Dr. Nair caps the highlighter, reluctantly.</em> "95%, and more patients next year. Fine. But I\'m going to want a very big sample."'}
+      :{ok:false,title:"Dr. Nair's interval",text:'"No shortcuts. Bigger sample. I\'ll put it in the budget request and blame you."'},
+    takeaway:"Check normality with a Q-Q plot and the Shapiro-Wilk test. A confidence interval narrows with more data or less confidence, and only the first is free."};
+}
+
+function case4(R,level){ // Dana: sampling variability and the CLT; what a confidence interval means
+  const p=.72,A=auditData();
+  const sims={};[10,25,50,100,200].forEach(n=>{const out=[];for(let r=0;r<300;r++){let y=0;for(let i=0;i<n;i++)if(R.u()<p)y++;out.push(100*y/n);}sims[n]=out;});
+  return {id:"c4",npc:"dana",title:"Two auditors, two answers",
+    scene:"Dana has two audit forms side by side on her desk, and two very different numbers circled on them.",
+    message:"<p>Two auditors watched hand hygiene on the same unit, the same week, 25 chances each. One got 64% compliance. The other got 80%. One of them must be doing it wrong, and I need to know which before I write anybody up.</p>",
+    steps:[
+      {id:"c4s1",label:"Which auditor is wrong?",type:"reply",channel:"chat",narr:"Dana taps the 64% with her pen. \"This one. Probably.\"",
+       show:`<div class="slider"><p><strong>Try it.</strong> Suppose the unit's true compliance is 72%. Each dot is one simulated audit; there are 300. Change how many hand-hygiene chances each audit watches.</p>
+         <div class="seg" role="group" aria-label="Chances watched per audit">${[10,25,50,100,200].map(n=>`<input type="radio" id="au-${n}" name="aushow" value="${n}" ${n===25?"checked":""}><label for="au-${n}">${n}</label>`).join("")}</div><div id="auviz"></div><p id="aunote" class="where" aria-live="polite"></p></div>`,
+       init:()=>{const draw=()=>{const n=+document.querySelector('input[name="aushow"]:checked').value,v=sims[n],inside=v.filter(x=>x>=64&&x<=80).length;
+           document.getElementById("auviz").innerHTML=histo(v,{lo:20,hi:100,bw:n>=100?2:4,xlab:`% compliance in one audit of ${n} chances`,lines:[{v:72,lab:"true 72%",cls:"v-reflab",dash:true}],h:180});
+           document.getElementById("aunote").textContent=`With ${n} chances per audit, ${inside} of 300 audits land between 64% and 80%. The spread of these results is the sampling distribution.`;};
+         document.querySelectorAll('input[name="aushow"]').forEach(e=>e.addEventListener("change",draw));draw();},
+       prompt:"Dana wants to know which auditor is wrong. Build your reply.",
+       hint:["Look at the 25-chance audits: how many land as low as 64% or as high as 80%? Then try bigger audits.","Each audit is a sample, and samples vary. With bigger samples the results vary less and pile up in a bell shape around the truth: the central limit theorem."],
+       thread:["So which one do I write up?"],
+       slots:[
+        {label:"The audits",options:[{t:"Maybe neither: each audit is a sample of 25, and samples that small easily land 8 points either side of the truth,",tag:"correct"},{t:"The 64% auditor: the results should match,",tag:"sampling_var",fb:"Two honest samples of 25 rarely match. Look how wide the histogram is at 25."}]},
+        {label:"Bigger audits",options:[{t:"and bigger audits vary less, with results piling up in a bell shape around the true rate.",tag:"correct"},{t:"and a big enough audit always gives exactly the true rate.",tag:"clt_exact",fb:"Bigger audits vary less, but they still vary."}]}],
+       okFb:"Sample results vary from sample to sample. Their distribution narrows as samples grow and becomes bell-shaped: the central limit theorem."},
+      {id:"c4s2",label:"The report sentence",type:"reply",channel:"email",subject:"Hand hygiene audit, final",narr:"Dana combines the audits with the rest of the week's: 200 chances in all. She starts typing the report, then stops.",
+       show:tbl("Hand hygiene audit","All audits this week combined",["Statistic","Value"],[["Chances watched (n)",A.n],["Hands cleaned (x)",A.x],["Compliance (p̂)",pct(A.ph,0)],["95% CI, lower",pct(A.lo,1)],["95% CI, upper",pct(A.hi,1)]]),
+       prompt:"Dana wants one correct sentence about the interval. Build it.",
+       hint:["The interval estimates one thing for the whole unit. Ask what that thing is.","The 95% describes the method: across many repeated audits, about 95% of intervals built this way would contain the true rate."],
+       thread:["How do I say what the interval means without getting it wrong?"],
+       slots:[
+        {label:"The interval",options:[{t:`The interval, ${pct(A.lo,1)} to ${pct(A.hi,1)}, estimates the unit's true compliance rate,`,tag:"correct"},{t:`The interval shows that most nurses comply between ${pct(A.lo,0)} and ${pct(A.hi,0)} of the time,`,tag:"ci_misread",fb:"It estimates one overall rate, not a range for individual nurses."}]},
+        {label:"And 95% means",options:[{t:"and if we repeated the audit many times, about 95% of intervals built this way would contain the true rate.",tag:"correct"},{t:"and there's a 95% chance the true rate is in this interval.",tag:"ci_misread",fb:"The true rate is fixed: it's in this interval or it isn't. The 95% describes the method."},{t:"and 95% of future audits will land in this interval.",tag:"ci_misread",fb:"Future audits will vary more than that. The interval is about the true rate."}]}],
+       okFb:"The 95% belongs to the method, not to any one interval."}],
+    outro:g=>g("c4s1")==="correct"
+      ?{ok:true,title:"Nobody gets written up",text:'<em>Dana tears up the write-up form she had ready.</em> "Two honest auditors and a small sample. I owe one of them a coffee and an apology."'}
+      :{ok:false,title:"Nobody gets written up",text:'<em>Dana puts the write-up form back in the drawer.</em> "Samples vary. Small ones vary a lot. Got it."'},
+    takeaway:"Different samples give different results. Bigger samples vary less and their results pile up in a bell shape (the CLT). A 95% confidence level describes how often the method captures the truth."};
+}
+
+const CORE=[case1,case2,case3,case4];
+
+/* ---------- optional consult: Marcus, a before-and-after study with no comparison group ---------- */
+function expertCase(){
+  const board=`<div class="art art-wb"><span class="sr">Whiteboard: </span><h3>Balance class results</h3><p class="mk">32 patients, age 75+</p><p class="mk">Balance score BEFORE class: avg 38</p><p class="mk">Balance score AFTER 8 weeks: avg 44</p><p class="mk mk-red">IT WORKS?</p></div>`;
+  return {id:"e1",npc:"marcus",title:"Does the balance class work?",
+    scene:"Marcus has the before-and-after scores on the whiteboard and a hopeful look on his face.",
+    message:"<p>Everyone in my balance class got better. The administrator wants to know if the class works before she pays for another year. I'd like to say yes. Can I?</p>",
+    steps:[
+      {id:"e1s1",label:"What design is this?",show:board,prompt:"What kind of design is Marcus's study?",
+       hint:"Everyone got the class, and each patient was measured before and after.",
+       options:[
+        {t:"Quasi-experimental: before and after, with no comparison group",tag:"correct",fb:"Right: there's an intervention, but no control group and no randomization."},
+        {t:"A randomized controlled trial",tag:"design_roles",fb:"Nobody was randomized, and nobody went without the class."},
+        {t:"A case-control study",tag:"design_roles",fb:"Nobody was chosen for having an outcome."}]},
+      {id:"e1s2",label:"Making it stronger",show:board,prompt:"What would make Marcus's evidence much stronger?",
+       hint:"Ask what the patients would have scored without the class.",
+       options:[
+        {t:"Randomly assign patients to the class or to usual care, and compare the two groups' change",tag:"correct",fb:"Right: a randomized comparison group shows how much patients improve anyway, so the difference can be credited to the class."},
+        {t:"Measure the same 32 patients a third time",tag:"prepost_cause",fb:"More measurements of the same group still have nothing to compare with."},
+        {t:"Recruit only the patients most likely to improve",tag:"biased_sample",fb:"That would make the class look better without showing it works."}]}],
+    outro:g=>g("e1s1")==="correct"
+      ?{ok:true,title:"Marcus's plan",text:'"So my patients improved, but I can\'t say how much is the class. Next session, half get the class first, by lottery. I\'ll make the lottery fun."'}
+      :{ok:false,title:"Marcus's plan",text:'"A comparison group, chosen at random. My administrator will love the word randomized."'},
+    takeaway:"A before-and-after design with no comparison group shows change, not what caused it. Randomizing a comparison group lets you credit the intervention."};
+}
+
+/* ---------- reviews with Jordan ---------- */
+const FOLLOWUPS={
+ fu_sampling:()=>JR("fu_sampling","Quick review: samples and populations","Who are you describing, and who did you ask?",[
+  {id:"fu_sa_1",label:"Population",prompt:"A study of childhood obesity samples 610 children aged 6 to 10. The population is…",hint:"The group the conclusions are about.",
+   options:[{t:"all children aged 6 to 10 the study wants to describe",tag:"correct",fb:"Right."},{t:"the 610 children",tag:"pop_vs_sample",fb:"That's the sample."},{t:"all children",tag:"pop_vs_sample",fb:"The population should be clearly defined: ages 6 to 10."}]},
+  {id:"fu_sa_2",label:"Stratified",prompt:"Sampling separately within each shift, in proportion to its size, is…",hint:"Groups first, then random within each.",
+   options:[{t:"stratified sampling",tag:"correct",fb:"Right."},{t:"cluster sampling",tag:"biased_sample",fb:"Cluster sampling picks whole groups at random."},{t:"convenience sampling",tag:"biased_sample",fb:"Convenience sampling takes whoever is easiest."}]},
+  {id:"fu_sa_3",label:"Size and bias",prompt:"A biased sample is made ten times larger. Its bias…",hint:"Size shrinks scatter.",
+   options:[{t:"stays the same",tag:"correct",fb:"Right: more of the same people, same tilt."},{t:"disappears",tag:"size_fixes_bias",fb:"Only random selection removes bias."},{t:"shrinks by ten times",tag:"size_fixes_bias",fb:"Size reduces random error, not bias."}]}],
+  "Define the population, then sample it randomly. Larger samples reduce random error, not bias."),
+ fu_design:()=>JR("fu_design","Quick review: study designs","Who decided the exposure, and which way does time run?",[
+  {id:"fu_de_1",label:"Rare disease",prompt:"To study a rare disease, the usual design is…",hint:"Start from the people who have it.",
+   options:[{t:"case-control",tag:"correct",fb:"Right."},{t:"prospective cohort",tag:"rare_cohort",fb:"You'd follow thousands for years to find a few cases."},{t:"cross-sectional",tag:"rare_cohort",fb:"One survey would catch almost no cases."}]},
+  {id:"fu_de_2",label:"Before and after",prompt:"Measuring patients before and after an intervention, with no control group, is…",hint:"Intervention, but no comparison.",
+   options:[{t:"quasi-experimental",tag:"correct",fb:"Right."},{t:"a randomized controlled trial",tag:"design_roles",fb:"Nobody was randomized."},{t:"a cohort study",tag:"design_roles",fb:"The researchers gave the intervention."}]},
+  {id:"fu_de_3",label:"Blocking",prompt:"When would you use a randomized block design?",hint:"Nuisance factors.",
+   options:[{t:"When nuisance factors, like age or sex, need to be controlled",tag:"correct",fb:"Right: randomize within each block."},{t:"When participants have already been completely randomized",tag:"design_roles",fb:"Blocking happens before randomizing."},{t:"When there are clusters of data",tag:"design_roles",fb:"That's a cluster design."}]}],
+  "Rare outcomes: case-control. Intervention without a control: quasi-experimental. Nuisance factors: block on them."),
+ fu_causal:()=>JR("fu_causal","Quick review: association and cause","When can you say \"causes\"?",[
+  {id:"fu_ca_1",label:"Temporality",prompt:"Which Bradford Hill criterion says the cause must come before the effect?",hint:"Order in time.",
+   options:[{t:"Temporality",tag:"correct",fb:"Right."},{t:"Consistency",tag:"causal_claim",fb:"That's about other studies agreeing."},{t:"Plausibility",tag:"causal_claim",fb:"That's about a believable mechanism."}]},
+  {id:"fu_ca_2",label:"Easiest route",prompt:"Causality is usually easiest to establish with…",hint:"Researchers control the exposure.",
+   options:[{t:"a randomized experiment",tag:"correct",fb:"Right."},{t:"a large observational study",tag:"causal_claim",fb:"Large doesn't remove confounding."},{t:"a very strong association",tag:"causal_claim",fb:"Strength is one Bradford Hill criterion, but on its own it can't rule out confounding."}]}],
+  "Observational studies show association. Experiments, or criteria like temporality and dose-response, support cause."),
+ fu_clt:()=>JR("fu_clt","Quick review: sampling distributions","What happens when you sample again and again.",[
+  {id:"fu_cl_1",label:"Sampling distribution",prompt:"The sampling distribution of the mean is…",hint:"Many samples, one mean each.",
+   options:[{t:"the distribution of sample means over many repeated samples",tag:"correct",fb:"Right."},{t:"the distribution of the data in one sample",tag:"sampling_var",fb:"That's the sample's own distribution."},{t:"the population's distribution",tag:"sampling_var",fb:"The population has its own shape; the sample means have theirs."}]},
+  {id:"fu_cl_2",label:"The CLT",prompt:"With a large sample (over about 30), the sample mean is approximately normal…",hint:"The central limit theorem.",
+   options:[{t:"whatever the shape of the population",tag:"correct",fb:"Right."},{t:"only if the population is normal",tag:"clt_exact",fb:"That's the special case for any n."},{t:"never",tag:"clt_exact",fb:"That's exactly what the CLT promises."}]}],
+  "Sample statistics vary from sample to sample. For large samples the mean's sampling distribution is approximately normal."),
+ fu_ci:()=>JR("fu_ci","Quick review: confidence intervals","What the 95% promises, and what changes the width.",[
+  {id:"fu_ci_1",label:"Meaning",prompt:"A 95% CI for mean BMI is 20 to 25. Which is correct?",hint:"The 95% describes the method.",
+   options:[{t:"If we sampled again and again, about 95% of intervals built this way would contain the true mean",tag:"correct",fb:"Right."},{t:"There is a 95% chance the true mean is between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed; this interval contains it or doesn't."},{t:"The mean will fall between 20 and 25 95% of the time",tag:"ci_misread",fb:"The true mean doesn't move around."}]},
+  {id:"fu_ci_2",label:"Width",prompt:"Which makes a confidence interval narrower?",hint:"One costs data; one costs confidence.",
+   options:[{t:"A larger sample, at the same confidence level",tag:"correct",fb:"Right."},{t:"A higher confidence level",tag:"ci_free_lunch",fb:"Higher confidence makes it wider."},{t:"Removing patients far from the mean",tag:"outlier_delete",fb:"That changes the data, not the truth."}]}],
+  "A confidence level describes the method. More data narrows the interval; lower confidence narrows it at a price."),
+ fu_normality:()=>JR("fu_normality","Quick review: checking normality","Two plots and two tests.",[
+  {id:"fu_no_1",label:"Q-Q plot",prompt:"On a normal Q-Q plot, normal data…",hint:"Look at the reference line.",
+   options:[{t:"fall close to the straight reference line",tag:"correct",fb:"Right."},{t:"form a bell shape",tag:"normality_stat",fb:"That's a histogram."},{t:"fall in a horizontal band",tag:"normality_stat",fb:"That would mean every value is about the same."}]},
+  {id:"fu_no_2",label:"The test",prompt:"Shapiro-Wilk gives Sig. = .41. You conclude…",hint:"Compare with 0.05.",
+   options:[{t:"no evidence against normality",tag:"correct",fb:"Right."},{t:"the data are not normal",tag:"normality_stat",fb:"That would need Sig. below 0.05."},{t:"the data are proven normal",tag:"normality_stat",fb:"A test can't prove normality, only fail to find evidence against it."}]}],
+  "Normal data follow the Q-Q line, and a Shapiro-Wilk Sig. above 0.05 gives no evidence against normality.")
+};
+const FU_MAP={pop_vs_sample:"fu_sampling",biased_sample:"fu_sampling",size_fixes_bias:"fu_sampling",
+  design_roles:"fu_design",rare_cohort:"fu_design",no_choice:"fu_design",no_design:"fu_design",build_wrong:"fu_design",prepost_cause:"fu_design",
+  causal_claim:"fu_causal",sampling_var:"fu_clt",clt_exact:"fu_clt",ci_misread:"fu_ci",ci_free_lunch:"fu_ci",outlier_delete:"fu_ci",
+  normality_ks:"fu_normality",normality_stat:"fu_normality"};
+
+/* ---------- the notes in each room ---------- */
+const CLUES=[
+ {idx:0,id:"g_card",name:"Survey card",x:13,y:11,html:l=>`
+  <div class="art art-flyer"><span class="sr">Survey card: </span><p class="flyer-title">How did we do tonight?</p><p class="flyer-sub">Handed out Tuesday, night shift, 11 p.m. to 7 a.m.</p><p>&#9745; Satisfied &nbsp; &#9744; Not satisfied</p><p><small>Optional. Leave it at the desk.</small></p></div>
+  ${stickyArt("19 of 20 satisfied = 95%!!! Board report, page 1.","Greg",-1.5)}`},
+ {idx:1,id:"r_list",name:"Case list",x:16,y:3,html:l=>`
+  <div class="art art-memo"><span class="sr">Printout: </span><dl class="memo-head"><dt>Report</dt><dd>SCAD cases, Riverbend, last 10 years</dd><dt>Count</dt><dd>${l?40:45} patients</dd></dl>
+   <p>A tear in a heart artery. About 4 cases a year in the whole hospital.</p></div>
+  ${stickyArt("CASES: every patient who had SCAD. CONTROLS: for each case, 2 patients who never had SCAD, same age and same sex. Then ask EVERYONE about energy drinks.","E.R.",1.5)}`},
+ {idx:2,id:"n_memo",name:"Report draft",x:5,y:3,html:l=>`
+  <div class="art art-memo"><span class="sr">Printed draft: </span><dl class="memo-head"><dt>From</dt><dd>Dr. Priya Nair</dd><dt>Re</dt><dd>Board report, Stroke Center page</dd></dl>
+   <p>Average systolic BP on arrival: ___ mmHg (95% CI ___ to ___).</p><p>Jordan's note in the margin: <em>"Check normality first. Q-Q plot and Shapiro-Wilk."</em></p></div>`},
+ {idx:3,id:"d_forms",name:"Audit forms",x:6,y:12,html:l=>`
+  <div class="art art-memo"><span class="sr">Two audit forms: </span><dl class="memo-head"><dt>Unit</dt><dd>5A, same week</dd><dt>Watched</dt><dd>25 hand-hygiene chances each</dd></dl>
+   <p>Auditor 1: 16 of 25 cleaned = <strong>64%</strong><br>Auditor 2: 20 of 25 cleaned = <strong>80%</strong></p></div>
+  ${stickyArt("Somebody is doing this wrong. WHO?","Dana",-2)}`}
+];
+mergeClues();
+
+
+/* ---------- general helpers (shared by every week) ---------- */
+const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
+/* the same output again on a later step, read-only (no clickable cells) */
+const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
+function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
+function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
+function ticks(lo,hi,k=6){const s0=(hi-lo)/k,m=Math.pow(10,Math.floor(Math.log10(s0)));const st=[1,2,5,10].map(v=>v*m).find(v=>v>=s0);const o=[];for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9;v+=st)o.push(+v.toFixed(6));return o;}
+function axis(x,lo,hi,y,x0,x1){return `<line class="v-axis" x1="${x0}" x2="${x1}" y1="${y}" y2="${y}"/>`+ticks(lo,hi).map(v=>`<line class="v-axis" x1="${x(v)}" x2="${x(v)}" y1="${y}" y2="${y+5}"/><text x="${x(v)}" y="${y+18}" text-anchor="middle">${v}</text>`).join("");}
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length;}
+function sdv(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/(a.length-1));}
+function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1));const mu=mean(x),sd=sdv(x);return x.map(v=>m+(v-mu)/sd*s);}
+function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
+
+function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
+
+/* ---------- WEEKS 1 TO 3: SHARED HELPERS ---------- */
+let GEN_OK=0;const GEN_MISS=[];
+function SEED(){return (typeof S!=="undefined"&&S&&S.seed!=null)?S.seed:20260901;}
+function pctile(sorted,p){const n=sorted.length,pos=p*(n+1);if(pos<=1)return sorted[0];if(pos>=n)return sorted[n-1];const k=Math.floor(pos),f=pos-k;return sorted[k-1]+f*(sorted[k]-sorted[k-1]);}
+function median(a){return pctile([...a].sort((x,y)=>x-y),.5);}
+function pct(x,d){return fx(100*x,d==null?1:d)+"%";}
+/* box plot numbers: whiskers end at the most extreme values that are not outliers; outliers are drawn beyond them */
+function boxStats(v){const s=[...v].sort((a,b)=>a-b),q1=pctile(s,.25),md=pctile(s,.5),q3=pctile(s,.75),iqr=q3-q1,lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+  const inn=s.filter(x=>x>=lo&&x<=hi);return {s,n:s.length,q1,md,q3,iqr,wLo:inn[0],wHi:inn[inn.length-1],outs:s.filter(x=>x<lo||x>hi),min:s[0],max:s[s.length-1]};}
+function skewness(v){const m=mean(v),n=v.length,s=sdv(v);return n/((n-1)*(n-2))*v.reduce((a,x)=>a+((x-m)/s)**3,0);}
+function round1(x){return Math.round(x*10)/10;}
+
+/* histogram. o: {lo,hi,bw,xlab,lines:[{v,lab,cls}],cap,hl:fn(binStart)} */
+function histo(v,o){const W=360,H=o.h||196,L=34,Rt=348,base=H-40,nb=Math.round((o.hi-o.lo)/o.bw),cnt=Array(nb).fill(0);
+  v.forEach(x=>{let b=Math.floor((x-o.lo)/o.bw);b=Math.max(0,Math.min(nb-1,b));cnt[b]++;});
+  const ymax=Math.max(...cnt),yt=ticks(0,ymax,4),ytop=Math.max(ymax,yt[yt.length-1]),X=sc(o.lo,o.hi,L,Rt),Y=sc(0,ytop,base,14);
+  let g=yt.map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${t}</text>`).join("");
+  cnt.forEach((c,i)=>{const x0=o.lo+i*o.bw;if(c)g+=`<rect x="${X(x0)+.5}" y="${Y(c)}" width="${Math.max(1,X(x0+o.bw)-X(x0)-1)}" height="${base-Y(c)}" fill="${o.hl&&o.hl(x0)?"var(--amber)":"var(--teal)"}" opacity=".85"/>`;});
+  g+=axis(X,o.lo,o.hi,base,L,Rt);
+  (o.lines||[]).forEach((l,i)=>{g+=`<line x1="${X(l.v)}" x2="${X(l.v)}" y1="${10+i*16}" y2="${base}" stroke="${l.cls==="v-reflab"?"var(--amber)":l.cls==="v-t1lab"?"var(--bad)":"var(--ink)"}" stroke-width="2.5" ${l.dash?'stroke-dasharray="5 3"':""}/><text x="${X(l.v)+(l.left?-5:5)}" y="${20+i*16}" text-anchor="${l.left?"end":"start"}" class="${l.cls||"v-strong"}">${l.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">${o.xlab}</text>`;
+  const top=cnt.indexOf(ymax);
+  return vz(W,H,o.label||`Histogram of ${v.length} values of ${o.xlab}. The tallest bar is ${fx(o.lo+top*o.bw,o.bw<1?1:0)} to ${fx(o.lo+(top+1)*o.bw,o.bw<1?1:0)}.${(o.lines||[]).map(l=>" "+l.lab.replace(/<[^>]+>/g,"")+".").join("")}`,g,o.cap);}
+
+/* horizontal box plots, one per group. Whisker ends are labeled; outliers are circles beyond them. */
+function boxPlots(groups,o){const W=360,rowH=o.rowH||64,top=10,H=top+rowH*groups.length+46,L=o.L||70,Rt=346,X=sc(o.lo,o.hi,L,Rt),base=H-38;
+  let g=axis(X,o.lo,o.hi,base,L,Rt)+`<text x="${(L+Rt)/2}" y="${H-2}" text-anchor="middle">${o.xlab}</text>`;const say=[];
+  if(o.ref!=null)g+=`<line class="v-ref" x1="${X(o.ref)}" x2="${X(o.ref)}" y1="${top}" y2="${base}"/><text x="${X(o.ref)+4}" y="${top+10}" class="v-reflab">${o.refLab||""}</text>`;
+  groups.forEach((gr,i)=>{const b=boxStats(gr.v),ym=top+i*rowH+rowH/2,y0=ym-12,y1=ym+12;
+    if(gr.name)g+=`<text x="${L-8}" y="${ym+4}" text-anchor="end" class="v-strong">${gr.name}</text>`;
+    g+=`<line x1="${X(b.wLo)}" x2="${X(b.q1)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(b.q3)}" x2="${X(b.wHi)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    g+=`<line x1="${X(b.wLo)}" x2="${X(b.wLo)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(b.wHi)}" x2="${X(b.wHi)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    g+=`<rect x="${X(b.q1)}" y="${y0}" width="${Math.max(1,X(b.q3)-X(b.q1))}" height="${y1-y0}" fill="var(--teal-wash)" stroke="var(--teal)" stroke-width="2"/><line x1="${X(b.md)}" x2="${X(b.md)}" y1="${y0}" y2="${y1}" stroke="var(--teal)" stroke-width="3"/>`;
+    if(o.whiskLab)g+=`<text x="${X(b.wLo)}" y="${ym+24}" text-anchor="middle">${o.fmt?o.fmt(b.wLo):b.wLo}</text><text x="${X(b.wHi)}" y="${ym-15}" text-anchor="middle" class="v-strong">${o.fmt?o.fmt(b.wHi):b.wHi}</text>`;
+    b.outs.forEach((x,k)=>{g+=`<circle cx="${X(x)}" cy="${ym+(k%2?6:-6)}" r="4.5" fill="none" stroke="var(--bad)" stroke-width="2"/>`;});
+    const f=o.fmt||(x=>x);say.push(`${gr.name?gr.name+": ":""}median ${f(b.md)}, box from ${f(b.q1)} to ${f(b.q3)}, whiskers end at ${f(b.wLo)} and ${f(b.wHi)}${b.outs.length?`, ${b.outs.length} outlier${b.outs.length>1?"s":""} beyond the whiskers (${b.outs.map(f).join(", ")})`:", no outliers"}`);});
+  return vz(W,H,`Box plot of ${o.xlab}. ${say.join(". ")}.`,g,o.cap===undefined?"Box: the middle half of the values (Q1 to Q3), with the median inside. Whiskers: the lines on each side. Circles: outliers, outside the whiskers.":o.cap);}
+
+/* vertical bar chart for categories, labeled with counts and percentages */
+function barChart(names,counts,o){o=o||{};const W=360,H=o.h||200,L=10,Rt=350,base=H-44,n=names.length,bw=(Rt-L)/n,tot=counts.reduce((a,b)=>a+b,0),mx=Math.max(...counts)*1.18,Y=sc(0,mx,base,10);
+  let g=`<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>`;
+  names.forEach((nm,i)=>{const x=L+i*bw,c=counts[i];g+=`<rect x="${x+bw*.18}" y="${Y(c)}" width="${bw*.64}" height="${base-Y(c)}" rx="2" fill="${o.hi===i?"var(--amber)":"var(--teal)"}" opacity=".88"/>`+
+    `<text x="${x+bw/2}" y="${Y(c)-5}" text-anchor="middle" class="v-strong">${o.pctOnly?pct(c/tot,0):c}</text>`+
+    nm.split("|").map((t,k)=>`<text x="${x+bw/2}" y="${base+15+k*13}" text-anchor="middle">${t}</text>`).join("");});
+  return vz(W,H,`Bar chart of ${o.lab||"counts"}: ${names.map((nm,i)=>nm.replace("|"," ")+" "+counts[i]+" ("+pct(counts[i]/tot,0)+")").join("; ")}.`,g,o.cap);}
+
+/* a normal (or t) curve with an optional shaded area. o: {mu,sd,lo,hi,shade:[a,b],xlab,marks:[{v,lab}],df,cap,label} */
+function curve(o){const W=360,H=o.h||176,L=14,Rt=346,base=H-40,X=sc(o.lo,o.hi,L,Rt),dens=x=>{const z=(x-o.mu)/o.sd;return Math.exp(-z*z/2);},Y=sc(0,1.08,base,8);
+  const pts=[];for(let k=0;k<=160;k++){const x=o.lo+(o.hi-o.lo)*k/160;pts.push([X(x),Y(dens(x))]);}
+  let g="";
+  if(o.shade){const [a,b]=o.shade,sp=[];for(let k=0;k<=120;k++){const x=Math.max(o.lo,a)+(Math.min(o.hi,b)-Math.max(o.lo,a))*k/120;sp.push(`${X(x)},${Y(dens(x))}`);}
+    g+=`<polygon class="v-shade" points="${X(Math.max(o.lo,a))},${base} ${sp.join(" ")} ${X(Math.min(o.hi,b))},${base}"/>`;}
+  g+=`<polyline class="v-curve" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+  g+=`<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>`;
+  (o.ticks||[]).forEach(t=>{g+=`<line class="v-axis" x1="${X(t.v)}" x2="${X(t.v)}" y1="${base}" y2="${base+5}"/><text x="${X(t.v)}" y="${base+17}" text-anchor="middle" ${t.strong?'class="v-strong"':""}>${t.lab}</text>`;});
+  (o.marks||[]).forEach(m=>{g+=`<line x1="${X(m.v)}" x2="${X(m.v)}" y1="${Y(dens(m.v))-4}" y2="${base}" stroke="var(--amber)" stroke-width="2.5"/><text x="${X(m.v)+(m.left?-5:5)}" y="${Math.max(14,Y(dens(m.v))-8)}" text-anchor="${m.left?"end":"start"}" class="v-reflab">${m.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">${o.xlab}</text>`;
+  return vz(W,H,o.label,g,o.cap);}
+
+/* a grid of people, colored by group: [{n,cls,lab}] */
+function people(groups,o){o=o||{};const per=o.per||20,r=6,gap=17,tot=groups.reduce((a,g)=>a+g.n,0),rows=Math.ceil(tot/per),W=per*gap+12,H=rows*gap+12;let k=0,g="";
+  groups.forEach(gr=>{for(let i=0;i<gr.n;i++,k++){const x=8+(k%per)*gap+r,y=8+Math.floor(k/per)*gap+r;g+=gr.ring?`<circle cx="${x}" cy="${y}" r="${r-1}" fill="${gr.fill}" stroke="${gr.ring}" stroke-width="2.5"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="${gr.fill}"/>`;}});
+  return vz(W,H,o.label||groups.map(gr=>gr.n+" "+gr.lab).join(", ")+".",g,o.cap);}
+
+/* SPSS-style crosstab: o.rows, o.cols, o.T, o.stats ("count","row","col","tot"), o.labels, o.pick(i,stat,j)->key */
+function crosstab(o){const T=o.T,r=T.map(row=>row.reduce((s,v)=>s+v,0)),c=T[0].map((_,j)=>T.reduce((s,row)=>s+row[j],0)),N=r.reduce((s,v)=>s+v,0);
+  const lab=Object.assign({count:"Count",row:`% within ${o.rowVar}`,col:`% within ${o.colVar}`,tot:"% of Total"},o.labels||{});
+  const val=(i,s,j)=>{const cnt=i<0?(j<0?N:c[j]):(j<0?r[i]:T[i][j]),rt=i<0?N:r[i],ct=j<0?N:c[j];
+    return s==="count"?String(cnt):s==="row"?pct(cnt/rt):s==="col"?pct(cnt/ct):pct(cnt/N);};
+  const cell=(i,s,j)=>{const v=val(i,s,j),k=o.pick?o.pick(i,s,j):null;if(!k)return v;
+    const rn=i<0?"Total":o.rows[i],cn=j<0?"Total":o.cols[j];
+    return `<button class="pick" data-pick="${k}" aria-label="${rn}, ${lab[s].replace(/"/g,"")}, ${o.colVar} ${cn}: ${v}">${v}</button>`;};
+  const block=(i,name)=>o.stats.map((s,k)=>`<tr${k===0?' class="grp"':''}>${k===0?`<th scope="rowgroup" rowspan="${o.stats.length}">${name}</th>`:""}<th scope="row" class="stat">${lab[s]}</th>${o.cols.map((_,j)=>`<td>${cell(i,s,j)}</td>`).join("")}<td>${cell(i,s,-1)}</td></tr>`).join("");
+  return `<figure class="output"><figcaption>${o.title}${o.note?`<span class="out-note">${o.note}</span>`:""}</figcaption><div class="scroll"><table class="xt"><thead><tr><th scope="col" rowspan="2">${o.rowVar}</th><th scope="col" rowspan="2"><span class="sr">Statistic</span></th><th scope="colgroup" colspan="${o.cols.length}">${o.colVar}</th><th scope="col" rowspan="2">Total</th></tr><tr>${o.cols.map(cn=>`<th scope="col">${cn}</th>`).join("")}</tr></thead><tbody>${o.rows.map((nm,i)=>block(i,nm)).join("")}${block(-1,"Total")}</tbody></table></div></figure>`;}
+
+/* a dark "screen" showing dashboard tiles: [[title,value,sub,warn]] */
+function dash(tiles,cap){return `<div class="art art-dash"><span class="sr">Dashboard screen: </span><p class="dash-bar">RIVERBEND ED &middot; LIVE DASHBOARD${cap?` &middot; ${cap}`:""}</p><div class="dash-grid">${tiles.map(t=>`<div class="dash-tile${t[3]?" warn":""}"><span class="dash-t">${t[0]}</span><b>${t[1]}</b>${t[2]?`<span class="dash-s">${t[2]}</span>`:""}</div>`).join("")}</div></div>`;}
+
+/* ---------- notes in each room ---------- */
+function peekOf(i,l){try{return CORE[i](coreRng(i),l).peek;}catch(e){return CORE[i](makeRng(4242+i),l).peek;}}
+function sheetArt(P,key){return `<figure class="art art-sheet"><figcaption class="sheet-bar"><span class="sheet-file">${P.file}</span><span>first ${P.rows.length} of ${P.total} rows</span></figcaption>
+  <div class="scroll"><table><thead><tr><th class="rn" scope="col"><span class="sr">Row</span>1</th>${P.cols.map(c=>`<th scope="col">${c.replace(/_/g,"_<wbr>")}</th>`).join("")}</tr></thead>
+  <tbody>${P.rows.map((r,k)=>`<tr><th class="rn" scope="row">${k+2}</th>${r.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}<tr class="more"><th class="rn" scope="row">&hellip;</th><td colspan="${P.cols.length}">${P.total-P.rows.length} more rows</td></tr></tbody></table></div>
+  <p class="sheet-key">${key}</p></figure>`;}
+const stickyArt=(txt,sig,tilt)=>`<div class="art art-sticky" style="--tilt:${tilt||-1.5}deg"><span class="sr">Sticky note: </span><p class="hand">${txt}</p>${sig?`<p class="hand sig">&mdash; ${sig}</p>`:""}</div>`;
+const WBS='stroke="#1D3F95" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+const WBT='fill="#1D3F95" font-family="Patrick Hand,Marker Felt,Chalkboard SE,cursive"';
+function mergeClues(){const g={};CLUES.forEach(c=>{(g[c.idx]=g[c.idx]||[]).push(c);});const out=Object.values(g).map(list=>({...list[0],html:l=>list.map(c=>c.html(l)).join('<hr style="border:0;border-top:1px solid var(--line);margin:.6rem 0">')}));CLUES.length=0;out.forEach(c=>CLUES.push(c));}
+function roomClues(idx){return CLUES.filter(c=>c.idx===idx);}
+
+/* ---------- reviews with Jordan ---------- */
+const JR=(id,title,msg,steps,take)=>({id,npc:"jordan",title,message:`<p>${msg}</p>`,steps,outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."}),takeaway:take});
+
+/* ---------- the builder, weeks 1 to 3: every row gets a choice from spec.roles; spec.want holds the right ones ---------- */
+function analysisName(b,vars,spec){return spec.name||"Your setup";}
+function shortName(p){const n=p.name.split(",")[0];return n.startsWith("Dr.")?"Dr. "+n.split(" ").pop():n.split(" ")[0];}
+function buildReason(type,want,got,F,nm,v,spec){if(!got)return "still needs a choice.";return (spec&&spec.why&&spec.why[v])||"doesn't fit. Check your notes.";}
+function designReason(want,got,tmode,spec){const lab=(spec&&spec.designLab)||"Design question";
+  if(got==null)return `<strong>${lab}:</strong> it needs an answer too.`;return `<strong>${lab}:</strong> ${(spec&&spec.designWhy)||"check your notes."}`;}
+function evalBuild(spec,b){const roles=b.roles||{};
+  for(const v of spec.vars){const got=roles[v[0]]||"",want=spec.want[v[0]]||"";if(got===want)continue;if(!got)return "no_choice";return spec.tagOf?spec.tagOf(v[0],want,got):"build_wrong";}
+  if(!spec.noDesign){if(b.repeated===null)return "no_design";if(b.repeated!==spec.repeated)return spec.designTag||"design_wrong";}
+  return "correct";}
+const BUILD_MSG={no_choice:"Every row needs a choice before it can run.",no_design:"Answer the last question too.",build_wrong:"Some rows don't fit. Check your notes.",design_wrong:"Check the last question against your notes."};
+
+/* ============================================================
+   HOSPITAL MAP
+   ============================================================ */
+const COLS=24,ROWS=15,TS=40;
+const ROOMS=[{id:"stroke",name:"Stroke Center",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"rehabc",name:"Rehab Clinic",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"cardio",name:"Cardiology",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
+  {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"nursing",name:"Nursing Office",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"finance",name:"Finance Office",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
+const NPCS=[
+  {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance",initials:"GW",color:"#9A6B12",kind:"core",idx:0},
+  {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist",initials:"ER",color:"#A33B5A",kind:"core",idx:1},
+  {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director",initials:"PN",color:"#B5572D",kind:"core",idx:2},
+  {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"nurse manager",initials:"DO",color:"#2F7D4F",kind:"core",idx:3},
+  {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead (optional)",initials:"MB",color:"#2D6FA3",kind:"expert"},
+  {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
+  {id:"brooks",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
+const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
+const GRID=(()=>{const g=[];for(let y=0;y<ROWS;y++){g.push([]);for(let x=0;x<COLS;x++)g[y].push(x===0||y===0||x===COLS-1||y===ROWS-1?"#":".");}
+  ROOMS.forEach(r=>{for(let y=r.y0;y<=r.y1;y++)for(let x=r.x0;x<=r.x1;x++)if(x===r.x0||x===r.x1||y===r.y0||y===r.y1)g[y][x]="#";g[r.door[1]][r.door[0]]=".";});return g;})();
+
+let S=null;
+function newState(av){return {seed:Math.floor(Math.random()*2147483647),phase:"map",pos:[1,7],clues:[],lock:{},done:[],level:0,path:{},pendingFU:null,fuDone:[],expDone:[],results:{},cred:SEASON.rep,hints:0,started:Date.now(),avatar:av};}
+function save(){if(MODE!=="season")return;try{localStorage.setItem(CONFIG.storageKey,JSON.stringify(S));}catch(e){}}
+function loadSaved(){try{const s=localStorage.getItem(CONFIG.storageKey);return s?JSON.parse(s):null;}catch(e){return null;}}
+function clearSaved(){if(MODE!=="season")return;try{localStorage.removeItem(CONFIG.storageKey);}catch(e){}}
+function coreRng(i){return makeRng((S.seed+i*1013+7)>>>0);}
+function valueOf(rec){if(!rec||rec.first==null)return "";if(rec.first==="correct")return rec.hintBefore?"correct_hint":"correct";return rec.first;}
+function title(){return S.cred>=75?"Lead analyst":S.cred>=50?"Analyst":"Analyst in training";}
+
+if(typeof document!=="undefined"){
+const app=document.getElementById("app");
+const PREVIEW=new URLSearchParams(location.search).has("preview");
+let walking=null,lastStep=0,mapActive=false;
+
+function setBar(text){document.getElementById("progress").textContent=text||"";const c=S?S.cred:50;document.getElementById("credv").textContent=c;document.getElementById("meterFill").style.width=c+"%";document.getElementById("meter").setAttribute("aria-label","Reputation "+c+" out of 100");}
+function cred(d){S.cred=Math.max(0,Math.min(100,S.cred+d));setBar(document.getElementById("progress").textContent);const m=document.getElementById("meter");if(m&&d){const c=document.createElement("span");c.className="delta";c.setAttribute("aria-hidden","true");c.textContent=(d>0?"+":"")+d;m.appendChild(c);setTimeout(()=>c.remove(),1300);}}
+function signText(){return `Sign-offs ${S.done.length}/4`;}
+
+
+/* ---------- character feedback (reactions + short play-out on wrong moves) ---------- */
+const REACT_OK={
+  nair:["Yes! That's exactly what I needed.","Perfect. I can work with that.","Oh, that's clean. Good.","Right, right. Keep going.","I like how fast you saw that."],
+  marcus:["That matches what I see with patients.","Okay, that makes sense to me.","Good. Even I can follow that.","Yep. That's the one.","Huh. The math agrees with the gym."],
+  ruiz:["Correct. Precisely.","Yes. That's defensible.","Good. No overreach.","That holds up.","Exactly the careful answer."],
+  dana:["Good. That won't waste my nurses' time.","Right call.","That's practical. I like it.","Yes. Moving on.","Finally, someone who gets it."],
+  greg:["Fine. That's... fair.","Okay, I'll give you that one.","Hm. Hard to argue with.","Right. Write that down for the board.","Annoyingly correct."],
+  brooks:["Good. The board can use that.","That's the evidence I wanted.","Clear and defensible.","Exactly."],
+  zhang:["Ah. Yes, that is clearer.","Good. I can explain that to a patient.","Thank you. I would have gotten that wrong.","That is the careful answer. I appreciate it."],
+  jordan:["There it is.","Good. That's the idea.","Exactly. You've earned a coffee.","Yes. See how that works?","Nice. You're getting it."]};
+const REACT_NO={
+  nair:["Wait, are you sure? That sounds too good.","Hold on. Dr. Brooks would send that back.","Hmm. That doesn't match your notes.","That's not what I expected you to say."],
+  marcus:["That doesn't match what I've seen.","Hang on, that can't be right.","Hmm. My patients would disagree.","You lost me there."],
+  ruiz:["No. I don't think that holds up.","That's an overreach.","I wouldn't sign that.","Check that again."],
+  dana:["That would cause problems on the floor.","No. My nurses would pay for that.","That's not going to work.","Try again. Quickly."],
+  greg:["Great, so I'm right? ...Wait, you look unsure.","Brooks is going to question that.","That's what I said, and she didn't like it either.","Hmm. That sounds like my kind of number."],
+  brooks:["That won't hold up in the room.","That doesn't answer the question.","Greg will pounce on that.","Try another piece of evidence."],
+  zhang:["Hm. I don't think I follow that.","Are you certain? My patients started so differently.","That doesn't quite answer what I asked.","Could we look at that once more?"],
+  jordan:["Hm. Walk me through that.","Not quite. Look again.","Close, but no.","Let's rethink that."]};
+function pickLine(a){return a[Math.floor(Math.random()*a.length)];}
+function unitNpc(unit){return NPCS.find(p=>p.id===unit.npc)||NPCS.find(p=>p.id==="jordan");}
+function firstName(p){return p.name.split(",")[0];}
+function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,40)}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p></div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
+function reactOk(fb,p,body){fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);markScrollers(fb);}
+function playWrong(fb,p,action,body,onReact,onDone){
+  const quick=window.matchMedia("(prefers-reduced-motion: reduce)").matches,d1=quick?250:900,d2=quick?300:1300;
+  fb.innerHTML=`<div class="react pending"><p class="react-action">${action}</p><p class="typing" aria-hidden="true"><span></span><span></span><span></span></p></div>`;
+  setTimeout(()=>{fb.innerHTML=reactHtml(p,pickLine(REACT_NO[p.id]||REACT_NO.jordan),"bad","");if(onReact)onReact();
+    setTimeout(()=>{fb.querySelector(".react").insertAdjacentHTML("beforeend",`<div class="react-note"><p class="react-name">${p.id==="jordan"?"Jordan explains":"Jordan, on the phone"}</p>${body}<p class="where">Try again.</p></div>`);markScrollers(fb);if(onDone)onDone();},d2);},d1);
+}
+
+function renderIntro(){
+  const ok=storageOK(),found=ok?seasonLoad():null,wk=ok?loadSaved():null;setBar("");mapActive=false;
+  const wkHere=wk&&(wk.done.length||wk.fuDone.length||wk.phase==="done");
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Episode ${WEEK.num}: ${WEEK.title}</h1>
+   <p class="lede">${WEEK.pitch}</p><p>${WEEK.topicLine}</p>
+   <fieldset><legend>Pick your badge color</legend><div class="swatches">${AVATARS.map((a,i)=>`<label><input type="radio" name="av" value="${a[0]}" ${i===0?"checked":""}><span class="swatch" style="background:${a[0]}"></span>${a[1]}</label>`).join("")}</div></fieldset>
+   <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap the map. Walk into someone or something to interact. Everything is also reachable from the list under the map.</p>
+   <h2>Your season</h2>
+   ${ok?"":`<p class="toast">This browser isn't allowing saved data, so saving is off. You can still enter a career code, and nothing will be saved.</p>`}
+   <div class="actions">
+     ${wkHere&&found?`<button class="primary" id="resumeW">Resume this week</button>`:""}
+     ${found?`<button class="${wkHere?"quiet":"primary"}" id="cont">Continue my season</button>`:ok?`<button class="primary" id="startSave">Start saving my season</button>`:""}
+     <button class="quiet" id="nosave">Play without saving</button>
+   </div>
+   ${found?`<p class="where">Saved season on this browser: ${seasonTitle(found.rep)}, reputation ${found.rep}, ${found.weeks.length} episode${found.weeks.length===1?"":"s"} played. Not you? Enter your own code or play without saving.</p>`:""}
+   <p class="where">Playing without saving stores nothing on this device. If you close the tab, this week starts over.</p>
+   <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line-strong);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
+  app.querySelector("h1").focus();
+  const av=()=>app.querySelector('input[name="av"]:checked').value;
+  const begin=(mode,season)=>{
+    if(mode==="season"&&wkHere&&!confirm("Start this week over? Your in-progress week will be replaced."))return;
+    SEASON=season;MODE=mode;if(MODE==="season"){clearSaved();seasonSave();}
+    S=newState(av());S.mode=MODE;save();renderOpening();};
+  const g=id=>document.getElementById(id);
+  if(g("resumeW"))g("resumeW").onclick=()=>{SEASON=found;MODE="season";S=wk;S.phase==="done"?renderSummary():renderMap();};
+  if(g("cont"))g("cont").onclick=()=>begin("season",found);
+  if(g("startSave"))g("startSave").onclick=()=>begin("season",seasonDefault());
+  g("nosave").onclick=()=>begin("nosave",seasonDefault());
+  g("useCode").onclick=()=>{const d=decodeCareer(g("codeIn").value);if(!d){g("codeErr").textContent="That code isn't valid. Check for typos and try again.";return;}
+    if(ok&&!wkHere)begin("season",d);else if(ok){SEASON=d;MODE="season";seasonSave();clearSaved();S=newState(av());S.mode=MODE;save();renderOpening();}else begin("nosave",d);};
+}
+function renderOpening(){
+  mapActive=false;setBar("");const prev=WEEK.previously?WEEK.previously(SEASON):"";
+  app.innerHTML=`<p class="where">Episode ${WEEK.num}</p><h1 tabindex="-1">${WEEK.title}</h1>
+   ${prev?`<p class="lede"><strong>Previously at Riverbend:</strong> ${prev}</p>`:""}${WEEK.scene?`<p class="narr">${WEEK.scene}</p>`:""}
+   ${WEEK.opening.map(([id,line])=>{const p=NPCS.find(q=>q.id===id);return `<div class="talk-head" style="align-items:flex-start">${portrait(p,52)}<div style="flex:1"><p class="who" style="margin-bottom:.2rem"><strong>${p.name.split(",")[0]}</strong></p><div class="bubble" style="margin:0 0 .6rem">${line}</div></div></div>`;}).join("")}
+   <div class="actions"><button class="primary" id="go">Head to the floor</button></div>`;
+  app.querySelector("h1").focus();document.getElementById("go").onclick=()=>{gcount("started",`Episode ${WEEK.num} started`);renderMap();toast(`Start with anyone who has a <strong>!</strong> above them. Check the <strong>?</strong> clues in their room first.`);};
+}
+function applySeason(){
+  if(S.seasonApplied)return;const k=WEEK.keyFlags(S);
+  Object.assign(SEASON.flags,k.flags);if(k.dana){SEASON.danaN=k.dana.n;SEASON.danaA=k.dana.a;}
+  k.trust.forEach(id=>{SEASON.trust[id]=Math.min(3,(SEASON.trust[id]||1)+1);});
+  if(!SEASON.weeks.includes(WEEK.num))SEASON.weeks.push(WEEK.num);SEASON.rep=S.cred;S.seasonApplied=true;seasonSave();
+}
+
+function npcStatus(p){
+  if(p.kind==="core")return S.done.includes(p.idx)?"done":"need";
+  if(p.kind==="stats")return S.pendingFU||(S.hiddenUnlocked&&!S.hiddenDone)?"need":"wait";
+  if(p.kind==="expert")return S.expDone.length?"done":"need";
+  if(p.kind==="cameo")return "wait";
+  return S.done.length===4?"need":"wait";
+}
+function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return S.pendingFU?"Wants to see you":(S.hiddenUnlocked&&!S.hiddenDone?"★ Hidden problem":"Available");if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";if(p.kind==="cameo")return "No consult this week";return s==="done"?"Signed off":"Needs help";}
+function toast(html){const t=document.getElementById("toast");if(t){t.innerHTML=html;markScrollers(t);}}
+
+function mapSvg(){
+  let s=`<rect x="0" y="0" width="${COLS*TS}" height="${ROWS*TS}" class="m-corr"/>`;
+  ROOMS.forEach(r=>{s+=`<rect x="${r.x0*TS}" y="${r.y0*TS}" width="${(r.x1-r.x0+1)*TS}" height="${(r.y1-r.y0+1)*TS}" class="${r.c}"/>`;});
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(GRID[y][x]==="#")s+=`<rect x="${x*TS}" y="${y*TS}" width="${TS}" height="${TS}" class="m-wall"/>`;
+  ROOMS.forEach(r=>{const top=r.y0===0;s+=`<text class="m-label" x="${(r.x0+1)*TS+8}" y="${top?(r.y0+1)*TS+22:(r.y0+1)*TS+22}">${r.name}</text>`;
+});
+  s+=`<text class="m-label" x="${4*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text><rect class="m-deco" x="${12*TS}" y="${6*TS+4}" width="${3*TS}" height="10" rx="4"/><text class="m-name" x="${13*TS+20}" y="${8*TS+28}" text-anchor="middle" opacity=".7">Guest desk</text>`;
+  CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
+    s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
+  NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
+    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
+    if(st!=="wait")s+=`<g transform="translate(${cx+14},${cy-22})"><circle r="10" class="${st==="need"?"mk-need":"mk-done"}"/><text class="mk-t" y="5" text-anchor="middle">${st==="need"?"!":"✓"}</text></g>`;
+    s+=`</g>`;});
+  s+=`<g id="player" style="transition:transform .11s linear" transform="translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})"><circle r="16" fill="${S.avatar}" stroke="#fff" stroke-width="3"/><text class="m-init" y="4" text-anchor="middle">You</text></g>`;
+  return s;
+}
+function renderMap(){
+  mapActive=true;setBar(signText());
+  const quest=S.done.length<4?`Get sign-offs from 4 teams (${S.done.length} of 4 so far), then report to Dr. Brooks.`:"All 4 sign-offs collected. Take the report to Dr. Brooks in the Quality Office.";
+  app.innerHTML=`<h1 class="sr" tabindex="-1">Hospital map</h1><p class="quest"><strong>Task:</strong> ${quest}</p>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <div class="map-wrap"><svg id="mapsvg" viewBox="0 0 ${COLS*TS} ${ROWS*TS}" tabindex="0" role="application" aria-label="Hospital map. Use arrow keys to walk. The staff list below the map is an alternative.">${mapSvg()}</svg></div>
+    <div class="controls">
+      <div class="dpad" aria-label="Movement buttons"><button class="up" data-d="0,-1" aria-label="Up">▲</button><button class="left" data-d="-1,0" aria-label="Left">◀</button><button class="down" data-d="0,1" aria-label="Down">▼</button><button class="right" data-d="1,0" aria-label="Right">▶</button></div>
+      <div class="dir" id="dir">${dirHtml()}</div>
+    </div>`;
+  const svg=document.getElementById("mapsvg");
+  svg.addEventListener("click",ev=>{const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());const tx=Math.floor(q.x/TS),ty=Math.floor(q.y/TS);
+    const npc=NPCS.find(p=>p.x===tx&&p.y===ty)||CLUES.find(c=>c.x===tx&&c.y===ty);if(npc)goTo(npc);else walkTo(tx,ty,null);});
+  app.querySelectorAll(".dpad button").forEach(b=>b.onclick=()=>{const [dx,dy]=b.dataset.d.split(",").map(Number);step(dx,dy);});
+  bindDir();
+  if(S.pendingFU)toast(`Jordan from Statistics wants a quick word. Head to the <strong>Statistics</strong> office.`);
+  focusMap();
+}
+function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
+function bindDir(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>goTo(NPCS.find(p=>p.id===b.dataset.go)));app.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>goTo(CLUES.find(c=>c.id===b.dataset.clue)));}
+function refreshMap(){const svg=document.getElementById("mapsvg");if(!svg)return;const pos=S.pos;svg.innerHTML=mapSvg();document.getElementById("dir").innerHTML=dirHtml();bindDir();}
+function inspect(c){
+  if(S.lock[c.idx]==null)S.lock[c.idx]=S.level;
+  const room=NPCS.find(p=>p.idx===c.idx).room,isNew=!S.clues.includes(c.id);if(isNew)S.clues.push(c.id);
+  toast(`<p class="fb-head">${c.name}, ${room}</p>${c.html(S.lock[c.idx])}<p class="where">${isNew?"Added to your notes.":"Already in your notes."}</p>`);
+  save();refreshMap();
+}
+function focusMap(){const s=document.getElementById("mapsvg");if(s)s.focus({preventScroll:true});}
+function movePlayer(){const p=document.getElementById("player");if(p)p.setAttribute("transform",`translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})`);}
+function free(x,y){return x>=0&&y>=0&&x<COLS&&y<ROWS&&GRID[y][x]==="."&&!NPCS.some(p=>p.x===x&&p.y===y)&&!CLUES.some(c=>c.x===x&&c.y===y);}
+function step(dx,dy){
+  if(!mapActive)return;walking=null;const nx=S.pos[0]+dx,ny=S.pos[1]+dy;const npc=NPCS.find(p=>p.x===nx&&p.y===ny);
+  if(npc)return interact(npc);const cl=CLUES.find(c=>c.x===nx&&c.y===ny);if(cl)return inspect(cl);if(free(nx,ny)){S.pos=[nx,ny];movePlayer();}
+}
+function bfs(targets){
+  const key=(x,y)=>x+","+y,prev={},q=[S.pos];prev[key(...S.pos)]=null;
+  while(q.length){const [x,y]=q.shift();if(targets.some(t=>t[0]===x&&t[1]===y)){const path=[];let k=key(x,y);while(prev[k]){path.unshift(k.split(",").map(Number));k=prev[k];}return path;}
+    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{const nx=x+dx,ny=y+dy,k=key(nx,ny);if(!(k in prev)&&free(nx,ny)){prev[k]=key(x,y);q.push([nx,ny]);}});}
+  return null;
+}
+function walkTo(tx,ty,npc){
+  const targets=npc?[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>[npc.x+dx,npc.y+dy]).filter(t=>free(t[0],t[1])):[[tx,ty]];
+  const path=bfs(targets);if(!path)return;const token={};walking=token;const act=o=>o.html?inspect(o):interact(o);
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tick=()=>{if(walking!==token||!mapActive)return;if(!path.length){walking=null;if(npc)act(npc);return;}S.pos=path.shift();movePlayer();setTimeout(tick,reduce?15:95);};tick();
+}
+function goTo(npc){walkTo(null,null,npc);}
+document.addEventListener("keydown",ev=>{
+  if(!mapActive||ev.target.closest("button,input,textarea,select,a"))return;
+  const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]}[ev.key];
+  if(!d)return;ev.preventDefault();const now=Date.now();if(now-lastStep<85)return;lastStep=now;step(...d);
+});
+
+function interact(p){
+  const first=p.name.split(" ")[0]==="Dr."?p.name.split(",")[0]:p.name.split(" ")[0];
+  if(p.kind==="cameo")return toast(`<strong>${first}:</strong> "${(WEEK.cameo[p.id]||(()=>"Busy week. Come find me later."))(SEASON)}"`);
+  if(p.kind==="stats"){if(!S.pendingFU&&S.hiddenUnlocked&&!S.hiddenDone&&WEEK.hidden)return startUnit(WEEK.hidden(),"hidden",null,p);if(S.pendingFU)return startUnit(FOLLOWUPS[S.pendingFU](),"fu",null,p);return toast(`<strong>Jordan:</strong> "Nothing for now. If you get stuck in a consult, call me for a hint."`);}
+  if(p.kind==="admin"){if(S.done.length<4)return toast(`<strong>Dr. Brooks:</strong> "I need all four sign-offs for the report. You have ${S.done.length} of 4."`);return finalReport();}
+  if(S.pendingFU)return toast(`<strong>${first}:</strong> "Jordan from Statistics was looking for you. Go see them first."`);
+  if(p.kind==="expert"){if(S.expDone.length)return toast(`<strong>${first}:</strong> "${WEEK.expertThanks}"`);return startUnit(expertCase(),"expert",null,p);}
+  if(S.done.includes(p.idx))return toast(`<strong>${first}:</strong> "Thanks again! You already have my sign-off."`);
+  const missing=roomClues(p.idx).filter(c=>!S.clues.includes(c.id));
+  if(missing.length)return toast(`<strong>${first}:</strong> "Hi! Before we sit down, take a look at the ${missing.map(c=>c.name.toLowerCase()).join(" and the ")} first."`);
+  const lvl=S.lock[p.idx]??S.level;startUnit(CORE[p.idx](coreRng(p.idx),lvl),"core",lvl,p);
+}
+
+function startUnit(unit,kind,lvl,npc){
+  mapActive=false;walking=null;setBar(signText());
+  app.innerHTML=`<div class="talk-head">${portrait(npc)}<div><p class="where">${npc.room}</p><h1 tabindex="-1">${unit.title}</h1><p class="who">${npc.name}, ${npc.role}</p></div></div>
+    ${unit.scene?`<p class="narr">${unit.scene}</p>`:""}<div class="bubble">${npcLine(npc)}${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!(unit.steps[0].spec||unit.steps[0].reveal)?unit.viz:""}</div><div id="steps"></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  markScrollers();
+  showStep(unit,0,kind,lvl);
+}
+function showStep(unit,i,kind,lvl){
+  const box=document.getElementById("steps");if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
+  const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
+  let hintUsed=false,done=false,wrongs=0;
+  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.narr?`<p class="narr">${st.narr}</p>`:""}${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
+    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
+    ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
+    <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
+  if(st.init)st.init();
+  markScrollers();
+  const pr=box.querySelector(".prompt");if(i>0){pr.scrollIntoView({behavior:"smooth",block:"start"});pr.focus({preventScroll:true});}
+  const fb=document.getElementById("fb");
+  /* hints can be one line or [where to look, the key idea]; the second only if asked again */
+  const hints=Array.isArray(st.hint)?st.hint:[st.hint];let hintN=0;
+  document.getElementById("hintBtn").onclick=()=>{if(hintN>=hints.length)return;hintUsed=true;S.hints++;cred(-hintCost());
+    const ht=document.getElementById("hintText");
+    ht.insertAdjacentHTML("beforeend",`${hintN?"":`<p class="fb-head">Jordan, on the phone</p>`}<p>${hints[hintN]}</p>`);hintN++;
+    const hb=document.getElementById("hintBtn");if(!hb)return;
+    if(hintN>=hints.length)hb.remove();else hb.textContent=`Still stuck? Ask Jordan for more (costs ${hintCost()} reputation)`;};
+  if(st.type==="build"){let busyB=false;
+    /* mark every row right or wrong, lock the right ones, and give a reason for each wrong one */
+    const bWant=v=>st.spec.want?(st.spec.want[v]||""):st.spec.outcome===v?"outcome":(st.spec.factors||[]).includes(v)?"factor":(st.spec.covs||[]).includes(v)?"covariate":"";
+    const gradeBuild=tag=>{const tmode=st.spec.mode==="t",F=tmode?"grouping variable":"factor",nm=shortName(unitNpc(unit)),bad=[];let okN=0,n=0;
+      box.querySelectorAll("tr[data-brow]").forEach(tr=>{const v=tr.dataset.brow,sl=tr.querySelector("select"),got=sl.value,want=bWant(v),type=(st.spec.vars.find(x=>x[0]===v)||[])[2],stat=tr.querySelector(".rowstat");n++;
+        if(got===want){okN++;tr.classList.add("row-ok");tr.classList.remove("row-bad");stat.textContent=" ✓ Right";sl.disabled=true;}
+        else{tr.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(`<code>${v}</code> ${buildReason(type,want,got,F,nm,v,st.spec)}`);}});
+      const dq=box.querySelector("#designQ");
+      if(dq){n++;const r=box.querySelector('input[name="rep"]:checked'),got=r?r.value:null,want=tmode?st.spec.compare:(st.spec.repeated?"yes":"no"),stat=dq.querySelector(".rowstat");
+        if(got===want){okN++;dq.classList.add("row-ok");dq.classList.remove("row-bad");stat.textContent=" ✓ Right";dq.querySelectorAll("input").forEach(x=>x.disabled=true);}
+        else{dq.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(designReason(want,got,tmode,st.spec));}}
+      const extra=st.spec.msgs&&st.spec.msgs[tag]&&st.spec.msgs[tag].includes("<figure")?st.spec.msgs[tag]:"";
+      return `<p><strong>${okN} of ${n} choices fit.</strong> ${okN?"The ones marked ✓ are locked in. ":""}Change the ones marked ✗.</p>`+bad.map(x=>`<p>${x}</p>`).join("")+extra;};
+    const unflag=el=>{const row=el.closest("tr[data-brow],#designQ");if(row&&row.classList.contains("row-bad")){row.classList.remove("row-bad");row.querySelector(".rowstat").textContent="";}};
+    box.querySelectorAll("tr[data-brow] select,#designQ input").forEach(el=>el.addEventListener("change",()=>unflag(el)));
+    document.getElementById("runB").onclick=()=>{
+      if(done||busyB)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
+      const anc=st.spec.mode==="ancova";
+      const b={outcomes:sel.filter(x=>x.value==="outcome").map(x=>x.dataset.var),factors:sel.filter(x=>x.value==="factor").map(x=>x.dataset.var),
+               covs:sel.filter(x=>x.value==="covariate").map(x=>x.dataset.var),roles:Object.fromEntries(sel.map(x=>[x.dataset.var,x.value])),repeated:anc?false:(r?r.value==="yes":null)};
+      const tag=evalBuild(st.spec,b),name=analysisName(b,st.spec.vars,st.spec);
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(tag==="correct"){done=true;if(wrongs===0)cred(hintUsed?5:10);
+        reactOk(fb,unitNpc(unit),`<p><strong>${st.spec.okHead||`Analysis runs: ${name}.`}</strong> ${st.spec.ok} The results are shown above.</p>`);document.getElementById("vizSlot").innerHTML=unit.viz||"";markScrollers();
+        box.querySelectorAll("select,input,#runB").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+        document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">Next</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+      }else{if(busyB)return;wrongs++;busyB=true;const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag],notReady=tag==="no_design"||tag==="no_choice"||tag==="outcome_misread"&&!b.outcomes.length;
+        document.getElementById("runB").disabled=true;
+        playWrong(fb,unitNpc(unit),notReady?"Checking your setup…":(st.spec.runText||`Running ${name}…`),gradeBuild(tag),()=>cred(-4),()=>{busyB=false;document.getElementById("runB").disabled=false;});}
+    };
+  }
+  let busy=false;const who=unitNpc(unit);
+  box.querySelectorAll(".opt").forEach(btn=>{btn.onclick=()=>{
+    if(done||busy||btn.getAttribute("aria-disabled")==="true")return;const o=st.options[+btn.dataset.k];
+    if(rec.first===null){rec.first=o.tag;rec.hintBefore=hintUsed;}
+    const inner=o.fb.trim().startsWith("<")?o.fb:`<p>${o.fb}</p>`;
+    if(o.tag==="correct"){done=true;btn.classList.add("right");btn.querySelector(".st-sr").textContent=" (correct)";
+      box.querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-disabled","true");b.classList.add("locked");b.classList.remove("chosen");});
+      if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,inner);
+      const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+      document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;
+      document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
+    }else{wrongs++;busy=true;btn.classList.add("chosen");
+      playWrong(fb,who,`You give ${firstName(who)} your answer…`,inner,
+        ()=>{btn.classList.remove("chosen");btn.classList.add("wrong");btn.setAttribute("aria-disabled","true");btn.querySelector(".st-sr").textContent=" (not correct)";cred(-4);},
+        ()=>{busy=false;});}
+  };});
+
+  const mark=(el,cls)=>{el.classList.remove("chosen");el.classList.add(cls);};
+  const wrapP=t=>t.trim().startsWith("<")?t:`<p>${t}</p>`;
+  const okFinish=body=>{done=true;if(wrongs===0)cred(hintUsed?5:10);reactOk(fb,who,body);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
+    document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);};
+  const badFinish=(el,action,body)=>{wrongs++;busy=true;if(el)el.classList.add("chosen");
+    playWrong(fb,who,action,wrapP(body),()=>{cred(-4);if(el){mark(el,"wrong");el.setAttribute("aria-disabled","true");}},()=>{busy=false;});};
+  /* Grade a multi-part answer row by row: lock and collapse the rows that are right,
+     flag the ones that aren't, and explain every flagged row, not just the first. */
+  const gradeRows=(root,sel)=>{const wrong=[];
+    st.slots.forEach((sl,si)=>{const o=sl.options[sel[si]],row=root.querySelector(`[data-row="${si}"]`),stat=row&&row.querySelector(".rowstat");
+      if(!row)return;
+      if(o.tag==="correct"){row.classList.add("row-ok");row.classList.remove("row-bad");if(stat)stat.textContent=" \u2713 Right";
+        row.querySelectorAll(".tile").forEach(t=>{t.disabled=true;if(t.getAttribute("aria-pressed")!=="true")t.hidden=true;});}
+      else{row.classList.add("row-bad");if(stat)stat.textContent=" \u2717 Look again";
+        wrong.push({label:sl.label,fb:String(o.fb||"That piece doesn't fit what the data show.").replace(/<\/?p>/g,"")});}});
+    const n=st.slots.length,k=n-wrong.length;
+    const lead=n>1?`<p><strong>${k} of ${n} pieces fit.</strong> ${k?"The rows marked \u2713 are locked in. ":""}Change the row${wrong.length>1?"s":""} marked \u2717.</p>`:"";
+    return lead+wrong.map(w=>`<p>${n>1?`<strong>${w.label}:</strong> `:""}${w.fb}</p>`).join("");};
+  const clearRow=b=>{const row=b.closest("[data-row]");if(row&&row.classList.contains("row-bad")){row.classList.remove("row-bad");const st2=row.querySelector(".rowstat");if(st2)st2.textContent="";}};
+  let lockAll=()=>{};
+  const choose=(el,item,action)=>{if(done||busy||el.getAttribute("aria-disabled")==="true")return;if(rec.first===null){rec.first=item.tag;rec.hintBefore=hintUsed;}
+    if(item.tag==="correct"){mark(el,"right");lockAll();okFinish(wrapP(item.fb));}else badFinish(el,action,item.fb);};
+  if(st.type==="spot"){
+    box.querySelector(".opts").outerHTML=`<div class="draft"><p class="draft-title">${st.draftTitle}</p><p>${st.draft.map((d,k)=>`<button class="sent" data-k="${k}">${d.t}</button>`).join(" ")}</p></div>`;
+    lockAll=()=>box.querySelectorAll(".sent").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
+  }
+  if(st.type==="cards"){
+    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
+  }
+  if(st.type==="point"){
+    lockAll=()=>box.querySelectorAll("[data-pick]").forEach(b=>b.setAttribute("aria-disabled","true"));
+    box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{const it=st.picks[b.dataset.pick];if(it)choose(b,it,`You point it out to ${firstName(who)}…`);});
+  }
+
+  if(st.type==="reply"||st.type==="interview"){
+    const bub=(you,t)=>`<div class="msg ${you?"you":"them"}"><span class="msg-who">${you?"You":firstName(who)}</span>${t}</div>`;
+    box.querySelector(".opts").outerHTML=`<div class="thread ${st.channel||"chat"}">${st.channel==="email"?`<div class="mailhead"><span><strong>From:</strong> ${who.name}</span><span><strong>Subject:</strong> ${st.subject||""}</span></div>`:""}<div class="msgs" id="msgs" aria-live="polite">${(st.thread||[]).map(m=>bub(false,m)).join("")}</div>${st.type==="interview"?`<div class="asks"><span class="slotlab" style="width:100%">Ask ${firstName(who)}:</span>${st.questions.map((q,k)=>`<button class="ask" data-k="${k}">${q.q}</button>`).join("")}</div>`:""}<div id="composeHost"></div></div>`;
+    const msgs=document.getElementById("msgs"),addMsg=(you,t)=>msgs.insertAdjacentHTML("beforeend",bub(you,t));
+    const doCompose=()=>{
+      const host=document.getElementById("composeHost"),sel=st.slots.map(()=>null);
+      host.innerHTML=`<div class="compose"><span class="slotlab">Build your ${st.channel==="email"?"email":"reply"} from the pieces</span>${st.slots.map((sl,si)=>`<div class="slotrow" data-row="${si}"><span class="slotlab">${sl.label}<span class="rowstat"></span></span><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></div>`).join("")}<div class="draftmsg" id="draftmsg">…</div><button class="primary" id="sendBtn">${st.channel==="email"?"Send email":"Send"}</button></div>`;
+      const txt=()=>sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ");
+      host.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy||b.disabled)return;clearRow(b);const si=+b.dataset.s;sel[si]=+b.dataset.o;host.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));document.getElementById("draftmsg").textContent=txt();});
+      document.getElementById("sendBtn").onclick=()=>{
+        if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a piece from each row first.</p>`;return;}
+        addMsg(true,txt());const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+        if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+        if(!bad){host.querySelectorAll("button").forEach(b=>b.disabled=true);box.querySelectorAll(".ask").forEach(b=>b.disabled=true);if(st.reveal){const vs=document.getElementById("vizSlot");if(vs)vs.innerHTML=unit.viz||"";markScrollers();}okFinish(wrapP(st.okFb));}
+        else badFinish(null,`${firstName(who)} is typing…`,gradeRows(host,sel));};
+    };
+    if(st.type==="reply")doCompose();
+    else{let opened=false;box.querySelectorAll(".ask").forEach(b=>b.onclick=()=>{if(done||busy||b.disabled)return;const q=st.questions[+b.dataset.k];b.disabled=true;addMsg(true,q.q);addMsg(false,q.a);if(!q.key)cred(-1);if(q.key&&!opened){opened=true;doCompose();}});}
+  }
+  if(st.type==="tiles"){
+    const sel=st.slots.map(()=>null);
+    box.querySelector(".opts").outerHTML=`${st.slots.map((sl,si)=>`<fieldset data-row="${si}"><legend>${sl.label}<span class="rowstat"></span></legend><div class="tiles">${sl.options.map((o,oi)=>[Math.random(),oi]).sort((x,y)=>x[0]-y[0]).map(([_,oi])=>`<button class="tile" aria-pressed="false" data-s="${si}" data-o="${oi}">${sl.options[oi].t}</button>`).join("")}</div></fieldset>`).join("")}<p class="headline" id="hl" aria-live="polite">Pick one tile from each row to build the headline.</p><button class="quiet" id="present">Present the headline</button>`;
+    const upd=()=>{document.getElementById("hl").textContent=sel.map((x,si)=>x===null?"…":st.slots[si].options[x].t).join(" ")+(sel.every(x=>x!==null)?".":"");};
+    box.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{if(done||busy||b.disabled)return;clearRow(b);const si=+b.dataset.s;sel[si]=+b.dataset.o;box.querySelectorAll(`.tile[data-s="${si}"]`).forEach(t=>t.setAttribute("aria-pressed",t===b?"true":"false"));upd();});
+    document.getElementById("present").onclick=()=>{
+      if(done||busy)return;if(sel.some(x=>x===null)){fb.innerHTML=`<p class="where">Pick a tile from each row first.</p>`;return;}
+      const bad=sel.map((x,si)=>st.slots[si].options[x]).find(o=>o.tag!=="correct"),tag=bad?bad.tag:"correct";
+      if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
+      if(!bad){box.querySelectorAll(".tile,#present").forEach(e=>e.disabled=true);okFinish(wrapP(st.okFb));}
+      else badFinish(null,`You present the headline to ${firstName(who)}…`,gradeRows(box,sel));};
+  }
+}
+function showOutro(unit,kind,lvl){
+  const g=id=>valueOf(S.results[id]).replace("correct_hint","correct"),oc=unit.outro(g),box=document.getElementById("steps");
+  box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
+    <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">${kind==="finale"?"File the report and see my results":"Back to the hallway"}</button></div></div>`;
+  const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();gcount("finished",`Episode ${WEEK.num} finished`);renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
+}
+function unitDone(unit,kind,lvl){
+  let msg="";
+  if(kind==="core"){const idx=+unit.id.slice(1)-1;S.done.push(idx);S.path[idx]=lvl;
+    const ids=unit.steps.map(s=>s.id),misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct"),hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
+    if(misses.length===0&&hinted.length===0)S.level=1;else if(misses.length>=2)S.level=0;
+    if(S.fuDone.length<1)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
+    msg=`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
+    if(S.done.length===4&&!S.pendingFU&&WEEK.hidden&&!S.hiddenUnlocked&&CORE.every((c,ci)=>c(coreRng(ci),S.path[ci]).steps.every(st=>S.results[st.id]&&S.results[st.id].first==="correct"))){S.hiddenUnlocked=true;msg+=` ★ Jordan texts: "You didn't need me once this week. Come to Statistics. There's something strange in the data."`;}
+  }else if(kind==="hidden"){S.hiddenDone=true;msg="★ Hidden problem solved. Jordan is impressed.";
+  }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;msg="Jordan's done with you. Back to the consults.";}
+  else{S.expDone.push(unit.id);msg="Nice work on the optional consult.";}
+  save();renderMap();if(!S.pendingFU)toast(msg);
+}
+function finalReport(){
+  if(WEEK.finale&&!S.finaleDone){const b=NPCS.find(q=>q.id==="brooks");return startUnit(WEEK.finale(S),"finale",null,b);}
+  mapActive=false;const p=NPCS.find(q=>q.id==="brooks");
+  app.innerHTML=`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
+    <div class="bubble"><p>${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}</p></div>
+    <div class="actions"><button class="primary" id="file">File the report and see my results</button><button class="quiet" id="back">Not yet, back to the floor</button></div>`;
+  app.querySelector("h1").focus();
+  document.getElementById("file").onclick=()=>{S.phase="done";applySeason();save();renderSummary();};
+  document.getElementById("back").onclick=()=>renderMap();
+}
+function buildPayload(){
+  const parts=[`Mission ${CONFIG.mission}`,`version ${CONFIG.version}`,`save ${MODE==="season"?"on":"off"}`,`case levels ${[0,1,2,3].map(i=>S.path[i]??"-").join("")}`,`credibility ${S.cred}`,`hints ${S.hints}`,`minutes ${Math.round((Date.now()-S.started)/60000)}`];
+  const add=(u,name)=>u.steps.forEach(st=>{const v=valueOf(S.results[st.id]);if(v)parts.push(`${name}, ${st.label}: ${v}`);});
+  CORE.forEach((c,i)=>{if(S.done.includes(i)){const u=c(coreRng(i),S.path[i]);add(u,`Case ${i+1} (${u.title})`);}});
+  if(WEEK.finale&&S.finaleDone){const u=WEEK.finale(S);add(u,u.title);}
+  if(S.hiddenDone&&WEEK.hidden){const u=WEEK.hidden();add(u,"Hidden problem ("+u.title+")");}
+  S.fuDone.forEach(id=>{const u=FOLLOWUPS[id]();add(u,u.title);});
+  if(S.expDone.length)add(expertCase(),"Optional ("+expertCase().title+")");
+  return {results:parts.join(" | ").replace(/α/g,"alpha").replace(/μ/g,"mu")};
+}
+function renderSummary(){
+  mapActive=false;setBar("Results");
+  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0)),coreSteps=units.flatMap(u=>u.steps);
+  const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
+  const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">First try</span>`:v==="correct_hint"?`<span class="st ok">First try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
+  const payload=buildPayload(),configured=!!CONFIG.qualtricsUrl;
+  const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>Your season is saved on this browser. To continue on another device, keep this code somewhere safe:</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
+    :`<div class="submit-box" style="margin:1rem 0"><h2>Played without saving</h2><p>Nothing was saved on this device.</p><p id="ccWrap"><button class="linkish" id="showc">Get a career code anyway</button></p></div>`;
+  app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this week's hidden problem.</p>`:""}
+    <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
+    <div class="bubble"><p><strong>Next week:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
+    <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  const cp=document.getElementById("copyc");if(cp)cp.onclick=()=>{const t=document.getElementById("ccode").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{cp.textContent="Copied";},()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("ccode"));getSelection().removeAllRanges();getSelection().addRange(r);cp.textContent="Selected: press Ctrl+C";});};
+  const shc=document.getElementById("showc");if(shc)shc.onclick=()=>{document.getElementById("ccWrap").innerHTML=`<code style="font-size:1.15rem">${encodeCareer(SEASON)}</code><br><span class="where">Enter it at the start of next week's game to keep your story.</span>`;};
+  const sb=document.getElementById("submit");if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);u.searchParams.set("results",payload.results);location.href=u.toString();};
+  document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased."))return;clearSaved();S=null;renderIntro();};
+}
+renderIntro();
+}
+</script>
+<script data-goatcounter="https://ah3005.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
