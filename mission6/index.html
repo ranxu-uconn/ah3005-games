@@ -328,7 +328,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:6,version:"1.8",
+const CONFIG={mission:6,version:"1.9",
   // Qualtrics survey link (same survey as Missions 4 and 5)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission6-v1"};
@@ -385,7 +385,7 @@ function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.coun
 const SEASON_KEY="riverbend-season-v1";
 const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
 // Append new flags at the END only, so older career codes keep working.
-const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound"];
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample"];
 const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
 let SEASON=seasonDefault(),MODE="nosave";
