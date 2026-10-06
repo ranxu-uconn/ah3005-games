@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:4,version:"7.7",
+const CONFIG={mission:4,version:"7.8",
   // Qualtrics survey link (same survey for all missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission4-v7"};
@@ -378,7 +378,7 @@ function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.coun
 const SEASON_KEY="riverbend-season-v1";
 const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
 // Append new flags at the END only, so older career codes keep working.
-const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction"];
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample"];
 const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
 let SEASON=seasonDefault(),MODE="nosave";
@@ -421,11 +421,18 @@ function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:
    WEEK 4 STORY (from the Riverbend Story Bible)
    ============================================================ */
 const WEEK={num:4,title:"First rounds",
-  pitch:"It's your first day as an analyst at Riverbend. Four teams want sign-offs on claims they plan to make, and the chief quality officer is watching.",
+  pitch:"Four teams bring their first claims to test: claims they want in the quarterly report. Each one needs your sign-off, and the chief quality officer is watching.",
   topicLine:"This week: hypothesis testing and t tests. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
-  opening:[["brooks","Welcome to Riverbend. The state reviewers arrive in December, so every claim we make needs to hold up. Get me sign-offs from four teams this week."],
-           ["jordan","Coffee's in Statistics if you need me. Look around each room before you start analyzing. Show me the design first."]],
-  previously:null,callbacks:{},cameo:{},
+  opening:[["brooks","Four teams want claims in the quarterly report, and the state reviewers will read every one in December. Get me sign-offs from all four this week, and only for claims that hold up."],
+           ["jordan","Testing week: now we decide what the data can and can't support. Look around each room before you start analyzing. Show me the design first."]],
+  previously:d=>d.weeks.includes(3)?"Last week Greg's 95% satisfaction number came out of the board report before it was printed."+(d.flags.w3_greg_sample?" He says he'll ask who was surveyed before he quotes a survey again.":" He's still a little sore about it."):"",
+  callbacks:{
+    nair:d=>d.weeks.includes(3)?"Last week you wouldn't let me shrink my interval. This week I don't need to: I think we beat the target outright!":"",
+    marcus:d=>d.weeks.includes(2)?"My three hills are still on the wall. This week it's pain scores, and I just want to know if they changed.":"",
+    ruiz:d=>d.weeks.includes(3)?"The SCAD study is collecting cases. Meanwhile my drug pilot came back, and it's small. You know how I feel about small.":"",
+    dana:d=>d.flags.w2_dana_given?"Remember P(sepsis given flagged)? I'm testing a new sepsis alert to replace the old screen, and this time the pilot gets designed properly from the start.":d.weeks.includes(2)?"I'm testing a new sepsis alert to replace the old screen, and this time the pilot gets designed properly from the start.":"",
+    greg:d=>d.flags.w3_greg_sample?"No surveys this time. Real data, every patient with diabetes. I asked who was in it first, like you said.":d.weeks.includes(3)?"No surveys this time, I promise. Real data, every patient with diabetes.":""},
+  cameo:{},
   keyFlags:S=>{const f={w4_nair_honest:firstRight("c1s3"),w4_marcus_paired:firstRight("c2s1"),w4_ruiz_inconclusive:S.done.includes(2)?firstRight("c3s3"):1,w4_greg_portal:firstRight("e2s1")};
     const t=[];if(f.w4_nair_honest)t.push("nair");if(f.w4_marcus_paired)t.push("marcus");if(S.done.includes(2)&&firstRight("c3s3"))t.push("ruiz");if(firstRight("c4s3"))t.push("dana");if(f.w4_greg_portal)t.push("greg");
     if([firstRight("c1s3"),firstRight("c2s1"),firstRight("c3s3"),firstRight("c4s3")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");if(S.fuDone.length===0)t.push("jordan");
