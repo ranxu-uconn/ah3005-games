@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission 8: The mock survey | AH/STAT 3005</title>
+<title>Mission 9: One line, many readings | AH/STAT 3005</title>
 <style>
 
 :root{
@@ -315,19 +315,34 @@ main>h2{margin-top:1.8rem}
 .side{display:grid;grid-template-columns:1fr;gap:.2rem}
 @media (max-width:620px){.side{grid-template-columns:1fr}}
 
-/* week 7+: SPSS crosstabs and footnotes */
+/* weeks 1-3: SPSS crosstabs and footnotes, the dashboard screen, paired figures, stacked design choices */
 .out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.9rem;color:var(--ink);margin:.45rem 0 0;max-width:none}
 .xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
 .xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
 .xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
 @media (max-width:520px){.xt th[scope="rowgroup"]{white-space:normal;min-width:3.2rem}}
 .xt thead th[scope="colgroup"]{text-align:center;border-bottom:1px solid var(--line)}
+.art-dash{background:#17212B;color:#E6EDF3;border-radius:10px;padding:.6rem .7rem .7rem;max-width:36rem;box-shadow:0 3px 8px rgba(0,0,0,.18);font-family:Arial,Helvetica,sans-serif}
+.art-dash .dash-bar{font-size:.72rem;letter-spacing:.08em;color:#9FB0BF;margin:0 0 .45rem}
+.art-dash .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.5rem}
+.art-dash .dash-tile{background:#243240;border-radius:8px;padding:.5rem .6rem;border:2px solid transparent}
+.art-dash .dash-tile.warn{border-color:#E8A33D}
+.art-dash .dash-t{display:block;font-size:.8rem;color:#C9D4DE}
+.art-dash b{display:block;font-size:1.6rem;line-height:1.2;color:#FFFFFF}
+.art-dash .dash-s{display:block;font-size:.74rem;color:#9FB0BF}
+.pair{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-start}.pair>figure{flex:1 1 17rem;margin:0}
+.radios.stack{flex-direction:column;align-items:flex-start;gap:.5rem}
+.build select{max-width:100%}
+.build .typ{white-space:normal}
 .narr{font-style:italic;color:var(--muted);margin:.3rem 0 .8rem;font-size:.98rem}
+
+/* weeks 9-10: SPSS regression and correlation tables fit a phone */
+@media (max-width:520px){table.reg thead th{min-width:2.3rem}table.reg th,table.reg td{padding:.34rem .2rem}table.reg tbody th{white-space:normal;min-width:4.6rem;max-width:7rem;line-height:1.25}}
 </style>
 </head>
 <body>
 <header class="bar"><div class="bar-in">
-  <div class="bar-title">Mission 8: The mock survey</div>
+  <div class="bar-title">Mission 9: One line, many readings</div>
   <div class="bar-meta">
     <span id="progress"></span>
     <span class="meter" role="img" id="meter" aria-label="Reputation">Reputation
@@ -337,10 +352,10 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:8,version:"1.8",
-  // Qualtrics survey link (same survey as Missions 4 to 6)
+const CONFIG={mission:9,version:"1.1",
+  // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
-  storageKey:"ahstat3005-mission8-v1"};
+  storageKey:"ahstat3005-mission9-v1"};
 function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
 function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
 function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
@@ -394,7 +409,7 @@ function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.coun
 const SEASON_KEY="riverbend-season-v1";
 const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
 // Append new flags at the END only, so older career codes keep working.
-const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample"];
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample","w9_marcus_predict","w9_dana_residuals","w10_greg_adjusted","w10_ruiz_interaction"];
 const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
 let SEASON=seasonDefault(),MODE="nosave";
@@ -408,7 +423,7 @@ function encodeCareer(d){
   put(1,3);let wm=0;d.weeks.forEach(w=>{if(w>=1&&w<=15)wm|=1<<(w-1);});put(wm,15);
   put(Math.max(0,Math.min(100,Math.round(d.rep))),7);
   CAST_IDS.forEach(k=>put(Math.max(1,Math.min(3,d.trust[k]||1))-1,2));
-  let fm=0n;FLAG_BITS.forEach((f,i)=>{if(d.flags[f])fm|=1n<<BigInt(i);});v=(v<<32n)|fm;
+  let fm=BigInt(d.flagsRaw||0)&~((1n<<BigInt(FLAG_BITS.length))-1n)&0xFFFFFFFFn;FLAG_BITS.forEach((f,i)=>{if(d.flags[f])fm|=1n<<BigInt(i);});v=(v<<32n)|fm;
   put(Math.max(0,DANA_N.indexOf(d.danaN)),2);put(Math.max(0,DANA_A.indexOf(d.danaA)),2);
   let p="";for(let i=14;i>=0;i--)p+=B32[Number((v>>BigInt(5*i))&31n)];
   return `RIV-${p.slice(0,5)}-${p.slice(5,10)}-${p.slice(10)}${b32sum(p)}`;
@@ -420,105 +435,403 @@ function decodeCareer(code){
   let v=0n;for(const ch of p)v=(v<<5n)|BigInt(B32.indexOf(ch));
   const take=bits=>{const x=Number(v&((1n<<BigInt(bits))-1n));v>>=BigInt(bits);return x;};
   const d=seasonDefault();d.danaA=DANA_A[take(2)]??0.05;d.danaN=DANA_N[take(2)]??100;
-  const fm=v&0xFFFFFFFFn;v>>=32n;d.flags={};FLAG_BITS.forEach((f,i)=>{d.flags[f]=Number((fm>>BigInt(i))&1n);});
+  const fm=v&0xFFFFFFFFn;v>>=32n;d.flagsRaw=Number(fm);d.flags={};FLAG_BITS.forEach((f,i)=>{d.flags[f]=Number((fm>>BigInt(i))&1n);});
   [...CAST_IDS].reverse().forEach(k=>{d.trust[k]=take(2)+1;});d.rep=take(7);
   const wm=take(15);d.weeks=[];for(let w=1;w<=15;w++)if(wm&(1<<(w-1)))d.weeks.push(w);
   if(take(3)!==1)return null;return d;
 }
 function seasonTitle(rep){return rep>=75?"Lead analyst":rep>=50?"Analyst":"Analyst in training";}
-const GREET={farrow:"Good. Let's continue.",jordan:"Back again? Good. Coffee's fresh.",brooks:"Good. You're here.",nair:"There's my favorite analyst!",zhang:"You came. Thank you. Sit, please.",marcus:"Good to see you. Pull up a stool.",dana:"Good, it's you. I need someone who gets it right.",ruiz:"Ah, the careful one. Sit down.",greg:"My favorite skeptic. Fine, have a look."};
-const BACKSTORY={farrow:"(Ms. Farrow surveyed forty hospitals before this one. She remembers every sentence that was wrong.)",jordan:"(Jordan once switched to decaf for a week. They still call it the worst week of their career.)",brooks:"(Brooks was an ICU nurse for twelve years before this job. She has seen what bad data does.)",nair:"(Nair trained at a hospital with the slowest stroke times in the state. She swore never again.)",zhang:"(Zhang keeps a photograph of his first patient on his desk. He has never said why.)",marcus:"(Marcus became a PT after rehab for his own knee.)",dana:"(Dana worked nights on this floor for fifteen years. She still hears alarms in her sleep.)",ruiz:"(Ruiz's first trial was stopped over a false positive. She has been careful ever since.)",greg:"(Greg started here as a billing clerk. He says every dollar has a patient attached.)"};
+const GREET={jordan:"Back again? Good. Coffee's fresh.",brooks:"Good. You're here.",nair:"There's my favorite analyst!",zhang:"You came. Thank you. Sit, please.",marcus:"Good to see you. Pull up a stool.",dana:"Good, it's you. I need someone who gets it right.",ruiz:"Ah, the careful one. Sit down.",greg:"My favorite skeptic. Fine, have a look."};
+const BACKSTORY={jordan:"(Jordan once switched to decaf for a week. They still call it the worst week of their career.)",brooks:"(Brooks was an ICU nurse for twelve years before this job. She has seen what bad data does.)",nair:"(Nair trained at a hospital with the slowest stroke times in the state. She swore never again.)",zhang:"(Zhang keeps a photograph of his first patient on his desk. He has never said why.)",marcus:"(Marcus became a PT after rehab for his own knee.)",dana:"(Dana worked nights on this floor for fifteen years. She still hears alarms in her sleep.)",ruiz:"(Ruiz's first trial was stopped over a false positive. She has been careful ever since.)",greg:"(Greg started here as a billing clerk. He says every dollar has a patient attached.)"};
 function npcLine(p){const cb=(WEEK.callbacks[p.id]||(()=>""))(SEASON),t=SEASON.trust[p.id]||1;let h="";
   if(cb)h+=`<p>${cb}</p>`;else if(t>=2&&GREET[p.id])h+=`<p>${GREET[p.id]}</p>`;if(t>=3&&BACKSTORY[p.id])h+=`<p class="where">${BACKSTORY[p.id]}</p>`;return h;}
 function hintCost(){return (SEASON.trust.jordan||1)>=3?2:3;}
 function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:0;}
 
 /* ============================================================
-   WEEK 8 STORY (from the Riverbend Story Bible): exam week, the mock survey
+   WEEK 9 STORY (from the Riverbend Story Bible): the research wing opens; Marcus predicts recovery
    ============================================================ */
 const PLAYED=w=>SEASON.weeks.includes(w);
-const AL=a=>a===0.1?"0.10":String(a);
-const SSWB=`<div class="art art-wb"><span class="sr">Whiteboard: </span><h3>n = (z &times; &sigma; &divide; E)&sup2;</h3><p class="mk">z = 1.96 (95%) &middot; &sigma; = 2.4 days &middot; E = 0.5 day</p><p class="mk mk-red">Calculator says: n = 88.5</p></div>`;
-const WEEK={num:8,title:"The mock survey",
-  scene:"Monday, 8:02 a.m. A woman in a gray suit is already at the guest desk, binder open, pen uncapped. Nobody saw her come in.",
-  pitch:"A surveyor from the State Department of Health has arrived two months early for a practice run. She's pulling old reports from the season, and one of them has an error nobody caught.",
-  topicLine:"This week is a midterm review: variables and sampling, study designs, describing data, confidence intervals, p-values and power, choosing the right test. Check the clue in each room first. About 20 to 25 minutes. Practice pilot, not graded.",
-  opening:[["brooks","The State Department of Health sent a surveyor for a practice run, two months early. She'll pull our old reports, and I want every answer to be one we can defend."],
-           ["jordan","Exam week, so think of this as a review with a clipboard. Read the clue in each room first, and be polite to Ms. Farrow at the guest desk. She's polite back until you're wrong."]],
-  previously:d=>"Last week Greg turned out to be right about 4B's readmission rate, and the beds stayed open while Dana's team looked for the reason."+(d.flags.w7_dana_rowpct?" Dana says she checks which percentage she's reading now.":""),
-  cameo:{greg:d=>d.flags.w7_greg_builder?"I was right about 4B last week. Make sure the surveyor writes that down.":"For the record, I was right about 4B last week."},
-  expertThanks:"Thank you. Small pilot, wide interval: I'll tell the surveyor exactly that.",
+const WEEK={num:9,title:"One line, many readings",
+  scene:"Monday, 7:30 a.m. The research wing at the end of the main corridor opens today: fresh paint, a whiteboard nobody has written on yet, and a respiratory therapist already sitting in it with a laptop.",
+  pitch:"The new research wing opens, and its first guest wants to know what drives ventilator weaning time. Marcus wants to predict how many sessions his patients need, Dr. Nair has a correlation table, and Dana thinks a straight line settles her antibiotic delays.",
+  topicLine:"This week: scatterplots and correlation, simple linear regression, R², reading the slope, prediction and extrapolation, and residual plots. Check the clue in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  opening:[["brooks","The research wing opens today, and the first regression it publishes will carry Riverbend's name. I want it to be one we'd defend in front of Ms. Farrow."],
+           ["jordan","Regression week: one line through a cloud of points, and a dozen ways to misread it. Clues first. Our guest, Tomás from Respiratory Therapy, is already set up in the research wing."]],
+  previously:d=>PLAYED(8)?"Last week Ms. Farrow's practice survey ended with her notes on Dr. Brooks's desk."+(d.flags.w8_nair_ci?" She circled one sentence in the stroke report, and you had already caught it.":" She circled one sentence in the stroke report, and it has been fixed."):"",
+  cameo:{greg:d=>d.flags.w7_greg_builder?"Next week I bring you a cost argument. I checked it twice. You'll still find something, won't you.":"Next week I bring you a cost argument. Numbers, a model, the works."},
+  mapExtra:()=>`<rect class="m-deco" x="${18*TS}" y="${8*TS+28}" width="${5*TS-8}" height="8" rx="4"/><text class="m-name" x="${20.4*TS}" y="${6*TS+16}" text-anchor="middle" opacity=".8">Research wing (new)</text>`,
+  expertThanks:"Thank you. One standard deviation of weight, .41 of a standard deviation of pressure. The fellow can explain it now.",
   callbacks:{
-    farrow:()=>"Marion Farrow, State Department of Health. This is a practice survey, so nothing I find today goes on your record. But I will find things.",
-    nair:d=>d.flags.w4_nair_honest?"The surveyor read our quarterly report. \"Not yet shown\" passed, she said. Then she opened the annual report to page four.":"The surveyor found the draft where I said we beat the target. It was never published, but she found it. Now she's on page four.",
-    marcus:d=>d.flags.w5_marcus_repeated?"She asked why we used repeated measures on the walk tests. I said, because they're the same patients. Help me say it properly.":"She wants to know which analysis we ran on my walk tests, and why. I'd like a better answer than \"the computer picked it.\"",
-    dana:d=>PLAYED(4)?`She has my sepsis pilot plan in her hand. ${d.danaN} per group, α = ${AL(d.danaA)}. Your design.`:"The surveyor has been through my folders all morning.",
-    ruiz:d=>d.flags.w6_ruiz_adjusted?"The surveyor asked why my pilot was so small. After the full trial, I can answer that properly. Help me.":"The surveyor asked why my pilot was so small. I need an answer that isn't \"budget.\""},
-  keyFlags:S=>{const f={w8_farrow_sampling:firstRight("c1s1"),w8_nair_ci:firstRight("c2s3"),w8_marcus_design:firstRight("c3s1"),w8_dana_pvalue:firstRight("c4s1")};
-    const t=[];if(f.w8_nair_ci)t.push("nair");if(f.w8_marcus_design)t.push("marcus");if(f.w8_dana_pvalue)t.push("dana");if(firstRight("e1s1"))t.push("ruiz");
-    if([f.w8_farrow_sampling,f.w8_nair_ci,f.w8_marcus_design,f.w8_dana_pvalue].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
+    tomas:()=>"Tomás Reyes, respiratory therapy. First team in the new wing. They gave us the good chairs.",
+    nair:d=>d.flags.w8_nair_ci?"The surveyor liked our fixed report. Now I have a correlation table and a poster to make!":"I have a correlation table, a poster deadline, and a lot of enthusiasm.",
+    marcus:d=>d.flags.w4_marcus_paired&&d.flags.w5_marcus_repeated?"You taught me to sort out the design before collecting anything. So I asked Jordan first this time: one row per patient, with the balance score at intake and how many sessions each patient ended up needing.":d.flags.w8_marcus_design?"The surveyor understood my walk tests in the end. This week I want to predict something, not just compare.":"This week I want to predict something, not just compare.",
+    dana:d=>d.flags.w8_dana_pvalue?"I don't say \"3% chance it doesn't work\" anymore. Now I have a line, and I think it settles things.":"I have a line, and I think it settles things.",
+    ruiz:d=>d.flags.w6_ruiz_adjusted?"The full trial's paper is under review. Meanwhile my fellow is working on a side analysis, and he's confused about one column.":"My fellow is working on a side analysis, and he's confused about one column."},
+  keyFlags:S=>{const f={w9_marcus_predict:firstRight("c3s3"),w9_dana_residuals:firstRight("c4s1")};
+    const t=[];if(firstRight("c2s2"))t.push("nair");if(f.w9_marcus_predict)t.push("marcus");if(f.w9_dana_residuals)t.push("dana");if(firstRight("e1s1"))t.push("ruiz");
+    if([firstRight("c1s1"),firstRight("c2s2"),f.w9_marcus_predict,f.w9_dana_residuals].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
     if(S.fuDone.length===0)t.push("jordan");
     return {flags:f,trust:t};},
-  ending:f=>f.w8_nair_ci?"You found the sentence in our own report before the surveyor finished reading it. In December, that's the job.":"The surveyor found a sentence we should have caught ourselves. In December, we catch it first.",
-  teaser:"Marcus wants to predict how many therapy sessions a patient will need, and the new research wing opens on Monday.",
-  hidden:()=>({id:"hid",npc:"jordan",title:"How many charts?",
-    scene:"Jordan has the formula on the whiteboard and three sticky notes beside it, each with a different number. \"Two of these people are wrong,\" Jordan says, sipping coffee.",
-    message:"<p>Off the books. Ms. Farrow wants our next audit to estimate the mean length of stay within half a day, with 95% confidence. Last year's standard deviation was 2.4 days. Three people have already sent me a number.</p>",
+  ending:f=>f.w9_dana_residuals?"You looked at the residuals before anyone published a straight line through a curve. The research wing's first week went well.":"The straight line came out of Dana's report before it went anywhere. Next time, look at the residuals first.",
+  teaser:"Greg says the hospitalist program costs $1,900 more per patient, and he wants it gone by the next budget.",
+  hidden:()=>{const H=hiddenData9(),m=H.m;
+   const draft=[{t:`The intern correlated daily high temperature with ED visits across ${H.n} days.`,tag:"ok_sentence",fb:"That sentence just says what was done."},
+     {t:`Pearson's r was ${f3(H.r)} (Sig. = ${fP(H.p)}).`,tag:"ok_sentence",fb:"That's the number, reported correctly."},
+     {t:"So temperature has no relationship with how busy the ED is.",tag:"correct",fb:"That's the wrong sentence. r measures only straight-line relationships, and this one is a U: busy on cold days and on hot days."},
+     {t:"Staffing will not be adjusted for weather.",tag:"ok_sentence",fb:"That's the decision that follows from the wrong sentence. Find the claim it rests on."}];
+   const sct=scatter({x:H.t,y:H.v,xlo:-10,xhi:40,ylo:Math.floor((Math.min(...H.v)-10)/20)*20,yhi:Math.ceil((Math.max(...H.v)+10)/20)*20,xlab:"Daily high temperature (°C)",ylab:"ED visits that day",
+     label:`Scatterplot of ${H.n} days: ED visits are high on the coldest and the hottest days and lowest around 15 °C, a U shape. Pearson's r is ${f3(H.r)}.`,cap:"Each dot is one day."});
+   return {id:"hid",npc:"jordan",title:"The zero that wasn't",
+    scene:"Jordan is holding a printed memo at arm's length, like it might bite.",
+    message:"<p>Off the books. An intern sent this to the staffing office. It's one sentence away from being fine. Find the sentence.</p>",
     steps:[
-     {id:"hid1",label:"Rounding",type:"point",
-      show:SSWB+tbl("Proposed audit sizes","Mean length of stay, within half a day, 95% confidence",["Proposal from","Charts to pull"],
-        [["Analyst A (rounded down)",pk("88","c")],["Analyst B (rounded up)",pk("89","ok")],["Analyst C (used z = 1.645)",pk("63","a")]]),
-      prompt:"The calculator says 88.5. Click the number of charts that keeps the planned margin within half a day.",
-      hint:"You can't audit half a chart. Rounding one way gives a slightly wider margin than asked; the other way gives slightly narrower.",
-      picks:{ok:{tag:"correct",fb:"Round up. 89 charts keeps the margin of error within half a day; 88 would leave it slightly wider."},
-       c:{tag:"samplesize_round",fb:"Rounding down gives a sample a little too small, so the margin would be slightly wider than half a day. Always round up."},
-       a:{tag:"samplesize_round",fb:"1.645 is the z for 90% confidence. Ms. Farrow asked for 95%, which uses 1.96."}}},
-     {id:"hid2",label:"Tightening the margin",type:"reply",channel:"chat",show:`<p class="where">The worksheet you just checked (answer: 89 charts for half a day):</p>${SSWB}`,prompt:"Build your reply to Jordan.",
-      hint:"Look at the formula: the margin of error, E, is squared.",
-      thread:["She'll ask next: what if she wants a quarter of a day instead of half?"],
+     {id:"hid1",label:"The wrong sentence",type:"spot",show:sct,prompt:"Click the sentence in the intern's memo that the data don't support.",
+      hint:"Look at the shape of the dots, then at what a correlation can measure.",draftTitle:"Intern's memo to staffing (one sentence is wrong)",draft:draft},
+     {id:"hid2",label:"Explaining it",type:"reply",channel:"chat",prompt:"Build your reply to Jordan.",show:`<p class="where">The same days, with a curve instead of a line:</p>`+scatter({x:H.t,y:H.v,xlo:-10,xhi:40,ylo:Math.floor((Math.min(...H.v)-10)/20)*20,yhi:Math.ceil((Math.max(...H.v)+10)/20)*20,xlab:"Daily high temperature (°C)",ylab:"ED visits that day",fits:[{f:x=>H.q[0]+H.q[1]*x+H.q[2]*x*x,color:"var(--amber)"}],
+       label:"The same scatterplot with a U-shaped curve drawn through the dots.",cap:`A curve with a squared temperature term: R² = ${f3(H.mq.R2)}.`}),
+      hint:"Think about what r = 0 rules out, and what it doesn't.",
+      thread:["So what do I tell the intern? Nicely."],
       slots:[
-       {label:"How many",options:[{t:"Halving the margin takes about four times as many charts,",tag:"correct"},{t:"Halving the margin takes about twice as many charts,",tag:"samplesize_round",fb:"E is squared in the formula, so halving it multiplies n by four, not two."}]},
-       {label:"So",options:[{t:"so precision gets expensive fast.",tag:"correct"},{t:"so it's an easy change.",tag:"samplesize_round",fb:"Four times the charts is a lot of extra auditing."}]}],
-      okFb:"Precision is expensive: every halving of the margin of error quadruples the sample."}],
-    outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "89 for half a day, about four times that for a quarter. I\'ll send her both and let her pick."'}),
-    takeaway:"Always round a sample size up. Halving the margin of error takes about four times as many observations."}),
-  finale:S=>({id:"fin",npc:"brooks",title:"The exit interview",
-    scene:"Ms. Farrow closes her binder slowly. Dr. Brooks folds her hands. Nobody touches the coffee.",
-    message:"<p>Ms. Farrow closes her binder. Dr. Brooks is in the room. Three last questions, and then the practice survey's findings. Answer each with your strongest evidence.</p>",
+       {label:"r near zero",options:[{t:"An r near zero only rules out a straight-line relationship,",tag:"correct"},{t:"An r near zero proves there's no relationship of any kind,",tag:"corr_linear",fb:"The scatterplot shows a strong pattern. It just isn't a straight line."}]},
+       {label:"Here",options:[{t:"and here visits rise on both the coldest and the hottest days: a U shape. Always plot the data first.",tag:"correct"},{t:"and here a few outliers cancel each other out.",tag:"corr_linear",fb:"It isn't a few points. The whole cloud bends."}]}],
+      okFb:"Correlation measures linear relationships only. A curve can have r = 0 and still be strong."}],
+    outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "The intern took it well. They\'ve made a scatterplot of everything since. Everything."'}),
+    takeaway:"An r near zero means no straight-line relationship, not no relationship. Plot the data before trusting a correlation."};},
+  finale:S=>{const T=tomasData(0),M=marcusData9((S.path&&S.path[2])||0),D=danaData9((S.path&&S.path[3])||0);
+   return {id:"fin",npc:"brooks",title:"The research wing's first committee",
+    scene:"The committee meets in the research wing because it's the only room with enough chairs. The paint smell has not faded.",
+    message:"<p>Three regressions from this week are on the agenda. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"What 95% promises",type:"cards",claim:'<strong>Ms. Farrow:</strong> "Your stroke report gives a 95% confidence interval. What, exactly, does the 95% promise?"',prompt:"Play your strongest evidence.",hint:"The 95% belongs to the method of building intervals, not to any one interval.",
-      cards:[{k:"Reasoning",t:"If we repeated the sampling many times, about 95% of the intervals built this way would contain the true mean",tag:"correct",fb:"That's the definition. Any one interval either contains the true mean or it doesn't."},
-       {k:"Reasoning",t:"There's a 95% chance the true mean is inside this interval",tag:"ci_misread",fb:"That's the classic misreading: the true mean is fixed, so any one interval either contains it or doesn't."},
-       {k:"Data",t:"95% of our patients had times inside the interval",tag:"ci_misread",fb:"A confidence interval is about the mean, not individual patients."}]},
-     {id:"fin2",label:"Overtime and falls",type:"cards",claim:'<strong>Ms. Farrow:</strong> "Units with more overtime had more falls. Did Riverbend conclude that overtime causes falls?"',prompt:"Play your strongest evidence.",hint:"Think back to Greg's overtime proposal: a third variable that could drive both overtime and falls.",
-      cards:[{k:"Reasoning",t:"No: patient acuity could drive both, so it had to be measured and held constant before drawing any conclusion",tag:"correct",fb:"Name the confounder and measure it. That's the answer a surveyor wants."},
-       {k:"Data",t:"Yes: units with more overtime clearly had more falls",tag:"confound_causal",fb:"A strong association is exactly what a confounder can produce."},
-       {k:"Reasoning",t:"No: observational data can't tell us anything",tag:"confound_causal",fb:"Too strong. Measured confounders can be adjusted for."}]},
-     {id:"fin3",label:"Times the risk",type:"cards",narr:"Greg, who has been hovering by the door, quietly takes a seat.",claim:'<strong>Ms. Farrow:</strong> "Your committee minutes say the risk of readmission on 4B was more than one and a half times the risk on other units. Where does that number come from?"',prompt:"Play your strongest evidence.",hint:"\"Times the risk\" compares two risks.",
-      cards:[{k:"Output",t:"The risk ratio: 4B's readmission rate divided by the rate on the other units",tag:"correct",fb:"Two risks, divided. That's what \"times the risk\" means."},
-       {k:"Output",t:"The odds ratio from the crosstab",tag:"or_as_rr",fb:"Odds aren't probabilities. The odds ratio was larger."},
-       {k:"Data",t:"4B's share of all the hospital's readmissions",tag:"column_pct",fb:"That's a column percentage, and it mostly reflects 4B's size."}]}],
-    outro:g=>{const F=SEASON.flags,lines=[g("fin1")==="correct"?"Confidence intervals: explained correctly":"Confidence intervals: explained on the second try",
-        g("fin2")==="correct"?"Overtime and falls: no causal claim, confounder named":"Overtime and falls: confounder named after some prompting",
-        g("fin3")==="correct"?"4B minutes: risk ratio confirmed":"4B minutes: risk ratio confirmed on the second pass"];
-      const past=[];
-      if(PLAYED(1))past.push(F.w1_greg_median?"Week 1 ED dashboard: Greg's contract stopped by comparing median with median the first time":"Week 1 ED dashboard: Greg's contract stopped once the medians were lined up");
-      if(PLAYED(2))past.push(F.w2_dana_given?"Week 2 sepsis screen: P(sepsis given flagged) right the first time":"Week 2 sepsis screen: the conditional probability corrected");
-      if(PLAYED(3))past.push(F.w3_greg_sample?"Week 3 satisfaction survey: the twenty-patient 95% kept out from the start":"Week 3 satisfaction survey: the 95% removed before printing");
-      if(PLAYED(4))past.push(F.w4_nair_honest?"Week 4 stroke report: honest headline from the first draft":"Week 4 stroke report: headline corrected before it went out");
-      if(PLAYED(5))past.push(F.w5_greg_posthoc?"Week 5 program cuts: the right comparisons the first time":"Week 5 program cuts: the right comparisons in the end");
-      if(PLAYED(6))past.push(F.w6_ruiz_adjusted?"Week 6 BP trial: adjusted for baseline from the start":"Week 6 BP trial: adjustment added before the board saw it");
-      if(PLAYED(7))past.push(F.w7_dana_rowpct?"Week 7 readmissions: the right percentage the first time":"Week 7 readmissions: the percentage corrected before Thursday");
-      return {ok:true,title:"Practice survey findings",
-        text:lines.map(x=>"• "+x).join("<br>")+(past.length?`<br><br><strong>Your earlier calls, reviewed:</strong><br>${past.map(x=>"• "+x).join("<br>")}`:`<br><br><em>No earlier reports of yours are on file, so the survey reviewed this week only.</em>`)+
-          `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`};},
-    takeaway:"Every number in a report needs a sentence that says exactly what it means and no more."})};
+     {id:"fin1",label:"Tomás's slope",type:"cards",claim:`<strong>Committee member:</strong> "The slope is ${fx(T.m.b[1],1)}. So every extra day on the ventilator adds ${fx(T.m.b[1],1)} hours of weaning for every patient?"`,prompt:"Play your strongest evidence.",hint:"Think back to Tomás: the line describes an average, and the patients scatter around it.",
+      cards:[{k:"Output",t:`On average: each extra day goes with about ${fx(T.m.b[1],1)} more hours. Individual patients scatter widely around the line (R² = ${f3(T.m.R2)})`,tag:"correct",fb:"The slope is an average difference. The line explains part of the variation, not all of it."},
+       {k:"Output",t:"Yes: the slope is the exact effect for each patient",tag:"slope_misread",fb:"Patients scatter around the line. The slope describes the average."},
+       {k:"Output",t:`No: the effect is the Beta, ${f3(T.m.beta[1])}`,tag:"beta_units",fb:"Beta is in standard deviations, not hours. The slope in hours is B."}]},
+     {id:"fin2",label:"Marcus's model",type:"cards",claim:`<strong>Committee member:</strong> "Can Marcus use his model to book sessions for a new patient with a balance score of ${M.ext}?"`,prompt:"Play your strongest evidence.",hint:"Think back to Marcus: his data only covered a certain range of balance scores.",
+      cards:[{k:"Data",t:`Not from this model: his patients scored ${M.lo} to ${M.hi}, so ${M.ext} is outside the data. That's extrapolation`,tag:"correct",fb:"The line describes the range it was fitted on. Beyond it, nobody knows if it stays straight."},
+       {k:"Output",t:"Yes: the slope is significant, so the line holds for any score",tag:"extrapolate",fb:"Significance says the slope isn't zero within the data. It says nothing about scores nobody had."},
+       {k:"Output",t:`Yes: R² is ${f3(M.m.R2)}, which is high`,tag:"extrapolate",fb:"R² describes the fit to the patients in the data, not to scores outside them."}]},
+     {id:"fin3",label:"Dana's line",type:"cards",claim:'<strong>Dana\'s draft:</strong> "The straight line was significant, so time to antibiotics rises steadily with ED census." Ready to publish?',prompt:"Play your strongest evidence.",hint:"Think back to Dana: the residual plot for the straight line had a shape.",
+      cards:[{k:"Chart",t:"No: the residuals curve, so the delay isn't steady. It stays flat, then climbs fast when the ED is very full, and a model with a squared census term fits that curve",tag:"correct",fb:"A significant line can still be the wrong shape. The residual plot showed it."},
+       {k:"Output",t:"Yes: a significant slope means the straight line is the right model",tag:"sig_fit",fb:"Significance says the slope isn't zero, not that a straight line is the right shape."},
+       {k:"Data",t:"Yes, after dropping the busiest days as outliers",tag:"outlier_delete",fb:"The busiest days are real, and they're exactly where the curve shows up."}]}],
+    outro:g=>({ok:true,title:"Committee decisions",
+      text:[g("fin1")==="correct"?"Weaning study: reported as an average difference per day, with R²":"Weaning study: reworded to an average difference, on the second pass",
+            g("fin2")==="correct"?`Marcus's model: used only for balance scores from ${M.lo} to ${M.hi}`:"Marcus's model: limited to the scores in his data, after some debate",
+            g("fin3")==="correct"?"Dana's report: rewritten with the curved model":"Dana's report: the straight line was replaced"].map(x=>"• "+x).join("<br>")+
+        `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
+    takeaway:"A slope is an average difference, a line describes only the range it was fitted on, and a significant line can still be the wrong shape."};}};
+
+/* ---------- WEEK 9 DATA (seeded from the game, so each consult and the finale agree) ---------- */
+function tomasData(level){const R=makeRng((SEED()^0x9A01)>>>0);let x,y,m;GEN_OK=0;
+  for(let k=0;k<400;k++){const n=R.int(70,90);x=[];y=[];for(let i=0;i<n;i++){const d=Math.round(2+12*Math.pow(R.u(),1.3));x.push(d);y.push(round1(Math.max(1.5,9+2.4*d+R.normal(0,7.5))));}
+    m=ols(y,[x]);if(m.b[1]>2&&m.b[1]<2.8&&m.R2>.35&&m.R2<.6&&m.pv[1]<.001){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w9 tomas");
+  return {x,y,m,mh:ols(y,[x.map(v=>v*24)])};}
+function nairData9(level){const R=makeRng((SEED()^0x9A02^(level?7:0))>>>0);let V,rr;GEN_OK=0;
+  for(let k=0;k<500;k++){const n=level?R.int(400,440):R.int(130,150);const ct=[],nih=[],age=[],dtn=[];
+    for(let i=0;i<n;i++){const c=Math.round(Math.min(40,Math.max(5,R.normal(18,6))));const s=Math.round(Math.min(30,Math.max(1,R.normal(9,5))));const a=Math.round(Math.min(98,Math.max(30,R.normal(71,12))));
+      ct.push(c);nih.push(s);age.push(a);dtn.push(Math.round(Math.max(10,22+1.25*c-0.85*s+(level?0.075:0.02)*a+R.normal(0,6.5))));}
+    V=[dtn,ct,nih,age];rr=V.map(a=>V.map(b=>corr(a,b)));const n2=n;
+    const ok=rr[0][1]>.6&&rr[0][1]<.8&&rr[0][2]<-.35&&rr[0][2]>-.55&&Math.abs(rr[1][2])<.15&&Math.abs(rr[1][3])<.15&&Math.abs(rr[2][3])<.15&&
+      (level?(rr[0][3]>.09&&rr[0][3]<.16&&corrP(rr[0][3],n2)<.05):Math.abs(rr[0][3])<.12);
+    if(ok){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w9 nair");
+  return {V,rr,n:V[0].length,names:["Door-to-needle (min)","Arrival to CT (min)","NIHSS severity","Age (years)"]};}
+function marcusData9(level){const R=makeRng((SEED()^0x9A03)>>>0);let berg,ses,dis,m;GEN_OK=0;
+  for(let k=0;k<400;k++){const n=R.int(60,75);berg=[];ses=[];dis=[];
+    for(let i=0;i<n;i++){const b=R.int(20,50);berg.push(b);ses.push(Math.max(3,Math.round(31-0.42*b+R.normal(0,2.8))));dis.push(Math.min(56,b+Math.max(0,Math.round(R.normal(8,3)))));}
+    m=ols(ses,[berg]);if(m.b[1]<-.35&&m.b[1]>-.5&&m.R2>.4&&m.R2<.7&&Math.min(...berg)<=21&&Math.max(...berg)>=49){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w9 marcus");
+  const lo=Math.min(...berg),hi=Math.max(...berg),ext=level?55:8;return {berg,ses,dis,m,lo,hi,ext,pred:m.b[0]+m.b[1]*ext};}
+function danaData9(level){const R=makeRng((SEED()^0x9A04^(level?5:0))>>>0);let c,y,m1,m2;GEN_OK=0;const q=level?.019:.026;
+  for(let k=0;k<400;k++){const n=R.int(110,130);c=[];y=[];for(let i=0;i<n;i++){const v=R.int(8,58);c.push(v);y.push(Math.round(Math.max(15,52-0.85*v+q*v*v+R.normal(0,level?6:5.5))));}
+    m1=ols(y,[c]);m2=ols(y,[c,c.map(v=>v*v)]);const z=m1.zres,lowE=c.map((v,i)=>v<16?z[i]:null).filter(v=>v!=null),mid=c.map((v,i)=>v>26&&v<40?z[i]:null).filter(v=>v!=null),hiE=c.map((v,i)=>v>50?z[i]:null).filter(v=>v!=null);
+    if(m1.pv[1]<.001&&m2.pv[2]<(level?.01:.001)&&mean(lowE)>.25&&mean(hiE)>.25&&mean(mid)<-.15){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w9 dana");
+  return {c,y,m1,m2};}
+function hiddenData9(){const R=makeRng((SEED()^0x9A05)>>>0);let t,v,r;GEN_OK=0;
+  for(let k=0;k<300;k++){const n=R.int(150,180);t=[];v=[];for(let i=0;i<n;i++){const x=round1(R.uni(-8,36));t.push(x);v.push(Math.round(205+0.22*(x-14)**2+R.normal(0,9)));}
+    r=corr(t,v);if(Math.abs(r)<.08){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w9 hidden");
+  const mq=ols(v,[t,t.map(x=>x*x)]);return {t,v,r,p:corrP(r,t.length),n:t.length,mq,q:mq.b};}
+
+/* ============================================================
+   CASES
+   ============================================================ */
+function case1(R,level){ // Tomás Reyes, RRT (guest): simple linear regression, the slope, and units
+  const T=tomasData(level),m=T.m,nm=["Days on ventilator before weaning"];
+  const pick=k=>["r","r2","f","pf","b0","b1","beta1","t1","p1","se1"].includes(k);
+  const sct=scatter({x:T.x,y:T.y,xlo:0,xhi:16,ylo:0,yhi:Math.ceil((Math.max(...T.y)+5)/10)*10,xlab:"Days on the ventilator before the first weaning trial",ylab:"Weaning time (hours)",
+    fits:[{f:v=>m.b[0]+m.b[1]*v,lo:Math.min(...T.x),hi:Math.max(...T.x)}],label:`Scatterplot of ${m.n} patients: weaning time rises with days on the ventilator, with a lot of scatter. Fitted line: weaning hours = ${fx(m.b[0],2)} + ${fx(m.b[1],2)} × days.`,cap:"Each dot is one patient. The line is the least-squares fit."});
+  const outD=regTables(m,{names:nm,dv:"Weaning time (hours)",pick});
+  const outH=regTables(T.mh,{names:["Hours on ventilator before weaning"],dv:"Weaning time (hours)"});
+  return {id:"c1",npc:"tomas",title:"Longer on the vent, longer to wean?",
+    scene:"Tomás has his feet up on a brand-new chair and a ventilator log on his laptop. He sits up when you come in, mostly out of politeness.",
+    message:`<p>Our therapists swear the longer a patient has been on the ventilator, the longer weaning takes. I've got ${m.n} patients' worth of data, and I'd like a number instead of a feeling.</p>`,
+    viz:sct+still(outD.ms)+still(outD.an),
+    steps:[
+      {id:"c1s1",label:"Interviewing Tomás",type:"interview",reveal:true,prompt:"Ask Tomás about his data, then tell him your plan.",
+       hint:["Ask Tomás what he's trying to explain and what he thinks explains it. Then check that both are numbers.","Weaning time is the outcome; days on the ventilator beforehand is the predictor. Two numerical variables and a question about how much one changes with the other: simple linear regression."],
+       thread:["Ask away. I'm in no hurry. Well, my patients are."],
+       questions:[
+        {q:"What exactly is weaning time?",a:"Hours from the start of the first breathing trial until the tube comes out.",key:true},
+        {q:"What do you think drives it?",a:"Days on the vent before we try. Longer on the vent, weaker breathing muscles. That's the theory.",key:true},
+        {q:"Is each patient in the file once?",a:"Once each. Their first wean only.",key:false},
+        {q:"Which ventilator brand is best?",a:"Ha. Whichever one isn't beeping. Is that... a statistics question?",key:false}],
+       slots:[
+        {label:"I'll model",options:[{t:"I'll model weaning time (hours) as the outcome,",tag:"correct"},{t:"I'll model days on the ventilator as the outcome,",tag:"outcome_misread",fb:"Tomás wants to explain weaning time. Days on the ventilator come first, so they're the predictor."}]},
+        {label:"Using",options:[{t:"with days on the ventilator beforehand as the predictor, in a simple linear regression.",tag:"correct"},{t:"and just report the correlation, since one number says it all.",tag:"corr_vs_reg",fb:"A correlation says how strongly the two move together. Tomás wants how many more hours per extra day: that's the slope of a regression."},{t:"comparing short and long ventilator stays with a t test.",tag:"wrong_test",fb:"Splitting days into two groups throws information away. Both variables are numbers: regression."}]}],
+       okFb:"Two numerical variables, one explaining the other: simple linear regression. The scatterplot and output are shown above."},
+      {id:"c1s2",label:level?"The intercept":"The slope",type:"point",narr:"Tomás pulls his chair closer to the screen. \"Okay, which of these numbers is mine?\"",show:outD.co,
+       prompt:level?"Tomás: \"What would this line predict for a patient on the ventilator for zero days?\" Click the number.":"Tomás: \"For each extra day on the ventilator, how many more hours does weaning take, on average?\" Click the number.",
+       hint:level?["The line's prediction at zero days is where it crosses the vertical axis.",`That's the (Constant), B = ${fx(m.b[0],2)}. Nobody in the data had zero days, though: the shortest was ${Math.min(...T.x)}.`]:["Tomás wants hours per extra day, in the data's own units. Look at the predictor's row.","The unstandardized B on the days row is the slope: the average change in weaning hours per extra day."],
+       picks:level?{b0:{tag:"correct",fb:`${fx(m.b[0],2)} hours: the (Constant), where the line crosses zero days. Careful, though: nobody in the data had fewer than ${Math.min(...T.x)} days, so this is the line's value, not something we observed.`},
+          b1:{tag:"intercept_misread",fb:"That's the slope: hours per extra day. Tomás asked about zero days."},beta1:{tag:"beta_units",fb:"That's the standardized coefficient, in standard deviations."},
+          t1:{tag:"output_misread",fb:"That's the t statistic for the slope."},p1:{tag:"output_misread",fb:"That's the slope's significance."},se1:{tag:"output_misread",fb:"That's the slope's standard error."}}
+        :{b1:{tag:"correct",fb:`${fx(m.b[1],2)} hours: on average, each extra day on the ventilator goes with about ${fx(m.b[1],1)} more hours of weaning.`},
+          b0:{tag:"intercept_misread",fb:"That's the (Constant): the line's value at zero days, not the change per day."},
+          beta1:{tag:"beta_units",fb:"That's Beta, the standardized coefficient: standard deviations of weaning time per standard deviation of days. Tomás wants hours per day."},
+          t1:{tag:"output_misread",fb:"That's the t statistic, the slope divided by its standard error."},p1:{tag:"output_misread",fb:"That's the slope's significance: it says the slope isn't zero, not how big it is."},se1:{tag:"output_misread",fb:"That's the slope's standard error."}}},
+      {id:"c1s3",label:"Days or hours?",type:"reply",channel:"chat",narr:"Tomás frowns at his laptop. \"Wait. The ICU system records ventilator time in hours, not days.\"",
+       show:`<div class="slider"><p><strong>Try it.</strong> Run the same regression with ventilator time in days or in hours.</p><div class="seg" role="group" aria-label="Units for ventilator time"><input type="radio" id="un-d" name="unshow" value="d" checked><label for="un-d">Days</label><input type="radio" id="un-h" name="unshow" value="h"><label for="un-h">Hours</label></div><div id="unviz"></div></div>`,
+       init:()=>{const draw=()=>{const h=document.querySelector('input[name="unshow"]:checked').value==="h";document.getElementById("unviz").innerHTML=h?outH.ms+outH.co:still(outD.ms)+still(outD.co);markScrollers();};
+         document.querySelectorAll('input[name="unshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
+       prompt:"Tomás asks whether recording in hours makes the effect weaker. Build your reply.",
+       hint:["Switch between days and hours and compare B, then t and Sig., row by row.","Changing units rescales the slope (per hour instead of per day), but t, Sig. and R² stay the same: it's the same relationship."],
+       thread:["If I switch to hours, the slope gets tiny. Does that mean the effect is 24 times weaker?"],
+       slots:[
+        {label:"The slope",options:[{t:"The slope gets 24 times smaller only because it's now per hour instead of per day,",tag:"correct"},{t:"The slope stays the same number whatever the units,",tag:"units_slope",fb:"Switch to hours and look at B: it changes."}]},
+        {label:"But",options:[{t:"and t, Sig. and R² don't change at all. It's the same relationship, measured in different units.",tag:"correct"},{t:"so the relationship really is 24 times weaker.",tag:"units_slope",fb:"Compare t and Sig. in both versions: they're identical. Only the unit of the slope changed."}]}],
+       okFb:"Units change the size of the slope, never the strength of the evidence. t, the p-value and R² don't move."}],
+    outro:g=>g("c1s1")==="correct"
+      ?{ok:true,title:"Tomás's number",text:`<em>Tomás writes "${fx(m.b[1],1)} hours per day, on average" on the empty whiteboard, then adds "(per DAY)" underneath.</em> "The therapists will love being right."`}
+      :{ok:false,title:"Tomás's number",text:'<em>Tomás leans back in the good chair.</em> "Outcome first, predictor second. I\'ll remember that."'},
+    takeaway:"In simple linear regression, the slope (B) is the average change in the outcome per one-unit change in the predictor. Changing units rescales B but not t, the p-value or R²."};
+}
+
+function case2(R,level){ // Dr. Nair: correlation, strength and sign (harder level: significant but weak)
+  const N=nairData9(level),rr=N.rr,ni=N.names;
+  const picks={};for(let i=0;i<4;i++)for(let j=0;j<4;j++){const k=`r${i}${j}`,pair=[i,j].sort().join("");
+    picks[k]=i===j?{tag:"corr_self",fb:"That's a variable correlated with itself, always exactly 1. Nair wants two different measures."}
+      :pair==="01"?{tag:"correct",fb:`${f3(rr[0][1])}: door-to-needle time and arrival-to-CT time, the largest correlation between two different measures.`}
+      :pair==="02"?{tag:"corr_strength",fb:`${f3(rr[0][2])} is negative, but its size, ${f3(Math.abs(rr[0][2]))}, is smaller than ${f3(rr[0][1])}. Strength is the size, ignoring the sign.`}
+      :{tag:"corr_strength",fb:`${f3(rr[i][j])} is close to zero: a weak relationship. Look for the largest size, ignoring the sign.`};}
+  const ctab=corrTable(N.V,["Door-to-needle","CT time","Stroke severity (NIHSS)","Age"],{pick:k=>true,note:`${N.n} stroke patients treated with clot-busting medication this year. Door-to-needle: minutes from arrival to the drug. CT time: minutes from arrival to the CT scan. NIHSS: stroke severity, higher is worse.`});
+  const sct=scatter({x:N.V[2],y:N.V[0],xlo:0,xhi:32,ylo:0,yhi:Math.ceil((Math.max(...N.V[0])+5)/20)*20,xlab:"NIHSS stroke severity (higher = more severe)",ylab:"Door-to-needle (min)",
+    label:`Scatterplot of ${N.n} patients: door-to-needle time tends to fall as stroke severity rises. Pearson's r = ${f3(rr[0][2])}.`,cap:`Each dot is one patient.`});
+  const sctA=scatter({x:N.V[3],y:N.V[0],xlo:30,xhi:100,ylo:0,yhi:Math.ceil((Math.max(...N.V[0])+5)/20)*20,xlab:"Age (years)",ylab:"Door-to-needle (min)",r:2.2,
+    label:`Scatterplot of ${N.n} patients: almost no visible trend between age and door-to-needle time. Pearson's r = ${f3(rr[0][3])}.`,cap:`Each dot is one patient.`});
+  const rAge=`<p><strong>Age and door-to-needle time: r = ${f3(rr[0][3])}, r² = ${f3(rr[0][3]**2)}</strong> (age goes with about ${pct(rr[0][3]**2,0)} of the variation in times).</p>`,rSev=`<p><strong>Stroke severity and door-to-needle time: r = ${f3(rr[0][2])}.</strong></p>`;
+  return {id:"c2",npc:"nair",title:"The correlation poster",
+    scene:"Dr. Nair has a poster template open in one window and a correlation table in the other. The poster already has a title in a very large font.",
+    message:`<p>Research day is in two weeks, and I want our strongest finding on the poster! I correlated door-to-needle time with three things for ${N.n} patients. Help me pick the headline.</p>`,
+    steps:[
+      {id:"c2s1",label:"The strongest pair",type:"point",narr:"Dr. Nair tilts her screen toward you, highlighter already in hand.",show:ctab,
+       prompt:"Dr. Nair: \"Which two different measures are most strongly related? That's the headline.\" Click their correlation.",
+       hint:["Ignore the 1s on the diagonal: those are each variable with itself. Compare the sizes of the rest.","Strength is the size of r, whatever its sign. The largest one between two different measures is door-to-needle time with arrival-to-CT time."],
+       picks},
+      {id:"c2s2",label:level?"Significant, so important?":"Negative means weak?",type:"reply",channel:"chat",narr:level?"Dr. Nair points at a different cell, with an asterisk next to it. \"Look, this one's significant too!\"":"Dr. Nair taps the severity cell. \"And this one's negative, so it's weak. We can skip it.\"",
+       show:level?rAge+sctA:rSev+sct,
+       prompt:level?"Dr. Nair wants to call age a major finding because it's significant. Build your reply.":"Dr. Nair thinks a negative correlation means a weak one. Build your reply.",
+       hint:level?["Look at how much the dots in the age plot actually trend, and at r² shown above the chart.",`With ${N.n} patients, even a tiny correlation can be significant. r = ${f3(rr[0][3])} is weak: age goes with about ${pct(rr[0][3]**2,0)} of the variation in door-to-needle time.`]:["Look at the scatterplot: notice which way the dots trend, and how tightly they cluster.","The sign gives the direction; the size gives the strength. r = "+f3(rr[0][2])+" is a moderate negative relationship."],
+       thread:level?["Age is significantly correlated with our times! That's a finding, right?"]:["Negative correlations are the weak ones, right? I'll leave it off."],
+       slots:level?[
+        {label:"Significant",options:[{t:`It's significant because we have ${N.n} patients, but r = ${f3(rr[0][3])} is weak,`,tag:"correct"},{t:"It's significant, so it's a strong relationship,",tag:"sig_vs_strength",fb:`Significance says r probably isn't zero. Its size, ${f3(rr[0][3])}, says how strong it is: weak.`}]},
+        {label:"So",options:[{t:`and age goes with only about ${pct(rr[0][3]**2,0)} of the variation in times. Not a headline.`,tag:"correct"},{t:"and older age causes slower treatment.",tag:"causal_claim",fb:"A correlation can't show cause, and this one is tiny anyway."}]}]
+       :[
+        {label:"Negative",options:[{t:`No: ${f3(rr[0][2])} is a moderate relationship. The sign gives the direction, the size gives the strength,`,tag:"correct"},{t:"Yes: negative correlations are weaker than positive ones,",tag:"corr_sign",fb:"The sign only says which way the dots slope. −0.5 and +0.5 are equally strong."}]},
+        {label:"In words",options:[{t:"and it means patients with more severe strokes tend to be treated faster.",tag:"correct"},{t:"and it means more severe strokes tend to wait longer.",tag:"corr_direction",fb:"Negative means one goes up as the other goes down: more severe, shorter door-to-needle."}]}],
+       okFb:level?"With a big sample, a weak correlation can be significant. Report the size, not just the asterisk.":"The sign of r is the direction; its size is the strength. Negative relationships can be strong."}],
+    outro:g=>g("c2s1")==="correct"
+      ?{ok:true,title:"Dr. Nair's poster",text:`<em>Dr. Nair types the headline in an even larger font.</em> ${level?'"CT time and door-to-needle time move together! Age stays off the headline: significant isn\'t the same as strong. Noted!"':'"CT time and door-to-needle time move together! And the severity one goes on there too. Negative isn\'t weak. Noted!"'}`}
+      :{ok:false,title:"Dr. Nair's poster",text:'"Size for strength, sign for direction. Got it. The diagonal 1s are very tempting, though."'},
+    takeaway:"A correlation's size measures how strong a linear relationship is, and its sign gives the direction. With a large sample, even a weak correlation can be significant."};
+}
+
+function case3(R,level){ // Marcus: the builder (simple regression), R², then extrapolation
+  const M=marcusData9(level),m=M.m;
+  const vars=[["patient_id","Patient ID","R-201, R-202 …"],["sessions","Therapy sessions needed to discharge","14, 9, 21 …"],["intake_berg","Balance score at intake (Berg, 0 to 56)","31, 44, 22 …"],["discharge_berg","Balance score at discharge","40, 51, 33 …"]];
+  const want={patient_id:"none",sessions:"outcome",intake_berg:"factor",discharge_berg:"none"};
+  if(level){vars.push(["therapist","Therapist (initials)","MB, KT, JS …"]);want.therapist="none";}
+  const why={patient_id:"is just a label.",sessions:"is what Marcus wants to predict: the outcome.",intake_berg:"is known the day a patient walks in, so it can predict sessions: the predictor.",
+    discharge_berg:"is measured after the sessions are done, so it can't predict them for a new patient.",therapist:"isn't part of Marcus's question about intake balance."};
+  const sct=scatter({x:M.berg,y:M.ses,xlo:0,xhi:56,ylo:0,yhi:Math.ceil((Math.max(...M.ses)+3)/5)*5,xlab:"Balance score at intake (Berg, 0 to 56)",ylab:"Sessions needed",band:[M.lo,M.hi],
+    fits:[{f:v=>m.b[0]+m.b[1]*v,lo:M.lo,hi:M.hi}],label:`Scatterplot of ${m.n} patients with intake balance scores from ${M.lo} to ${M.hi}: sessions needed fall as balance rises. Fitted line: sessions = ${fx(m.b[0],2)} + (${fx(m.b[1],3)}) × balance.`,cap:`Shaded band: the scores in Marcus's data, ${M.lo} to ${M.hi}.`});
+  const out=regTables(m,{names:["Intake balance score"],dv:"Sessions needed",pick:k=>["r","r2","adj","pf","b1","beta1","p1"].includes(k)});
+  return {id:"c3",npc:"marcus",title:"How many sessions?",
+    scene:"Marcus is at the parallel bars with a clipboard, watching a patient take very careful steps. He gives you a thumbs-up without looking away.",
+    message:"<p>Insurance wants to know how many sessions a patient will need before we start. I measure balance on day one with the Berg scale. If that predicts sessions, I can book them properly from the start.</p>",
+    viz:sct,
+    steps:[
+      {id:"c3s1",label:"Setting up the model",type:"build",narr:"Marcus hands you the clipboard. \"Every column's on there. Tell me which ones do the work.\"",prompt:"Give each column its role in Marcus's model, answer the design question, then run it.",
+       show:`<p class="where"><strong>Outcome (Y):</strong> what you want to predict. <strong>Predictor (X):</strong> what you predict it from, known in advance. <strong>Not used:</strong> not part of the question.</p>`,
+       hint:["Sort each column three ways: what Marcus wants to predict, what is known on day one, or neither.","Sessions needed is the outcome and intake balance is the predictor. Discharge balance is measured after the sessions, so it can't be used to predict them. Each patient appears once."],
+       spec:{name:"Simple linear regression",run:"Run the model",okHead:"The model runs: simple linear regression.",runText:"Running Marcus's model…",varHead:"Column",typeHead:"Values in the file",roleHead:"Role",
+        roles:[["","Choose a role"],["outcome","Outcome (Y)"],["factor","Predictor (X)"],["none","Not used"]],
+        vars,want,why,tagOf:(v,w,g)=>v==="discharge_berg"&&g==="factor"?"predictor_after":w==="outcome"||g==="outcome"?"outcome_misread":"extra_factor",
+        repeated:false,designQ:"Does any patient appear in the file more than once?",designYes:"Yes",designNo:"No, one row per patient",designLab:"Design question",designTag:"design_wrong",
+        designWhy:"each patient is in the file once, so each row is independent of the others.",ok:"One numerical outcome, one numerical predictor known in advance, each patient once."}},
+      {id:"c3s2",label:"How much does it explain?",type:"point",narr:"Marcus taps the Model Summary. \"Is this thing any good, or is it just a line?\"",show:out.ms+out.co,
+       prompt:"Marcus: \"How much of the difference in sessions between patients does intake balance account for?\" Click the number.",
+       hint:["The question is about the share of variation explained. Look in the Model Summary.","R Square is the proportion of the variation in the outcome explained by the model."],
+       picks:{r2:{tag:"correct",fb:`${f3(m.R2)}: intake balance accounts for about ${pct(m.R2,0)} of the variation in sessions. The rest is everything else about a patient.`},
+        r:{tag:"r2_misread",fb:"That's R, the correlation between predicted and actual sessions. The proportion explained is R Square."},
+        adj:{tag:"r2_misread",fb:"That's Adjusted R Square, a corrected version you'll meet next week. The share explained is R Square."},
+        pf:{tag:"output_misread",fb:"That's the model's significance: whether it explains anything at all, not how much."},
+        b1:{tag:"r2_misread",fb:"That's the slope: sessions per balance point."},beta1:{tag:"beta_units",fb:"That's the standardized slope."},p1:{tag:"output_misread",fb:"That's the slope's significance."}}},
+      {id:"c3s3",label:"A new patient",type:"reply",channel:"chat",narr:`Marcus's pager goes off. He reads it and frowns. "New referral. Balance score of ${M.ext}."`,
+       show:`<div class="slider"><label for="bgx">Intake balance score: <strong id="bglab"></strong></label><input type="range" id="bgx" min="0" max="56" step="1" value="${M.ext}"><div id="bgviz"></div><p id="bgnote" class="where" aria-live="polite"></p></div>`,
+       init:()=>{const sl=document.getElementById("bgx"),draw=()=>{const v=+sl.value,p=m.b[0]+m.b[1]*v,inside=v>=M.lo&&v<=M.hi;document.getElementById("bglab").textContent=v;
+           document.getElementById("bgviz").innerHTML=scatter({x:M.berg,y:M.ses,xlo:0,xhi:56,ylo:0,yhi:Math.max(30,Math.ceil((Math.max(...M.ses,p)+3)/5)*5),xlab:"Balance score at intake (Berg, 0 to 56)",ylab:"Sessions needed",band:[M.lo,M.hi],
+             fits:[{f:x=>m.b[0]+m.b[1]*x,lo:M.lo,hi:M.hi},{f:x=>m.b[0]+m.b[1]*x,lo:0,hi:56,dash:true,color:"var(--muted)"}],marks:[{x:v,y:p,lab:`${v}: line says ${fx(p,0)}`,left:v>36}],
+             label:`Marcus's data cover balance scores ${M.lo} to ${M.hi}. At a score of ${v}, the line predicts ${fx(p,0)} sessions${inside?"":", outside the data"}.`,cap:`Solid line: inside the data. Dashed: the same line extended beyond it.`});
+           document.getElementById("bgnote").textContent=inside?`A score of ${v} is inside Marcus's data (${M.lo} to ${M.hi}). The line predicts about ${fx(p,0)} sessions.`:`A score of ${v} is outside Marcus's data (${M.lo} to ${M.hi}). The line still gives ${fx(p,0)} sessions, but nobody in the data looked like this patient.`;};
+         sl.addEventListener("input",draw);draw();},
+       prompt:`Marcus wants to book sessions for the new patient with a score of ${M.ext}. Build your reply.`,
+       hint:["Move the slider into the shaded band and back out. The band is where Marcus's patients actually scored.",`His patients scored ${M.lo} to ${M.hi}. Predicting at ${M.ext} extends the line beyond the data: extrapolation, which the data can't support.`],
+       thread:[`The line says about ${fx(M.pred,0)} sessions for a score of ${M.ext}. Book them?`],
+       slots:[
+        {label:"The line",options:[{t:`The line only describes patients who scored ${M.lo} to ${M.hi}; ${M.ext} is outside that, so ${fx(M.pred,0)} is an extrapolation,`,tag:"correct"},{t:"A straight line works for any score; that's the point of a model,",tag:"extrapolate",fb:"Nobody in the data scored like this patient. The relationship could bend outside the range we saw."}]},
+        {label:"So",options:[{t:"so plan this patient's sessions clinically, and collect data on scores like this before predicting them.",tag:"correct"},{t:`so book ${fx(M.pred,0)} sessions, since the slope is significant.`,tag:"extrapolate",fb:"A significant slope describes the data's range, not scores outside it."}]}],
+       okFb:"Predict inside the range of the data. Beyond it, the line is a guess with a formula attached."}],
+    outro:g=>g("c3s3")==="correct"
+      ?{ok:true,title:"Marcus's booking sheet",text:`<em>Marcus writes "only for scores ${M.lo} to ${M.hi}" across the top of the booking sheet in red.</em> "Insurance gets a number. My unusual patients get me."`}
+      :{ok:false,title:"Marcus's booking sheet",text:'<em>Marcus crosses out the booking he nearly made.</em> "Inside the data only. I\'m making a sign for the wall."'},
+    takeaway:"A predictor must be known before the outcome. R² is the share of variation the model explains. Use the fitted line only inside the range of the data; outside it is extrapolation."};
+}
+
+function case4(R,level){ // Dana: the residual plot shows a curve; a squared term fits
+  const D=danaData9(level),m1=D.m1,m2=D.m2;
+  const yhi=Math.ceil((Math.max(...D.y)+5)/20)*20;
+  const sLine=scatter({x:D.c,y:D.y,xlo:0,xhi:60,ylo:0,yhi,xlab:"Patients in the ED when the alert fired",ylab:"Minutes to first antibiotic",fits:[{f:v=>m1.b[0]+m1.b[1]*v,lo:8,hi:58}],
+    label:`Scatterplot of ${m1.n} sepsis alerts with a straight fitted line: delays are fairly flat at lower census and climb steeply above about 40 patients.`,cap:"Each dot is one sepsis alert. Straight line: the linear model."});
+  const sCurve=scatter({x:D.c,y:D.y,xlo:0,xhi:60,ylo:0,yhi,xlab:"Patients in the ED when the alert fired",ylab:"Minutes to first antibiotic",fits:[{f:v=>m2.b[0]+m2.b[1]*v+m2.b[2]*v*v,lo:8,hi:58,color:"var(--amber)"}],
+    label:`The same alerts with a curved fit that includes census squared: it follows the flat start and the steep climb.`,cap:"Amber curve: the model with census and census squared."});
+  const rcap="Residual plot. Each dot is one sepsis alert: how far the model's prediction missed (up and down) against the prediction itself (left to right).";
+  const rp1=residPlot(m1,{cap:rcap,label:`Residual plot for the straight line: residuals are mostly positive at both ends and negative in the middle, a U shape.`});
+  const rp2=residPlot(m2,{cap:rcap,label:`Residual plot for the curved model: residuals scatter randomly around zero.`});
+  const o1=regTables(m1,{names:["Census"],dv:"Minutes to first antibiotic",tag:"straight line"});
+  const o2=regTables(m2,{names:["Census","Census squared"],dv:"Minutes to first antibiotic",tag:"with a squared term",pick:k=>["r2","b1","b2","p1","p2","pf"].includes(k)});
+  return {id:"c4",npc:"dana",title:"A line through a curve",
+    scene:"Dana has a printout of a scatterplot with a ruler laid across it, as if she drew the line herself.",
+    message:`<p>When the ED is packed, sepsis antibiotics come late. I ran a regression on ${m1.n} alerts: the slope is significant, it goes up, done. I want to tell the board that every extra patient adds the same delay.</p>`,
+    steps:[
+      {id:"c4s1",label:"The residual plot",type:"reply",channel:"chat",narr:"Dana slides the ruler off the printout. \"Jordan told me to check one more plot. I don't know what I'm looking at.\"",
+       show:sLine+rp1+o1.co,
+       prompt:"Dana wants to know whether the straight line is good enough. Build your reply.",
+       hint:["In a good residual plot the dots scatter randomly around the zero line. Look at the left end, the middle and the right end.","The residuals sit above zero at both ends and below it in the middle: a curve the straight line missed. A squared census term lets the model bend."],
+       thread:["The slope is significant. Isn't that enough?"],
+       slots:[
+        {label:"The residuals",options:[{t:"The residuals curve: above zero at both ends, below it in the middle, so a straight line misses the shape,",tag:"correct"},{t:"The residuals are a random cloud around zero, so the line is fine,",tag:"resid_read",fb:"Look at the ends of the plot: most residuals there are above zero, and in the middle most are below. That's a pattern, not a random cloud."},{t:"The residuals fan out, so the spread grows with census,",tag:"resid_read",fb:"A fan would widen from one side to the other. This plot bends: up, down, up."}]},
+        {label:"So",options:[{t:"so add census squared to the model (a polynomial regression) and check the residuals again.",tag:"correct"},{t:"so drop the busiest days as outliers.",tag:"outlier_delete",fb:"The busiest days are real alerts, and they're where the curve is."}]}],
+       okFb:"A significant slope doesn't mean the right shape. The residual plot shows what the line missed."},
+      {id:"c4s2",label:"Is the curve real?",type:"point",narr:"Jordan reruns the model with census squared and emails it over. Dana opens it on her phone.",
+       show:`<div class="slider"><p><strong>Try it.</strong> Switch between the straight line and the curve, and watch the residuals.</p><div class="seg" role="group" aria-label="Which model"><input type="radio" id="dm-l" name="dmshow" value="l" checked><label for="dm-l">Straight line</label><input type="radio" id="dm-c" name="dmshow" value="c"><label for="dm-c">With census squared</label></div><div id="dmviz" class="pair"></div></div>${o2.ms}${o2.co}`,
+       init:()=>{const draw=()=>{const c=document.querySelector('input[name="dmshow"]:checked').value==="c";document.getElementById("dmviz").innerHTML=(c?sCurve+rp2:sLine+rp1);};
+         document.querySelectorAll('input[name="dmshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
+       prompt:"Dana: \"Show me the one number that says the curve is real, not just a wiggle.\" Click it.",
+       hint:["The curve comes from one new term. Find its row in the Coefficients table.","Click the Sig. on the census squared row: it tests whether the bend is more than chance."],
+       picks:{p2:{tag:"correct",fb:`${fP(m2.pv[2])} on the census squared row: the bend is statistically significant, so a curve this strong would be very unlikely if the relationship were really a straight line. Delays stay fairly flat, then climb fast once the ED is very full.`},
+        r2:{tag:"r2_rises",fb:`R Square did rise, from ${f3(m1.R2)} to ${f3(m2.R2)}, but R Square always rises when you add a term. The test of the new term says whether it's real.`},
+        b2:{tag:"output_misread",fb:"That's the size of the bend, in minutes per patient squared. Its Sig. says whether it's real."},
+        b1:{tag:"output_misread",fb:"That's the census term, which now only makes sense together with census squared."},p1:{tag:"output_misread",fb:"That's the census term's test. The curve is the squared term."},
+        pf:{tag:"output_misread",fb:"That's the whole model's test. Dana asked about the curve itself."}}}],
+    outro:g=>g("c4s1")==="correct"
+      ?{ok:true,title:"Dana's board slide",text:'<em>Dana puts the ruler in a drawer.</em> "Flat, then a cliff once we pass forty patients. That\'s what my nurses have been saying for a year. Now I can show it."'}
+      :{ok:false,title:"Dana's board slide",text:'<em>Dana squints at the residual plot one more time.</em> "Smile shape means a curve. I\'ll look at that plot first from now on."'},
+    takeaway:"Always look at the residual plot. A curve in the residuals means a straight line is the wrong shape; a squared term (polynomial regression) can fix it, and its own test says whether the curve is more than chance."};
+}
+
+const CORE=[case1,case2,case3,case4];
+
+/* ---------- optional consult: Dr. Ruiz, the standardized coefficient ---------- */
+function expertCase(){
+  const memo=`<div class="art art-memo"><span class="sr">Printed output: </span><dl class="memo-head"><dt>From</dt><dd>Dr. Ruiz's fellow</dd><dt>Re</dt><dd>Side analysis: body weight and systolic BP, 80 trial patients at enrollment</dd></dl>
+   <p>Coefficients: weight (kg): <strong>B = 0.62</strong>, <strong>Beta = .41</strong>, Sig. &lt; .001</p><p>Fellow's note: "Beta = .41, so 41% of blood pressure is explained by weight??"</p></div>`;
+  return {id:"e1",npc:"ruiz",title:"The other coefficient",
+    scene:"Dr. Ruiz is reading her fellow's printout with the expression of someone grading a test.",
+    message:"<p>My fellow ran a regression of blood pressure on weight for a side paper. He understands B. He does not understand Beta, and he has invented a meaning for it. Help me correct him.</p>",
+    steps:[
+      {id:"e1s1",label:"What Beta means",show:memo,prompt:"What does Beta = .41 mean?",
+       hint:"Beta is the slope after both variables are standardized: measured in standard deviations.",
+       options:[
+        {t:"One standard deviation more weight goes with .41 standard deviation higher blood pressure, on average",tag:"correct",fb:"Right. Standardizing puts both variables on the same scale, which is why Beta is handy for comparing predictors measured in different units."},
+        {t:"Each extra kilogram goes with 0.41 mmHg higher pressure",tag:"beta_units",fb:"That would be B, and B is 0.62 mmHg per kg."},
+        {t:"Weight explains 41% of blood pressure",tag:"r2_misread",fb:"The share explained is R Square, not Beta."}]},
+      {id:"e1s2",label:"One predictor",show:memo,prompt:"With only one predictor, the standardized coefficient Beta equals…",
+       hint:"Both variables are on a standard scale, and one familiar number already measures a linear relationship on that scale.",
+       options:[
+        {t:"the correlation r between weight and blood pressure",tag:"correct",fb:"Right. In simple regression, Beta = r, and R Square = r²."},
+        {t:"R Square",tag:"r2_misread",fb:"R Square is r squared: here about .17."},
+        {t:"the slope in mmHg per kg",tag:"beta_units",fb:"That's B, in the data's own units."}]}],
+    outro:g=>g("e1s1")==="correct"
+      ?{ok:true,title:"The fellow, corrected",text:'Dr. Ruiz caps her pen. "Standard deviations, not percent. He\'ll rewrite the paragraph tonight."'}
+      :{ok:false,title:"The fellow, corrected",text:'"Beta is in standard deviations. B is in the units. I\'ll have him write it out ten times."'},
+    takeaway:"B is the slope in the data's units. Beta is the slope in standard deviations; with one predictor it equals the correlation r."};
+}
+
+/* ---------- reviews with Jordan ---------- */
+const FOLLOWUPS={
+ fu_regbuild:()=>JR("fu_regbuild","Quick review: setting up a regression","Which variable plays which part.",[
+  {id:"fu_rb_1",label:"Outcome",prompt:"\"Does tap water consumption predict change in hemoglobin?\" The outcome (dependent variable) is…",hint:"The outcome is the one being predicted.",
+   options:[{t:"change in hemoglobin",tag:"correct",fb:"Right: tap water is the predictor."},{t:"tap water consumption",tag:"outcome_misread",fb:"That's the predictor."},{t:"both",tag:"outcome_misread",fb:"Simple regression has one outcome and one predictor."}]},
+  {id:"fu_rb_2",label:"When it's known",prompt:"A good predictor for planning is one that is…",hint:"Think about Marcus's discharge score.",
+   options:[{t:"known before the outcome happens",tag:"correct",fb:"Right."},{t:"measured at the same time as the outcome, after treatment",tag:"predictor_after",fb:"Then you can't use it to plan."},{t:"as strongly correlated with the outcome as possible, whenever it's measured",tag:"predictor_after",fb:"A score measured afterward can't help you predict in advance."}]}],
+  "Outcome: what you want to explain or predict. Predictor: what you use to predict it, known in advance."),
+ fu_slope:()=>JR("fu_slope","Quick review: reading the Coefficients table","Which number answers which question.",[
+  {id:"fu_sl_1",label:"The slope",prompt:"Change in hemoglobin = 2.647 + 0.0022 × (tap water, L). The 0.0022 means…",hint:"It's the B on the predictor's row.",
+   options:[{t:"each extra liter goes with 0.0022 units more change in hemoglobin, on average",tag:"correct",fb:"Right."},{t:"the predicted change for someone who drinks no tap water",tag:"intercept_misread",fb:"That's the intercept, 2.647."},{t:"tap water explains 0.22% of hemoglobin change",tag:"r2_misread",fb:"The share explained comes from R Square, not from a slope."}]},
+  {id:"fu_sl_2",label:"Units",prompt:"If water is recorded in 100-liter units instead of liters, what changes?",hint:"Same relationship, different ruler.",
+   options:[{t:"The slope B (100 times larger), but not t or the p-value",tag:"correct",fb:"Right."},{t:"Everything, including the p-value",tag:"units_slope",fb:"The test doesn't depend on units."},{t:"Nothing",tag:"units_slope",fb:"B is in the data's units, so it changes."}]}],
+  "B is the average change per unit of the predictor. Units change B, never t, the p-value or R²."),
+ fu_corr:()=>JR("fu_corr","Quick review: correlation","Size, sign, and significance.",[
+  {id:"fu_co_1",label:"Sign",prompt:"r = −0.60 between water drunk and hemoglobin means…",hint:"Negative: one goes up as the other goes down.",
+   options:[{t:"a medium-strong negative relationship: more water, lower hemoglobin",tag:"correct",fb:"Right."},{t:"a weak relationship, since it's negative",tag:"corr_sign",fb:"The size is 0.60; the sign is only the direction."},{t:"more water, higher hemoglobin",tag:"corr_direction",fb:"That would be a positive r."}]},
+  {id:"fu_co_2",label:"Significance",prompt:"With 5,000 patients, r = 0.05 is significant. That means…",hint:"Significant and strong aren't the same thing.",
+   options:[{t:"r probably isn't zero, but the relationship is very weak",tag:"correct",fb:"Right."},{t:"the relationship is strong",tag:"sig_vs_strength",fb:"Big samples make tiny correlations significant."},{t:"one causes the other",tag:"causal_claim",fb:"Correlation isn't cause."}]},
+  {id:"fu_co_3",label:"Zero",prompt:"r = 0 means…",hint:"r measures one particular kind of relationship.",
+   options:[{t:"no straight-line relationship",tag:"correct",fb:"Right: there could still be a curve."},{t:"no relationship of any kind",tag:"corr_linear",fb:"A U shape can have r = 0."},{t:"the variables are identical",tag:"corr_self",fb:"That would be r = 1."}]}],
+  "Size of r is the strength, sign is the direction, and r only measures straight-line relationships."),
+ fu_resid:()=>JR("fu_resid","Quick review: residual plots","What the leftover pattern tells you.",[
+  {id:"fu_re_1",label:"Good",prompt:"A residual plot with no problems looks like…",hint:"Nothing left for the model to explain.",
+   options:[{t:"a random band of dots around zero",tag:"correct",fb:"Right."},{t:"a U shape",tag:"resid_read",fb:"That means a curve was missed."},{t:"a fan that widens",tag:"resid_read",fb:"That means unequal variance."}]},
+  {id:"fu_re_2",label:"Curve",prompt:"A curved residual plot suggests…",hint:"The straight line is the wrong shape.",
+   options:[{t:"adding a squared term (polynomial regression)",tag:"correct",fb:"Right."},{t:"deleting the points at the ends",tag:"outlier_delete",fb:"Those points are where the curve shows."},{t:"that the model is fine because the slope is significant",tag:"sig_fit",fb:"Significance doesn't check the shape."}]},
+  {id:"fu_re_3",label:"R² went up",prompt:"Adding a squared term raised R Square from .20 to .26. That alone shows…",hint:"R Square can't go down when a term is added.",
+   options:[{t:"nothing yet: check the new term's own Sig.",tag:"correct",fb:"Right: R Square never falls when you add a term, so the term's test decides."},{t:"the curve is real",tag:"r2_rises",fb:"R Square rises with any added term, even a useless one."},{t:"the straight line was wrong",tag:"r2_rises",fb:"The residual plot and the new term's test say that, not the rise in R Square."}]}],
+  "Residuals should scatter randomly around zero. A curve calls for a squared term; a fan means unequal spread."),
+ fu_extrap:()=>JR("fu_extrap","Quick review: prediction","Where a fitted line can be trusted.",[
+  {id:"fu_ex_1",label:"Range",prompt:"A model was fitted on adults aged 30 to 60. Predicting for an 85-year-old is…",hint:"Outside the data.",
+   options:[{t:"extrapolation, which the data can't support",tag:"correct",fb:"Right."},{t:"fine if R² is high",tag:"extrapolate",fb:"R² describes the fit inside the data."},{t:"fine if the slope is significant",tag:"extrapolate",fb:"Significance doesn't extend the range."}]},
+  {id:"fu_ex_2",label:"The equation",prompt:"The prediction equation Ŷ = a + bX has no error term because…",hint:"It's the fitted line itself.",
+   options:[{t:"it gives the line's predicted average, not any one patient's actual value",tag:"correct",fb:"Right."},{t:"the model has no error",tag:"slope_misread",fb:"Real patients scatter around the line."},{t:"R² is 1",tag:"r2_misread",fb:"R² is rarely 1."}]}],
+  "Predict only inside the range the line was fitted on, and remember the prediction is an average.")
+};
+const FU_MAP={outcome_misread:"fu_regbuild",corr_vs_reg:"fu_regbuild",wrong_test:"fu_regbuild",predictor_after:"fu_regbuild",extra_factor:"fu_regbuild",no_choice:"fu_regbuild",no_design:"fu_regbuild",design_wrong:"fu_regbuild",build_wrong:"fu_regbuild",
+  slope_misread:"fu_slope",intercept_misread:"fu_slope",beta_units:"fu_slope",units_slope:"fu_slope",output_misread:"fu_slope",r2_misread:"fu_slope",
+  corr_self:"fu_corr",corr_strength:"fu_corr",corr_sign:"fu_corr",corr_direction:"fu_corr",sig_vs_strength:"fu_corr",causal_claim:"fu_corr",corr_linear:"fu_corr",
+  resid_read:"fu_resid",outlier_delete:"fu_resid",r2_rises:"fu_resid",sig_fit:"fu_resid",extrapolate:"fu_extrap",ok_sentence:"fu_corr"};
+
+/* ---------- the notes in each room ---------- */
+const CLUES=[
+ {idx:0,id:"t_board",name:"Research wing whiteboard",x:19,y:7,html:l=>`
+  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>RT weaning project</h3><p class="mk">Outcome? weaning time (hrs, trial start to extubation)</p><p class="mk">Theory: more vent days first = longer wean</p><p class="mk mk-red">Need: a NUMBER, not a feeling</p></div>
+  ${stickyArt("One row per patient, first wean only. Vent days counted before the first breathing trial.","T.R.",1.5)}`},
+ {idx:1,id:"n_poster",name:"Poster draft",x:5,y:3,html:l=>`
+  <div class="art art-flyer"><span class="sr">Poster draft: </span><p class="flyer-title">FASTER, TOGETHER!</p><p class="flyer-sub">Stroke Center &middot; Research Day poster (draft)</p><p>Headline finding: <strong>[the strongest correlation goes here]</strong></p><p><small>Correlated door-to-needle time with arrival-to-CT time, NIHSS severity, and age.</small></p></div>
+  ${stickyArt("NIHSS = stroke severity, higher is worse. Negative r = weak?? Ask.","P.N.",-2)}`},
+ {idx:2,id:"m_sheet",name:"Intake clipboard",x:9,y:3,html:l=>`
+  <div class="art art-memo"><span class="sr">Clipboard: </span><dl class="memo-head"><dt>File</dt><dd>rehab_sessions.csv, one row per patient</dd><dt>Question</dt><dd>Does day-one balance predict sessions needed?</dd></dl>
+   <p>Berg balance scale: 0 to 56, higher = steadier.<br>Measured at <strong>intake</strong> (day one) and again at <strong>discharge</strong>.<br>Sessions needed: counted at discharge.</p></div>
+  ${stickyArt("Insurance wants the number BEFORE we start.","Marcus",1.8)}`},
+ {idx:3,id:"d_ruler",name:"Dana's printout",x:6,y:12,html:l=>`
+  <div class="art art-memo"><span class="sr">Printout: </span><dl class="memo-head"><dt>Data</dt><dd>Every sepsis alert this year</dd><dt>Census</dt><dd>patients in the ED when the alert fired</dd></dl>
+   <p>Regression: minutes to first antibiotic on census. Slope significant!</p></div>
+  ${stickyArt("Jordan: \"Look at the residual plot before you tell anyone anything.\"","Dana",-2)}`}
+];
+mergeClues();
 
 
 /* ---------- general helpers (shared by every week) ---------- */
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
-const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+const still=h=>h.replace(/<button class="pick"[^>]*>([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -530,484 +843,86 @@ function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1
 function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
 
 function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
-/* ---------- ANOVA calculations ---------- */
-function oneway(groups){const all=groups.flat(),N=all.length,k=groups.length,g=mean(all);
-  const SSB=groups.reduce((s,a)=>s+a.length*(mean(a)-g)**2,0),SSW=groups.reduce((s,a)=>{const m=mean(a);return s+a.reduce((t,v)=>t+(v-m)**2,0);},0);
-  const dfB=k-1,dfW=N-k,MSB=SSB/dfB,MSW=SSW/dfW,F=MSB/MSW;return {N,k,SSB,SSW,dfB,dfW,MSB,MSW,F,p:fSurv(F,dfB,dfW)};}
-function scheffe(groups,names,a){const out=[];for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++){
-  const d=mean(groups[i])-mean(groups[j]),Fp=(d*d/(a.MSW*(1/groups[i].length+1/groups[j].length)))/(a.k-1);
-  out.push({a:names[i],b:names[j],d,p:fSurv(Fp,a.k-1,a.dfW)});}return out;}
-function aovRows(a,label){return [["Between Groups",fx(a.SSB,3),a.dfB,fx(a.MSB,3),fx(a.F,3),fP(a.p)],["Within Groups",fx(a.SSW,3),a.dfW,fx(a.MSW,3),"",""],["Total",fx(a.SSB+a.SSW,3),a.N-1,"","",""]];}
 
-/* ---------- more charts ---------- */
-function stripK(groups,xlab,rng){
-  const all=groups.flatMap(g=>g.vals),lo=rng?rng[0]:Math.min(...all),hi=rng?rng[1]:Math.max(...all),pad=rng?0:Math.max((hi-lo)*0.08,1),x=sc(lo-pad,hi+pad,130,620),H=groups.length*50+56;
-  const rows=groups.map((g,i)=>{const yc=34+i*50;return `<text class="v-strong" x="10" y="${yc+4}">${g.name}</text>`+g.vals.map((v,j)=>`<circle class="v-dot" cx="${x(v)}" cy="${yc+((j*29)%7-3)*3}" r="3.8"/>`).join("")+`<line class="v-mean" x1="${x(mean(g.vals))}" x2="${x(mean(g.vals))}" y1="${yc-16}" y2="${yc+16}"/>`;}).join("");
-  return vz(650,H,`Dot plots of ${xlab} for ${groups.map(g=>g.name).join(", ")}; dark bars mark group means.`,`${rows}${axis(x,lo-pad,hi+pad,H-40,130,620)}<text x="375" y="${H-6}" text-anchor="middle">${xlab}</text>`,"Each dot is one patient; the dark bar is the group mean.");
-}
-function spaghetti(data,labels,connect,ylab){
-  const all=data.flat(),lo=Math.min(...all)-15,hi=Math.max(...all)+15,y=sc(lo,hi,230,20),xs=labels.map((_,i)=>150+i*170);
-  let body="";data.forEach((r,i)=>{const jx=connect?0:((i*53)%11-5)*3;if(connect)body+=`<path class="v-down" fill="none" d="M${r.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`;body+=r.map((v,t)=>`<circle class="v-dot" cx="${xs[t]+jx}" cy="${y(v)}" r="3.5"/>`).join("");});
-  const mu=labels.map((_,t)=>mean(data.map(r=>r[t])));
-  body+=`<path class="v-mean" fill="none" d="M${mu.map((v,t)=>`${xs[t]},${y(v)}`).join(" L")}"/>`+mu.map((v,t)=>`<rect x="${xs[t]-5}" y="${y(v)-5}" width="10" height="10" fill="var(--ink)"/>`).join("");
-  const yt=ticks(lo,hi,4).map(v=>`<text x="70" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="78" x2="530" y1="${y(v)}" y2="${y(v)}"/>`).join("");
-  return vz(600,262,connect?`Line chart: each thin line is one patient across ${labels.join(", ")}; the dark line is the average.`:`Dots for each visit, ${data.length} patients; the dark line is the average.`,
-    `${yt}${body}${labels.map((l,t)=>`<text x="${xs[t]}" y="252" text-anchor="middle">${l}</text>`).join("")}<text x="20" y="125" transform="rotate(-90 20 125)" text-anchor="middle">${ylab}</text>`,
-    connect?"Each thin line is one patient; the dark line is the average.":"Each dot is one measurement; the dark line is the average.");
-}
-function interactionPlot(cm,aN,bN,ylab){
-  const all=cm.flat(),lo=Math.floor(Math.min(...all)/5)*5-5,hi=Math.ceil(Math.max(...all)/5)*5+5,y=sc(lo,hi,220,24),xs=[170,400];
-  const line=(i,cls,mk)=>`<path class="${cls}" d="M${xs[0]},${y(cm[i][0])} L${xs[1]},${y(cm[i][1])}"/>`+cm[i].map((v,j)=>mk==="c"?`<circle cx="${xs[j]}" cy="${y(v)}" r="6" class="v-est"/>`:`<rect x="${xs[j]-6}" y="${y(v)-6}" width="12" height="12" fill="var(--ink)"/>`).join("")+`<text class="v-strong" x="${xs[1]+14}" y="${y(cm[i][1])+4}">${aN[i]} (${fx(cm[i][1],0)})</text><text x="${xs[0]-12}" y="${y(cm[i][0])+4+(Math.abs(cm[0][0]-cm[1][0])<4?(cm[i][0]>=cm[1-i][0]?-8:8):0)}" text-anchor="end">${fx(cm[i][0],0)}</text>`;
-  const yt=ticks(lo,hi,4).map(v=>`<text x="62" y="${y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="70" x2="420" y1="${y(v)}" y2="${y(v)}"/>`).join("");
-  return vz(600,262,`Interaction plot of mean ${ylab} by ${bN.join(" and ")}, one line for each of ${aN.join(" and ")}.`,
-    `${yt}${line(0,"v-null2","s")}${line(1,"v-alt2","c")}${bN.map((b,j)=>`<text x="${xs[j]}" y="248" text-anchor="middle">${b}</text>`).join("")}<text x="18" y="122" transform="rotate(-90 18 122)" text-anchor="middle">${ylab}</text>`,
-    "Each point is a group mean. Parallel lines = no interaction.");
-}
-function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
-
-/* ---------- regression / ANCOVA / mixed ANOVA / MANOVA helpers ---------- */
-function ssxy(x,y){const mx=mean(x),my=mean(y);let sxx=0,syy=0,sxy=0;
-  for(let i=0;i<x.length;i++){sxx+=(x[i]-mx)**2;syy+=(y[i]-my)**2;sxy+=(x[i]-mx)*(y[i]-my);}
-  return {sxx,syy,sxy,mx,my,b:sxy/sxx,r:sxy/Math.sqrt(sxx*syy)};}
-function ancova(G){ // G = [{name,x,y}]
-  const k=G.length,N=G.reduce((s,g)=>s+g.y.length,0);
-  const allx=G.flatMap(g=>g.x),ally=G.flatMap(g=>g.y);
-  const T=ssxy(allx,ally);
-  let Wxx=0,Wyy=0,Wxy=0;G.forEach(g=>{const s=ssxy(g.x,g.y);Wxx+=s.sxx;Wyy+=s.syy;Wxy+=s.sxy;});
-  const b=Wxy/Wxx;                                   // pooled within-group slope
-  const SSEw=Wyy-Wxy*Wxy/Wxx, dfE=N-k-1;             // error adjusted for covariate
-  const SSEt=T.syy-T.sxy*T.sxy/T.sxx;                // error ignoring group
-  const SSg=SSEt-SSEw, dfG=k-1;                      // group effect, adjusted
-  const SScv=Wxy*Wxy/Wxx, MSE=SSEw/dfE;
-  const Fg=(SSg/dfG)/MSE, Fc=SScv/MSE;
-  const adj=G.map(g=>mean(g.y)-b*(mean(g.x)-T.mx));
-  const raw=G.map(g=>mean(g.y));
-  return {k,N,b,SSg,dfG,SScv,SSEw,dfE,MSE,Fg,Fc,pG:fSurv(Fg,dfG,dfE),pC:fSurv(Fc,1,dfE),
-          adj,raw,grandX:T.mx,names:G.map(g=>g.name)};}
-function slopesTest(G){ // homogeneity of regression slopes: group x covariate interaction
-  const k=G.length,N=G.reduce((s,g)=>s+g.y.length,0);
-  let Wxx=0,Wyy=0,Wxy=0,SSEsep=0;
-  G.forEach(g=>{const s=ssxy(g.x,g.y);Wxx+=s.sxx;Wyy+=s.syy;Wxy+=s.sxy;SSEsep+=s.syy-s.sxy*s.sxy/s.sxx;});
-  const SSEcommon=Wyy-Wxy*Wxy/Wxx;
-  const SSint=SSEcommon-SSEsep, dfI=k-1, dfE=N-2*k, MSE=SSEsep/dfE;
-  const F=(SSint/dfI)/MSE;
-  return {SSint,dfI,SSEsep,dfE,MSE,F,p:fSurv(F,dfI,dfE),slopes:G.map(g=>ssxy(g.x,g.y).b)};}
-function mixedAnova(rows,t){ // rows = [{g:groupName, y:[t values]}]
-  const groups=[...new Set(rows.map(r=>r.g))],k=groups.length;
-  const all=rows.flatMap(r=>r.y),N=rows.length,G=mean(all);
-  const SStot=all.reduce((s,v)=>s+(v-G)**2,0);
-  const subjMean=rows.map(r=>mean(r.y));
-  const SSbs=t*subjMean.reduce((s,v)=>s+(v-G)**2,0);
-  const gMean=groups.map(gr=>mean(rows.filter(r=>r.g===gr).flatMap(r=>r.y)));
-  const gN=groups.map(gr=>rows.filter(r=>r.g===gr).length);
-  const SSa=groups.reduce((s,gr,i)=>s+t*gN[i]*(gMean[i]-G)**2,0), dfA=k-1;
-  const SSsa=SSbs-SSa, dfSA=N-k;
-  const tMean=[];for(let j=0;j<t;j++)tMean.push(mean(rows.map(r=>r.y[j])));
-  const SSt=N*tMean.reduce((s,v)=>s+(v-G)**2,0), dfT=t-1;
-  let SSat=0;groups.forEach((gr,i)=>{const sub=rows.filter(r=>r.g===gr);
-    for(let j=0;j<t;j++){const cell=mean(sub.map(r=>r.y[j]));SSat+=gN[i]*(cell-gMean[i]-tMean[j]+G)**2;}});
-  const dfAT=(k-1)*(t-1);
-  const SSws=SStot-SSbs, SSts=SSws-SSt-SSat, dfTS=(t-1)*(N-k);
-  const MSsa=SSsa/dfSA, MSts=SSts/dfTS;
-  const Fa=(SSa/dfA)/MSsa, Ft=(SSt/dfT)/MSts, Fat=(SSat/dfAT)/MSts;
-  return {groups,k,t,N,SSa,dfA,Fa,pA:fSurv(Fa,dfA,dfSA),SSsa,dfSA,MSsa,
-          SSt,dfT,Ft,pT:fSurv(Ft,dfT,dfTS),SSat,dfAT,Fat,pAT:fSurv(Fat,dfAT,dfTS),SSts,dfTS,MSts,
-          cell:groups.map(gr=>{const sub=rows.filter(r=>r.g===gr);const o=[];for(let j=0;j<t;j++)o.push(mean(sub.map(r=>r.y[j])));return o;})};}
-function manova2(G){ // one-way MANOVA, two outcomes; exact F via Wilks for p=2
-  const k=G.length,N=G.reduce((s,g)=>s+g.a.length,0);
-  const A=G.flatMap(g=>g.a),B=G.flatMap(g=>g.b),ma=mean(A),mb=mean(B);
-  const sc=(xs,ys,mx,my)=>{let s=0;for(let i=0;i<xs.length;i++)s+=(xs[i]-mx)*(ys[i]-my);return s;};
-  const Taa=sc(A,A,ma,ma),Tbb=sc(B,B,mb,mb),Tab=sc(A,B,ma,mb);
-  let Waa=0,Wbb=0,Wab=0;
-  G.forEach(g=>{const ga=mean(g.a),gb=mean(g.b);Waa+=sc(g.a,g.a,ga,ga);Wbb+=sc(g.b,g.b,gb,gb);Wab+=sc(g.a,g.b,ga,gb);});
-  const detW=Waa*Wbb-Wab*Wab, detT=Taa*Tbb-Tab*Tab, L=detW/detT;
-  const rt=Math.sqrt(L), df1=2*(k-1), df2=2*(N-k-1);
-  const F=((1-rt)/rt)*((N-k-1)/(k-1));
-  return {L,F,df1,df2,p:fSurv(F,df1,df2),
-          a:oneway(G.map(g=>g.a)),b:oneway(G.map(g=>g.b))};}
-
-/* ---------- charts for this week ---------- */
-const MK=['<circle cx="0" cy="0" r="4"/>','<rect x="-3.6" y="-3.6" width="7.2" height="7.2"/>','<path d="M0,-4.4 L4,3 L-4,3 Z"/>'];
-const GC=['var(--teal)','var(--bad)','var(--amber)'];
-function scatterFit(G,xlab,ylab,mode,note){
-  const allx=G.flatMap(g=>g.x),ally=G.flatMap(g=>g.y);
-  const x0=Math.min(...allx),x1=Math.max(...allx),y0=Math.min(...ally),y1=Math.max(...ally);
-  const px=(x1-x0)*.08||1,py=(y1-y0)*.12||1;
-  const X=sc(x0-px,x1+px,86,600),Y=sc(y0-py,y1+py,236,26);
-  let common=null;
-  if(mode==="common"){let Wxx=0,Wxy=0;G.forEach(g=>{const s=ssxy(g.x,g.y);Wxx+=s.sxx;Wxy+=s.sxy;});common=Wxy/Wxx;}
-  let body="",legend="";
-  G.forEach((g,i)=>{
-    body+=g.x.map((v,j)=>`<g transform="translate(${X(v)},${Y(g.y[j])})" fill="${GC[i]}" opacity=".8">${MK[i]}</g>`).join("");
-    const s=ssxy(g.x,g.y),b=mode==="common"?common:s.b,a=s.my-b*s.mx;
-    const lo=Math.min(...g.x),hi=Math.max(...g.x);
-    body+=`<path d="M${X(lo)},${Y(a+b*lo)} L${X(hi)},${Y(a+b*hi)}" fill="none" stroke="${GC[i]}" stroke-width="2.5"/>`;
-    legend+=`<g transform="translate(${96+i*150},18)" fill="${GC[i]}">${MK[i]}</g><text x="${108+i*150}" y="22">${g.name}</text>`;});
-  const yt=ticks(y0-py,y1+py,4).map(v=>`<text x="78" y="${Y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="86" x2="600" y1="${Y(v)}" y2="${Y(v)}"/>`).join("");
-  return vz(640,278,`Scatter plot of ${ylab} against ${xlab} for ${G.map(g=>g.name).join(", ")}, with a fitted line for each group.`,
-    `${legend}${yt}${body}${axis(X,x0-px,x1+px,236,86,600)}<text x="343" y="272" text-anchor="middle">${xlab}</text><text x="18" y="131" transform="rotate(-90 18 131)" text-anchor="middle">${ylab}</text>`,
-    note||(mode==="common"?"One shared slope fitted to every group.":"A separate slope fitted to each group."));
-}
-function interPlotK(cells,series,xlabs,ylab){
-  const all=cells.flat(),lo=Math.min(...all),hi=Math.max(...all),pad=(hi-lo)*.25||1;
-  const Y=sc(lo-pad,hi+pad,224,30),xs=xlabs.map((_,j)=>140+j*(400/Math.max(1,xlabs.length-1)));
-  let body="",legend="";
-  cells.forEach((row,i)=>{
-    body+=`<path d="M${row.map((v,j)=>`${xs[j]},${Y(v)}`).join(" L")}" fill="none" stroke="${GC[i]}" stroke-width="2.5"/>`;
-    body+=row.map((v,j)=>`<g transform="translate(${xs[j]},${Y(v)})" fill="${GC[i]}">${MK[i]}</g>`).join("");
-    legend+=`<g transform="translate(${150+i*150},18)" fill="${GC[i]}">${MK[i]}</g><text x="${162+i*150}" y="22">${series[i]}</text>`;});
-  const yt=ticks(lo-pad,hi+pad,4).map(v=>`<text x="128" y="${Y(v)+4}" text-anchor="end">${v}</text><line class="v-grid" x1="136" x2="560" y1="${Y(v)}" y2="${Y(v)}"/>`).join("");
-  return vz(600,268,`Interaction plot of mean ${ylab} across ${xlabs.join(", ")}, one line for each of ${series.join(", ")}.`,
-    `${legend}${yt}${body}${xlabs.map((l,j)=>`<text x="${xs[j]}" y="250" text-anchor="middle">${l}</text>`).join("")}<text x="18" y="128" transform="rotate(-90 18 128)" text-anchor="middle">${ylab}</text>`,
-    "Each point is a group mean. Parallel lines mean the change was the same on every unit.");
-}
-function meansChart(names,raw,adj,show,ylab){
-  // Compact viewBox on purpose: this figure is read on phones, and a wide viewBox
-  // scales the 12px chart text down to about 6px on a 320px screen.
-  const v=show==="adj"?adj:raw,all=[...raw,...adj];
-  const lo=Math.min(...all),hi=Math.max(...all),pad=Math.max((hi-lo)*1.1,5);
-  const W=360,H=200,L=44,Rt=348,top=42,bot=150;
-  const Y=sc(lo-pad,hi+pad,bot,top),step=(Rt-L)/names.length;
-  const yt=ticks(lo-pad,hi+pad,4).map(t=>`<text x="${L-6}" y="${Y(t)+4}" text-anchor="end">${t}</text><line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/>`).join("");
-  let body="";
-  names.forEach((n,i)=>{const cx=L+step*(i+.5);
-    body+=`<line x1="${cx}" x2="${cx}" y1="${top}" y2="${bot}" stroke="var(--line)" stroke-width="1"/>`;
-    body+=`<g transform="translate(${cx},${Y(v[i])})" fill="${GC[i]}">${MK[i]}</g>`;
-    body+=`<circle cx="${cx}" cy="${Y(v[i])}" r="7.5" fill="none" stroke="${GC[i]}" stroke-width="2.5"/>`;
-    // value label sits ABOVE its marker, centred, on its own band clear of the gridlines
-    body+=`<rect x="${cx-24}" y="${Y(v[i])-26}" width="48" height="15" fill="var(--card)"/>`;
-    body+=`<text class="v-strong" x="${cx}" y="${Y(v[i])-15}" text-anchor="middle">${fx(v[i],1)}</text>`;
-    body+=`<text x="${cx}" y="${bot+20}" text-anchor="middle">${n}</text>`;});
-  return vz(W,H,`Dot chart of ${show==="adj"?"adjusted":"unadjusted"} mean ${ylab} for ${names.join(", ")}: ${names.map((n,i)=>n+" "+fx(v[i],1)).join("; ")}.`,
-    `${yt}${body}<text x="12" y="${(top+bot)/2}" transform="rotate(-90 12 ${(top+bot)/2})" text-anchor="middle">${ylab}</text>`,
-    show==="adj"?"Adjusted means: what each group would average if every patient had started at the same baseline. The axis does not start at zero.":"Unadjusted means: the raw group averages. The axis does not start at zero.");
-}
-
-
-/* ---------- WEEK 8 HELPERS ---------- */
+/* ---------- WEEKS 1 TO 3: SHARED HELPERS ---------- */
+let GEN_OK=0;const GEN_MISS=[];
+function SEED(){return (typeof S!=="undefined"&&S&&S.seed!=null)?S.seed:20260901;}
 function pctile(sorted,p){const n=sorted.length,pos=p*(n+1);if(pos<=1)return sorted[0];if(pos>=n)return sorted[n-1];const k=Math.floor(pos),f=pos-k;return sorted[k-1]+f*(sorted[k]-sorted[k-1]);}
 function median(a){return pctile([...a].sort((x,y)=>x-y),.5);}
-/* dot plot of door-to-needle times with the mean and the median marked */
-function dotPlot(v,o){const W=360,H=196,L=18,Rt=344,base=150,X=sc(0,o.xmax,L,Rt),bin=o.bin||6,stack={};
-  let dots="";[...v].sort((a,b)=>a-b).forEach(t=>{const b=Math.round(t/bin);stack[b]=(stack[b]||0)+1;dots+=`<circle cx="${X(b*bin)}" cy="${base-5-(stack[b]-1)*7}" r="3" class="v-dot"/>`;});
-  const m=mean(v),md=median(v);
-  const ticksX=ticks(0,o.xmax,6).map(t=>`<line class="v-axis" x1="${X(t)}" x2="${X(t)}" y1="${base}" y2="${base+5}"/><text x="${X(t)}" y="${base+18}" text-anchor="middle">${t}</text>`).join("");
-  return vz(W,H,`Dot plot of ${v.length} door-to-needle times in minutes. Median ${fx(md,1)}, mean ${fx(m,1)}. Longest ${Math.max(...v)}.`,
-    `<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>${ticksX}${dots}
-     <line x1="${X(md)}" x2="${X(md)}" y1="10" y2="${base}" stroke="var(--teal)" stroke-width="2.5"/><text x="${X(md)+6}" y="20" class="v-altlab">median ${fx(md,1)}</text>
-     <line x1="${X(m)}" x2="${X(m)}" y1="28" y2="${base}" stroke="var(--amber)" stroke-width="2.5" stroke-dasharray="5 3"/><text x="${X(m)+6}" y="40" class="v-reflab">mean ${fx(m,1)}</text>
-     <text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">Minutes from arrival to treatment</text>`,o.cap);}
-/* a simple power bar for the hands-on */
-function powerBar(pw){const W=360,H=58,L=10,Rt=350,X=v=>L+(Rt-L)*v;
-  return vz(W,H,`Power ${Math.round(pw*100)}%: the chance of detecting a real effect of this size.`,
-    `<rect x="${L}" y="12" width="${Rt-L}" height="18" rx="4" fill="var(--line)"/><rect x="${L}" y="12" width="${Math.max(2,X(pw)-L)}" height="18" rx="4" fill="${pw>=.8?"var(--teal)":"var(--amber)"}"/>
-     <line x1="${X(.8)}" x2="${X(.8)}" y1="6" y2="36" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 3"/><text x="${X(.8)}" y="50" text-anchor="middle">80% target</text>`);}
+function pct(x,d){return fx(100*x,d==null?1:d)+"%";}
+/* box plot numbers: whiskers end at the most extreme values that are not outliers; outliers are drawn beyond them */
+function boxStats(v){const s=[...v].sort((a,b)=>a-b),q1=pctile(s,.25),md=pctile(s,.5),q3=pctile(s,.75),iqr=q3-q1,lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+  const inn=s.filter(x=>x>=lo&&x<=hi);return {s,n:s.length,q1,md,q3,iqr,wLo:inn[0],wHi:inn[inn.length-1],outs:s.filter(x=>x<lo||x>hi),min:s[0],max:s[s.length-1]};}
+function skewness(v){const m=mean(v),n=v.length,s=sdv(v);return n/((n-1)*(n-2))*v.reduce((a,x)=>a+((x-m)/s)**3,0);}
+function round1(x){return Math.round(x*10)/10;}
 
-/* ============================================================
-   CASES
-   ============================================================ */
-function case1(R,level){ // Marion Farrow, State Department of Health (guest): sampling, scales, designs
-  const strat=!level;
-  const scaleRows=[["unit","4B, 5A, 6B, 7B","u"],["fall_injury","none, minor, major","ord"],["falls_per_1000","0 to 12.4","ratio"],["room_temp_F","68 to 75 °F","int"],["age","19 to 97 years","age"]];
-  const scaleFb={u:{tag:"scale_confusion",fb:"Nominal: unit names are categories with no order."},
-    ord:level?{tag:"scale_confusion",fb:"Ordinal: none &lt; minor &lt; major has an order, but the steps aren't equal amounts, so it isn't interval."}:{tag:"correct",fb:"Ordinal: none &lt; minor &lt; major has an order, but the steps between them aren't equal amounts. Averaging them would be meaningless."},
-    ratio:{tag:"scale_confusion",fb:"Ratio: zero means no falls at all, so 4 is truly twice 2."},
-    int:level?{tag:"correct",fb:"Interval: a 5-degree gap means the same everywhere, but 0 °F isn't \"no temperature,\" so 70 °F isn't twice as warm as 35 °F."}:{tag:"scale_confusion",fb:"Interval: equal gaps, but no true zero. It does have order, though, and equal steps, so it's more than ordinal."},
-    age:{tag:"scale_confusion",fb:"Ratio: age has a true zero, so 80 is twice 40."}};
-  const designRows=level?[
-    {label:"The NSAID study",options:[{t:"Dr. Ruiz's NSAID study was a case-control study,",tag:"correct"},{t:"Dr. Ruiz's NSAID study was a cohort study,",tag:"design_confusion",fb:"A cohort starts from people without the outcome and follows them forward. This study started from people who had already had a heart attack and looked back at their NSAID use. That's case-control."}]},
-    {label:"The knee protocol",options:[{t:"and Marcus's knee protocol was a before-and-after study with no control group.",tag:"correct"},{t:"and Marcus's knee protocol was a randomized controlled trial.",tag:"design_confusion",fb:"Nobody was randomized and there was no control group: the same patients, before and after."}]}]
-   :[
-    {label:"The BP trial",options:[{t:"Dr. Ruiz's BP trial was a randomized controlled trial,",tag:"correct"},{t:"Dr. Ruiz's BP trial was a cohort study,",tag:"design_confusion",fb:"Patients were randomly assigned to drug or placebo. That makes it an experiment."}]},
-    {label:"The NSAID study",options:[{t:"and her NSAID study was a case-control study.",tag:"correct"},{t:"and her NSAID study was a randomized trial.",tag:"design_confusion",fb:"Nobody was assigned to take NSAIDs. The study started from heart attack patients and looked back."}]}];
-  return {id:"c1",npc:"farrow",title:"How did you choose these charts?",
-    scene:"Ms. Farrow writes your name at the top of a fresh page and underlines it, twice. She smiles. Her pen does not.",
-    message:`<p>Let's start with your falls audit: 120 charts. ${strat?"Your quality team drew them, and I've read their sampling notes. Ask me what the notes say, then name the sample in your audit log.":"I chose them myself this time. Ask me how, then write it in your audit log."}</p>`,
-    steps:[
-      {id:"c1s1",label:"Naming the sample",type:"interview",prompt:"Ask Ms. Farrow how the charts were drawn, then write it up for her audit log.",
-       hint:["Ask how the charts were chosen and why. Listen for whether charts were drawn within every unit, or whole units were picked.",strat?"Charts were drawn at random within each of the 8 units, so every unit is represented. That's stratified random sampling.":"Whole units were drawn at random, and every chart on those units was taken. That's cluster sampling."],
-       thread:["Ask me anything about how these charts were chosen."],
-       questions:[
-        {q:"How were the charts chosen?",a:strat?"Your quality team split the discharge list by unit, then drew 15 charts at random from each of the 8 units.":"I numbered your 8 units, drew 4 of them at random, and pulled every falls chart from those 4 units.",key:true},
-        {q:"Why do it that way?",a:strat?"A small unit like 4B would barely show up in one big random draw. This way every unit is represented.":"Pulling every chart from a few units is far cheaper than visiting all eight.",key:true},
-        {q:"Did every chart have a chance to be picked?",a:strat?"Yes, within its own unit.":"Yes. Every unit had the same chance, and every chart on a chosen unit is in.",key:true},
-        {q:"Is the state taking over Riverbend?",a:"Not today. Ask me again in December.",key:false}],
-       slots:[
-        {label:"The sample",options:strat?[{t:"That's a stratified random sample: charts were drawn at random within every unit,",tag:"correct"},{t:"That's a simple random sample: charts were drawn from one big list,",tag:"sampling_confusion",fb:"Here the list was split by unit first, then charts were drawn within each unit. That's stratified."},{t:"That's a cluster sample: whole units were taken,",tag:"sampling_confusion",fb:"A cluster sample takes everyone in a few chosen groups. Here charts were drawn within every unit."}]
-          :[{t:"That's a cluster sample: whole units were drawn at random, and every chart on them was taken,",tag:"correct"},{t:"That's a stratified random sample: charts were drawn within every unit,",tag:"sampling_confusion",fb:"Stratified would draw some charts from every unit. Here 4 whole units were picked."},{t:"That's a simple random sample: charts were drawn from one big list,",tag:"sampling_confusion",fb:"Here whole units were picked first, not charts from one list."}]},
-        {label:"Why",options:[{t:strat?"so even a small unit like 4B is represented.":"which is cheaper than visiting all eight units.",tag:"correct"},{t:"which guarantees the sample matches the hospital exactly.",tag:"sampling_confusion",fb:"No random sample guarantees that. It makes big differences unlikely, not impossible."}]}],
-       okFb:strat?"Stratify when every group must be represented; draw at random within each one.":"Cluster sampling picks whole groups at random. It's cheaper, but charts within a cluster tend to resemble each other."},
-      {id:"c1s2",label:"Measurement scales",type:"point",
-       narr:"She turns the falls audit sheet around to face you and waits, pen perfectly still.",
-       show:tbl("Falls audit sheet: variables","Example values as recorded",["Variable","Example values"],scaleRows.map(r=>[pk(r[0],r[2]),r[1]])),
-       prompt:level?"Ms. Farrow: \"One of these has equal gaps but no true zero: interval, not ratio. Show me which.\"":"Ms. Farrow: \"Your report averages one of these. I never accept an average of an ordinal variable.\" Point to the ordinal one.",
-       hint:level?["Interval and ratio both have equal gaps. The difference is whether zero means \"none at all.\"","Room temperature in °F has equal gaps, but 0 °F isn't \"no temperature.\" It's interval, not ratio."]:["Ordinal means ordered categories with unequal or unknown gaps between them.","fall_injury (none, minor, major) is ordered, but \"major\" isn't a fixed amount more than \"minor.\""],
-       picks:scaleFb},
-      {id:"c1s3",label:"Study designs",type:"reply",channel:"chat",narr:"She flips to two yellow tabs in her binder, one for each study.",
-       show:`<div class="art art-memo"><span class="sr">Binder tabs: </span><dl class="memo-head"><dt>Binder</dt><dd>Riverbend studies, this fall</dd></dl>${level
-         ?`<p><strong>NSAID study (Dr. Ruiz, Cardiology).</strong> The team picked a group of heart attack patients and twice as many similar patients who had not had one, then asked everyone whether they had taken NSAIDs regularly.</p><p><strong>Knee protocol (Marcus, Rehab).</strong> Marcus recorded knee pain in his knee-replacement patients at their first and last visits on his new exercise protocol. Every patient got the protocol; there was no comparison group.</p>`
-         :`<p><strong>BP trial (Dr. Ruiz, Cardiology).</strong> 80 patients with high blood pressure were randomly assigned to a new drug or a placebo, and their blood pressure was measured again after 8 weeks.</p><p><strong>NSAID study (Dr. Ruiz, Cardiology).</strong> The team picked a group of heart attack patients and twice as many similar patients who had not had one, then asked everyone whether they had taken NSAIDs regularly.</p>`}</div>`,
-       prompt:"Ms. Farrow wants a design named for each study in her binder. Read the two tabs, then build your answer.",
-       hint:["For each study, check whether anyone assigned the treatment, and whether the study started from the outcome.","Assigned at random: a randomized controlled trial. Started from the outcome and looked back: case-control. The same patients before and after, with no control group: a before-and-after study."],
-       thread:["Two studies from this fall. Name each design for me, please."],
-       slots:designRows,
-       okFb:level?"Started from the outcome and looked back: case-control. The same patients before and after, with no control group: a before-and-after (quasi-experimental) design that can show change, not cause.":"Someone assigned the treatment: experiment. Nobody did: observational. Started from the outcome and looked back: case-control."}],
-    outro:g=>g("c1s1")==="correct"
-      ?{ok:true,title:"Ms. Farrow makes a note",text:'<em>She writes one short word in the margin. It looks like a good one.</em> "Precise. I wish every hospital answered like that."'}
-      :{ok:false,title:"Ms. Farrow makes a note",text:'<em>She writes something longer in the margin.</em> "We got there. I\'ll note that the second answer was correct."'},
-    takeaway:"Name a sample by how it was drawn, a variable by what its numbers can do, and a study by who decided the exposure."};
-}
+/* histogram. o: {lo,hi,bw,xlab,lines:[{v,lab,cls}],cap,hl:fn(binStart)} */
+function histo(v,o){const W=360,H=o.h||196,L=34,Rt=348,base=H-40,nb=Math.round((o.hi-o.lo)/o.bw),cnt=Array(nb).fill(0);
+  v.forEach(x=>{let b=Math.floor((x-o.lo)/o.bw);b=Math.max(0,Math.min(nb-1,b));cnt[b]++;});
+  const ymax=Math.max(...cnt),yt=ticks(0,ymax,4),ytop=Math.max(ymax,yt[yt.length-1]),X=sc(o.lo,o.hi,L,Rt),Y=sc(0,ytop,base,14);
+  let g=yt.map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${t}</text>`).join("");
+  cnt.forEach((c,i)=>{const x0=o.lo+i*o.bw;if(c)g+=`<rect x="${X(x0)+.5}" y="${Y(c)}" width="${Math.max(1,X(x0+o.bw)-X(x0)-1)}" height="${base-Y(c)}" fill="${o.hl&&o.hl(x0)?"var(--amber)":"var(--teal)"}" opacity=".85"/>`;});
+  g+=axis(X,o.lo,o.hi,base,L,Rt);
+  (o.lines||[]).forEach((l,i)=>{g+=`<line x1="${X(l.v)}" x2="${X(l.v)}" y1="${10+i*16}" y2="${base}" stroke="${l.cls==="v-reflab"?"var(--amber)":l.cls==="v-t1lab"?"var(--bad)":"var(--ink)"}" stroke-width="2.5" ${l.dash?'stroke-dasharray="5 3"':""}/><text x="${X(l.v)+(l.left?-5:5)}" y="${20+i*16}" text-anchor="${l.left?"end":"start"}" class="${l.cls||"v-strong"}">${l.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">${o.xlab}</text>`;
+  const top=cnt.indexOf(ymax);
+  return vz(W,H,o.label||`Histogram of ${v.length} values of ${o.xlab}. The tallest bar is ${fx(o.lo+top*o.bw,o.bw<1?1:0)} to ${fx(o.lo+(top+1)*o.bw,o.bw<1?1:0)}.${(o.lines||[]).map(l=>" "+l.lab.replace(/<[^>]+>/g,"")+".").join("")}`,g,o.cap);}
 
-function case2(R,level){ // Dr. Nair: describing skewed data, outliers, and what a confidence interval says
-  let v,n,s,q1,q3,iqr,fence,top,m,md,sd,lo,hi;
-  for(let k=0;k<800;k++){
-    n=2*R.int(19,22)+1;v=[];
-    for(let i=0;i<n-4;i++)v.push(Math.round(Math.exp(R.normal(Math.log(48),.22))));
-    for(let i=0;i<3;i++)v.push(R.int(76,118));
-    v.push(R.int(175,240));
-    s=[...v].sort((a,b)=>a-b);q1=pctile(s,.25);q3=pctile(s,.75);iqr=q3-q1;fence=q3+1.5*iqr;top=s.slice(-5);
-    m=mean(v);md=median(v);sd=sdv(v);const t=tinv(.975,n-1),se=sd/Math.sqrt(n);lo=m-t*se;hi=m+t*se;
-    const above=top.filter(x=>x>fence),firstAbove=top.findIndex(x=>x>fence);
-    if(above.length>=2&&firstAbove>=1&&top.every(x=>Math.abs(x-fence)>=2)&&new Set(top).size===5&&m-md>=4&&lo<60&&hi>60&&s[0]>=q1-1.5*iqr)break;}
-  const fz=x=>Number.isInteger(Math.round(x*100)/10)?fx(x,1):fx(x,2);
-  const first=top.find(x=>x>fence);
-  const below=s.filter(x=>x<=fence),wHi=Math.max(...below),wLo=s[0],outs=s.filter(x=>x>fence);
-  const sumTbl=tbl("Box plot summary","Door-to-needle time, minutes. Outliers are times outside the whiskers.",["Statistic","Minutes"],
-    [["Q1 (25th percentile)",fx(q1,1)],["Median (50th percentile)",fx(md,1)],["Q3 (75th percentile)",fx(q3,1)],["Lower whisker ends at",wLo],["Upper whisker ends at",wHi],["Outliers",outs.join(", ")]]);
-  const box=(()=>{const W=360,H=150,L=16,Rt=344,xmax=Math.ceil((Math.max(...v)+10)/50)*50,X=sc(0,xmax,L,Rt),y0=56,y1=86,ym=(y0+y1)/2;
-    let g=`<line class="v-axis" x1="${L}" x2="${Rt}" y1="118" y2="118"/>`+ticks(0,xmax,6).map(t=>`<line class="v-axis" x1="${X(t)}" x2="${X(t)}" y1="118" y2="123"/><text x="${X(t)}" y="136" text-anchor="middle">${t}</text>`).join("");
-    g+=`<line x1="${X(wLo)}" x2="${X(q1)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(q3)}" x2="${X(wHi)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/>`;
-    g+=`<line x1="${X(wLo)}" x2="${X(wLo)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(wHi)}" x2="${X(wHi)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/>`;
-    g+=`<rect x="${X(q1)}" y="${y0}" width="${X(q3)-X(q1)}" height="${y1-y0}" fill="var(--teal-wash)" stroke="var(--teal)" stroke-width="2"/><line x1="${X(md)}" x2="${X(md)}" y1="${y0}" y2="${y1}" stroke="var(--teal)" stroke-width="3"/>`;
-    g+=`<text x="${X(wLo)}" y="${ym+24}" text-anchor="middle">${wLo}</text><text x="${X(wHi)}" y="${ym-14}" text-anchor="middle" class="v-strong">${wHi}</text>`;
-    outs.forEach((o,i)=>{g+=`<circle cx="${X(o)}" cy="${ym+(i%2?7:-7)}" r="5" fill="none" stroke="var(--bad)" stroke-width="2"/>`;});
-    g+=`<text x="${X(Math.max(...outs))}" y="${ym-18}" text-anchor="end" class="v-t1lab">outliers</text>`;
-    return vz(W,H,`Box plot of ${n} door-to-needle times. Q1 ${fx(q1,1)}, median ${fx(md,1)}, Q3 ${fx(q3,1)}. Whiskers end at ${wLo} and ${wHi} minutes. ${outs.length} outliers outside the whiskers, drawn as circles: ${outs.join(", ")} minutes.`,g,
-      "Box: Q1 to Q3, with the median inside. Lines on each side: the whiskers, ending at the numbers shown. Circles: outliers, outside the whiskers.");})();
-  const k=v.filter(x=>x>fence).length;
-  const errSent=level?`In 95% of future quarters, our mean door-to-needle time will fall between ${fx(lo,1)} and ${fx(hi,1)} minutes.`
-    :`There is a 95% chance that our true mean door-to-needle time lies between ${fx(lo,1)} and ${fx(hi,1)} minutes.`;
-  const longest=Math.max(...v),second=s[n-2];
-  return {id:"c2",npc:"nair",title:"Page four of the annual report",
-    scene:"Dr. Nair is pacing when you arrive. The annual report lies open on her desk, page four flagged with three sticky notes.",
-    message:`<p>The surveyor is reading the door-to-needle section of this year's report. ${n} patients. She asked why we quote the median, and she circled one sentence. Help!</p>`,
-    steps:[
-      {id:"c2s1",label:"Mean or median?",type:"reply",channel:"chat",narr:"She stops mid-step. \"The median! Is quoting the median bad? Tell me it isn't bad!\"",
-       show:`<div class="slider"><label for="longest">What if the longest case had taken <strong id="lonlab">${longest}</strong> minutes?</label><input type="range" id="longest" min="${second}" max="300" step="1" value="${longest}"><p id="mmlab" class="where" aria-live="polite"></p></div><div id="dotviz"></div>`,
-       init:()=>{const sl=document.getElementById("longest"),draw=()=>{const w=+sl.value,vv=[...v];vv[vv.indexOf(longest)]=w;
-           document.getElementById("lonlab").textContent=w;
-           document.getElementById("dotviz").innerHTML=dotPlot(vv,{xmax:300,cap:"Each dot is one patient. Solid line: median. Dashed line: mean."});
-           document.getElementById("mmlab").textContent=`Mean ${fx(mean(vv),1)} minutes, median ${fx(median(vv),1)} minutes.`;};
-         sl.addEventListener("input",draw);draw();},
-       prompt:"Ms. Farrow asks why the report leads with the median. Help Dr. Nair answer.",
-       hint:["Drag the slider and watch which line moves. Then look at which side of the plot has the long tail.","The times are right-skewed: a few very long cases. The mean follows them; the median barely moves, so it describes a typical patient better."],
-       thread:["Your report leads with the median, not the mean. Why?"],
-       slots:[
-        {label:"The times",options:[{t:"The times are right-skewed: a few very long cases pull the mean up,",tag:"correct"},{t:"The times are roughly normal, so the mean and median agree,",tag:"skew_confusion",fb:"Look at the dot plot: most times bunch together, with a long tail to the right. Drag the slider and watch the mean move."},{t:"The long cases pull the median up,",tag:"skew_confusion",fb:"Drag the slider: the median hardly moves. The mean does."}]},
-        {label:"So",options:[{t:"so the median describes a typical patient better here.",tag:"correct"},{t:"so the median is always better than the mean.",tag:"skew_confusion",fb:"Not always. For symmetric data the mean works well and uses every value."}]}],
-       okFb:"For skewed data, the median describes the typical patient; the mean is pulled toward the tail."},
-      {id:"c2s2",label:"Outliers",type:"reply",channel:"chat",narr:"Nair circles the dots beyond the upper whisker in red, then hesitates.",show:box+sumTbl,
-       prompt:"Dr. Nair wants to know whether the surveyor is just picking on the longest cases. Build your reply.",
-       hint:["Look at the box plot: find where the upper whisker ends, and the circles beyond it.",`Only times outside the whiskers are outliers; the upper whisker ends at ${wHi} minutes. They're real patients, so they stay in the data, which is why the report leads with the median.`],
-       thread:[`She says ${k} of our times are "outliers." Is she just picking the longest ones?`],
-       slots:[
-        {label:"The rule",options:[{t:`No: a time is an outlier only if it falls outside the box plot's whiskers, and ${k} of ours do,`,tag:"correct"},
-          {t:"Yes: any time over the 60-minute target is an outlier,",tag:"outlier_rule",fb:"The 60-minute target is a goal, not an outlier rule. On a box plot, outliers are the points outside the whiskers."},
-          {t:"Yes: the five longest times always count as outliers,",tag:"outlier_rule",fb:`Only times outside the whiskers count. Here that's ${k}, not five: look for the circles beyond the upper whisker.`}]},
-        {label:"So",options:[{t:"but they're real patients, so they stay in, and that's why we lead with the median.",tag:"correct"},
-          {t:"so we should delete them before the report goes out.",tag:"outlier_rule",fb:"They're real patients. Deleting real data to improve a number isn't honest; leading with the median handles them."}]}],
-       okFb:"An outlier is a point outside the box plot's whiskers, not just a long time. Real patients stay in the data; the median isn't thrown by them."},
-      {id:"c2s3",label:"The circled sentence",type:"spot",show:`<p class="where">The report's door-to-needle summary:</p>${tbl("Descriptives","Door-to-needle time, minutes",["Statistic","Value"],[["N",n],["Mean",fx(m,1)],["Median",fx(md,1)],["Std. Deviation",fx(sd,1)],["95% CI for Mean, Lower",fx(lo,1)],["95% CI for Mean, Upper",fx(hi,1)]])}`,
-       narr:"Nair reads page four aloud, faster and faster, then stops at the third sentence.",
-       prompt:"Dr. Nair: \"She circled the one sentence that's wrong! Which is it?\" Click the sentence that misstates what the 95% confidence interval means.",
-       hint:["One sentence gives the confidence interval a meaning it doesn't have. Read each one that mentions 95%.","A 95% CI doesn't give the probability that the true mean is inside it, and it doesn't predict future means. The 95% describes how often the method captures the true mean over repeated samples."],
-       draftTitle:"Riverbend Stroke Center annual report, page 4 (one sentence is wrong)",
-       draft:[
-        {t:`Median door-to-needle time for our last ${n} patients was ${fx(md,1)} minutes.`,tag:"ci_misread",fb:"That's an accurate summary of the data."},
-        {t:`The mean was ${fx(m,1)} minutes (95% CI ${fx(lo,1)} to ${fx(hi,1)}), pulled up by ${k} unusually long cases.`,tag:"ci_misread",fb:"That reports the interval without claiming what it means. Fine."},
-        {t:errSent,tag:"correct",fb:level?"That's one of the common misconceptions listed in the lecture slides: the interval doesn't predict where future means will fall. The 95% describes the method: across repeated samples, about 95% of intervals built this way contain the true mean.":"That's the classic misreading. The true mean is fixed; it's either in the interval or not. The 95% describes the method: across repeated samples, about 95% of intervals built this way contain the true mean."},
-        {t:"We have not yet shown that our average beats the 60-minute national target.",tag:"ci_misread",fb:`True: the interval runs from ${fx(lo,1)} to ${fx(hi,1)}, which includes 60.`}]}],
-    outro:g=>g("c2s3")==="correct"
-      ?{ok:true,title:"Dr. Nair fixes page four",text:'<em>Nair is already typing before you finish.</em> "Found it before she finished reading! I\'m rewriting that sentence right now!"'}
-      :{ok:false,title:"Dr. Nair fixes page four",text:'<em>Nair groans into her hands, then sits up straight.</em> "That sentence has been in every report for three years. Not anymore!"'},
-    takeaway:"Describe skewed data with the median, flag outliers as points outside the box plot's whiskers, and say only what a confidence interval says: the 95% belongs to the method."};
-}
+/* horizontal box plots, one per group. Whisker ends are labeled; outliers are circles beyond them. */
+function boxPlots(groups,o){const W=360,rowH=o.rowH||64,top=10,H=top+rowH*groups.length+46,L=o.L||70,Rt=346,X=sc(o.lo,o.hi,L,Rt),base=H-38;
+  let g=axis(X,o.lo,o.hi,base,L,Rt)+`<text x="${(L+Rt)/2}" y="${H-2}" text-anchor="middle">${o.xlab}</text>`;const say=[];
+  if(o.ref!=null)g+=`<line class="v-ref" x1="${X(o.ref)}" x2="${X(o.ref)}" y1="${top}" y2="${base}"/><text x="${X(o.ref)+4}" y="${top+10}" class="v-reflab">${o.refLab||""}</text>`;
+  groups.forEach((gr,i)=>{const b=boxStats(gr.v),ym=top+i*rowH+rowH/2,y0=ym-12,y1=ym+12;
+    if(gr.name)g+=`<text x="${L-8}" y="${ym+4}" text-anchor="end" class="v-strong">${gr.name}</text>`;
+    g+=`<line x1="${X(b.wLo)}" x2="${X(b.q1)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(b.q3)}" x2="${X(b.wHi)}" y1="${ym}" y2="${ym}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    g+=`<line x1="${X(b.wLo)}" x2="${X(b.wLo)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/><line x1="${X(b.wHi)}" x2="${X(b.wHi)}" y1="${ym-8}" y2="${ym+8}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    g+=`<rect x="${X(b.q1)}" y="${y0}" width="${Math.max(1,X(b.q3)-X(b.q1))}" height="${y1-y0}" fill="var(--teal-wash)" stroke="var(--teal)" stroke-width="2"/><line x1="${X(b.md)}" x2="${X(b.md)}" y1="${y0}" y2="${y1}" stroke="var(--teal)" stroke-width="3"/>`;
+    if(o.whiskLab)g+=`<text x="${X(b.wLo)}" y="${ym+24}" text-anchor="middle">${o.fmt?o.fmt(b.wLo):b.wLo}</text><text x="${X(b.wHi)}" y="${ym-15}" text-anchor="middle" class="v-strong">${o.fmt?o.fmt(b.wHi):b.wHi}</text>`;
+    b.outs.forEach((x,k)=>{g+=`<circle cx="${X(x)}" cy="${ym+(k%2?6:-6)}" r="4.5" fill="none" stroke="var(--bad)" stroke-width="2"/>`;});
+    const f=o.fmt||(x=>x);say.push(`${gr.name?gr.name+": ":""}median ${f(b.md)}, box from ${f(b.q1)} to ${f(b.q3)}, whiskers end at ${f(b.wLo)} and ${f(b.wHi)}${b.outs.length?`, ${b.outs.length} outlier${b.outs.length>1?"s":""} beyond the whiskers (${b.outs.map(f).join(", ")})`:", no outliers"}`);});
+  return vz(W,H,`Box plot of ${o.xlab}. ${say.join(". ")}.`,g,o.cap===undefined?"Box: the middle half of the values (Q1 to Q3), with the median inside. Whiskers: the lines on each side. Circles: outliers, outside the whiskers.":o.cap);}
 
-function case3(R,level){ // Marcus: which ANOVA? (repeated measures at entry level, mixed design when advanced)
-  const weeks=["Week 0","Week 6","Week 12"],n=level?10:12,progs=["Standard","Intensive"];
-  let rows,mx;
-  for(let k=0;k<600;k++){
-    rows=[];const gains=level?[[0,18,32],[0,42,78]]:[[0,28,51]];
-    (level?progs:["All"]).forEach((g,gi)=>{for(let i=0;i<n;i++){const b=R.normal(330,60);rows.push({g,y:gains[gi].map(d=>Math.round(b+d+R.normal(0,16)))});}});
-    mx=mixedAnova(rows,3);
-    if(level?(mx.pT<.001&&mx.pAT<.02&&mx.pAT>.0005):(mx.pT<.001))break;}
-  const within=tbl("Tests of Within-Subjects Effects","Dependent variable: 6-minute walk distance (m)",["Source","Sum of Squares","df","Mean Square","F","Sig."],
-    level?[["Visit",fx(mx.SSt,1),mx.dfT,fx(mx.SSt/mx.dfT,1),pk(fx(mx.Ft,3),"fv"),pk(fP(mx.pT),"sigv")],
-           ["Visit × Program",fx(mx.SSat,1),mx.dfAT,fx(mx.SSat/mx.dfAT,1),pk(fx(mx.Fat,3),"fvp"),pk(fP(mx.pAT),"sigvp")],
-           ["Error(Visit)",fx(mx.SSts,1),mx.dfTS,fx(mx.MSts,1),"",""]]
-         :[["Visit",fx(mx.SSt,1),pk(mx.dfT,"dfv"),fx(mx.SSt/mx.dfT,1),pk(fx(mx.Ft,3),"fv"),pk(fP(mx.pT),"sigv")],
-           ["Error(Visit)",fx(mx.SSts,1),mx.dfTS,fx(mx.MSts,1),"",""]]);
-  const between=level?tbl("Tests of Between-Subjects Effects","",["Source","Sum of Squares","df","Mean Square","F","Sig."],
-    [["Program",fx(mx.SSa,1),mx.dfA,fx(mx.SSa/mx.dfA,1),pk(fx(mx.Fa,3),"fp"),pk(fP(mx.pA),"sigp")],["Error",fx(mx.SSsa,1),mx.dfSA,fx(mx.MSsa,1),"",""]]):"";
-  const vars=[["patient_id","Patient ID","ID"],["visit","Visit (week 0, 6 or 12)","categorical",3],["walk_m","6-minute walk distance (m)","numeric"],["age","Age (years)","numeric"],["sex","Sex","categorical",2]];
-  if(level)vars.splice(1,0,["program","Rehab program (standard or intensive)","categorical",2]);
-  const progMeans=mx.cell.map(r=>mean(r)),pSig=mx.pA<.05;
-  const picks=level?{sigp:{tag:"correct",fb:`That's the main effect of program: ${pT(mx.pA)}. Averaged across all three visits, intensive patients walked ${fx(progMeans[1],0)} m and standard patients ${fx(progMeans[0],0)} m. ${pSig?"That overall difference is significant.":"That overall difference isn't significant: the data don't show a difference in average walking distance between the programs."} The Visit × Program interaction is significant too (${pT(mx.pAT)}), so the gap between programs isn't the same at every visit; report the two together.`},
-      fp:{tag:"output_misread",fb:"That's the F for program. The Sig. beside it is what you compare with 0.05."},
-      sigvp:{tag:"interaction_misread",fb:"That's the Visit × Program interaction: whether the programs changed walking by different amounts over the 12 weeks. Ms. Farrow asked about overall walking distance, averaged across the visits."},
-      fvp:{tag:"interaction_misread",fb:"That's the F for the Visit × Program interaction, about whether the change over time differed. She asked about the programs overall."},
-      sigv:{tag:"main_effect_only",fb:"That's the main effect of visit: change over time, averaged across both programs. She asked about the programs."},
-      fv:{tag:"main_effect_only",fb:"That's the F for visit, the change over time. She asked about the programs."}}
-    :{sigv:{tag:"correct",fb:`${pT(mx.pT)}, below 0.05. Mean walking distance differs across at least two of the visits.`},
-      fv:{tag:"output_misread",fb:"F is the test statistic. The Sig. beside it is what you compare with 0.05."},
-      dfv:{tag:"output_misread",fb:"That's the degrees of freedom: 3 visits minus 1."}};
-  return {id:"c3",npc:"marcus",title:"Which analysis, and why?",
-    scene:"Marcus is coiling resistance bands when you come in. \"One of my patients walked to the parking lot on Friday,\" he says. \"First time in a year. Pull up a stool.\"",
-    message:`<p>The surveyor wants to see the analysis behind my walk-test numbers. ${level?`Two programs this year, standard and intensive, ${n} patients each, everyone tested at weeks 0, 6 and 12.`:`${n} patients, each tested at weeks 0, 6 and 12.`} ${level?"Set it up so I can show her.":"Set it up again so I can show her."}</p>`,
-    viz:interPlotK(mx.cell,level?progs:["All patients"],weeks,"Mean walk distance (m)").replace("Parallel lines mean the change was the same on every unit.",level?"Each point is a group mean. Parallel lines would mean both programs changed by the same amount.":"Each point is the mean of all patients at that visit."),
-    steps:[
-      {id:"c3s1",label:"Setting up the analysis",type:"build",prompt:"Set up Marcus's analysis from his whiteboard, then run it.",
-       hint:[`Your notes list ${vars.length} variables. Ask which number is being compared, which groupings the question is about, and whether the same people appear more than once.`,level?"Walk distance is the outcome. Visit and program are both factors, and the same patients walked at every visit, so yes, people were measured more than once: a mixed design ANOVA.":"Walk distance is the outcome and visit is the factor. The same patients walked at every visit, so yes, people were measured more than once: a repeated measures ANOVA."],
-       spec:{mode:"anova",outcome:"walk_m",factors:level?["program","visit"]:["visit"],repeated:true,vars,
-        msgs:{ignore_dependence:"The same patients walked at weeks 0, 6 and 12. Treating the visits as separate groups of people throws away that pairing.",
-              extra_factor:level?"Marcus's question is about visits and the two programs. Sex isn't part of it.":"Marcus's question is about change across visits. Sex isn't part of it.",
-              lose_factor_structure:"You're missing a factor Marcus asked about. Check his whiteboard: two programs, three visits."},
-        ok:level?"One factor measured within patients (visit), one between them (program): a mixed design ANOVA.":"One factor measured within the same patients: a one-way repeated measures ANOVA."}},
-      {id:"c3s2",label:"Reading the output",type:"point",show:within+between,
-       narr:"Marcus leans over your shoulder and squints. \"That's a lot of numbers for 'she walks farther now.'\"",
-       prompt:level?"Marcus: \"She asked a simple one: averaging over all three visits, do intensive patients walk a different distance than standard patients? Which number answers that?\"":"Marcus: \"She wants one number that says my patients walk farther over time. Which one do I show her?\"",
-       hint:level?["\"Averaging over all three visits\" means one factor on its own: program. Program compares different groups of patients, so look in the between-subjects table.","Click the Sig. value on the Program row, in Tests of Between-Subjects Effects. That's the main effect of program."]:["Find the Visit row. Only one of its numbers is compared with α = 0.05.",`Click the Sig. value on the Visit row (${pT(mx.pT)}).`],
-       picks}],
-    outro:g=>g("c3s1")==="correct"
-      ?{ok:true,title:"Marcus shows his work",text:'<em>Marcus gives you a thumbs-up, a resistance band still looped around his wrist.</em> "Same patients, three visits, and now I can say why that matters. She actually nodded."'}
-      :{ok:false,title:"Marcus shows his work",text:'<em>Marcus shrugs and grins.</em> "Second setup was the right one. I\'ll show her that one."'},
-    takeaway:"Count the outcomes, count the factors, and ask whether the same people were measured more than once: that picks the member of the ANOVA family."};
-}
+/* vertical bar chart for categories, labeled with counts and percentages */
+function barChart(names,counts,o){o=o||{};const W=360,H=o.h||200,L=10,Rt=350,base=H-44,n=names.length,bw=(Rt-L)/n,tot=counts.reduce((a,b)=>a+b,0),mx=Math.max(...counts)*1.18,Y=sc(0,mx,base,10);
+  let g=`<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>`;
+  names.forEach((nm,i)=>{const x=L+i*bw,c=counts[i];g+=`<rect x="${x+bw*.18}" y="${Y(c)}" width="${bw*.64}" height="${base-Y(c)}" rx="2" fill="${o.hi===i?"var(--amber)":"var(--teal)"}" opacity=".88"/>`+
+    `<text x="${x+bw/2}" y="${Y(c)-5}" text-anchor="middle" class="v-strong">${o.pctOnly?pct(c/tot,0):c}</text>`+
+    nm.split("|").map((t,k)=>`<text x="${x+bw/2}" y="${base+15+k*13}" text-anchor="middle">${t}</text>`).join("");});
+  return vz(W,H,`Bar chart of ${o.lab||"counts"}: ${names.map((nm,i)=>nm.replace("|"," ")+" "+counts[i]+" ("+pct(counts[i]/tot,0)+")").join("; ")}.`,g,o.cap);}
 
-function case4(R,level){ // Dana: what a p-value means, errors and power (her Week 4 pilot design returns)
-  const d=SEASON.danaN>=180?0.3:0.4;
-  return {id:"c4",npc:"dana",title:"The teach-back report",
-    scene:"Dana has two folders on her desk, each with a yellow sticky note in the surveyor's handwriting. She hasn't sat down since six.",
-    message:"<p>She stopped at the p-value line in my teach-back report, then asked about the sepsis pilot. I'd like to get both right this time.</p>",
-    steps:[
-      {id:"c4s1",label:"What p = .03 means",type:"reply",channel:"chat",narr:"She slides the report across. One sentence is highlighted, and she can't quite look at it.",
-       show:`<div class="art art-memo"><span class="sr">Printed report excerpt: </span><dl class="memo-head"><dt>From</dt><dd>Dana Okafor, RN</dd><dt>Re</dt><dd>Teach-back pilot results</dd></dl><p>Patients taught with teach-back scored higher on the medication knowledge test than patients taught the standard way (p = .03, α = 0.05). <mark>This means there is only a 3% chance that teach-back doesn't work.</mark></p></div>`,
-       prompt:"Help Dana rewrite the highlighted sentence. Build your reply.",
-       hint:["A p-value is calculated assuming the null hypothesis is true. Ask what that assumption lets it describe.","p = .03: if teach-back made no difference, a gap at least this large would turn up about 3% of the time. That's evidence against H₀, not the probability that H₀ is true."],
-       thread:["She says my sentence is \"the most common mistake in the state.\" What should it say?"],
-       slots:[
-        {label:"p = .03 means",options:[{t:"If teach-back made no difference, a gap at least this large would happen only about 3% of the time.",tag:"correct"},{t:"There's a 3% chance teach-back doesn't work.",tag:"p_as_prob_null",fb:"That's the sentence she circled. A p-value assumes teach-back makes no difference, so it can't be the chance that it makes no difference."},{t:"Teach-back works for 97% of patients.",tag:"p_misread",fb:"A p-value says nothing about how many patients benefit."}]},
-        {label:"So",options:[{t:"That's evidence that teach-back helps, not proof.",tag:"correct"},{t:"That proves teach-back works.",tag:"proof_overclaim",fb:"It's evidence, not proof. With α = 0.05 we accept up to a 5% false-positive risk."}]}],
-       okFb:"A p-value is about the data, assuming H₀ is true. It is never the probability that H₀ is true."},
-      {id:"c4s2",label:"Will the pilot catch it?",type:"reply",channel:"email",subject:"Re: sepsis pilot plan",narr:"Dana taps the sample size on the plan. \"My nurses are enrolling every one of those patients. I want it to count.\"",
-       show:`<div class="slider"><p><strong>Try it.</strong> The pilot is looking for an effect of size d = ${d}. Change the design and watch the power.</p>
-         <label for="pn">Patients per group: <strong id="pnlab"></strong></label><input type="range" id="pn" min="10" max="200" step="5">
-         <div class="seg" role="group" aria-label="Significance level"><input type="radio" id="pa1" name="pa" value="0.01"><label for="pa1">α = 0.01</label><input type="radio" id="pa5" name="pa" value="0.05"><label for="pa5">α = 0.05</label><input type="radio" id="pa10" name="pa" value="0.10"><label for="pa10">α = 0.10</label></div>
-         <div id="pwviz"></div><p id="pwlab" class="where" aria-live="polite"></p></div>`,
-       init:()=>{const N0=SEASON.danaN||100,A0=SEASON.danaA||.05,sl=document.getElementById("pn");sl.value=N0;
-         const a0=document.querySelector(`input[name="pa"][value="${A0===0.1?"0.10":String(A0)}"]`);(a0||document.getElementById("pa5")).checked=true;
-         const draw=()=>{const nn=+sl.value,a=+document.querySelector('input[name="pa"]:checked').value,pw=power2(d,nn,a);
-           document.getElementById("pnlab").textContent=nn;document.getElementById("pwviz").innerHTML=powerBar(pw);
-           document.getElementById("pwlab").textContent=`Power ${Math.round(pw*100)}%: the chance of detecting a real effect of this size. Type II error risk: ${100-Math.round(pw*100)}%. Type I error risk: ${Math.round(a*100)}%.`+(PLAYED(4)&&nn===N0&&a===A0?" (Your Week 4 design.)":"");};
-         sl.addEventListener("input",draw);document.querySelectorAll('input[name="pa"]').forEach(e=>e.addEventListener("change",draw));draw();},
-       prompt:"Ms. Farrow emailed Dana a question about the sepsis pilot. Build the reply.",
-       hint:["Move the slider down and watch what power does. Then name the error that low power makes likely.","Low power risks a Type II error: missing an alert that really works. Its chance is 1 − power. Adding patients raises power without raising α, the false-positive risk."],
-       thread:["If your sepsis pilot finds no significant difference, what error should worry you most, and how did you guard against it?"],
-       slots:[
-        {label:"The worry",options:[{t:"The worry is a Type II error: missing an alert that really works. Its chance is 1 − power,",tag:"correct"},{t:"The worry is a Type I error: missing an alert that really works. Its chance is α,",tag:"errors_confusion",fb:"Missing a real effect is a Type II error, with chance 1 − power. A Type I error is a false alarm, with chance α."}]},
-        {label:"The guard",options:[{t:"so the pilot enrolls enough patients for high power.",tag:"correct"},{t:"so we raised α to 0.10 to get more power.",tag:"alpha_power",fb:"That raises power, but it doubles the false-alarm risk. Adding patients is the safer lever."}]}],
-       okFb:"Plan for power before collecting data. More patients raise power without raising the false-positive risk."}],
-    outro:g=>g("c4s1")==="correct"
-      ?{ok:true,title:"Dana signs off",text:'<em>Dana prints the new sentence and tapes it to her monitor while you watch.</em> "Evidence, not proof, and not \'a 3% chance.\' My nurses deserve numbers that mean what they say."'}
-      :{ok:false,title:"Dana signs off",text:'<em>Dana crosses out the old sentence, hard.</em> "I\'ve been writing that wrong for years. Not anymore."'},
-    takeaway:"A p-value assumes H₀ is true; it is not the probability that H₀ is true. Low power risks a Type II error, and sample size is the safest way to raise power."};
-}
-const CORE=[case1,case2,case3,case4];
+/* a normal (or t) curve with an optional shaded area. o: {mu,sd,lo,hi,shade:[a,b],xlab,marks:[{v,lab}],df,cap,label} */
+function curve(o){const W=360,H=o.h||176,L=14,Rt=346,base=H-40,X=sc(o.lo,o.hi,L,Rt),dens=x=>{const z=(x-o.mu)/o.sd;return Math.exp(-z*z/2);},Y=sc(0,1.08,base,8);
+  const pts=[];for(let k=0;k<=160;k++){const x=o.lo+(o.hi-o.lo)*k/160;pts.push([X(x),Y(dens(x))]);}
+  let g="";
+  if(o.shade){const [a,b]=o.shade,sp=[];for(let k=0;k<=120;k++){const x=Math.max(o.lo,a)+(Math.min(o.hi,b)-Math.max(o.lo,a))*k/120;sp.push(`${X(x)},${Y(dens(x))}`);}
+    g+=`<polygon class="v-shade" points="${X(Math.max(o.lo,a))},${base} ${sp.join(" ")} ${X(Math.min(o.hi,b))},${base}"/>`;}
+  g+=`<polyline class="v-curve" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+  g+=`<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>`;
+  (o.ticks||[]).forEach(t=>{g+=`<line class="v-axis" x1="${X(t.v)}" x2="${X(t.v)}" y1="${base}" y2="${base+5}"/><text x="${X(t.v)}" y="${base+17}" text-anchor="middle" ${t.strong?'class="v-strong"':""}>${t.lab}</text>`;});
+  (o.marks||[]).forEach(m=>{g+=`<line x1="${X(m.v)}" x2="${X(m.v)}" y1="${Y(dens(m.v))-4}" y2="${base}" stroke="var(--amber)" stroke-width="2.5"/><text x="${X(m.v)+(m.left?-5:5)}" y="${Math.max(14,Y(dens(m.v))-8)}" text-anchor="${m.left?"end":"start"}" class="v-reflab">${m.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-4}" text-anchor="middle">${o.xlab}</text>`;
+  return vz(W,H,o.label,g,o.cap);}
 
-/* ---------- optional consult: Dr. Ruiz, standard error and an inconclusive interval ---------- */
-function expertCase(){
-  return {id:"e1",npc:"ruiz",title:"Why was the pilot so small?",
-    scene:"Dr. Ruiz has written \"n ≈ 15\" on a sticky note and stuck it, accusingly, to her monitor.",
-    message:"<p>The surveyor asked why my pilot had only about 15 patients per arm. I want to answer with something better than \"budget.\" Two questions for you.</p>",
-    steps:[
-      {id:"e1s1",label:"More patients",prompt:"The full trial had many more patients per arm than the pilot, with its 15 or so per arm. What did that do to the standard error of the mean?",
-       hint:"The standard error measures how much a sample mean would bounce around from sample to sample.",
-       options:[
-        {t:"It got smaller, so the trial's estimate is more precise",tag:"correct",fb:"More patients, smaller standard error, narrower confidence interval. That's why the pilot's interval was so wide."},
-        {t:"It got larger, because there's more data to vary",tag:"clt_confusion",fb:"More patients make the mean steadier, not shakier."},
-        {t:"It stayed the same, because the patients are just as varied",tag:"clt_confusion",fb:"The spread of the patients stays about the same, but the standard error of the mean shrinks as n grows."}]},
-      {id:"e1s2",label:"The pilot's interval",show:tbl("Pilot results","New drug minus placebo, change in systolic BP (mmHg)",["Statistic","Value"],[["Mean difference (drug − placebo; negative = BP fell more on the drug)","−4.4"],["95% CI, lower","−11.6"],["95% CI, upper","2.8"]]),
-       prompt:"Dr. Ruiz: \"The surveyor read my pilot's interval and asked what it shows. What do I say?\"",
-       hint:"Check whether 0, meaning no difference, is inside the interval, and whether a meaningful reduction is inside it too.",
-       options:[
-        {t:"It's inconclusive: the interval includes 0 (no effect) and also reductions big enough to matter",tag:"correct",fb:"Exactly. A pilot this small can't settle it either way, which is why the full trial was needed."},
-        {t:"The drug doesn't work, because the interval includes 0",tag:"ci_misread",fb:"Including 0 means \"no effect\" can't be ruled out. It doesn't show there is no effect: reductions of up to 11.6 mmHg are in the interval too."},
-        {t:"The drug works, because most of the interval is below 0",tag:"ci_misread",fb:"The interval still includes 0, so \"no effect\" can't be ruled out."}]}],
-    outro:g=>g("e1s1")==="correct"
-      ?{ok:true,title:"Dr. Ruiz has her answer",text:'<em>Dr. Ruiz peels the \"n = 15\" note off her monitor and drops it in the bin.</em> "Too few patients, too wide an interval, so we ran the full trial. That is the answer I wanted."'}
-      :{ok:false,title:"Dr. Ruiz has her answer",text:'<em>Dr. Ruiz writes it down.</em> "More patients, narrower interval. I knew that once."'},
-    takeaway:"More patients shrink the standard error and narrow the confidence interval. An interval that includes 0 and also meaningful effects is inconclusive."};
-}
+/* a grid of people, colored by group: [{n,cls,lab}] */
+function people(groups,o){o=o||{};const per=o.per||20,r=6,gap=17,tot=groups.reduce((a,g)=>a+g.n,0),rows=Math.ceil(tot/per),W=per*gap+12,H=rows*gap+12;let k=0,g="";
+  groups.forEach(gr=>{for(let i=0;i<gr.n;i++,k++){const x=8+(k%per)*gap+r,y=8+Math.floor(k/per)*gap+r;g+=gr.ring?`<circle cx="${x}" cy="${y}" r="${r-1}" fill="${gr.fill}" stroke="${gr.ring}" stroke-width="2.5"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="${gr.fill}"/>`;}});
+  return vz(W,H,o.label||groups.map(gr=>gr.n+" "+gr.lab).join(", ")+".",g,o.cap);}
 
-/* ---------- reviews with Jordan ---------- */
-const JR=(id,title,msg,steps,take)=>({id,npc:"jordan",title,message:`<p>${msg}</p>`,steps,outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."}),takeaway:take});
-const FOLLOWUPS={
- fu_sampling:()=>JR("fu_sampling","Quick review: sampling","Three ways to draw a sample. Two quick ones.",[
-  {id:"fu_s_1",label:"Stratified",prompt:"You split patients by unit, then draw 10 at random from each unit. That's…",hint:"Groups first, then random draws inside every group.",
-   options:[{t:"stratified sampling",tag:"correct",fb:"Right: every stratum is represented."},{t:"cluster sampling",tag:"sampling_confusion",fb:"Cluster sampling picks whole groups and takes everyone in them."},{t:"simple random sampling",tag:"sampling_confusion",fb:"That draws from one list with no grouping."}]},
-  {id:"fu_s_2",label:"Cluster",prompt:"You pick 3 of 12 clinics at random and survey every patient in those 3. That's…",hint:"Whole groups are the sampling unit.",
-   options:[{t:"cluster sampling",tag:"correct",fb:"Right: the clinic is the sampling unit."},{t:"stratified sampling",tag:"sampling_confusion",fb:"Stratified would sample from every clinic."},{t:"a convenience sample",tag:"sampling_confusion",fb:"The clinics were picked at random, not for convenience."}]}],
-  "Stratified: random draws within every group. Cluster: random whole groups, everyone in them."),
- fu_scales:()=>JR("fu_scales","Quick review: measurement scales","Four scales, and what each lets you do.",[
-  {id:"fu_sc_1",label:"Ordinal",prompt:"Pain rated none, mild, moderate, severe is…",hint:"Order, but unknown gaps.",
-   options:[{t:"ordinal",tag:"correct",fb:"Right: ordered categories, unequal gaps."},{t:"interval",tag:"scale_confusion",fb:"Interval needs equal gaps between values."},{t:"nominal",tag:"scale_confusion",fb:"These categories have an order."}]},
-  {id:"fu_sc_2",label:"Ratio",prompt:"Which variable is on a ratio scale?",hint:"A true zero.",
-   options:[{t:"Weight in kg",tag:"correct",fb:"Right: 0 kg means no weight, so 80 kg is twice 40 kg."},{t:"Temperature in °F",tag:"scale_confusion",fb:"0 °F isn't \"no temperature,\" so it's interval."},{t:"Blood type",tag:"scale_confusion",fb:"That's nominal."}]}],
-  "Nominal names, ordinal orders, interval adds equal gaps, ratio adds a true zero."),
- fu_designs:()=>JR("fu_designs","Quick review: study designs","Who decided the exposure, and where did the study start?",[
-  {id:"fu_d_1",label:"Case-control",prompt:"A study starts with 50 patients who had a stroke and 100 who didn't, then asks both groups about past smoking. That's…",hint:"It starts from the outcome.",
-   options:[{t:"a case-control study",tag:"correct",fb:"Right: start from the outcome, look back at exposure."},{t:"a cohort study",tag:"design_confusion",fb:"A cohort starts from people without the outcome and follows them forward."},{t:"a randomized trial",tag:"design_confusion",fb:"Nobody was assigned to smoke."}]},
-  {id:"fu_d_2",label:"Cohort",prompt:"2,000 adults are enrolled, smoking is recorded, and everyone is followed for 10 years to see who has a stroke. That's…",hint:"Exposure first, outcome later.",
-   options:[{t:"a prospective cohort study",tag:"correct",fb:"Right."},{t:"a case-control study",tag:"design_confusion",fb:"That would start from people who already had a stroke."},{t:"a cross-sectional study",tag:"design_confusion",fb:"Cross-sectional is one time point. These people were followed."}]}],
-  "Experiments assign the exposure. Cohorts follow people forward; case-control studies start from the outcome and look back; cross-sectional studies look once."),
- fu_describe:()=>JR("fu_describe","Quick review: describing skewed data","Two quick ones on shape and outliers.",[
-  {id:"fu_ds_1",label:"Mean and median",prompt:"Data are right-skewed. Which is usually true?",hint:"The tail pulls the mean.",
-   options:[{t:"The mean is larger than the median",tag:"correct",fb:"Right: the long right tail pulls the mean up."},{t:"The median is larger than the mean",tag:"skew_confusion",fb:"That's typical of left-skewed data."},{t:"They are equal",tag:"skew_confusion",fb:"That's typical of symmetric data."}]},
-  {id:"fu_ds_2",label:"The whiskers",prompt:"On a box plot, the lower whisker ends at 20 minutes and the upper whisker at 90. Which of these times is an outlier?",hint:"Outliers are the points outside the whiskers.",
-   options:[{t:"95",tag:"correct",fb:"95 is outside the upper whisker (90), so it's an outlier."},{t:"85",tag:"outlier_rule",fb:"85 is inside the whiskers, which run from 20 to 90."},{t:"25",tag:"outlier_rule",fb:"25 is inside the whiskers, which run from 20 to 90."}]}],
-  "For skewed data, report the median. On a box plot, points outside the whiskers are outliers."),
- fu_ci:()=>JR("fu_ci","Quick review: confidence intervals","The most misread number in any report.",[
-  {id:"fu_ci_1",label:"What 95% means",prompt:"A 95% CI for mean BMI is 20 to 25. Which statement is correct?",hint:"The 95% belongs to the method.",
-   options:[{t:"If we sampled again and again, about 95% of intervals built this way would contain the true mean",tag:"correct",fb:"Right."},{t:"There's a 95% chance the true mean is between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed: it's in this interval or it isn't."},{t:"The mean will fall between 20 and 25 in 95% of future samples",tag:"ci_misread",fb:"The interval doesn't predict future sample means."}]},
-  {id:"fu_ci_2",label:"Narrower",prompt:"Which makes a confidence interval narrower?",hint:"Look at the standard error.",
-   options:[{t:"A larger sample",tag:"correct",fb:"Right: the standard error shrinks with √n."},{t:"A higher confidence level",tag:"ci_misread",fb:"99% intervals are wider than 95% intervals."},{t:"More variable data",tag:"ci_misread",fb:"More spread makes it wider."}]}],
-  "A 95% confidence interval comes from a method that captures the true value in about 95% of repeated samples."),
- fu_pvalue:()=>JR("fu_pvalue","Quick review: p-values","Two quick ones on what a p-value can say.",[
-  {id:"fu_pv_1",label:"The definition",prompt:"p = .02 means…",hint:"It's calculated assuming H₀ is true.",
-   options:[{t:"if H₀ were true, results at least this extreme would occur about 2% of the time",tag:"correct",fb:"Right."},{t:"there's a 2% chance H₀ is true",tag:"p_as_prob_null",fb:"A p-value assumes H₀; it can't be the probability of H₀."},{t:"the effect is 2% of the mean",tag:"p_misread",fb:"A p-value isn't an effect size."}]},
-  {id:"fu_pv_2",label:"Failing to reject",prompt:"p = .40 with α = 0.05. What can you say?",hint:"Absence of evidence…",
-   options:[{t:"The data don't give enough evidence against H₀",tag:"correct",fb:"Right: not the same as showing H₀ is true."},{t:"H₀ is proven true",tag:"proof_overclaim",fb:"Failing to reject isn't proof."},{t:"There's a 40% chance the treatment works",tag:"p_as_prob_null",fb:"A p-value isn't the probability of either hypothesis."}]}],
-  "A p-value describes the data assuming H₀ is true. Small p is evidence against H₀; large p is a lack of evidence, not proof of H₀."),
- fu_power:()=>JR("fu_power","Quick review: errors and power","Two errors, one lever.",[
-  {id:"fu_pw_1",label:"Type I",prompt:"A Type I error is…",hint:"A false positive.",
-   options:[{t:"rejecting H₀ when it's true",tag:"correct",fb:"Right: a false positive, with probability α."},{t:"failing to reject H₀ when it's false",tag:"errors_confusion",fb:"That's a Type II error."},{t:"using the wrong test",tag:"errors_confusion",fb:"That's a mistake, but not a Type I error."}]},
-  {id:"fu_pw_2",label:"Raising power",prompt:"Which raises power without raising the Type I error rate?",hint:"Slide: three ways to increase power.",
-   options:[{t:"A larger sample",tag:"correct",fb:"Right."},{t:"Raising α from 0.05 to 0.10",tag:"alpha_power",fb:"That raises power by accepting more false positives."},{t:"Using a two-sided test instead of one-sided",tag:"alpha_power",fb:"That lowers power for a directional effect."}]}],
-  "α is the false-positive risk; 1 − power is the false-negative risk. A larger sample raises power without raising α."),
- fu_choose8:()=>JR("fu_choose8","Quick review: choosing the test","Same three questions every time.",[
-  {id:"fu_c8_1",label:"Same people",prompt:"Pain scores for the same 20 patients before and after surgery.",hint:"Two measurements, same people.",
-   options:[{t:"Paired t test",tag:"correct",fb:"Right."},{t:"Independent-samples t test",tag:"ignore_dependence",fb:"The same patients were measured twice."},{t:"One-way ANOVA",tag:"ignore_dependence",fb:"Two related measurements, not separate groups."}]},
-  {id:"fu_c8_2",label:"Groups over time",prompt:"Two programs, each patient in one, everyone measured at 3 visits.",hint:"One factor within people, one between.",
-   options:[{t:"Mixed design ANOVA",tag:"correct",fb:"Right."},{t:"Two-way ANOVA",tag:"ignore_dependence",fb:"That treats the visits as separate people."},{t:"Repeated measures ANOVA",tag:"lose_factor_structure",fb:"That leaves out the program factor."}]}],
-  "Count the outcomes and factors, then ask whether the same people were measured more than once.")
-};
-const FU_MAP={sampling_confusion:"fu_sampling",scale_confusion:"fu_scales",design_confusion:"fu_designs",skew_confusion:"fu_describe",outlier_rule:"fu_describe",
-  ci_misread:"fu_ci",clt_confusion:"fu_ci",p_as_prob_null:"fu_pvalue",p_misread:"fu_pvalue",proof_overclaim:"fu_pvalue",threshold_misread:"fu_pvalue",
-  errors_confusion:"fu_power",alpha_power:"fu_power",
-  outcome_misread:"fu_choose8",id_as_factor:"fu_choose8",numeric_as_factor:"fu_choose8",no_factor:"fu_choose8",no_design:"fu_choose8",false_repeated:"fu_choose8",ignore_dependence:"fu_choose8",lose_factor_structure:"fu_choose8",extra_factor:"fu_choose8",covariate_categorical:"fu_choose8",
-  output_misread:"fu_choose8",main_effect_only:"fu_choose8",interaction_misread:"fu_choose8"};
+/* SPSS-style crosstab: o.rows, o.cols, o.T, o.stats ("count","row","col","tot"), o.labels, o.pick(i,stat,j)->key */
+function crosstab(o){const T=o.T,r=T.map(row=>row.reduce((s,v)=>s+v,0)),c=T[0].map((_,j)=>T.reduce((s,row)=>s+row[j],0)),N=r.reduce((s,v)=>s+v,0);
+  const lab=Object.assign({count:"Count",row:`% within ${o.rowVar}`,col:`% within ${o.colVar}`,tot:"% of Total"},o.labels||{});
+  const val=(i,s,j)=>{const cnt=i<0?(j<0?N:c[j]):(j<0?r[i]:T[i][j]),rt=i<0?N:r[i],ct=j<0?N:c[j];
+    return s==="count"?String(cnt):s==="row"?pct(cnt/rt):s==="col"?pct(cnt/ct):pct(cnt/N);};
+  const cell=(i,s,j)=>{const v=val(i,s,j),k=o.pick?o.pick(i,s,j):null;if(!k)return v;
+    const rn=i<0?"Total":o.rows[i],cn=j<0?"Total":o.cols[j];
+    return `<button class="pick" data-pick="${k}" aria-label="${rn}, ${lab[s].replace(/"/g,"")}, ${o.colVar} ${cn}: ${v}">${v}</button>`;};
+  const block=(i,name)=>o.stats.map((s,k)=>`<tr${k===0?' class="grp"':''}>${k===0?`<th scope="rowgroup" rowspan="${o.stats.length}">${name}</th>`:""}<th scope="row" class="stat">${lab[s]}</th>${o.cols.map((_,j)=>`<td>${cell(i,s,j)}</td>`).join("")}<td>${cell(i,s,-1)}</td></tr>`).join("");
+  return `<figure class="output"><figcaption>${o.title}${o.note?`<span class="out-note">${o.note}</span>`:""}</figcaption><div class="scroll"><table class="xt"><thead><tr><th scope="col" rowspan="2">${o.rowVar}</th><th scope="col" rowspan="2"><span class="sr">Statistic</span></th><th scope="colgroup" colspan="${o.cols.length}">${o.colVar}</th><th scope="col" rowspan="2">Total</th></tr><tr>${o.cols.map(cn=>`<th scope="col">${cn}</th>`).join("")}</tr></thead><tbody>${o.rows.map((nm,i)=>block(i,nm)).join("")}${block(-1,"Total")}</tbody></table></div></figure>`;}
 
-/* ---------- the notes in each room: objects, not dictionaries ---------- */
+/* a dark "screen" showing dashboard tiles: [[title,value,sub,warn]] */
+function dash(tiles,cap){return `<div class="art art-dash"><span class="sr">Dashboard screen: </span><p class="dash-bar">RIVERBEND ED &middot; LIVE DASHBOARD${cap?` &middot; ${cap}`:""}</p><div class="dash-grid">${tiles.map(t=>`<div class="dash-tile${t[3]?" warn":""}"><span class="dash-t">${t[0]}</span><b>${t[1]}</b>${t[2]?`<span class="dash-s">${t[2]}</span>`:""}</div>`).join("")}</div></div>`;}
+
+/* ---------- notes in each room ---------- */
 function peekOf(i,l){try{return CORE[i](coreRng(i),l).peek;}catch(e){return CORE[i](makeRng(4242+i),l).peek;}}
 function sheetArt(P,key){return `<figure class="art art-sheet"><figcaption class="sheet-bar"><span class="sheet-file">${P.file}</span><span>first ${P.rows.length} of ${P.total} rows</span></figcaption>
   <div class="scroll"><table><thead><tr><th class="rn" scope="col"><span class="sr">Row</span>1</th>${P.cols.map(c=>`<th scope="col">${c.replace(/_/g,"_<wbr>")}</th>`).join("")}</tr></thead>
@@ -1016,103 +931,86 @@ function sheetArt(P,key){return `<figure class="art art-sheet"><figcaption class
 const stickyArt=(txt,sig,tilt)=>`<div class="art art-sticky" style="--tilt:${tilt||-1.5}deg"><span class="sr">Sticky note: </span><p class="hand">${txt}</p>${sig?`<p class="hand sig">&mdash; ${sig}</p>`:""}</div>`;
 const WBS='stroke="#1D3F95" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"';
 const WBT='fill="#1D3F95" font-family="Patrick Hand,Marker Felt,Chalkboard SE,cursive"';
-/* eight units as boxes of charts; the drawn charts are filled */
-function sampleSketch(strat){const names=["4B","5A","5B","6A","6B","7A","7B","8A"],pick=[1,3,4,6];let out="";
-  names.forEach((nm,i)=>{const x=8+(i%4)*82,y=10+Math.floor(i/4)*70,chosen=strat||pick.includes(i);
-    out+=`<rect x="${x}" y="${y}" width="74" height="56" rx="5" ${WBS}/><text x="${x+6}" y="${y+16}" font-size="13" ${WBT}>${nm}</text>`;
-    for(let k=0;k<12;k++){const cx=x+12+(k%6)*10,cy=y+28+Math.floor(k/6)*14,fill=strat?(k%4===1||k%4===2):chosen;
-      out+=`<rect x="${cx-3.5}" y="${cy-5}" width="7" height="10" rx="1" ${fill?'fill="#B0261E" stroke="#B0261E"':'fill="none" stroke="#1D3F95"'} stroke-width="1.2"/>`;}});
-  return `<svg viewBox="0 0 340 152" role="img" aria-label="Sketch of eight units, each a box of charts. ${strat?"In every unit, some charts are marked as drawn.":"In four of the units every chart is marked as drawn; the other four have none marked."}">${out}</svg>`;}
-function walkSketch(level){return `<svg viewBox="0 0 340 ${level?130:92}" role="img" aria-label="Diagram: ${level?"two programs, standard and intensive, each with its own patients; ":""}every patient walks at week 0, week 6 and week 12.">
-  ${(level?["Standard","Intensive"]:["Every patient"]).map((g,i)=>{const y=14+i*56;return `<text x="8" y="${y+22}" font-size="14" ${WBT}>${g}</text>`+[0,6,12].map((w,j)=>`<rect x="${118+j*74}" y="${y}" width="58" height="36" rx="6" ${WBS}/><text x="${147+j*74}" y="${y+23}" text-anchor="middle" font-size="13" ${WBT}>wk ${w}</text>`+(j<2?`<path d="M${178+j*74} ${y+18} H${190+j*74} M${185+j*74} ${y+13} L${190+j*74} ${y+18} L${185+j*74} ${y+23}" ${WBS}/>`:"")).join("");}).join("")}</svg>`;}
-const CLUES=[
- {idx:0,id:"f_notice",name:"Survey notice",x:9,y:6,html:l=>`
-  <div class="art art-memo"><span class="sr">Printed notice: </span><dl class="memo-head"><dt>From</dt><dd>State Department of Health</dd><dt>To</dt><dd>Riverbend Quality Office</dd><dt>Re</dt><dd>Practice survey: documents requested</dd></dl>
-   <p>Falls audit sample (120 charts) and audit sheet &middot; Stroke Center annual report &middot; rehabilitation outcome analysis &middot; teach-back report and sepsis pilot plan.</p></div>
-  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>FALLS AUDIT: 120 CHARTS</h3>${sampleSketch(!l)}<p class="mk mk-red">${l?"Drawn charts in red":"Drawn charts in red: 15 per unit"}</p></div>
-  ${stickyArt("She's two months early. Be honest, be specific, and don't guess.","H.B.",1.6)}`},
- {idx:1,id:"n_report",name:"Annual report",x:5,y:3,html:l=>{return `
-  <div class="art art-memo coffee"><span class="sr">Printed report: </span><dl class="memo-head"><dt>Report</dt><dd>Stroke Center annual report</dd><dt>Status</dt><dd>Published</dd></dl>
-   <p>Page 4: door-to-needle times. Median, mean, a 95% confidence interval, and one sentence about what the interval means.</p></div>
-  ${stickyArt("The surveyor circled something on page 4!! Can you look before she finishes?","P.N.",-1.8)}`;}},
- {idx:2,id:"m_board",name:"Walk test board",x:9,y:3,html:l=>{return `
-  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>6-MINUTE WALK TESTS</h3>${walkSketch(l)}<p class="mk mk-red">Same patients at every visit${l?"; one program each":""}</p></div>
-  ${stickyArt("Surveyor wants to know WHICH analysis and WHY.","Marcus",2)}
-  <p class="where">Variables in the file: patient_id, ${l?"program, ":""}visit, walk_m (meters walked in 6 minutes), age, sex.</p>`;}},
- {idx:3,id:"d_plan",name:"Pilot plan",x:6,y:12,html:()=>`
-  <div class="art art-flyer"><span class="sr">Pinned plan: </span><p class="flyer-title">Sepsis alert pilot: plan</p><p class="flyer-sub">${PLAYED(4)?"Designed in Week 4, with your help":"Designed this fall"}</p>
-   <p>H<sub>0</sub>: the alert doesn't change time to antibiotics. <strong>${SEASON.danaN} patients per group</strong>, <strong>α = ${AL(SEASON.danaA)}</strong>.</p></div>
-  ${stickyArt("Surveyor stopped at my p-value line in the teach-back report. Then asked for THIS.","Dana",-2)}`}
-];
-(()=>{const g={};CLUES.forEach(c=>{(g[c.idx]=g[c.idx]||[]).push(c);});const out=Object.values(g).map(list=>({...list[0],html:l=>list.map(c=>c.html(l)).join('<hr style="border:0;border-top:1px solid var(--line);margin:.6rem 0">')}));CLUES.length=0;out.forEach(c=>CLUES.push(c));})();
+function mergeClues(){const g={};CLUES.forEach(c=>{(g[c.idx]=g[c.idx]||[]).push(c);});const out=Object.values(g).map(list=>({...list[0],html:l=>list.map(c=>c.html(l)).join('<hr style="border:0;border-top:1px solid var(--line);margin:.6rem 0">')}));CLUES.length=0;out.forEach(c=>CLUES.push(c));}
 function roomClues(idx){return CLUES.filter(c=>c.idx===idx);}
 
-/* ---------- the analysis builder (ANOVA family), as in Week 6 ---------- */
-function analysisName(b,vars,spec){const f=b.factors,cv=b.covs||[];
-  if(!f.length)return cv.length?"No analysis (no factor chosen)":"No analysis (no factor chosen)";
-  if(cv.length)return f.length===1?"ANCOVA":"Two-way ANCOVA";
-  if(f.length===1){const lv=(vars.find(v=>v[0]===f[0])||[])[3]||3;return b.repeated?"One-way repeated measures ANOVA":lv===2?"Independent-samples t test":"One-way ANOVA";}
-  return b.repeated?"Mixed design ANOVA":"Two-way ANOVA";}
-/* ---------- builder feedback: one verdict and one reason per row ---------- */
-function shortName(p){const n=p.name.split(",")[0];return n.startsWith("Dr.")?"Dr. "+n.split(" ").pop():n.split(" ")[0];}
-function buildReason(type,want,got,F,nm){
-  if(want===""){
-    if(got==="outcome")return `isn't the measurement ${nm} is asking about.`;
-    if(got==="factor"){if(type==="ID")return `is just an ID label, so it can't be a ${F}.`;if(type==="numeric")return `is a number, and a ${F} has to be a grouping.`;return `isn't part of ${nm}'s question.`;}
-    if(type==="ID")return "is just an ID label, so there's nothing to hold constant.";
-    if(type==="categorical")return "is a grouping, and a covariate has to be a number measured beforehand.";
-    return "isn't the measurement that differed between the groups at the start.";}
-  if(want==="outcome"){if(got==="")return `is the measurement ${nm} wants to compare, so it's the outcome.`;if(got==="factor")return `is the number being compared, so it's the outcome, not a ${F}.`;return "is the later measurement being compared, so it's the outcome.";}
-  if(want==="factor"){if(got==="")return `is part of ${nm}'s question, so it belongs in the analysis as a ${F}.`;if(got==="outcome")return "is a grouping, not the number being compared.";return `is a grouping, so it's a ${F}, not a covariate.`;}
-  if(got==="")return "was measured before treatment and differs between the groups, so it needs holding constant as a covariate.";
-  if(got==="factor")return "is a number, so it goes in as a covariate, not a factor.";
-  return "was measured at the start; the outcome is the later measurement.";}
-function designReason(want,got,tmode){
-  if(got==null)return "<strong>Design question:</strong> it needs an answer too.";
-  const D="<strong>Design question:</strong> ";
-  if(tmode){
-    if(want==="same")return D+(got==="groups"?"each patient appears at both visits, so these aren't two separate groups of people.":"there's no fixed target value here; the comparison is between two visits by the same patients.");
-    if(want==="groups")return D+(got==="same"?"each patient was in only one group, so nobody was measured twice.":"there are two groups to compare, not one group against a fixed value.");
-    return D+"there's one group of patients, compared with a fixed target value.";}
-  return D+(want==="yes"?"the same people were measured more than once.":"each person was in one group only, so nobody was measured more than once.");}
-function evalBuild(spec,b){
-  const type=v=>(spec.vars.find(x=>x[0]===v)||[])[2];
-  const cv=b.covs||[];
-  if(b.outcomes.length!==1||b.outcomes[0]!==spec.outcome)return "outcome_misread";
-  if(spec.mode==="ancova"){
-    if(b.factors.some(f=>type(f)==="ID"))return "id_as_factor";
-    if(b.factors.some(f=>type(f)==="numeric"))return "numeric_as_factor";
-    if(!b.factors.length)return "no_factor";
-    if(cv.some(c=>type(c)==="ID"))return "id_as_covariate";
-    if(cv.some(c=>type(c)==="categorical"))return "covariate_categorical";
-    if(!cv.length)return "no_covariate";
-    if(cv.length!==spec.covs.length||!spec.covs.every(c=>cv.includes(c)))return "wrong_covariate";
-    if(b.factors.length!==spec.factors.length||!spec.factors.every(f=>b.factors.includes(f)))return "extra_factor";
-    return "correct";}
-  if(cv.length)return "covariate_categorical";
-  if(b.factors.some(f=>type(f)==="ID"))return "id_as_factor";
-  if(b.factors.some(f=>type(f)==="numeric"))return "numeric_as_factor";
-  if(!b.factors.length)return "no_factor";
-  if(b.repeated===null)return "no_design";
-  if(b.repeated!==spec.repeated)return spec.repeated?"ignore_dependence":"false_repeated";
-  const want=spec.factors,have=b.factors;
-  if(have.length<want.length&&have.every(f=>want.includes(f)))return "lose_factor_structure";
-  if(have.length!==want.length||!want.every(f=>have.includes(f)))return "extra_factor";
-  return "correct";}
-const BUILD_MSG={outcome_misread:"Pick exactly one outcome: the numeric measurement the team wants to compare. Check your notes.",
-  id_as_factor:"An ID number just labels people or beds; it isn't a grouping the team is comparing.",
-  numeric_as_factor:"A factor is a categorical grouping. That variable is numeric.",
-  no_factor:"You need at least one factor: the grouping being compared.",
-  no_design:"Answer the design question: was anyone measured more than once?",
-  false_repeated:"Check your notes: was anyone actually in more than one group?",
-  ignore_dependence:"Check your notes: are these separate people, or the same people measured again?",
-  lose_factor_structure:"You're missing a factor the team asked about. Check the questions in your notes.",
-  extra_factor:"That factor wasn't part of the team's question. Check your notes.",
-  no_covariate:"Nothing is holding the pre-treatment measurement constant, so a difference that was there before treatment will still be in the comparison.",
-  covariate_categorical:"A covariate is a numeric variable. A categorical grouping belongs in the factor role.",
-  id_as_covariate:"An ID number just labels people; it isn't a measurement worth holding constant.",
-  wrong_covariate:"That isn't the measurement that differs between the groups at the start. Check your notes."};
+/* ---------- reviews with Jordan ---------- */
+const JR=(id,title,msg,steps,take)=>({id,npc:"jordan",title,message:`<p>${msg}</p>`,steps,outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."}),takeaway:take});
 
+/* ---------- the builder, weeks 1 to 3: every row gets a choice from spec.roles; spec.want holds the right ones ---------- */
+function analysisName(b,vars,spec){return spec.name||"Your setup";}
+function shortName(p){const n=p.name.split(",")[0];return n.startsWith("Dr.")?"Dr. "+n.split(" ").pop():n.split(" ")[0];}
+function buildReason(type,want,got,F,nm,v,spec){if(!got)return "still needs a choice.";return (spec&&spec.why&&spec.why[v])||"doesn't fit. Check your notes.";}
+function designReason(want,got,tmode,spec){const lab=(spec&&spec.designLab)||"Design question";
+  if(got==null)return `<strong>${lab}:</strong> it needs an answer too.`;return `<strong>${lab}:</strong> ${(spec&&spec.designWhy)||"check your notes."}`;}
+function evalBuild(spec,b){const roles=b.roles||{};
+  for(const v of spec.vars){const got=roles[v[0]]||"",want=spec.want[v[0]]||"";if(got===want)continue;if(!got)return "no_choice";return spec.tagOf?spec.tagOf(v[0],want,got):"build_wrong";}
+  if(!spec.noDesign){if(b.repeated===null)return "no_design";if(b.repeated!==spec.repeated)return spec.designTag||"design_wrong";}
+  return "correct";}
+const BUILD_MSG={no_choice:"Every row needs a choice before it can run.",no_design:"Answer the last question too.",build_wrong:"Some rows don't fit. Check your notes.",design_wrong:"Check the last question against your notes."};
+
+/* ---------- WEEKS 9 AND 10: REGRESSION HELPERS ---------- */
+function matInv(A){const n=A.length,M=A.map((r,i)=>[...r,...A.map((_,j)=>i===j?1:0)]);
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];
+    const d=M[c][c];for(let k=0;k<2*n;k++)M[c][k]/=d;
+    for(let r=0;r<n;r++)if(r!==c){const f=M[r][c];if(f)for(let k=0;k<2*n;k++)M[r][k]-=f*M[c][k];}}
+  return M.map(r=>r.slice(n));}
+/* ordinary least squares: y on the columns in X (an intercept is added). Returns everything SPSS prints. */
+function ols(y,X){const n=y.length,p=X.length,rows=y.map((_,i)=>[1,...X.map(c=>c[i])]),k=p+1;
+  const XtX=Array.from({length:k},(_,a)=>Array.from({length:k},(_,b)=>rows.reduce((s,r)=>s+r[a]*r[b],0)));
+  const Xty=Array.from({length:k},(_,a)=>rows.reduce((s,r,i)=>s+r[a]*y[i],0));
+  const inv=matInv(XtX),b=inv.map(r=>r.reduce((s,v,j)=>s+v*Xty[j],0));
+  const yhat=rows.map(r=>r.reduce((s,v,j)=>s+v*b[j],0)),res=y.map((v,i)=>v-yhat[i]),my=mean(y);
+  const SST=y.reduce((s,v)=>s+(v-my)**2,0),SSE=res.reduce((s,v)=>s+v*v,0),SSR=SST-SSE,dfR=p,dfE=n-p-1,MSE=SSE/dfE,MSR=SSR/dfR,F=MSR/MSE;
+  const se=b.map((_,j)=>Math.sqrt(MSE*inv[j][j])),t=b.map((v,j)=>v/se[j]),pv=t.map(v=>twoSidedP(v,dfE)),sy=sdv(y);
+  const beta=b.map((v,j)=>j?v*sdv(X[j-1])/sy:null),R2=SSR/SST;
+  const vif=X.map((c,j)=>{if(p<2)return 1;const o=X.filter((_,q)=>q!==j);const r=olsR2(c,o);return 1/(1-r);});
+  const sdh=sdv(yhat),mh=mean(yhat);
+  return {n,p,b,se,t,pv,beta,vif,yhat,res,SST,SSE,SSR,dfR,dfE,MSE,MSR,F,pF:fSurv(F,dfR,dfE),R2,R:Math.sqrt(Math.max(0,R2)),adjR2:1-(1-R2)*(n-1)/dfE,
+    zres:res.map(v=>v/Math.sqrt(MSE)),zpred:yhat.map(v=>(v-mh)/sdh)};}
+function olsR2(y,X){const rows=y.map((_,i)=>[1,...X.map(c=>c[i])]),k=X.length+1;
+  const XtX=Array.from({length:k},(_,a)=>Array.from({length:k},(_,b)=>rows.reduce((s,r)=>s+r[a]*r[b],0))),Xty=Array.from({length:k},(_,a)=>rows.reduce((s,r,i)=>s+r[a]*y[i],0));
+  const inv=matInv(XtX),b=inv.map(r=>r.reduce((s,v,j)=>s+v*Xty[j],0)),my=mean(y);let sse=0,sst=0;
+  y.forEach((v,i)=>{const h=rows[i].reduce((s,x,j)=>s+x*b[j],0);sse+=(v-h)**2;sst+=(v-my)**2;});return 1-sse/sst;}
+function corr(a,b){const ma=mean(a),mb=mean(b);let sab=0,saa=0,sbb=0;a.forEach((v,i)=>{sab+=(v-ma)*(b[i]-mb);saa+=(v-ma)**2;sbb+=(b[i]-mb)**2;});return sab/Math.sqrt(saa*sbb);}
+function corrP(r,n){const t=r*Math.sqrt((n-2)/(1-r*r));return twoSidedP(t,n-2);}
+const money=v=>(v<0?"−$":"$")+Math.round(Math.abs(v)).toLocaleString("en-US"),regT=h=>h.replace('<table>','<table class="reg">'),f3=v=>fx(v,3),fB=v=>Math.abs(v)>=100?fx(v,1):Math.abs(v)>=10?fx(v,2):fx(v,3);
+
+/* SPSS-style regression output. o.pick(key) decides which cells are clickable; keys: r, r2, adj, see, ssr, sse, sst, dfr, dfe, f, pf, and per row j: bj, sej, betaj, tj, pj, tolj, vifj */
+function regTables(m,o){o=o||{};const P=(v,k)=>o.pick&&o.pick(k)?pk(v,(o.prefix||"")+k):v,names=o.names,note=o.note||"",dv=o.dv;
+  const ms=tbl("Model Summary"+(o.tag?` (${o.tag})`:""),`Dependent variable: ${dv}`,["Model","R","R Square","Adjusted R Square","Std. Error of the Estimate"],
+    [["1",P(f3(m.R),"r"),P(f3(m.R2),"r2"),P(f3(m.adjR2),"adj"),P(fB(Math.sqrt(m.MSE)),"see")]]);
+  const an=tbl("ANOVA"+(o.tag?` (${o.tag})`:""),`Dependent variable: ${dv}`,["Model","Sum of Squares","df","Mean Square","F","Sig."],
+    [["Regression",P(fB(m.SSR),"ssr"),P(m.dfR,"dfr"),fB(m.MSR),P(fx(m.F,3),"f"),P(fP(m.pF),"pf")],["Residual",P(fB(m.SSE),"sse"),P(m.dfE,"dfe"),fB(m.MSE),"",""],["Total",P(fB(m.SST),"sst"),m.n-1,"","",""]]);
+  const drop=o.drop||[],keep=["Model","B","Std. Error","Beta","t","Sig."].map(h=>!(h==="Std. Error"&&drop.includes("se"))&&!(h==="Beta"&&drop.includes("beta")));const heads=["Model","B","Std. Error","Beta","t","Sig."].filter((_,i)=>keep[i]).concat(o.vif?["Tolerance","VIF"]:[]);
+  const rows=["(Constant)",...names].map((nm,j)=>[nm,P(fB(m.b[j]),"b"+j),P(fB(m.se[j]),"se"+j),j?P(f3(m.beta[j]),"beta"+j):"",P(fx(m.t[j],3),"t"+j),P(fP(m.pv[j]),"p"+j)].filter((_,i)=>keep[i])
+    .concat(o.vif?(j?[P(f3(1/m.vif[j-1]),"tol"+j),P(fx(m.vif[j-1],3),"vif"+j)]:["",""]):[]));
+  const co=tbl("Coefficients"+(o.tag?` (${o.tag})`:""),`Dependent variable: ${dv}. B is the unstandardized coefficient (in the data's units); Beta is the standardized coefficient.${note?" "+note:""}`,heads,rows);
+  const [a1,a2,a3]=[ms,an,co].map(regT);return {ms:a1,an:a2,co:a3,all:(o.skip||[]).includes("ms")?a2+a3:a1+a2+a3};}
+/* SPSS-style Correlations table: for each variable, Pearson r, two-tailed Sig. and N */
+function corrTable(vars,names,o){o=o||{};const n=vars[0].length,P=(v,k)=>o.pick&&o.pick(k)?pk(v,k):v;
+  const heads=["Variable",""].concat(names);const rows=[];
+  names.forEach((nm,i)=>{const rr=vars.map(v=>corr(vars[i],v));
+    rows.push([nm,"Pearson Correlation",...rr.map((r,j)=>P(i===j?"1":f3(r)+(i!==j&&corrP(r,n)<.01?"**":i!==j&&corrP(r,n)<.05?"*":""),`r${i}${j}`))]);
+    rows.push(["","Sig. (2-tailed)",...rr.map((r,j)=>i===j?"":fP(corrP(r,n)))]);rows.push(["","N",...rr.map(()=>n)]);});
+  return regT(tbl("Correlations",o.note||"",heads,rows)).replace(/<\/figure>$/,`<p class="out-foot">**. Correlation is significant at the 0.01 level (2-tailed).<br>*. Correlation is significant at the 0.05 level (2-tailed).</p></figure>`);}
+
+/* scatterplot, optionally with fitted lines or curves: o.fits = [{f:x=>y, lab, cls}], o.groups = [{x,y,cls,lab}] */
+function scatter(o){const W=360,H=o.h||236,L=44,Rt=346,top=12,base=H-44,X=sc(o.xlo,o.xhi,L,Rt),Y=sc(o.ylo,o.yhi,base,top);
+  let g=ticks(o.ylo,o.yhi,5).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${o.yfmt?o.yfmt(t):t}</text>`).join("")+axis(X,o.xlo,o.xhi,base,L,Rt);
+  if(o.band)g+=`<rect x="${X(o.band[0])}" y="${top}" width="${X(o.band[1])-X(o.band[0])}" height="${base-top}" fill="var(--teal-wash)" opacity=".55"/>`;
+  (o.groups||[{x:o.x,y:o.y}]).forEach((gr,k)=>{gr.x.forEach((xv,i)=>{const cx=X(xv),cy=Y(gr.y[i]);if(cx<L-2||cx>Rt+2||cy<top-2||cy>base+2)return;
+    g+=gr.shape==="sq"?`<rect x="${cx-3}" y="${cy-3}" width="6" height="6" fill="var(--amber)" opacity=".8"/>`:`<circle class="v-dot" cx="${cx}" cy="${cy}" r="${o.r||3}"${gr.ring?' fill="none" stroke="var(--bad)" stroke-width="2"':""}/>`;});});
+  (o.fits||[]).forEach(f=>{const pts=[];const a=f.lo??o.xlo,b=f.hi??o.xhi;for(let k=0;k<=80;k++){const xv=a+(b-a)*k/80,yv=f.f(xv);if(yv>=o.ylo&&yv<=o.yhi)pts.push(`${X(xv)},${Y(yv)}`);}
+    g+=`<polyline points="${pts.join(" ")}" fill="none" stroke="${f.color||"var(--ink)"}" stroke-width="2.5" ${f.dash?'stroke-dasharray="6 4"':""}/>`;
+    if(f.lab){const xv=f.labX??b,yv=f.f(xv);g+=`<text x="${X(xv)-4}" y="${Y(yv)-8}" text-anchor="end" class="${f.cls||"v-strong"}">${f.lab}</text>`;}});
+  (o.marks||[]).forEach(m=>{g+=`<line class="v-ref" x1="${X(m.x)}" x2="${X(m.x)}" y1="${top}" y2="${base}"/>`+(m.y!=null?`<circle cx="${X(m.x)}" cy="${Y(m.y)}" r="6" fill="var(--card)" stroke="var(--amber)" stroke-width="3"/>`:"")+`<text x="${X(m.x)+(m.left?-6:6)}" y="${top+12}" text-anchor="${m.left?"end":"start"}" class="v-reflab">${m.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">${o.xlab}</text><text transform="translate(12,${(top+base)/2}) rotate(-90)" text-anchor="middle">${o.ylab}</text>`;
+  return vz(W,H,o.label,g,o.cap);}
+/* SPSS residual plot: standardized residual against standardized predicted value */
+function residPlot(m,o){o=o||{};const lo=Math.min(-3.5,Math.floor(Math.min(...m.zres))),hi=Math.max(3.5,Math.ceil(Math.max(...m.zres)));
+  return scatter({x:m.zpred,y:m.zres,xlo:-3,xhi:3,ylo:lo,yhi:hi,xlab:"Predicted value (standardized)",ylab:"Residual (standardized)",r:2.6,h:o.h||220,
+    fits:[{f:()=>0,color:"var(--muted)",dash:true}],label:o.label,cap:o.cap||"Residual plot. Each dot is one patient: how far the model's prediction missed (up and down) against the prediction itself (left to right)."});}
 
 /* ============================================================
    HOSPITAL MAP
@@ -1121,13 +1019,13 @@ const COLS=24,ROWS=15,TS=40;
 const ROOMS=[{id:"stroke",name:"Stroke Center",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"rehabc",name:"Rehab Clinic",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"cardio",name:"Cardiology",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
   {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"nursing",name:"Nursing Office",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"finance",name:"Finance Office",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
 const NPCS=[
-  {id:"farrow",room:"Guest desk",x:13,y:6,name:"Marion Farrow",role:"state surveyor (guest)",initials:"MF",color:"#4A63C4",kind:"core",idx:0},
+  {id:"tomas",room:"Research wing",x:21,y:7,name:"Tomás Reyes, RRT",role:"respiratory therapist (guest)",initials:"TR",color:"#4A63C4",kind:"core",idx:0},
   {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director",initials:"PN",color:"#B5572D",kind:"core",idx:1},
   {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead",initials:"MB",color:"#2D6FA3",kind:"core",idx:2},
   {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"nurse manager",initials:"DO",color:"#2F7D4F",kind:"core",idx:3},
   {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist (optional)",initials:"ER",color:"#A33B5A",kind:"expert"},
-  {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
   {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance",initials:"GW",color:"#9A6B12",kind:"cameo"},
+  {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
   {id:"brooks",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
 const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
 const GRID=(()=>{const g=[];for(let y=0;y<ROWS;y++){g.push([]);for(let x=0;x<COLS;x++)g[y].push(x===0||y===0||x===COLS-1||y===ROWS-1?"#":".");}
@@ -1154,7 +1052,7 @@ function signText(){return `Sign-offs ${S.done.length}/4`;}
 
 /* ---------- character feedback (reactions + short play-out on wrong moves) ---------- */
 const REACT_OK={
-  farrow:["Thank you. That's precise.","Good. I'll note that.","That's the answer I was hoping for.","Clear. Moving on."],
+  tomas:["Nice. That's a number I can use.","Oh, that makes sense.","Yeah, that tracks.","Cool. Keep going."],
   nair:["Yes! That's exactly what I needed.","Perfect. I can work with that.","Oh, that's clean. Good.","Right, right. Keep going.","I like how fast you saw that."],
   marcus:["That matches what I see with patients.","Okay, that makes sense to me.","Good. Even I can follow that.","Yep. That's the one.","Huh. The math agrees with the gym."],
   ruiz:["Correct. Precisely.","Yes. That's defensible.","Good. No overreach.","That holds up.","Exactly the careful answer."],
@@ -1164,7 +1062,7 @@ const REACT_OK={
   zhang:["Ah. Yes, that is clearer.","Good. I can explain that to a patient.","Thank you. I would have gotten that wrong.","That is the careful answer. I appreciate it."],
   jordan:["There it is.","Good. That's the idea.","Exactly. You've earned a coffee.","Yes. See how that works?","Nice. You're getting it."]};
 const REACT_NO={
-  farrow:["I'm going to write that down, and not in a good way.","Are you certain? Look again.","That isn't what your own file says.","Would you like to rephrase that?"],
+  tomas:["Hm. That doesn't match what I see at the bedside.","Wait, say that again?","I don't think that's it.","My therapists would argue with that."],
   nair:["Wait, are you sure? That sounds too good.","Hold on. Dr. Brooks would send that back.","Hmm. That doesn't match your notes.","That's not what I expected you to say."],
   marcus:["That doesn't match what I've seen.","Hang on, that can't be right.","Hmm. My patients would disagree.","You lost me there."],
   ruiz:["No. I don't think that holds up.","That's an overreach.","I wouldn't sign that.","Check that again."],
@@ -1247,7 +1145,7 @@ function mapSvg(){
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(GRID[y][x]==="#")s+=`<rect x="${x*TS}" y="${y*TS}" width="${TS}" height="${TS}" class="m-wall"/>`;
   ROOMS.forEach(r=>{const top=r.y0===0;s+=`<text class="m-label" x="${(r.x0+1)*TS+8}" y="${top?(r.y0+1)*TS+22:(r.y0+1)*TS+22}">${r.name}</text>`;
 });
-  s+=`<text class="m-label" x="${4*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text><rect class="m-deco" x="${12*TS}" y="${6*TS+4}" width="${3*TS}" height="10" rx="4"/><text class="m-name" x="${13*TS+20}" y="${8*TS+28}" text-anchor="middle" opacity=".7">Guest desk</text>`;
+  s+=`<text class="m-label" x="${4*TS}" y="${7*TS+26}" opacity=".45">Main corridor</text><rect class="m-deco" x="${12*TS}" y="${6*TS+4}" width="${3*TS}" height="10" rx="4"/><text class="m-name" x="${13*TS+20}" y="${8*TS+28}" text-anchor="middle" opacity=".7">Guest desk</text>`+(WEEK.mapExtra?WEEK.mapExtra():"");
   CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
     s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
   NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
@@ -1336,9 +1234,9 @@ function showStep(unit,i,kind,lvl){
   const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
   let hintUsed=false,done=false,wrongs=0;
   box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.narr?`<p class="narr">${st.narr}</p>`:""}${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
-    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}</select></td></tr>`).join("")}</tbody></table>
-    ${st.spec.mode==="ancova"?"":`<fieldset id="designQ"><legend>Was anyone measured more than once (in more than one group)?<span class="rowstat"></span></legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>`}
-    <button class="quiet" id="runB">Run analysis</button>`:""}
+    ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
+    ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
+    <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
     <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
@@ -1354,15 +1252,15 @@ function showStep(unit,i,kind,lvl){
     if(hintN>=hints.length)hb.remove();else hb.textContent=`Still stuck? Ask Jordan for more (costs ${hintCost()} reputation)`;};
   if(st.type==="build"){let busyB=false;
     /* mark every row right or wrong, lock the right ones, and give a reason for each wrong one */
-    const bWant=v=>st.spec.outcome===v?"outcome":(st.spec.factors||[]).includes(v)?"factor":(st.spec.covs||[]).includes(v)?"covariate":"";
+    const bWant=v=>st.spec.want?(st.spec.want[v]||""):st.spec.outcome===v?"outcome":(st.spec.factors||[]).includes(v)?"factor":(st.spec.covs||[]).includes(v)?"covariate":"";
     const gradeBuild=tag=>{const tmode=st.spec.mode==="t",F=tmode?"grouping variable":"factor",nm=shortName(unitNpc(unit)),bad=[];let okN=0,n=0;
       box.querySelectorAll("tr[data-brow]").forEach(tr=>{const v=tr.dataset.brow,sl=tr.querySelector("select"),got=sl.value,want=bWant(v),type=(st.spec.vars.find(x=>x[0]===v)||[])[2],stat=tr.querySelector(".rowstat");n++;
         if(got===want){okN++;tr.classList.add("row-ok");tr.classList.remove("row-bad");stat.textContent=" ✓ Right";sl.disabled=true;}
-        else{tr.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(`<code>${v}</code> ${buildReason(type,want,got,F,nm)}`);}});
+        else{tr.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(`<code>${v}</code> ${buildReason(type,want,got,F,nm,v,st.spec)}`);}});
       const dq=box.querySelector("#designQ");
       if(dq){n++;const r=box.querySelector('input[name="rep"]:checked'),got=r?r.value:null,want=tmode?st.spec.compare:(st.spec.repeated?"yes":"no"),stat=dq.querySelector(".rowstat");
         if(got===want){okN++;dq.classList.add("row-ok");dq.classList.remove("row-bad");stat.textContent=" ✓ Right";dq.querySelectorAll("input").forEach(x=>x.disabled=true);}
-        else{dq.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(designReason(want,got,tmode));}}
+        else{dq.classList.add("row-bad");stat.textContent=" ✗ Look again";bad.push(designReason(want,got,tmode,st.spec));}}
       const extra=st.spec.msgs&&st.spec.msgs[tag]&&st.spec.msgs[tag].includes("<figure")?st.spec.msgs[tag]:"";
       return `<p><strong>${okN} of ${n} choices fit.</strong> ${okN?"The ones marked ✓ are locked in. ":""}Change the ones marked ✗.</p>`+bad.map(x=>`<p>${x}</p>`).join("")+extra;};
     const unflag=el=>{const row=el.closest("tr[data-brow],#designQ");if(row&&row.classList.contains("row-bad")){row.classList.remove("row-bad");row.querySelector(".rowstat").textContent="";}};
@@ -1371,16 +1269,16 @@ function showStep(unit,i,kind,lvl){
       if(done||busyB)return;const sel=[...box.querySelectorAll("select[data-var]")],r=box.querySelector('input[name="rep"]:checked');
       const anc=st.spec.mode==="ancova";
       const b={outcomes:sel.filter(x=>x.value==="outcome").map(x=>x.dataset.var),factors:sel.filter(x=>x.value==="factor").map(x=>x.dataset.var),
-               covs:sel.filter(x=>x.value==="covariate").map(x=>x.dataset.var),repeated:anc?false:(r?r.value==="yes":null)};
+               covs:sel.filter(x=>x.value==="covariate").map(x=>x.dataset.var),roles:Object.fromEntries(sel.map(x=>[x.dataset.var,x.value])),repeated:anc?false:(r?r.value==="yes":null)};
       const tag=evalBuild(st.spec,b),name=analysisName(b,st.spec.vars,st.spec);
       if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
       if(tag==="correct"){done=true;if(wrongs===0)cred(hintUsed?5:10);
-        reactOk(fb,unitNpc(unit),`<p><strong>Analysis runs: ${name}.</strong> ${st.spec.ok} The results are shown above.</p>`);document.getElementById("vizSlot").innerHTML=unit.viz||"";markScrollers();
+        reactOk(fb,unitNpc(unit),`<p><strong>${st.spec.okHead||`Analysis runs: ${name}.`}</strong> ${st.spec.ok} The results are shown above.</p>`);document.getElementById("vizSlot").innerHTML=unit.viz||"";markScrollers();
         box.querySelectorAll("select,input,#runB").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
         document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">Next</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
-      }else{if(busyB)return;wrongs++;busyB=true;const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag],notReady=tag==="no_design"||tag==="outcome_misread"&&!b.outcomes.length;
+      }else{if(busyB)return;wrongs++;busyB=true;const m=(st.spec.msgs&&st.spec.msgs[tag])||BUILD_MSG[tag],notReady=tag==="no_design"||tag==="no_choice"||tag==="outcome_misread"&&!b.outcomes.length;
         document.getElementById("runB").disabled=true;
-        playWrong(fb,unitNpc(unit),notReady?"Checking your setup…":`Running ${name}…`,gradeBuild(tag),()=>cred(-4),()=>{busyB=false;document.getElementById("runB").disabled=false;});}
+        playWrong(fb,unitNpc(unit),notReady?"Checking your setup…":(st.spec.runText||`Running ${name}…`),gradeBuild(tag),()=>cred(-4),()=>{busyB=false;document.getElementById("runB").disabled=false;});}
     };
   }
   let busy=false;const who=unitNpc(unit);

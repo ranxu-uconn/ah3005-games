@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -121,7 +121,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -307,7 +307,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 .clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
 .dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
 .toast table{font-size:.82rem;min-width:0}
@@ -316,7 +316,7 @@ main>h2{margin-top:1.8rem}
 @media (max-width:620px){.side{grid-template-columns:1fr}}
 
 /* weeks 1-3: SPSS crosstabs and footnotes, the dashboard screen, paired figures, stacked design choices */
-.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.8rem;color:var(--muted);margin:.45rem 0 0;max-width:none}
+.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.9rem;color:var(--ink);margin:.45rem 0 0;max-width:none}
 .xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
 .xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
 .xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
@@ -349,7 +349,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:3,version:"1.1",
+const CONFIG={mission:3,version:"1.2",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission3-v1"};
@@ -460,8 +460,8 @@ const WEEK={num:3,title:"Twenty patients",
   expertThanks:"Thanks again. Before and after with no comparison group shows change, not cause. I'm finding a comparison group.",
   callbacks:{
     greg:d=>d.flags.w1_greg_median?"You saved me $400,000 two weeks ago. Today I bring good news, so please don't ruin it.":"I bring good news today. Please don't ruin it.",
-    ruiz:()=>PLAYED(2)?"My fellow redid his interval with t. Now he wants to prove a cause with a study that can't.":"Elena Ruiz, cardiology. My fellow wants to prove a cause with a study that can't.",
-    nair:()=>PLAYED(2)?"I put \"add or multiply\" on a mug, like I promised. Now I need a confidence interval, a narrow one!":"I need a confidence interval for the board, and I want it narrow!",
+    ruiz:()=>PLAYED(2)?"My fellow has stopped calling everything normal. Now he wants to prove a cause with a study that can't.":"Elena Ruiz, cardiology. My fellow wants to prove a cause with a study that can't.",
+    nair:()=>PLAYED(2)?"No probabilities this week, thank goodness. Now I need a confidence interval, a narrow one!":"I need a confidence interval for the board, and I want it narrow!",
     dana:d=>d.flags.w2_dana_given?"My nurses quote conditional probabilities now. It's adorable. Today: hand hygiene, and two auditors who disagree.":"Two auditors, two different numbers, and one very annoyed nurse manager.",
     marcus:()=>PLAYED(2)?"My three hills are still on the wall. Now somebody wants to know if my balance class actually works.":"Somebody wants to know if my balance class actually works."},
   keyFlags:S=>{const f={w3_greg_sample:firstRight("c1s1")};
@@ -572,7 +572,7 @@ function case1(R,level){ // Greg: population vs sample, bias vs sampling error
        slots:[
         {label:"The population",options:[{t:"Your population is every ED patient this year, but your sample is 20 volunteers from one night shift,",tag:"correct"},{t:"Your population is the 20 patients you surveyed,",tag:"pop_vs_sample",fb:"Those 20 are the sample. The board report is about all ED patients, which is the population."}]},
         {label:"So",options:[{t:"so it may not represent all patients. Draw patients at random from every shift.",tag:"correct"},{t:"so it's fine: 95% is too high to be a fluke.",tag:"biased_sample",fb:"A high number from the wrong people is still the wrong number. Who was asked matters more than how impressive the answer looks."}]}],
-       okFb:"A sample can only speak for the population it was drawn from, fairly. One night shift of volunteers speaks for one night shift of volunteers."},
+       okFb:"A sample speaks for a population only if it was drawn from that population fairly. One night shift of volunteers speaks for one night shift of volunteers."},
       {id:"c1s2",label:"A bigger sample?",type:"reply",channel:"chat",narr:"Greg sets his fork down. \"Fine. Then I'll survey 200 people on night shifts. Bigger sample, problem solved.\"",
        show:`<div class="slider"><p><strong>Try it.</strong> Each plan was run 40 times. Every dot is one survey's result. The dashed line is the true rate for all patients, ${truth}%.</p>
          <div class="seg" role="group" aria-label="Survey plan">${Object.keys(lab).map((k,i)=>`<input type="radio" id="sv-${k}" name="svshow" value="${k}" ${i?"":"checked"}><label for="sv-${k}">${lab[k]}</label>`).join("")}</div><div id="svviz"></div></div>`,
@@ -586,7 +586,7 @@ function case1(R,level){ // Greg: population vs sample, bias vs sampling error
         {label:"Instead",options:[{t:"so pick patients at random from every shift, in proportion to how many each shift sees.",tag:"correct"},{t:"so survey only day-shift patients instead.",tag:"biased_sample",fb:"That just swaps one shift's bias for another's."}]}],
        okFb:"Sample size controls random scatter; how you sample controls bias. Stratified random sampling by shift gives every patient a fair chance."},
       {id:"c1s3",label:"Who gets a survey",type:"point",narr:"Greg pulls up last year's visit counts. \"Fine. Random, every shift. Three people sent me plans already.\"",
-       show:`<p class="where"><strong>Who comes to the ED:</strong> share of last year's visits on each shift</p>${kpis([["45%","day shift"],["35%","evening shift"],["20%","night shift"]])}`+
+       show:`<p><strong>Who comes to the ED:</strong> share of last year's visits on each shift</p>${kpis([["45%","day shift"],["35%","evening shift"],["20%","night shift"]])}`+
          tbl("Proposed survey plans","200 surveys in all. Each cell: surveys on that shift (share of the 200).",["Plan","Day","Evening","Night"],
          [[pk("Plan A","a"),"67 (33%)","67 (33%)","66 (33%)"],[pk("Plan B","b"),"90 (45%)","70 (35%)","40 (20%)"],[pk("Plan C","c"),"0 (0%)","0 (0%)","200 (100%)"]]),
        prompt:"Greg: \"Which plan gives every shift its fair share of the 200 surveys, matching who actually comes to the ED?\" Click that plan.",
@@ -613,13 +613,13 @@ function case2(R,level){ // Dr. Ruiz: the builder (case-control design), then as
     message:`<p>SCAD, a tear in a heart artery, is rare: we've seen ${n} cases in ten years. Several of those patients drank a lot of energy drinks. I want to know whether that's a pattern or a coincidence, and I want a design that can answer it before I retire.</p>`,
     viz:`<div class="art art-wb"><span class="sr">Whiteboard: </span><h3>The SCAD study plan</h3>${caseSketch(n)}</div>`,
     steps:[
-      {id:"c2s1",label:"Setting up the study",type:"build",show:`<p class="where"><strong>Outcome:</strong> the condition that decides who is a case and who is a control. <strong>Exposure:</strong> what you compare between them. <strong>Match on:</strong> traits the controls are chosen to share with the cases. <strong>Not used:</strong> not part of the question.</p>`,narr:"\"Lay it out for me,\" Dr. Ruiz says. \"Every variable has a job, or it has no job.\"",prompt:"Give each variable its role in Dr. Ruiz's study, answer the design question, then set up the study.",
+      {id:"c2s1",label:"Setting up the study",type:"build",show:`<p><strong>Outcome:</strong> the condition that decides who is a case and who is a control. <strong>Exposure:</strong> what you compare between them. <strong>Match on:</strong> traits the controls are chosen to share with the cases. <strong>Not used:</strong> not part of the question.</p>`,narr:"\"Lay it out for me,\" Dr. Ruiz says. \"Every variable has a job, or it has no job.\"",prompt:"Give each variable its role in Dr. Ruiz's study, answer the design question, then set up the study.",
        hint:["Start with how the patients will be found: SCAD is so rare that waiting for new cases won't work.","SCAD decides who is a case: the outcome. Energy drinks are what you compare: the exposure. Age and sex are matched so cases and controls are alike. Start from the existing cases: a case-control study."],
        spec:{name:"Matched case-control study",run:"Set up the study",okHead:"Study set up: a matched case-control study.",runText:"Setting up the study…",varHead:"Variable",typeHead:"Values in the file",roleHead:"Role",
         roles:[["","Choose a role"],["outcome","Outcome"],["exposure","Exposure"],["match","Match on"],["none","Not used"]],
         vars,want,why,tagOf:()=>"design_roles",repeated:true,designTag:"rare_cohort",designLab:"Finding the patients",
         designQ:"SCAD is rare. How will you find enough people with it?",designYes:"Start from the patients who already had SCAD, then find similar patients who didn't",designNo:"Follow 5,000 adults who drink energy drinks for ten years and count new cases",
-        designWhy:"with only a handful of cases a decade, following people forward would find almost none. Start from the cases you already have.",
+        designWhy:"with only about 4 cases a year in the whole hospital, following people forward would find almost none. Start from the cases you already have.",
         ok:"Cases chosen by outcome, controls matched on age and sex, exposure measured looking back."}},
       {id:"c2s2",label:"Proof?",type:"reply",channel:"chat",narr:"The fellow appears in the doorway again, holding a printout like a trophy.",show:res,
        prompt:"The fellow says this proves energy drinks cause SCAD. Build Dr. Ruiz's reply.",
@@ -649,19 +649,19 @@ function case3(R,level){ // Dr. Nair: checking normality, and what changes a con
       {id:"c3s1",label:"Normal enough?",type:"point",narr:"Dr. Nair taps the Q-Q plot. \"The dots are on the line! That's good, right? I need a number for the report, though.\"",show:pics+tests,
        prompt:"Dr. Nair: \"Which number in the table tells me whether the data could be normal?\" Click it.",
        hint:["Each normality test reports a significance, Sig. Of the two tests, Shapiro-Wilk is the more powerful one.","Click Shapiro-Wilk's Sig. Above 0.05 means the data are not statistically different from a normal distribution."],
-       picks:{sws:{tag:"correct",fb:`${fP(N.sw.p)}, above 0.05: no evidence that blood pressure isn't normal, and the Q-Q plot agrees. Shapiro-Wilk is the more powerful of the two tests.`},
+       picks:{sws:{tag:"correct",fb:`${fP(N.sw.p)}, above 0.05: blood pressure is not statistically different from a normal distribution, and the Q-Q plot agrees. Shapiro-Wilk is the more powerful of the two tests.`},
         kss:{tag:"normality_ks",fb:"That test agrees here, but Shapiro-Wilk has more power to detect non-normality, so it's the one to report."},
-        sww:{tag:"normality_stat",fb:"That's the test statistic. The significance beside it is what you compare with 0.05."},ksd:{tag:"normality_stat",fb:"That's a test statistic. Look for a significance."},
+        sww:{tag:"normality_stat",fb:"That's the test's statistic. Read the Sig. column beside it."},ksd:{tag:"normality_stat",fb:"That's a test statistic. Look for a significance."},
         swdf:{tag:"normality_stat",fb:"That's the degrees of freedom, the number of patients."},ksdf:{tag:"normality_stat",fb:"That's the degrees of freedom, the number of patients."}}},
       {id:"c3s2",label:"Narrower, please",type:"reply",channel:"chat",narr:"Dr. Nair uncaps the highlighter. \"Now. Narrower.\"",
        show:`<div class="slider"><p><strong>Try it.</strong> Change the confidence level and the number of patients. The sample mean and SD stay at ${fx(N.m,1)} and ${fx(N.s,1)}.</p>
          <div class="seg" role="group" aria-label="Confidence level"><input type="radio" id="cl-90" name="clshow" value="90"><label for="cl-90">90%</label><input type="radio" id="cl-95" name="clshow" value="95" checked><label for="cl-95">95%</label><input type="radio" id="cl-99" name="clshow" value="99"><label for="cl-99">99%</label></div>
-         <label for="cin">Patients: <strong id="cinlab"></strong></label><input type="range" id="cin" min="30" max="480" step="30" value="${N.n}"><div id="civiz"></div><p id="cinote" class="where" aria-live="polite"></p></div>`,
+         <label for="cin">Patients: <strong id="cinlab"></strong></label><input type="range" id="cin" min="30" max="480" step="30" value="${N.n}"><div id="civiz"></div><p id="cinote" aria-live="polite"></p></div>`,
        init:()=>{const sl=document.getElementById("cin"),draw=()=>{const c=+document.querySelector('input[name="clshow"]:checked').value,n=+sl.value,E=zc[c]*N.s/Math.sqrt(n),lo=N.m-E,hi=N.m+E;
            document.getElementById("cinlab").textContent=n;const W=360,H=80,X=sc(136,168,16,344);
            document.getElementById("civiz").innerHTML=vz(W,H,`The ${c}% confidence interval with ${n} patients runs from ${fx(lo,1)} to ${fx(hi,1)} mmHg.`,
              axis(X,136,168,52,16,344)+`<line x1="${X(lo)}" x2="${X(hi)}" y1="26" y2="26" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/><circle cx="${X(N.m)}" cy="26" r="6" fill="var(--card)" stroke="var(--teal)" stroke-width="3"/>`);
-           document.getElementById("cinote").textContent=`${c}% CI: ${fx(lo,1)} to ${fx(hi,1)} mmHg (z = ${zc[c]}, margin of error ${fx(E,1)}).`;};
+           document.getElementById("cinote").innerHTML=`<strong>${c}% CI: ${fx(lo,1)} to ${fx(hi,1)} mmHg</strong> (z = ${zc[c]}, margin of error ${fx(E,1)}).`;};
          sl.addEventListener("input",draw);document.querySelectorAll('input[name="clshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
        prompt:"Dr. Nair asks whether she can just switch to 90% to get a narrower interval. Build your reply.",
        hint:["Try 90%, 95% and 99% with the same patients, then move the slider with the level fixed.","A lower confidence level narrows the interval by making you less sure. More patients narrows it at the same confidence."],
@@ -673,7 +673,7 @@ function case3(R,level){ // Dr. Nair: checking normality, and what changes a con
     outro:g=>g("c3s1")==="correct"
       ?{ok:true,title:"Dr. Nair's interval",text:'<em>Dr. Nair caps the highlighter, reluctantly.</em> "95%, and more patients next year. Fine. But I\'m going to want a very big sample."'}
       :{ok:false,title:"Dr. Nair's interval",text:'"No shortcuts. Bigger sample. I\'ll put it in the budget request and blame you."'},
-    takeaway:"Check normality with a Q-Q plot and the Shapiro-Wilk test. A confidence interval narrows with more data or less confidence, and only the first is free."};
+    takeaway:"Check normality with a Q-Q plot and the Shapiro-Wilk test; it matters most for small samples, since with 30 or more patients the central limit theorem makes the sample mean close to normal anyway. A confidence interval narrows with more data or less confidence, and only the first is free."};
 }
 
 function case4(R,level){ // Dana: sampling variability and the CLT; what a confidence interval means
@@ -685,10 +685,10 @@ function case4(R,level){ // Dana: sampling variability and the CLT; what a confi
     steps:[
       {id:"c4s1",label:"Which auditor is wrong?",type:"reply",channel:"chat",narr:"Dana taps the 64% with her pen. \"This one. Probably.\"",
        show:`<div class="slider"><p><strong>Try it.</strong> Suppose the unit's true compliance is 72%. Each dot is one simulated audit; there are 300. Change how many hand-hygiene chances each audit watches.</p>
-         <div class="seg" role="group" aria-label="Chances watched per audit">${[10,25,50,100,200].map(n=>`<input type="radio" id="au-${n}" name="aushow" value="${n}" ${n===25?"checked":""}><label for="au-${n}">${n}</label>`).join("")}</div><div id="auviz"></div><p id="aunote" class="where" aria-live="polite"></p></div>`,
-       init:()=>{const draw=()=>{const n=+document.querySelector('input[name="aushow"]:checked').value,v=sims[n],inside=v.filter(x=>x>=64&&x<=80).length;
+         <div class="seg" role="group" aria-label="Chances watched per audit">${[10,25,50,100,200].map(n=>`<input type="radio" id="au-${n}" name="aushow" value="${n}" ${n===25?"checked":""}><label for="au-${n}">${n}</label>`).join("")}</div><div id="auviz"></div><p id="aunote" aria-live="polite"></p></div>`,
+       init:()=>{const draw=()=>{const n=+document.querySelector('input[name="aushow"]:checked').value,v=sims[n],out=v.filter(x=>x<=64||x>=80).length;
            document.getElementById("auviz").innerHTML=histo(v,{lo:20,hi:100,bw:n>=100?2:4,xlab:`% compliance in one audit of ${n} chances`,lines:[{v:72,lab:"true 72%",cls:"v-reflab",dash:true}],h:180});
-           document.getElementById("aunote").textContent=`With ${n} chances per audit, ${inside} of 300 audits land between 64% and 80%. The spread of these results is the sampling distribution.`;};
+           document.getElementById("aunote").innerHTML=`With ${n} chances per audit, <strong>${out} of 300</strong> audits land as far from 72% as Dana's auditors did (64% or lower, or 80% or higher). The spread of these results is the sampling distribution.`;};
          document.querySelectorAll('input[name="aushow"]').forEach(e=>e.addEventListener("change",draw));draw();},
        prompt:"Dana wants to know which auditor is wrong. Build your reply.",
        hint:["Look at the 25-chance audits: how many land as low as 64% or as high as 80%? Then try bigger audits.","Each audit is a sample, and samples vary. With bigger samples the results vary less and pile up in a bell shape around the truth: the central limit theorem."],
@@ -766,8 +766,8 @@ const FOLLOWUPS={
  fu_clt:()=>JR("fu_clt","Quick review: sampling distributions","What happens when you sample again and again.",[
   {id:"fu_cl_1",label:"Sampling distribution",prompt:"The sampling distribution of the mean is…",hint:"Many samples, one mean each.",
    options:[{t:"the distribution of sample means over many repeated samples",tag:"correct",fb:"Right."},{t:"the distribution of the data in one sample",tag:"sampling_var",fb:"That's the sample's own distribution."},{t:"the population's distribution",tag:"sampling_var",fb:"The population has its own shape; the sample means have theirs."}]},
-  {id:"fu_cl_2",label:"The CLT",prompt:"With a large sample (over about 30), the sample mean is approximately normal…",hint:"The central limit theorem.",
-   options:[{t:"whatever the shape of the population",tag:"correct",fb:"Right."},{t:"only if the population is normal",tag:"clt_exact",fb:"That's the special case for any n."},{t:"never",tag:"clt_exact",fb:"That's exactly what the CLT promises."}]}],
+  {id:"fu_cl_2",label:"The CLT",prompt:"With a large sample (over about 30), the sampling distribution of the sample mean is approximately normal…",hint:"The central limit theorem.",
+   options:[{t:"whatever the shape of the population",tag:"correct",fb:"Right."},{t:"only if the population is normal",tag:"clt_exact",fb:"A normal population is the special case where the mean is normal at any n; the CLT says large samples don't need it."},{t:"never",tag:"clt_exact",fb:"That's exactly what the CLT promises."}]}],
   "Sample statistics vary from sample to sample. For large samples the mean's sampling distribution is approximately normal."),
  fu_ci:()=>JR("fu_ci","Quick review: confidence intervals","What the 95% promises, and what changes the width.",[
   {id:"fu_ci_1",label:"Meaning",prompt:"A 95% CI for mean BMI is 20 to 25. Which is correct?",hint:"The 95% describes the method.",
@@ -779,8 +779,8 @@ const FOLLOWUPS={
   {id:"fu_no_1",label:"Q-Q plot",prompt:"On a normal Q-Q plot, normal data…",hint:"Look at the reference line.",
    options:[{t:"fall close to the straight reference line",tag:"correct",fb:"Right."},{t:"form a bell shape",tag:"normality_stat",fb:"That's a histogram."},{t:"fall in a horizontal band",tag:"normality_stat",fb:"That would mean every value is about the same."}]},
   {id:"fu_no_2",label:"The test",prompt:"Shapiro-Wilk gives Sig. = .41. You conclude…",hint:"Compare with 0.05.",
-   options:[{t:"no evidence against normality",tag:"correct",fb:"Right."},{t:"the data are not normal",tag:"normality_stat",fb:"That would need Sig. below 0.05."},{t:"the data are proven normal",tag:"normality_stat",fb:"A test can't prove normality, only fail to find evidence against it."}]}],
-  "Normal data follow the Q-Q line, and a Shapiro-Wilk Sig. above 0.05 gives no evidence against normality.")
+   options:[{t:"the distribution is not statistically different from normal",tag:"correct",fb:"Right."},{t:"the data are not normal",tag:"normality_stat",fb:"That would need Sig. below 0.05."},{t:"the data are proven exactly normal",tag:"normality_stat",fb:"Sig. above 0.05 means no detectable difference from normal, not proof of it."}]}],
+  "Normal data follow the Q-Q line, and a Shapiro-Wilk Sig. above 0.05 means the distribution is not statistically different from normal.")
 };
 const FU_MAP={pop_vs_sample:"fu_sampling",biased_sample:"fu_sampling",size_fixes_bias:"fu_sampling",
   design_roles:"fu_design",rare_cohort:"fu_design",no_choice:"fu_design",no_design:"fu_design",build_wrong:"fu_design",prepost_cause:"fu_design",
@@ -810,7 +810,7 @@ mergeClues();
 /* ---------- general helpers (shared by every week) ---------- */
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
-const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+const still=h=>h.replace(/<button class="pick"[^>]*>([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}

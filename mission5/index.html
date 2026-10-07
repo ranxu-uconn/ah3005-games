@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -105,7 +105,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -291,7 +291,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 /* clipboard sheet and a report form (Weeks 4 and 5) */
 .art-clip{background:#FFFFFF;color:#222;border:1px solid #CFCFCF;border-radius:4px;padding:1.5rem 1rem .6rem;max-width:24rem;box-shadow:0 3px 8px rgba(0,0,0,.14);background-image:repeating-linear-gradient(transparent 0 29px,#D6E2EC 29px 30px)}
 .art-clip::before{content:"";position:absolute;top:-9px;left:50%;width:92px;height:20px;margin-left:-46px;background:#9AA3AB;border-radius:4px 4px 9px 9px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:5,version:"7.0",
+const CONFIG={mission:5,version:"7.1",
   // Qualtrics survey link (same survey as Mission 4)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission5-v6"};
@@ -428,19 +428,19 @@ const WEEK={num:5,title:"The budget meeting",
   previously:d=>"Last week, four teams brought you their first claims to test. Now Greg is asking which programs the hospital can afford to cut."+(d.flags.w4_nair_honest?" Word got around that you told Dr. Nair her headline wasn't ready.":""),
   callbacks:{
     nadia:()=>"Hi, I'm Nadia from Women's Health. Jordan said you're the one to ask.",
-    greg:d=>d.flags.w4_greg_portal?"You again. Fine, check my numbers before the board does.":d.weeks.some(w=>w<4)?"Back for more? Fine. Let's see if you can keep up.":"So you're the new analyst. Let's see if you can keep up.",
-    marcus:d=>d.flags.w4_marcus_paired?"Remember my knee patients? This one might feel familiar.":"",
+    greg:d=>d.flags.w4_greg_portal?"You again. Fine, check my numbers before the board does.":d.weeks.some(w=>w<4)?"Back for more? Fine. Let's see if you can keep up.":"Greg Walton, finance. Let's see if you can keep up.",
+    marcus:d=>d.flags.w4_marcus_paired?"Remember my knee patients, the same people rating pain before and after? This one might feel familiar.":"",
     dana:d=>d.weeks.includes(4)?"The sepsis pilot is enrolling with the design you gave me. Now this.":"",
     nair:d=>d.flags.w4_nair_honest?"Before I celebrate, I'm asking you first this time.":""},
-  cameo:{ruiz:d=>d.flags.w4_ruiz_inconclusive&&d.weeks.includes(4)?"The full drug trial is approved. I'll need you next week.":"I'm planning a full trial. I'll need you next week."},
+  cameo:{ruiz:d=>d.flags.w4_ruiz_inconclusive&&d.weeks.includes(4)?"The full drug trial you argued for finishes next week, and the results land on my desk. I'll need you.":"My full drug trial finishes next week, and the results land on my desk. I'll need you."},
   keyFlags:S=>{const f={w5_greg_posthoc:firstRight("c2s2"),w5_marcus_repeated:firstRight("c3s1"),w5_dana_interaction:firstRight("c4s3")};
     const t=[];if(f.w5_greg_posthoc)t.push("greg");if(f.w5_marcus_repeated)t.push("marcus");if(f.w5_dana_interaction)t.push("dana");if(firstRight("e1s1"))t.push("nair");
     if([firstRight("c1s1"),firstRight("c2s2"),firstRight("c3s1"),firstRight("c4s3")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");if(S.fuDone.length===0)t.push("jordan");
     return {flags:f,trust:t};},
   finale:S=>({id:"fin",npc:"brooks",title:"The board meeting",message:"<p>The board is seated, and Greg has the first word. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"Night triage staffing",type:"cards",claim:`<strong>Greg:</strong> "Night staff cost money. Is night shift really any different?"`,prompt:"Play your strongest evidence.",hint:"Averages alone can't say whether shifts really differ. The ANOVA on the triage log tests that.",
-      cards:[{k:"Data",t:"The night shift's average triage time is the highest",tag:"within_between_confusion",fb:"Averages alone could differ by chance; the test weighs spread within shifts too."},{k:"Analysis",t:"An ANOVA of the triage log shows times differ by shift",tag:"correct",fb:"Differences between shifts are large compared with the spread within them."},{k:"Story",t:"The night nurses say they feel swamped",tag:"proof_overclaim",fb:"That's why Nadia asked, but the board needs the data."}]},
+     {id:"fin1",label:"Night triage staffing",type:"cards",claim:`<strong>Greg:</strong> "Night staff cost money. Is night shift really any different?"`,prompt:"Play your strongest evidence.",hint:"Averages alone can't say whether shifts really differ. The ANOVA on Nadia's log tests that, and the post hoc test says which shifts.",
+      cards:[{k:"Data",t:"The night shift's average triage time is the highest",tag:"within_between_confusion",fb:"Averages alone could differ by chance; the test weighs spread within shifts too."},{k:"Analysis",t:"The ANOVA on the triage log was significant, and the post hoc test shows night is slower than day",tag:"correct",fb:"Shift differences are large next to the spread within shifts, and the Scheffé test pins the gap on night vs. day."},{k:"Story",t:"The night nurses say they feel swamped",tag:"proof_overclaim",fb:"That's why Nadia asked, but the board needs the data."}]},
      {id:"fin2",label:"Group classes vs. the app",type:"cards",claim:`<strong>Greg:</strong> "Classes and the app weren't significantly different. So the app is just as good. Cut the classes."`,prompt:"Play your strongest evidence.",hint:"Not significantly different is not the same as equal: a small study can miss a real difference.",
       cards:[{k:"Analysis",t:"The ANOVA was significant, so all three programs differ",tag:"all_means_differ",fb:"A significant ANOVA means at least one differs, not all."},{k:"Reasoning",t:"No significant difference doesn't show the app is as good as classes",tag:"correct",fb:"Greg's comparison can't prove equivalence, so cutting classes on that basis is premature."},{k:"Analysis",t:"Group classes beat usual care",tag:"absence_as_equivalence",fb:"True, but it doesn't answer Greg's claim about the app."}]},
      {id:"fin3",label:"Cardiac rehab funding",type:"cards",claim:`<strong>Board member:</strong> "Do cardiac rehab patients actually improve, or should we cut it?"`,prompt:"Play your strongest evidence.",hint:"The same patients walked at every visit, so the evidence that counts is the repeated measures ANOVA.",
@@ -463,7 +463,7 @@ const WEEK={num:5,title:"The budget meeting",
     outro:()=>({ok:true,title:"Hidden problem solved",text:"Jordan: \"The record says 9.00. Nadia's rerun still shows shifts differ. Good catch.\""}),
     takeaway:"Check suspicious values against the original record before analyzing, and never delete data just because it's inconvenient."}),
   ending:f=>f.w5_greg_posthoc?"Greg walked out of the board meeting without his cuts. Nicely done.":"The board got the right comparisons in the end. Greg will be back.",
-  teaser:"Dr. Ruiz's full trial is enrolling, but the two arms don't look alike at baseline."};
+  teaser:"Dr. Ruiz's full trial has its results, and the two arms didn't start alike."};
 
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
@@ -523,7 +523,7 @@ function case1(R,level){
   const ss=E.flat().reduce((s,v)=>s+v*v,0),kf=Math.sqrt((3*n-3)/ss);E=E.map(g=>g.map(v=>v*kf));
   const mk=s=>names.map((nm,i)=>({name:nm,vals:E[i].map(v=>Math.max(1,mus[i]+s*v))}));
   const g=mean(mus),SSB=n*mus.reduce((a,m)=>a+(m-g)**2,0),dfW=3*n-3,Fof=s=>(SSB/2)/(s*s),pof=s=>fSurv(Fof(s),2,dfW);
-  const tight=4,wide=level?8:9,aTight=R.u()<.5,sA=aTight?tight:wide,sB=aTight?wide:tight;
+  const tight=4,wide=level?8:9,real=mk(tight).map(g=>g.vals),aR=oneway(real),phR=scheffe(real,names,aR);
   const lab="Arrival to triage (minutes)";const all20=mk(10).flatMap(g=>g.vals),RNG=[Math.max(0,Math.floor(Math.min(...all20)/5)*5),Math.ceil(Math.max(...all20)/5)*5];const wideAll=mk(wide).flatMap(g=>g.vals),RNG2=[Math.max(0,Math.floor(Math.min(...wideAll)/5)*5),Math.ceil(Math.max(...wideAll)/5)*5];
   const peek=(()=>{const G=mk(wide),q=makeRng(29+Math.round(G[0].vals[0]*10)),out=[];
     for(let k=0;k<6;k++){const g=k%3,j=Math.floor(k/3);out.push([`T${String(k+1).padStart(3,"0")}`,names[g].toLowerCase(),Math.round(G[g].vals[j]),q.u()<.45?"yes":"no",q.int(19,41)]);}
@@ -535,11 +535,10 @@ function case1(R,level){
        hint:["Read the triage log in your notes: each patient was logged once, with the one shift she arrived on.","Minutes to triage is the outcome and shift (day, evening, night) is the grouping. Three separate groups, each patient in only one, is a one-way ANOVA."],
        thread:["What will you run on my triage log?"],
        slots:[
-        {label:"Compare",options:[{t:"I'll compare minutes from arrival to triage",tag:"correct"},{t:"I'll compare patients' ages",tag:"outcome_misread",fb:"Your question is about triage times, not ages."}]},
-        {label:"Across",options:[{t:"across day, evening, and night shifts",tag:"correct"},{t:"between first births and later births",tag:"extra_factor",fb:"That's not Nadia's question; she asked about shifts."}]},
+        {label:"Compare",options:[{t:"I'll compare minutes from arrival to triage across day, evening, and night shifts",tag:"correct"},{t:"I'll compare patients' ages across the three shifts",tag:"outcome_misread",fb:"Your question is about triage times, not ages."},{t:"I'll compare minutes to triage between first births and later births",tag:"extra_factor",fb:"That's not Nadia's question; she asked about shifts."}]},
         {label:"Using",options:[{t:"using a one-way ANOVA.",tag:"correct"},{t:"using three separate t tests.",tag:"multiple_testing",fb:"Three tests push the false-positive risk to about 14%."},{t:"using a repeated measures ANOVA.",tag:"wrong_anova_type",fb:"Each patient was logged once, on one shift."}]}],
        okFb:"One factor with three independent groups: a one-way ANOVA."},
-      {id:"c1s3",label:"Between vs. within",show:`<div class="slider"><label for="spread">Spread within each shift (SD): <strong id="sdlab">9</strong> minutes &nbsp; <span id="flab"></span></label><input type="range" id="spread" min="2" max="10" step="1" value="9"></div><div id="liveviz"></div>`,
+      {id:"c1s3",label:"Between vs. within",show:`<div class="slider"><p><strong>Try it.</strong> Nadia's real log has a spread of about ${tight} minutes within each shift. Drag the spread up and down and watch F.</p><label for="spread">Spread within each shift (SD): <strong id="sdlab">9</strong> minutes &nbsp; <span id="flab"></span></label><input type="range" id="spread" min="2" max="10" step="1" value="9"></div><div id="liveviz"></div>`,
        init:()=>{const el=document.getElementById("spread"),draw=()=>{const s=+el.value;document.getElementById("sdlab").textContent=s;document.getElementById("flab").innerHTML=`F = ${fx(Fof(s),2)}, ${pT(pof(s))}`;document.getElementById("liveviz").innerHTML=stripK(mk(s),lab,RNG);};el.addEventListener("input",draw);draw();},
        type:"reply",channel:"chat",prompt:"Drag the slider, then answer Nadia.",
        hint:["Watch the F value above the chart as you drag: the shift averages (the dark bars) never move, only the spread around them.","F is variation between shifts divided by variation within shifts. More spread inside each shift makes the bottom of the ratio bigger, so the same gaps between averages become less convincing."],
@@ -547,7 +546,7 @@ function case1(R,level){
        slots:[
         {label:"Because F compares",options:[{t:"Because F compares variation between shifts with variation within shifts,",tag:"correct"},{t:"Because F compares only the shift averages,",tag:"f_misconception",fb:"If that were true, F wouldn't change when only the spread changes."}]},
         {label:"So more spread within shifts",options:[{t:"more spread within shifts makes the same differences less convincing.",tag:"correct"},{t:"more spread moves the averages closer together.",tag:"within_between_confusion",fb:"Watch the dark bars: the averages stay put."}]}],
-       okFb:"F = between-group variance ÷ within-group variance."}
+       okFb:`<p>F = between-group variance ÷ within-group variance.</p>${tbl("ANOVA: Nadia's triage log","Minutes from arrival to triage. Within-shift spread about "+tight+" minutes.",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(aR))}<p><strong>On her real log, shifts differ: F = ${fx(aR.F,2)}, ${pT(aR.p)}.</strong> The Scheffé post hoc test puts the gap between night and day (${pT(phR[1].p)}); evening vs. night ${pT(phR[2].p)}.</p>`}
     ],
     outro:g=>g("c1s1")==="correct"?{ok:true,title:"Nadia signs off",text:"\"One ANOVA, with the spread for each shift. That's what our moms deserve.\""}:{ok:false,title:"Nadia signs off after a rethink",text:"\"Glad we fixed that before I shared it with the unit.\""},
     takeaway:"ANOVA asks whether variation between group means is large compared with variation within groups."};
@@ -564,7 +563,7 @@ function case2(R,level){
   return {id:"c2",npc:"greg",title:"Which program works?",
     message:`<p>On Friday I'm proposing we replace group classes with the phone app. It costs a tenth as much. Check my numbers. α = 0.05.</p>`,viz:stripK(names.map((nm,i)=>({name:nm,vals:G[i]})),"HbA1c change (%)")+table,
     steps:[
-      {id:"c2s2",label:"Following up",
+      {id:"c2s2",label:"Answering Greg's t-test email",
        show:`<div class="slider"><p><strong>Try it first.</strong> Suppose the three programs were truly identical. Each t test at α = 0.05 has a 5% chance of a false positive. Run the pairwise tests one at a time and watch the overall risk.</p>
          <button class="quiet" id="runT">Run t test 1: Usual care vs. Group classes</button>
          <div style="margin:.7rem 0 .2rem"><span id="fwText">Tests run: 0. Chance of at least one false positive: 0%</span></div>
@@ -583,7 +582,7 @@ function case2(R,level){
        okFb:`${post}<p>Significant difference${sigPairs.length>1?"s":""}: ${sigPairs.join("; ")}.</p>`},
       {id:"c2s3",label:"Checking Greg's slide",type:"spot",show:`<p class="where">The post hoc results Greg is quoting:</p>${post}`,prompt:"Greg drafted his board slide. Click the sentence the data don't support.",hint:["Look for the sentence that turns \"no significant difference\" into a claim that two programs are the same.","Not significantly different doesn't mean equal: a study this size can miss a real difference. The sentence saying the app works just as well as classes goes further than the data."],draftTitle:"Board slide: diabetes education programs",
        draft:[
-        {t:"The three programs differed in HbA1c change (ANOVA, p < .05).",tag:"absence_as_equivalence",fb:"That's what the ANOVA table showed."},
+        {t:"HbA1c change differed across the programs (ANOVA, p < .05).",tag:"absence_as_equivalence",fb:"That's what the ANOVA table showed: at least one program differs."},
         {t:`Group classes lowered HbA1c more than usual care (Scheffé ${pT(ph[0].p)}).`,tag:"absence_as_equivalence",fb:"That's a correct reading of the post hoc test."},
         {t:`Classes versus the phone app: no significant difference (${pT(ph[2].p)}).`,tag:"absence_as_equivalence",fb:"That's accurate as stated."},
         {t:"So the app works just as well as classes.",tag:"correct",fb:"Not significantly different isn't the same as equal. With these sample sizes, the app could still be meaningfully worse."},
@@ -618,8 +617,7 @@ function case3(R,level){
         {q:"What shoes do patients wear?",a:"Their own sneakers, I guess? Not sure why that matters.",key:false},
         {q:"Does the log record sex?",a:"It does, but I'm asking about change over the program.",key:false}],
        slots:[
-        {label:"Compare",options:[{t:"I'll compare walking distance",tag:"correct"},{t:"I'll compare patients' ages",tag:"outcome_misread",fb:"Your question is about walking distance."}]},
-        {label:"Across",options:[{t:"across weeks 0, 6, and 12",tag:"correct"},{t:"between men and women",tag:"extra_factor",fb:"Sex isn't Marcus's question."}]},
+        {label:"Compare",options:[{t:"I'll compare walking distance across weeks 0, 6, and 12",tag:"correct"},{t:"I'll compare patients' ages across the three visits",tag:"outcome_misread",fb:"Your question is about walking distance."},{t:"I'll compare walking distance between men and women",tag:"extra_factor",fb:"Sex isn't Marcus's question."}]},
         {label:"Using",options:[{t:"using a one-way repeated measures ANOVA.",tag:"correct"},{t:"using a one-way ANOVA.",tag:"ignore_dependence",fb:`${tbl("ANOVA","Treating each visit as a separate group",["","Sum of Squares","df","Mean Square","F","Sig."],aovRows(ow))}<p>This says ${pT(ow.p)}, as if rehab weren't working. But these are the same patients at every visit.</p>`},{t:"using three paired t tests.",tag:"multiple_testing",fb:"Three tests inflate the false-positive risk; one analysis can compare all visits."}]}],
        okFb:"The same patients at three visits: a repeated measures ANOVA. Their walks are shown above."},
       {id:"c3s2",label:"Pointing at the evidence",type:"point",show:tbl("Tests of Within-Subjects Effects","",["Source","Sum of Squares","df","Mean Square","F","Sig."],[["Time",pk(fx(rm.SSt,1),"sst"),pk(rm.dft,"dft"),pk(fx(rm.MSt,1),"mst"),pk(fx(rm.F,3),"f"),pk(fP(rm.p),"sig")],["Error",pk(fx(rm.SSe,1),"sse"),pk(rm.dfe,"dfe"),pk(fx(rm.MSe,1),"mse"),"",""]]),
@@ -715,9 +713,9 @@ function expertCase(){
     message:"<p>Three triage protocols, 8 patients each, and a few very long stays. I want to announce a winner! What should we run?</p>",
     viz:stripK(nm.map((n,i)=>({name:n,vals:G[i]})),"Length of stay (hours)"),
     steps:[
-      {id:"e1s1",label:"Choosing a test for skewed data",prompt:"Which test fits best?",hint:"Small groups, long right tail, three independent groups. Check the test-selection chart.",
+      {id:"e1s1",label:"Choosing a test for skewed data",prompt:"Which test fits best?",hint:"Small, skewed groups and three independent groups: think of the rank-based test for three or more groups.",
        options:[{t:"One-way ANOVA",tag:"ignore_distribution",fb:"With 8 per group and heavy skew, the normality and equal-variance assumptions don't hold."},{t:"Wilcoxon rank-sum test",tag:"wrong_anova_type",fb:"That compares two groups; there are three."},{t:"Kruskal-Wallis test",tag:"correct",fb:"The nonparametric test for 3+ independent groups."},{t:"Repeated measures ANOVA",tag:"ignore_dependence",fb:"These are different patients in each protocol."}]},
-      {id:"e1s2",label:"Another option",prompt:"The lecture showed another way to handle unequal spread. Which?",hint:"Think about slide 17's cortisol example.",
+      {id:"e1s2",label:"Another option",prompt:"The lecture showed another way to handle unequal spread. Which?",hint:"A transformation can even out spread in right-skewed data.",
        options:[{t:"Remove the longest stays",tag:"ignore_distribution",fb:"Those are real patients; dropping them biases the results."},{t:"Log-transform length of stay to stabilize the variance, then recheck assumptions",tag:"correct",fb:"A log transform often evens out spread in right-skewed data."},{t:"Run ANOVA anyway; assumptions don't matter",tag:"ignore_distribution",fb:"With small, uneven groups, violations can lead to wrong conclusions."}]}],
     outro:g=>g("e1s1")==="correct"?{ok:true,title:"Dr. Nair holds the announcement",text:"\"I asked you first, and it paid off. Kruskal-Wallis it is.\""}:{ok:false,title:"Dr. Nair holds the announcement",text:"\"Fine, no ANOVA on those stays. I'm learning.\""},
     takeaway:"Small, skewed groups call for a nonparametric test like Kruskal-Wallis, or a transformation."};
@@ -727,8 +725,8 @@ function expertCase(){
 const JR=(id,title,msg,steps,take)=>({id,npc:"jordan",title,message:`<p>${msg}</p>`,steps,outro:()=>({ok:true,title:"Back to the floor",text:"Your next consult is waiting."}),takeaway:take});
 const FOLLOWUPS={
  fu_familywise:()=>JR("fu_familywise","Quick review: many comparisons","You ran into the multiple comparisons trap. Two quick ones.",[
-  {id:"fu_fw_1",label:"Error across tests",prompt:"Three separate tests, each at α = 0.05, when no real differences exist. Chance of at least one false positive?",hint:"1 − 0.95 × 0.95 × 0.95",
-   options:[{t:"About 5%",tag:"multiple_testing",fb:"That's for one test. Risks add up across tests."},{t:"About 14%",tag:"correct",fb:"1 − 0.95³ ≈ 0.14."},{t:"About 0.1%",tag:"multiple_testing",fb:"More tests raise the risk, not lower it."}]},
+  {id:"fu_fw_1",label:"Error across tests",prompt:"Three separate tests, each at α = 0.05, when no real differences exist. Chance of at least one false positive?",hint:"Each extra test adds its own chance of a false positive; the meter in Greg's consult showed three tests.",
+   options:[{t:"About 5%",tag:"multiple_testing",fb:"That's for one test. The risk grows with every extra test."},{t:"About 14%",tag:"correct",fb:"1 − 0.95³ ≈ 0.14."},{t:"About 0.1%",tag:"multiple_testing",fb:"More tests raise the risk, not lower it."}]},
   {id:"fu_fw_2",label:"Choosing a post hoc test",prompt:"Unequal group sizes, and you want all pairwise comparisons. Which method?",hint:"Slide 28 lists methods by design.",
    options:[{t:"Tukey",tag:"posthoc_balance",fb:"Tukey is for equal group sizes."},{t:"Tukey-Kramer or Scheffé",tag:"correct",fb:"Both handle unequal group sizes."},{t:"Separate t tests",tag:"multiple_testing",fb:"That inflates family-wise error."}]}],"Every extra test adds false-positive risk; post hoc methods control it."),
  fu_ftest:()=>JR("fu_ftest","Quick review: what F tells you","Let's check what an ANOVA result does and doesn't say.",[
@@ -785,7 +783,7 @@ function gridSketch(){const dots=(x,y)=>[0,1,2].map(k=>`<circle cx="${x+k*17}" c
   ${dots(153,56)}${dots(233,56)}${dots(153,102)}${dots(233,102)}</svg>`;}
 const CLUES=[
  {idx:0,id:"n_board",name:"Triage log summary",x:9,y:6,html:l=>{const P=peekOf(0,l);return `
-  ${sheetArt(P,"Each arriving patient is logged once, with the shift she arrived on. Minutes run from arrival to triage.")}
+  ${sheetArt(P,"<strong>Each arriving patient is logged once, with the shift she arrived on.</strong> Minutes run from arrival to triage.")}
   ${stickyArt(`Board meeting Friday: I'm asking for more night triage staff. We sampled ${P.total/3} arrivals per shift last month.`,"Nadia",-1.5)}`;}},
  {idx:1,id:"d_sheet",name:"Enrollment sheet",x:13,y:11,html:l=>{const e=l?[48,40,30]:[51,42,35];return `
   <div class="art art-clip"><span class="sr">Clipboard: </span><p class="clip-title hand">Diabetes program enrollment</p>

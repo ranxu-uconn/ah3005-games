@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -121,7 +121,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -307,7 +307,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 .clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
 .dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
 .toast table{font-size:.82rem;min-width:0}
@@ -316,7 +316,7 @@ main>h2{margin-top:1.8rem}
 @media (max-width:620px){.side{grid-template-columns:1fr}}
 
 /* week 7+: SPSS crosstabs and footnotes */
-.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.8rem;color:var(--muted);margin:.45rem 0 0;max-width:none}
+.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.9rem;color:var(--ink);margin:.45rem 0 0;max-width:none}
 .xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
 .xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
 .xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
@@ -337,7 +337,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:7,version:"1.4",
+const CONFIG={mission:7,version:"1.5",
   // Qualtrics survey link (same survey as Missions 4 to 6)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission7-v1"};
@@ -443,11 +443,11 @@ const WEEK={num:7,title:"Counts and rates",
   opening:[["brooks","Greg wants to close eight beds on Unit 4B because of its readmissions. The bed planning committee meets Thursday, and I want every count and every percentage checked before then."],
            ["jordan","This week we count instead of measure: yes or no, mild or severe. Read the clue in each room first. And say hello to our guest from Behavioral Health at the guest desk."]],
   previously:d=>(d.flags.w6_ruiz_adjusted?"Last week Dr. Ruiz's adjusted trial went through the monitoring board without a question.":"Last week Dr. Ruiz's trial got through the monitoring board once the baseline adjustment was explained.")+(d.flags.w6_greg_confound?" Greg promised to measure acuity before his next proposal, and he did.":" Greg says he has done his homework this time."),
-  cameo:{marcus:()=>"Quiet week in rehab. Next week I'll bring you something new: how many sessions it takes my patients to recover."},
+  cameo:{marcus:()=>"Quiet week in rehab. I hear a state surveyor is coming, so I'm tidying up my walk-test analysis."},
   expertThanks:"Thanks again. Prevalence, risk, incidence rate: they're on my whiteboard now.",
   callbacks:{
     jamal:()=>"Hi, I'm Jamal Wright from Behavioral Health. Jordan said you'd answer my questions with better questions.",
-    dana:d=>d.flags.w6_dana_mixed?"You showed me the falls bundle works best on 4B. Now Greg wants to close half of it.":"Greg is coming after 4B, and I have a number that says he's wrong.",
+    dana:d=>d.flags.w6_dana_mixed?"You helped me test the falls bundle unit by unit. Now Greg wants to close eight of 4B's beds.":"Greg is coming after 4B, and I have a number that says he's wrong.",
     greg:d=>d.flags.w6_greg_confound?"Before you say confounder: I pulled acuity first. You taught me that.":"I did my homework this time. Acuity first, then the claim.",
     ruiz:d=>d.flags.w6_ruiz_adjusted?"The trial paper is with the journal. Now a smaller study, and I'm not pleased about its size.":"A smaller study this time, and I'm not pleased about its size.",
     nair:d=>d.flags.w4_nair_honest?"I'm writing the annual report, and this time I want the right words before I celebrate.":"I'm writing the annual report. Help me use the right words."},
@@ -456,7 +456,7 @@ const WEEK={num:7,title:"Counts and rates",
     if([f.w7_jamal_chisq,f.w7_dana_rowpct,f.w7_greg_builder,f.w7_ruiz_oddsratio].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
     if(S.fuDone.length===0)t.push("jordan");
     return {flags:f,trust:t};},
-  ending:f=>f.w7_dana_rowpct?"You told Dana her percentage answered a different question, and she thanked you for it. That doesn't happen often.":"Dana's percentage got corrected before the committee saw it. Close, but it held.",
+  ending:f=>f.w7_dana_rowpct?"You told Dana her percentage answered a different question, and she thanked you for it. That doesn't happen often.":"Dana's percentage got corrected before the committee saw it. Close, but we caught it in time.",
   teaser:"A surveyor from the State Department of Health is coming for a practice run, and she wants to see our old reports.",
   hidden:()=>{const T=[[80,120],[30,270]],ro=rrOr(T),x=xtab(T);
    const risk=riskTable(ro,{rowVar:"a1c_group",rowLab:"Above 9% / 9% or below",colVar:"foot_wound",pick:true,N:x.N});
@@ -469,7 +469,7 @@ const WEEK={num:7,title:"Counts and rates",
      {id:"hid1",label:"Finding the right number",type:"point",show:flyer+ct+risk,
       prompt:"Click the value the flyer should have used for \"times the risk.\"",
       hint:"\"Times the risk\" is risk-ratio language. Find the row that divides the chance of a wound in one group by the chance in the other.",
-      picks:{rrv:{tag:"correct",fb:`For cohort foot_wound = Yes: ${fx(ro.rr,2)}. That's the risk ratio, 40% against 10%. The flyer's 6 is the odds ratio.`},
+      picks:{rrv:{tag:"correct",fb:`Risk ratio (SPSS: For cohort foot_wound = Yes): ${fx(ro.rr,2)}. That's the risk ratio, 40% against 10%. The flyer's 6 is the odds ratio.`},
        orv:{tag:"or_as_rr",fb:"That's the 6 on the flyer: the odds ratio. Odds aren't probabilities, so it can't be read as \"times the risk.\""},
        rnv:{tag:"cohort_no",fb:"That compares the chance of <em>not</em> getting a wound."},
        orlo:{tag:"output_misread",fb:"That's a confidence limit, not the estimate."},orhi:{tag:"output_misread",fb:"That's a confidence limit, not the estimate."},
@@ -480,8 +480,8 @@ const WEEK={num:7,title:"Counts and rates",
       hint:"Compare the two ratios with how common the outcome is in this table.",
       thread:["Right. Why are 6 and 4 so different? I need one line for marketing."],
       slots:[
-       {label:"Because",options:[{t:"Odds ratios only approximate risk ratios when the outcome is rare,",tag:"correct"},{t:"The odds ratio is adjusted for age,",tag:"or_as_rr",fb:"Nothing was adjusted. They're two different quantities from the same table."},{t:"The risk ratio is always smaller than the odds ratio,",tag:"or_as_rr",fb:"When the outcome is rare they're nearly equal. Here it isn't rare."}]},
-       {label:"And here",options:[{t:"and 40% of the A1c-above-9% group had a wound, which isn't rare.",tag:"correct"},{t:"and a sample of 500 is too small.",tag:"or_as_rr",fb:"Sample size changes the precision, not which quantity is which."}]},
+       {label:"Because",options:[{t:"Odds ratios only approximate risk ratios when the outcome is rare, and 40% of the A1c-above-9% group had a wound, which isn't rare.",tag:"correct"},{t:"The odds ratio is adjusted for age.",tag:"or_as_rr",fb:"Nothing was adjusted. They're two different quantities from the same table."},{t:"A sample of 500 is too small for an odds ratio.",tag:"or_as_rr",fb:"Sample size changes the precision, not which quantity is which."},{t:"The risk ratio is always smaller than the odds ratio.",tag:"or_as_rr",fb:"Not always: below 1 it's the other way round. And when the outcome is rare they're nearly equal; here it isn't rare."}]},
+       
        {label:"So the flyer",options:[{t:"So the flyer should say 4 times the risk.",tag:"correct"},{t:"So the flyer can keep \"6 times the risk.\"",tag:"or_as_rr",fb:"6 is the odds ratio. \"Times the risk\" needs the risk ratio, which is 4."}]}],
       okFb:"Exactly. With a common outcome, reading an odds ratio as a risk ratio exaggerates."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "Flyer fixed before it reached the printer. Four times the risk is plenty on its own."'}),
@@ -492,8 +492,8 @@ const WEEK={num:7,title:"Counts and rates",
     message:"<p>The bed planning committee is seated, and Greg has presented his proposal to close eight beds on 4B. Answer each question with your strongest evidence.</p>",
     steps:[
      {id:"fin1",label:"Is 4B really the worst?",type:"cards",show:`<p class="where">From Dana's consult:</p>${crosstab({title:"unit * readmit_30d Crosstabulation",rowVar:"Unit",colVar:"Readmitted",rows:D.units.map(u=>"Unit "+u),cols:["Yes","No"],T:D.T4,stats:["count","row"],labels:{row:"% of this unit's patients"}})}`,claim:'<strong>Director of nursing:</strong> "Is 4B\'s readmission rate really the highest, or is Greg cherry-picking?"',prompt:"Play your strongest evidence.",hint:"Think back to Dana's consult: a rate for 4B is out of 4B's own patients, which is the row percentage.",
-      cards:[{k:"Data",t:`Within 4B, ${pct(r4)} of patients were readmitted, the highest of any unit, and a chi-square test says readmission depends on unit`,tag:"correct",fb:"A rate within each unit, plus a test of whether unit and readmission are related. That settles the number."},
-       {k:"Data",t:"4B accounts for the smallest share of the hospital's readmissions",tag:"column_pct",fb:"That's 4B's share of all readmissions, which mostly reflects how small 4B is."},
+      cards:[{k:"Data",t:`Within 4B, ${pct(r4)} of patients were readmitted, the highest of any unit, and Greg's chi-square test (4B against the other units) says readmission depends on unit`,tag:"correct",fb:"A rate within each unit, plus a test of whether unit and readmission are related. That settles the number."},
+       {k:"Data",t:"4B accounts for the smallest share of the medical units' readmissions",tag:"column_pct",fb:"That's 4B's share of all readmissions, which mostly reflects how small 4B is."},
        {k:"Data",t:"4B had the fewest readmissions of any unit",tag:"count_not_rate",fb:"A count depends on how many patients a unit discharges."}]},
      {id:"fin2",label:"Times the risk?",type:"cards",show:`<p class="where">From Greg's consult:</p>${riskTable(ro,{rowVar:"unit_group",rowLab:"4B / Other units",colVar:"readmit_30d",N:D.x2.N})}`,claim:`<strong>Board member:</strong> "The odds ratio is ${fx(ro.or,1)}. So the risk of readmission on 4B is ${fx(ro.or,1)} times the risk elsewhere?"`,prompt:"Play your strongest evidence.",hint:"\"Times the risk\" compares two risks. The ratio of two risks is the risk ratio.",
       cards:[{k:"Output",t:`"Times the risk" needs the risk ratio, ${fx(ro.rr,1)}. ${fx(ro.or,1)} compares odds, not risks`,tag:"correct",fb:"Right: the risk on 4B was about "+fx(ro.rr,1)+" times the risk elsewhere."},
@@ -504,7 +504,7 @@ const WEEK={num:7,title:"Counts and rates",
        {k:"Analysis",t:"Yes: the chi-square test was significant, so 4B causes the readmissions",tag:"causal_claim",fb:"A significant chi-square says unit and readmission are related. It doesn't say why, or what closing beds would change."},
        {k:"Data",t:"No: 4B only contributes a small share of the readmissions",tag:"column_pct",fb:"That's back to the share. 4B's rate really is higher."}]}],
     outro:g=>({ok:true,title:"Bed planning committee decisions",
-      text:[g("fin1")==="correct"?"4B readmission rate: confirmed as the highest in the hospital":"4B readmission rate: confirmed, once the percentages were sorted out",
+      text:[g("fin1")==="correct"?"4B readmission rate: confirmed as the highest of the four medical units":"4B readmission rate: confirmed, once the percentages were sorted out",
             g("fin2")==="correct"?`Minutes record "about ${fx(ro.rr,1)} times the risk" (risk ratio)`:`Minutes corrected to the risk ratio, ${fx(ro.rr,1)}, on the second pass`,
             g("fin3")==="correct"?"Bed closure: deferred while Dana's team reviews why 4B patients come back":"Bed closure: deferred, after a long argument"].map(x=>"• "+x).join("<br>")+
         `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
@@ -570,8 +570,8 @@ function chiTable(x,o){o=o||{};const P=(v,k)=>o.pick&&v!==""&&(typeof o.pick!=="
 function riskTable(ro,o){const P=(v,k)=>o.pick&&(typeof o.pick!=="function"||o.pick(k))?pk(v,k):v;
   return tbl("Risk Estimate","",["Statistic","Value","95% CI Lower","95% CI Upper"],
     [[`Odds Ratio for ${o.rowVar} (${o.rowLab})`,P(fx(ro.or,3),"orv"),P(fx(ro.orCI[0],3),"orlo"),P(fx(ro.orCI[1],3),"orhi")],
-     [`For cohort ${o.colVar} = Yes`,P(fx(ro.rr,3),"rrv"),P(fx(ro.rrCI[0],3),"rrlo"),P(fx(ro.rrCI[1],3),"rrhi")],
-     [`For cohort ${o.colVar} = No`,P(fx(ro.rn,3),"rnv"),P(fx(ro.rnCI[0],3),"rnlo"),P(fx(ro.rnCI[1],3),"rnhi")],
+     [`Risk ratio (SPSS: For cohort ${o.colVar} = Yes)`,P(fx(ro.rr,3),"rrv"),P(fx(ro.rrCI[0],3),"rrlo"),P(fx(ro.rrCI[1],3),"rrhi")],
+     [`Risk ratio for No (SPSS: For cohort ${o.colVar} = No)`,P(fx(ro.rn,3),"rnv"),P(fx(ro.rnCI[0],3),"rnlo"),P(fx(ro.rnCI[1],3),"rnhi")],
      ["N of Valid Cases",P(o.N,"n"),"",""]]);}
 /* SPSS-style crosstabulation: one block of rows per category, one row per statistic.
    o.pick(i,stat,j) may return a pick key (i = -1 for the Total row, j = -1 for the Total column). */
@@ -635,7 +635,7 @@ function case1(R,level){ // Jamal Wright, Behavioral Health (guest) - chi-square
         {q:"Is each patient counted only once?",a:"Yes. We kept each patient's first screen of the year.",key:true},
         {q:"Which clinic has the best coffee?",a:"Westside, but please don't tell Jordan. Is that... relevant?",key:false}],
        slots:[
-        {label:"I'll compare",options:[{t:level?"I'll compare which screening category patients fall into":"I'll compare the share of patients who screen positive",tag:"correct"},{t:"I'll compare the average screening score",tag:"numeric_outcome",fb:"Jamal's question is about the screening result, positive or not, because that's what decides a referral."}]},
+        {label:"I'll compare",options:[{t:level?"I'll compare which screening category patients fall into":"I'll compare the share of patients who screen positive",tag:"correct"},{t:"I'll compare the average screening score",tag:"numeric_outcome",fb:level?"Jamal's question is about which screening category patients fall into, because that's what decides a referral.":"Jamal's question is about the screening result, positive or not, because that's what decides a referral."}]},
         {label:"Using",options:[{t:"across the three clinics, using a chi-square test.",tag:"correct"},{t:"across the three clinics, using a one-way ANOVA.",tag:"numeric_outcome",fb:"ANOVA compares averages of a number. A screening result is a category you count, so it's a chi-square test."}]}],
        okFb:"A category counted across clinics: a chi-square test of independence. The table is shown above."},
       {id:"c1s2",label:"What do I tell my team?",type:"point",narr:"Jamal's phone buzzes: his team, again. He turns it face-down and slides the output toward you.",show:chi,prompt:"Jamal: \"My team wants one number: does the clinic make a difference or not?\" Point him to it.",
@@ -672,7 +672,7 @@ function case2(R,level){ // Dana - row versus column percentages (Dana is the on
   const picks={},key=(i,s)=>`k${i}${s}`;
   const pickFn=(i,s,j)=>{if(j!==0||i<0||s==="tot"||(s==="count"&&i!==0))return null;const k=key(i,s);
     picks[k]=i===0&&s==="row"?{tag:"correct",fb:`${pct(r4)} of 4B's own patients were readmitted, the highest of the four units. Greg is right about the number.`}
-      :i===0&&s==="col"?{tag:"column_pct",fb:`That's Dana's ${pct(s4)}: 4B's share of all ${D.Y} readmissions in the hospital. It's small mostly because 4B is the smallest unit.`}
+      :i===0&&s==="col"?{tag:"column_pct",fb:`That's Dana's ${pct(s4)}: 4B's share of all ${D.Y} readmissions on the four medical units. It's small mostly because 4B is the smallest unit.`}
       :s==="count"?{tag:"count_not_rate",fb:"That's a count. A small unit has few readmissions even if its rate is high."}
       :s==="row"?{tag:"pct_wrong_cell",fb:`That's ${U[i]}'s rate. Dana asked about 4B.`}
       :{tag:"column_pct",fb:`That's ${U[i]}'s share of all readmissions, not a rate.`};return k;};
@@ -680,7 +680,7 @@ function case2(R,level){ // Dana - row versus column percentages (Dana is the on
   const ctab=crosstab({title:"unit * readmit_30d Crosstabulation",note:"SPSS labels these rows “% within Unit” and “% within Readmitted.”",rowVar:"Unit",colVar:"Readmitted",rows:U,cols:["Yes","No"],T:D.T4,stats:["count","row","col"],labels,pick:pickFn});
   return {id:"c2",npc:"dana",title:"Defending 4B",
     scene:"Dana is waiting at her desk with a printout already highlighted. She doesn't wait for you to sit down.",
-    message:`<p>Greg wants to close beds on 4B because of readmissions. But look: only ${pct(s4)} of the hospital's readmissions come from 4B, the smallest share of any unit. We're the best, not the worst.</p>`,
+    message:`<p>Greg wants to close beds on 4B because of readmissions. But look: only ${pct(s4)} of the medical units' readmissions come from 4B, the smallest share of any unit. We're the best, not the worst.</p>`,
     steps:[
       {id:"c2s1",label:"Finding 4B's rate",type:"point",narr:"She taps one number on the printout so hard the page wrinkles.",show:ctab,
        prompt:`Dana: "Fine. Then show me what share of 4B's own patients came back." Point to it.`,
@@ -693,13 +693,13 @@ function case2(R,level){ // Dana - row versus column percentages (Dana is the on
        init:()=>{const draw=()=>{const m=document.querySelector('input[name="pcshow"]:checked').value;
            document.getElementById("pcchart").innerHTML=m==="row"
              ?pctBars(U,D.rate,0,"the readmission rate within each unit",`Out of each unit's own patients. 4B: ${D.y[0]} readmitted ÷ ${D.n[0]} patients.`)
-             :pctBars(U,D.share,0,"each unit's share of all readmissions",`Out of all ${D.Y} readmissions in the hospital. 4B: ${D.y[0]} ÷ ${D.Y}.`);};
+             :pctBars(U,D.share,0,"each unit's share of all readmissions",`Out of all ${D.Y} readmissions on the four medical units. 4B: ${D.y[0]} ÷ ${D.Y}.`);};
          document.querySelectorAll('input[name="pcshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
        prompt:"Dana wants to know where her number came from. Build your reply.",
-       hint:["Switch the chart and watch 4B's bar. Then check what each percentage was divided by.","Dana divided by all the hospital's readmissions, so the smallest unit looks best. Out of its own patients, 4B's rate is the highest."],
+       hint:["Switch the chart and watch 4B's bar. Then check what each percentage was divided by.","Dana divided by all the medical units' readmissions, so the smallest unit looks best. Out of its own patients, 4B's rate is the highest."],
        thread:[`Then where did my ${pct(s4)} come from? I didn't make it up.`],
        slots:[
-        {label:"Your number",options:[{t:`Your ${pct(s4)} is 4B's share of all the hospital's readmissions, and it's small because 4B is the smallest unit.`,tag:"correct"},{t:`Your ${pct(s4)} is 4B's readmission rate, and it's the best in the hospital.`,tag:"column_pct",fb:`${pct(s4)} was divided by all ${D.Y} readmissions in the hospital, not by 4B's own ${D.n[0]} patients.`}]},
+        {label:"Your number",options:[{t:`Your ${pct(s4)} is 4B's share of all the medical units' readmissions, and it's small because 4B is the smallest unit.`,tag:"correct"},{t:`Your ${pct(s4)} is 4B's readmission rate, and it's the best of the four units.`,tag:"column_pct",fb:`${pct(s4)} was divided by all ${D.Y} readmissions on the four medical units, not by 4B's own ${D.n[0]} patients.`}]},
         {label:"The rate",options:[{t:`Out of 4B's own patients, ${pct(r4)} were readmitted, the highest of the four units.`,tag:"correct"},{t:`Out of 4B's own patients, ${pct(1-r4)} were readmitted.`,tag:"pct_wrong_cell",fb:`${pct(1-r4)} is the share of 4B patients who were <em>not</em> readmitted.`}]}],
        okFb:"\"Out of each unit's own patients\" is a rate. \"Out of all readmissions\" is a share, and a small unit always has a small share."}],
     outro:g=>g("c2s1")==="correct"
@@ -718,7 +718,7 @@ function case3(R,level){ // Greg - he is right this week: 2 x 2 chi-square, risk
   const rOther=D.T2[1][0]/(D.T2[1][0]+D.T2[1][1]);
   return {id:"c3",npc:"greg",title:"Greg's 4B claim",
     scene:"Greg's office smells of fresh coffee. His slide is already up: \"Close 8 beds on 4B. Saves $1.2 million a year.\"",
-    message:"<p>4B's readmission rate is the highest in the hospital. I pulled acuity first: 4B's patients are no sicker than anyone else's. I want to close eight beds there. Check me.</p>",
+    message:"<p>4B's readmission rate is the highest of the four medical units. I pulled acuity first: 4B's patients are no sicker than anyone else's. I want to close eight beds there. Check me.</p>",
     viz,
     steps:[
       {id:"c3s1",label:"Building the analysis",type:"build",narr:"\"Run it however you like,\" Greg says, leaning back. \"I already know the answer. That's new for me.\"",prompt:"Set up Greg's analysis from your notes, then run it.",
@@ -731,7 +731,7 @@ function case3(R,level){ // Greg - he is right this week: 2 x 2 chi-square, risk
       {id:"c3s2",label:"Filling in Greg's slide",type:"point",narr:"Greg turns his laptop toward you. One blank left on the slide, cursor blinking.",
        show:`<div class="bubble claim"><strong>Greg's slide:</strong> "The <em>risk</em> of readmission on 4B is ___ times the risk on the other units."</div>${risk}`,
        prompt:"Point Greg to the value that fills his blank.",
-       hint:[`Risk here is the chance of readmission: ${pct(D.rate[0])} on 4B and ${pct(rOther)} elsewhere. Find the row that divides one by the other.`,`That's the "For cohort readmit_30d = Yes" row (${fx(ro.rr,3)}), the risk ratio.`],
+       hint:[`Risk here is the chance of readmission: ${pct(D.rate[0])} on 4B and ${pct(rOther)} elsewhere. Find the row that divides one by the other.`,`That's the risk ratio row (SPSS: For cohort readmit_30d = Yes): ${fx(ro.rr,3)}.`],
        picks:{rrv:{tag:"correct",fb:`${pct(D.rate[0])} ÷ ${pct(rOther)} = ${fx(ro.rr,2)}. The risk of readmission on 4B is ${fx(ro.rr,2)} times the risk elsewhere: the risk ratio.`},
         orv:{tag:"or_as_rr",fb:"That's the odds ratio. It compares odds (readmitted ÷ not readmitted), not risks, so it would fill \"___ times the odds.\""},
         rnv:{tag:"cohort_no",fb:"That row compares the chance of <em>not</em> being readmitted."},
@@ -764,7 +764,7 @@ function case4(R,level){ // Dr. Ruiz - case-control study: odds ratio, Fisher's 
         {label:"Can he?",options:[{t:`No: we chose to include ${n} heart attack patients, so we can't measure anyone's risk of one.`,tag:"correct"},{t:"No: the sample is too small for a risk ratio.",tag:"rr_casecontrol",fb:"Small samples are a real worry, but they don't stop you computing a risk. The design does: the team picked how many heart attack patients to include."},{t:"Yes: a risk ratio works for any 2 × 2 table.",tag:"rr_casecontrol",fb:"Only when the table reflects real risk. Here the team picked how many heart attack patients to include."}]},
         {label:"Report",options:[{t:"Report the odds ratio instead.",tag:"correct"},{t:"Report the risk ratio anyway; it's easier to explain.",tag:"rr_casecontrol",fb:"Easier to explain, but it would be a made-up number in a case-control study."}]}],
        okFb:`Case-control studies estimate odds ratios: ${fx(ro.or,2)} here. Heart attack patients had about ${fx(ro.or,1)} times the odds of regular NSAID use.`},
-      {id:"c4s2",label:"Which p-value?",type:"point",narr:"Dr. Ruiz puts on her reading glasses. \"Always the small print first.\"",show:chi,prompt:"Dr. Ruiz: \"My fellow wants the p-value from the first row. I read footnote a first. Which p-value do we report?\"",
+      {id:"c4s2",label:"Which p-value?",type:"point",narr:"Dr. Ruiz puts on her reading glasses. \"Always the small print first.\"",show:chi,prompt:`Dr. Ruiz: "My fellow wants the p-value from the first row. But footnote a says ${x.small} cell${x.small===1?" has":"s have"} an expected count below 5 (the smallest is ${fx(x.minE,2)}). Which p-value do we report?"`,
        hint:["Footnote a says a cell has an expected count below 5. The chi-square rows rely on large counts, so they don't apply.","With an expected count below 5, use Fisher's Exact Test. Her question is about any association, so take the two-sided value."],
        picks:{f2:{tag:"correct",fb:level?`Fisher's exact, two-sided: ${pT(x.f2)}. It matters here: the first row says ${pT(x.p)}, below 0.05, but with counts this small the exact test is the one to trust.`:`Fisher's exact, two-sided: ${pT(x.f2)}. With an expected count below 5, the exact test is the one to trust.`},
         f1:{tag:"one_sided",fb:"That's the one-sided exact p. Dr. Ruiz is asking about any association, which is two-sided."},
@@ -822,8 +822,8 @@ const FOLLOWUPS={
   "A chi-square test of independence says whether two categorical variables are related, not which categories differ or why."),
  fu_pct:()=>JR("fu_pct","Quick review: row or column percentage","Three percentages, three different questions.",[
   {id:"fu_p_1",label:"Comparing rates",prompt:"Units are the rows of a crosstab. To compare readmission rates between units, use…",hint:"A rate for a unit is out of that unit's own patients.",
-   options:[{t:"% within unit (the row percentages)",tag:"correct",fb:"Right: each unit's readmissions out of its own discharges."},{t:"% within readmitted (the column percentages)",tag:"column_pct",fb:"That's each unit's share of all readmissions."},{t:"% of total",tag:"pct_total",fb:"That divides by every discharge in the hospital."}]},
-  {id:"fu_p_2",label:"A share",prompt:"A small unit accounts for 9% of all the hospital's readmissions. That tells you…",hint:"Check what the 9% divides by: all of the hospital's readmissions.",
+   options:[{t:"Out of each unit's own patients (row %; SPSS: % within unit)",tag:"correct",fb:"Right: each unit's readmissions out of its own discharges."},{t:"Out of all readmissions (column %)",tag:"column_pct",fb:"That's each unit's share of all readmissions."},{t:"Out of every patient (% of total)",tag:"pct_total",fb:"That divides by every discharge on the four units."}]},
+  {id:"fu_p_2",label:"A share",prompt:"A small unit accounts for 9% of all the medical units' readmissions. That tells you…",hint:"Check what the 9% divides by: all of the medical units' readmissions.",
    options:[{t:"its share of readmissions, which depends on its size as well as its rate",tag:"correct",fb:"Right: a small unit has a small share even with a high rate."},{t:"its readmission rate is 9%",tag:"column_pct",fb:"A rate divides by the unit's own patients."},{t:"it has the lowest readmission rate",tag:"column_pct",fb:"Its rate could be the highest."}]}],
   "Row percentages compare rates when groups are the rows. Column percentages show where the outcomes came from."),
  fu_ratio:()=>JR("fu_ratio","Quick review: risk ratio and odds ratio","Two ratios that look alike and mean different things.",[
@@ -841,7 +841,7 @@ const FOLLOWUPS={
    options:[{t:"row total × column total ÷ N",tag:"correct",fb:"Right."},{t:"observed count ÷ N",tag:"fisher_ignored",fb:"That's a proportion of the observed data."},{t:"N ÷ the number of cells",tag:"fisher_ignored",fb:"Only if every row and column had the same total."}]}],
   "Check the expected counts first. If any is below 5, use Fisher's exact test."),
  fu_measures:()=>JR("fu_measures","Quick review: prevalence, risk, incidence rate, odds","Four ways to count disease. Two quick ones.",[
-  {id:"fu_m_1",label:"All current cases",prompt:"All current cases ÷ everyone in the population, at one point in time, is…",hint:"Not time specific.",
+  {id:"fu_m_1",label:"All current cases",prompt:"All current cases ÷ everyone in the population, at one point in time, is…",hint:"Current cases, not new ones.",
    options:[{t:"prevalence",tag:"correct",fb:"Right."},{t:"risk",tag:"measure_confusion",fb:"Risk counts new cases over a period."},{t:"incidence rate",tag:"measure_confusion",fb:"That divides new cases by person-time."}]},
   {id:"fu_m_2",label:"Odds",prompt:"Odds compare…",hint:"Odds aren't probabilities.",
    options:[{t:"the chance something happens with the chance it doesn't",tag:"correct",fb:"Right: odds = p ÷ (1 − p)."},{t:"the chance something happens out of everyone",tag:"measure_confusion",fb:"That's a probability, like risk or prevalence."},{t:"new cases with person-time",tag:"measure_confusion",fb:"That's an incidence rate."}]}],
@@ -885,12 +885,12 @@ const CLUES=[
   ${stickyArt("Kept each patient's FIRST screen of the year only. Nobody counted twice.","J.W.",1.8)}
 `;}},
  {idx:1,id:"d_sticky",name:"Dana's note",x:6,y:12,html:l=>{const D=unitData();return `
-  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>OUR UNITS</h3>${unitsSketch()}</div>
-  ${stickyArt(`Only ${pct(D.share[0])} of the hospital's readmissions come from 4B. Greg is WRONG.`,"Dana",-2)}
+  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>OUR 4 MEDICAL UNITS</h3>${unitsSketch()}</div>
+  ${stickyArt(`Only ${pct(D.share[0])} of the medical units' readmissions come from 4B. Greg is WRONG.`,"Dana",-2)}
 `;}},
  {idx:2,id:"g_memo",name:"Greg's memo",x:13,y:11,html:l=>{return `
   <div class="art art-memo coffee"><span class="sr">Printed email: </span><dl class="memo-head"><dt>From</dt><dd>Greg Walton, VP Finance</dd><dt>To</dt><dd>Quality Office</dd><dt>Subject</dt><dd>4B readmissions</dd></dl>
-   <p>4B's 30-day readmission rate is the highest in the hospital. Before anyone asks: I pulled acuity scores first, and 4B's average acuity matches the other units.</p><p>File attached: one row per patient's first discharge this year. Proposal: close 8 of 4B's 12 beds.</p><p>&mdash; G.</p></div>
+   <p>4B's 30-day readmission rate is the highest of the four medical units. Before anyone asks: I pulled acuity scores first, and 4B's average acuity matches the other units.</p><p>File attached: one row per patient's first discharge this year. Proposal: close 8 of 4B's 12 beds.</p><p>&mdash; G.</p></div>
 `;}},
  {idx:3,id:"r_board",name:"Study whiteboard",x:16,y:3,html:l=>{const n=peekOf(3,l).n;return `
   <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>NSAIDs &amp; heart attack</h3>${ccSketch(n)}

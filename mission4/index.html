@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -105,7 +105,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -291,7 +291,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 /* clipboard sheet and a report form (Weeks 4 and 5) */
 .art-clip{background:#FFFFFF;color:#222;border:1px solid #CFCFCF;border-radius:4px;padding:1.5rem 1rem .6rem;max-width:24rem;box-shadow:0 3px 8px rgba(0,0,0,.14);background-image:repeating-linear-gradient(transparent 0 29px,#D6E2EC 29px 30px)}
 .art-clip::before{content:"";position:absolute;top:-9px;left:50%;width:92px;height:20px;margin-left:-46px;background:#9AA3AB;border-radius:4px 4px 9px 9px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
@@ -321,7 +321,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:4,version:"7.8",
+const CONFIG={mission:4,version:"8.0",
   // Qualtrics survey link (same survey for all missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission4-v7"};
@@ -428,8 +428,8 @@ const WEEK={num:4,title:"First rounds",
   previously:d=>d.weeks.includes(3)?"Last week Greg's 95% satisfaction number came out of the board report before it was printed."+(d.flags.w3_greg_sample?" He says he'll ask who was surveyed before he quotes a survey again.":" He's still a little sore about it."):"",
   callbacks:{
     nair:d=>d.weeks.includes(3)?"Last week you wouldn't let me shrink my interval. This week I don't need to: I think we beat the target outright!":"",
-    marcus:d=>d.weeks.includes(2)?"My three hills are still on the wall. This week it's pain scores, and I just want to know if they changed.":"",
-    ruiz:d=>d.weeks.includes(3)?"The SCAD study is collecting cases. Meanwhile my drug pilot came back, and it's small. You know how I feel about small.":"",
+    marcus:d=>d.weeks.includes(2)?"My strength program gets its comparison group next quarter. This week it's knee pain scores, and I just want to know if they changed.":"",
+    ruiz:d=>d.weeks.includes(3)?"Our SCAD case-control study, the rare artery-tear one, is matching controls now. Meanwhile my own drug pilot came back: about 30 patients. You know how I feel about small.":"",
     dana:d=>d.flags.w2_dana_given?"Remember P(sepsis given flagged)? I'm testing a new sepsis alert to replace the old screen, and this time the pilot gets designed properly from the start.":d.weeks.includes(2)?"I'm testing a new sepsis alert to replace the old screen, and this time the pilot gets designed properly from the start.":"",
     greg:d=>d.flags.w3_greg_sample?"No surveys this time. Real data, every patient with diabetes. I asked who was in it first, like you said.":d.weeks.includes(3)?"No surveys this time, I promise. Real data, every patient with diabetes.":""},
   cameo:{},
@@ -442,10 +442,10 @@ const WEEK={num:4,title:"First rounds",
      {id:"fin1",label:"The Stroke Center claim",type:"cards",claim:`<strong>Committee member:</strong> "Can the Stroke Center report that it beats the 60-minute target?"`,prompt:"Play your strongest evidence.",hint:"Go back to Dr. Nair's one-sided p-value and compare it with 0.05.",
       cards:[{k:"Output",t:"The one-sided p-value is above 0.05",tag:"correct",fb:"So the report says the target isn't shown yet."},{k:"Data",t:"The sample average is under 60 minutes",tag:"sample_mean_proof",fb:"A sample average under 60 could easily be chance."},{k:"Output",t:"The t statistic is negative",tag:"output_misread",fb:"A negative t only means the sample mean is below 60, not significantly below."}]},
      {id:"fin2",label:"Dr. Ruiz's drug",type:"cards",claim:`<strong>Committee member:</strong> "The pilot wasn't significant. Should we stop developing Dr. Ruiz's drug?"`,prompt:"Play your strongest evidence.",hint:"A non-significant pilot isn't proof of no effect. The confidence interval shows the range of effects the data still allow.",
-      cards:[{k:"Output",t:"The pilot's p-value is above 0.05",tag:"accept_null",fb:"That's the reason for the question, not an answer to it."},{k:"Chart",t:"The confidence interval still includes meaningful reductions",tag:"correct",fb:"So stopping now could throw away a useful drug. A full trial can settle it."},{k:"Output",t:"Levene's test wasn't significant",tag:"output_misread",fb:"That's about spread, not whether the drug works."}]},
-     {id:"fin3",label:"Marcus's protocol",type:"cards",claim:`<strong>Committee member:</strong> "Did Marcus's knee protocol actually reduce pain?"`,prompt:"Play your strongest evidence.",hint:"The same patients rated pain twice, so the evidence that counts comes from the paired analysis of each patient's change.",
-      cards:[{k:"Analysis",t:"An independent-samples test wasn't significant",tag:"paired_vs_independent",fb:"That analysis ignored that the same patients were measured twice."},{k:"Story",t:"Patients told Marcus they felt better",tag:"proof_overclaim",fb:"That's encouraging, but the committee needs the analysis."},{k:"Analysis",t:"A paired test on each patient's change was significant",tag:"correct",fb:"The right test for the design, and it shows pain dropped."}]}],
-    outro:g=>({ok:true,title:"Committee decisions",text:[g("fin1")==="correct"?"Stroke Center report: \"target not yet shown\"":"Stroke Center report: revised to \"target not yet shown\" after questions",g("fin2")==="correct"?"Dr. Ruiz's drug: moves to a full trial":"Dr. Ruiz's drug: moves to a full trial after a second look",g("fin3")==="correct"?"Knee protocol: expands to two more clinics":"Knee protocol: expands once the paired analysis was explained"].map(x=>"• "+x).join("<br>")+`<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
+      cards:[{k:"Output",t:"The pilot's p-value is above 0.05",tag:"accept_null",fb:"That's the reason for the question, not an answer to it."},{k:"Chart",t:"The confidence interval still includes meaningful reductions",tag:"correct",fb:"So stopping now could throw away a useful drug. A full trial can settle it."},{k:"Output",t:"Levene's test compared the two groups' spreads",tag:"output_misread",fb:"That's about spread, not whether the drug works."}]},
+     {id:"fin3",label:"Marcus's protocol",type:"cards",claim:`<strong>Committee member:</strong> "Did patients' pain actually drop under Marcus's knee protocol?"`,prompt:"Play your strongest evidence.",hint:"The same patients rated pain twice, so the evidence that counts comes from the paired analysis of each patient's change.",
+      cards:[{k:"Analysis",t:"An independent-samples test wasn't significant",tag:"paired_vs_independent",fb:"That analysis ignored that the same patients were measured twice."},{k:"Story",t:"Patients told Marcus they felt better",tag:"proof_overclaim",fb:"That's encouraging, but the committee needs the analysis."},{k:"Analysis",t:"A paired test on each patient's change was significant",tag:"correct",fb:"The right test for the design, and pain dropped on average. With no comparison group, it can't show how much of the drop is the protocol rather than normal recovery."}]}],
+    outro:g=>({ok:true,title:"Committee decisions",text:[g("fin1")==="correct"?"Stroke Center report: \"target not yet shown\"":"Stroke Center report: revised to \"target not yet shown\" after questions",g("fin2")==="correct"?"Dr. Ruiz's drug: moves to a full trial":"Dr. Ruiz's drug: moves to a full trial after a second look",g("fin3")==="correct"?"Knee protocol: pain drop confirmed; a comparison group comes next":"Knee protocol: pain drop confirmed once the paired analysis was explained; a comparison group comes next"].map(x=>"• "+x).join("<br>")+`<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
     takeaway:"Good evidence answers the question asked, and claims no more than the data allow."}),
   hidden:()=>({id:"hid",npc:"jordan",title:"The 20 subgroups",
     message:"<p>Off the books: Dr. Nair's team re-ran the stroke analysis 20 different ways (by shift, weekday, age group…). One came out significant: weekend arrivals, p = .04. She wants to publish it.</p>",
@@ -463,7 +463,7 @@ const WEEK={num:4,title:"First rounds",
      {id:"hid2",label:"Checking Nair's abstract",type:"spot",prompt:"Click the sentence in Dr. Nair's draft abstract that the analysis doesn't support.",hint:"One significant result among 20 subgroup tests is what chance alone produces. Look for the sentence that treats it as a proven cause.",draftTitle:"Draft abstract: Stroke Center",
       draft:[{t:"We compared door-to-needle times across 20 patient subgroups.",tag:"multiple_testing",fb:"That's an honest description of what was done."},
        {t:"Weekend arrivals had the shortest average time (p = .04).",tag:"multiple_testing",fb:"That's accurate as a raw result."},
-       {t:"Weekend staffing is therefore the key to fast stroke care.",tag:"correct",fb:"With 20 tests and no correction, one p = .04 is likely a false positive, and a subgroup comparison can't show what causes faster care."},
+       {t:"Weekend staffing is therefore the key to fast stroke care.",tag:"correct",fb:"With 20 tests and no adjustment, one p = .04 is what chance alone often produces, and a subgroup comparison can't show what causes faster care."},
        {t:"The other 19 subgroups showed no significant differences.",tag:"multiple_testing",fb:"That's accurate, and it's important context."}]}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:"Jordan: \"Nair will want to argue. But you'd make a good reviewer.\""}),
     takeaway:"Run enough tests and something will be significant by chance. Report how many comparisons you made."}),
@@ -472,7 +472,7 @@ const WEEK={num:4,title:"First rounds",
 
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
-const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+const still=h=>h.replace(/<button class="pick"[^>]*>([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
@@ -584,8 +584,7 @@ function case1(R,level){
        hint:["Read the report goal in your notes: it compares one average with a fixed number, and it says <em>under</em> that number.","One group against the fixed 60-minute target is a one-sample t test. Because the claim is \"under 60\" (it has a direction), the test is one-sided."],
        thread:["Quick question before you start: what exactly are you going to test?"],
        slots:[
-        {label:"Compare",options:[{t:"I'll compare our average door-to-needle time",tag:"correct"},{t:"I'll compare this year's times with last year's",tag:"wrong_test_one_sample",fb:"Dr. Nair's claim is about the 60-minute target, not last year."}]},
-        {label:"Against",options:[{t:"with the fixed 60-minute target",tag:"correct"},{t:"between day and night shifts",tag:"extra_factor",fb:"Shifts aren't part of her claim."}]},
+        {label:"Compare",options:[{t:"I'll compare our average door-to-needle time with the fixed 60-minute target",tag:"correct"},{t:"I'll compare this year's times with last year's",tag:"wrong_test_one_sample",fb:"Dr. Nair's claim is about the 60-minute target, not last year."},{t:"I'll compare door-to-needle times between day and night shifts",tag:"extra_factor",fb:"Shifts aren't part of her claim."}]},
         {label:"Using",options:[{t:"using a one-sided one-sample t test.",tag:"correct"},{t:"using a two-sided one-sample t test.",tag:"two_sided_for_directional",fb:"Her claim is \"under 60,\" which has a direction."},{t:"using an independent-samples t test.",tag:"wrong_test_one_sample",fb:"There's one group of patients compared with a fixed number."}]}],
        okFb:"One group against a fixed benchmark, one-sided because the claim is \"under 60.\""},
       {id:"c1s2",label:"Picking the right p-value",type:"point",show:out,prompt:"Click the p-value that matches Dr. Nair's claim.",
@@ -596,7 +595,7 @@ function case1(R,level){
         diff:{tag:"output_misread",fb:"That's the effect estimate, not a p-value."},
         lo:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."},hi:{tag:"wrong_tail_p",fb:"That interval goes with a two-sided test, and it isn't a p-value."}}},
       {id:"c1s3",label:"Checking the draft report",type:"spot",show:`<p class="where">The output Dr. Nair is quoting:</p>${still(out)}`,prompt:"Dr. Nair drafted her report paragraph. Click the sentence the data don't support.",
-       hint:[`Find the one-sided p-value in her paragraph (p = ${fP(p1)}) and compare it with α = 0.05.`,`p = ${fP(p1)} is above 0.05, so the data don't show the average is under 60. One sentence claims the team beats the target anyway.`],draftTitle:"Stroke Center annual report (draft)",
+       hint:[`Find the one-sided p-value in her paragraph (p = ${fP(p1)}) and compare it with α = 0.05.`,`p = ${fP(p1)} is above 0.05, so the data don't show the average is under 60. One sentence claims the team beats the target anyway.`],draftTitle:"Stroke Center quarterly report (draft)",
        draft:[
         {t:`Our last ${n} eligible patients averaged ${fx(m,1)} minutes from arrival to treatment.`,tag:"threshold_misread",fb:"That sentence only describes the sample, and it's accurate."},
         {t:`A one-sided t test against the 60-minute target gave p = ${fP(p1)}.`,tag:"threshold_misread",fb:"That's the right test and the right p-value."},
@@ -604,7 +603,7 @@ function case1(R,level){
         {t:"We will keep tracking times next quarter.",tag:"threshold_misread",fb:"That's a plan, not a claim about the data."}]}
     ],
     outro:g=>g("c1s3")==="correct"?{ok:true,title:"Dr. Nair signs off",text:"\"Not yet significant? Fine. Better you than the reviewers.\""}:{ok:false,title:"Dr. Nair signs off after a correction",text:"\"You're telling me I almost published that? Good catch, second time around.\""},
-    takeaway:"A sample mean below the target isn't enough; the test asks whether the gap is bigger than chance."};
+    takeaway:"A sample mean below the target isn't enough; the test asks whether a gap this large would be unusual if the true mean were 60."};
 }
 
 function case2(R,level){
@@ -622,7 +621,7 @@ function case2(R,level){
   const peek=(()=>{const q=makeRng(23+pairs[0][0]*7+pairs[1][1]*11),out=[];
     for(let r=0;r<3;r++){const id=`K${String(r+1).padStart(2,"0")}`,age=q.int(52,79),knee=q.u()<.5?"left":"right";out.push([id,"first",pairs[r][0],age,knee],[id,"last",pairs[r][1],age,knee]);}
     return {file:"pain_log.csv",cols:["patient_id","visit","pain_score","age","knee"],rows:out,total:2*n};})();
-  return {id:"c2",npc:"marcus",title:"Did the new protocol change pain?",peek,from:"Marcus Bell, PT, rehabilitation lead",
+  return {id:"c2",npc:"marcus",title:"Did pain change after the new protocol started?",peek,from:"Marcus Bell, PT, rehabilitation lead",
     message:`<p>Since the new knee protocol started, we log patients' pain in routine care. Did pain change? α = 0.05.</p>`,
     cards:[[n,"patients"],[fx(m1,1)+" → "+fx(m2,1),"mean pain, first → last"]],
     viz:slopeChart(pairs,!level),
@@ -640,7 +639,7 @@ function case2(R,level){
         sd:{tag:"output_misread",fb:"That's how much the changes vary from patient to patient."},
         t:{tag:"output_misread",fb:"t is the test statistic. The p-value beside it is what you compare with α."},
         df:{tag:"output_misread",fb:"Degrees of freedom reflect the sample size, not the strength of evidence."},
-        p:{tag:"correct",fb:`${fPtext(pP)} is below 0.05, so pain really changed: it dropped by about ${fx(dm,1)} points on average.`},
+        p:{tag:"correct",fb:`${fPtext(pP)} is below 0.05: a drop this large would be unlikely if pain didn't change on average. It fell by about ${fx(dm,1)} points.`},
         lo:{tag:"correct",fb:`The 95% CI (${fx(dm-tq*seP,2)} to ${fx(dm+tq*seP,2)}) sits entirely above 0, so pain dropped on average.`},
         hi:{tag:"correct",fb:`The 95% CI (${fx(dm-tq*seP,2)} to ${fx(dm+tq*seP,2)}) sits entirely above 0, so pain dropped on average.`}}}
     ],
@@ -662,7 +661,7 @@ function case3(R,level){
     pc=level?pWe:pPo;const se=level?seW:seP,tq=tinv(.975,level?dfW:dfP);lo=d-tq*se;hi=d+tq*se;
     if((level?lp<0.045:lp>0.2)&&pc>0.12&&pc<0.4&&lo<-6)break;}
   const F=Math.pow(tinv(1-lp/2,dfP),2),tqP=tinv(.975,dfP),tqW=tinv(.975,dfW);
-  const ind=tbl("Independent Samples Test","Mean difference = drug − placebo",["","Levene's F","Levene's Sig.","t","df","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],
+  const ind=tbl("Independent Samples Test","Mean difference = drug − placebo (negative = blood pressure fell more on the drug)",["","Levene's F","Levene's Sig.","t","df","Two-Sided p","Mean Difference","95% CI Lower","95% CI Upper"],
     [[pk("Equal variances assumed","eq"),fx(F,3),pk(fP(lp),"lev"),fx(tPo,3),dfP,pk(fP(pPo),"p1"),fx(d),fx(d-tqP*seP),fx(d+tqP*seP)],
      [pk("Equal variances not assumed","neq"),"","",fx(tWe,3),fx(dfW,2),pk(fP(pWe),"p2"),fx(d),fx(d-tqW*seW),fx(d+tqW*seW)]]);
   const smaller={t:"Whichever row has the smaller p-value",tag:"row_by_smaller_p",fb:"Picking the row by its result inflates false positives; Levene's test decides."};
@@ -688,8 +687,7 @@ function case3(R,level){
         {q:"Which clinic sites took part?",a:"Three sites, but that's not what I'm asking about.",key:false},
         {q:"What's the drug's brand name?",a:"It doesn't have one yet. Why would that matter?",key:false}],
        slots:[
-        {label:"Compare",options:[{t:"I'll compare the change in systolic BP",tag:"correct"},{t:"I'll compare blood pressure at enrollment",tag:"outcome_misread",fb:"The outcome is the change over 8 weeks."}]},
-        {label:"Between",options:[{t:"between the drug and placebo groups",tag:"correct"},{t:"across the three clinic sites",tag:"extra_factor",fb:"Sites aren't Dr. Ruiz's question."}]},
+        {label:"Compare",options:[{t:"I'll compare the change in systolic BP between the drug and placebo groups",tag:"correct"},{t:"I'll compare blood pressure at enrollment between the groups",tag:"outcome_misread",fb:"The outcome is the change over 8 weeks."},{t:"I'll compare the change in systolic BP across the three clinic sites",tag:"extra_factor",fb:"Sites aren't Dr. Ruiz's question."}]},
         {label:"Using",options:[{t:"using an independent-samples t test.",tag:"correct"},{t:"using a paired t test.",tag:"paired_vs_independent",fb:"Each patient was in one group only, so there's nothing to pair."},{t:"using a one-sample t test.",tag:"wrong_test_one_sample",fb:"There are two groups to compare."}]}],
        okFb:"Two separate randomized groups, one outcome each: an independent-samples t test. Her group data are shown above."},
       {id:"c3s2",label:"Reading the variance test",type:"point",show:ind,prompt:"Click the row of this output you should use.",
@@ -706,7 +704,7 @@ function case3(R,level){
         {k:"Clue",t:`Only ${n1} and ${n2} patients per group`,tag:"correct",fb:`<p>A pilot this small has low power and can easily miss a real effect. The confidence interval shows how large that effect could be:</p>${ciBar(lo,hi,d,"Difference in BP change, drug − placebo (mmHg)")}`},
         {k:"Output",t:`Levene's test ${pT(lp)}`,tag:"output_misread",fb:"Levene's test is about the spread of each group, not whether the drug works."}]}
     ],
-    outro:g=>g("c3s3")==="correct"?{ok:true,title:"Dr. Ruiz signs off",text:"\"Inconclusive. Yes. That's the honest word. I'll push for a full trial.\""}:{ok:false,title:"Dr. Ruiz signs off after a rethink",text:"\"So we nearly killed a drug over 30 patients. Let's run it properly.\""},
+    outro:g=>g("c3s3")==="correct"?{ok:true,title:"Dr. Ruiz signs off",text:"\"Inconclusive. Yes. That's the honest word. I'll push for a full trial.\""}:{ok:false,title:"Dr. Ruiz signs off after a rethink",text:`"So we nearly killed a drug over ${n1+n2} patients. Let's run it properly."`},
     takeaway:"Failing to reject H<sub>0</sub> isn't evidence of no effect, especially in a small study."};
 }
 
@@ -719,8 +717,7 @@ function case4(R,level){
        hint:["Read the alarm fatigue incident report in your notes: leadership caps the chance of a false positive at 5%.","Raising α to 0.10 makes significance easier, so power goes up, but it doubles the false-positive risk leadership won't accept. Adding patients raises power without that cost."],
        thread:["A colleague wants α = 0.10 so the pilot is more likely to find something. What should I tell her?"],
        slots:[
-        {label:"Power would",options:[{t:"Power would go up,",tag:"correct"},{t:"Power would go down,",tag:"alpha_change_power",fb:"A larger α makes rejecting easier, so power goes up."}]},
-        {label:"But",options:[{t:"but false positives would become more likely,",tag:"correct"},{t:"and both kinds of error would shrink,",tag:"lower_alpha_power",fb:"It's a trade-off, not a win on both."}]},
+        {label:"Power and risk",options:[{t:"Power would go up, but false positives would become more likely,",tag:"correct"},{t:"Power would go down, and false positives would become less likely,",tag:"alpha_change_power",fb:"A larger α makes rejecting easier, so power goes up."},{t:"Power would go up, and both kinds of error would shrink,",tag:"lower_alpha_power",fb:"It's a trade-off, not a win on both."}]},
         {label:"So",options:[{t:"so let's keep α at 0.05 and add patients instead.",tag:"correct"},{t:"so α = 0.10 is fine for a pilot.",tag:"alpha_shopping",fb:"Check the incident report: leadership wants false positives at 5% or less."}]}],
        okFb:"That's exactly what I'll send her."},
       {id:"c4s3",label:"Designing for power",type:"design",d,ns,alphas:[0.01,0.05,0.10],
@@ -728,7 +725,7 @@ function case4(R,level){
        hint:["The memo fixes the effect size and the incident report fixes α at 0.05 or less. The only setting left is patients per group, so watch the power bar as you raise it.",`Leave α at 0.05 and raise patients per group to ${ns[2]}: power reaches about 80% with no extra false-alarm risk.`]}
     ],
     outro:g=>g("c4s3")==="correct"?{ok:true,title:"Dana signs off",text:"\"Enough patients and no extra false alarms. My nurses thank you.\""}:{ok:false,title:"Dana signs off after a redesign",text:"\"Second try's the one we'll use. Let's not tell the nurses about the first.\""},
-    takeaway:"Larger samples raise power without raising false-positive risk; a larger α doesn't."};
+    takeaway:"Larger samples raise power without raising the false-positive risk; raising α also raises power, but only by allowing more false positives."};
 }
 
 const CORE=[case1,case2,case3,case4];
@@ -865,7 +862,7 @@ function goalSketch(){const x=m=>28+(m-30)*244/60;
   <path d="M${x(60)-8} 46 H${x(38)} M${x(38)+9} 40 L${x(38)} 46 L${x(38)+9} 52" ${WBS}/><text x="${x(47)}" y="38" text-anchor="middle" font-size="17" ${WBT}>under!</text></svg>`;}
 const CLUES=[
  {idx:0,id:"s_board",name:"Report whiteboard",x:2,y:4,html:()=>`
-  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>ANNUAL REPORT GOAL</h3>
+  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>QUARTERLY REPORT GOAL</h3>
    <p class="mk">Show our average door-to-needle time is <span class="mk-red">UNDER</span> the national target of 60 minutes.</p>
    ${goalSketch()}
    <p class="mk mk-green">Use our most recent eligible patients.</p></div>`},
@@ -881,7 +878,7 @@ const CLUES=[
    <p>If the alert works, we expect a moderate benefit: effect size <strong>d = ${l?0.3:0.4}</strong>.</p>
    <p>Budget: up to <strong>${l?180:100} patients per group</strong>. Goal: at least <strong>80% power</strong>.</p></div>
   <div class="art art-memo art-form"><span class="sr">Incident report: </span><p class="form-title">Incident report &middot; alarm fatigue</p>
-   <p>Last year's unhelpful alert led nurses to start ignoring alarms. Leadership will only adopt a new alert if the chance of a false positive stays at <strong>5% or less</strong>.</p></div>`}
+   <p>The current sepsis screen's false alarms led nurses to start ignoring alarms. Leadership will only adopt a new alert if the chance of a false positive stays at <strong>5% or less</strong>.</p></div>`}
 ];
 
 /* one clue per room: merge each room's clues into a single note */
@@ -1183,21 +1180,21 @@ function showStep(unit,i,kind,lvl){
   if(st.type==="design"){
     box.querySelector(".opts").outerHTML=`<fieldset><legend>Patients per group</legend><div class="radios">${st.ns.map((v,k)=>`<label><input type="radio" name="n" value="${v}" ${k===0?"checked":""}> ${v}</label>`).join("")}</div></fieldset>
       <fieldset><legend>Significance level (α)</legend><div class="radios">${st.alphas.map(a=>`<label><input type="radio" name="a" value="${a}" ${a===0.05?"checked":""}> ${a.toFixed(2)}</label>`).join("")}</div></fieldset>
-      <div id="pviz"></div><button class="quiet" id="runD">Run the pilot</button>`;
-    const val=nm=>+box.querySelector(`input[name="${nm}"]:checked`).value,drawP=()=>{document.getElementById("pviz").innerHTML=powerViz(st.d,val("n"),val("a"));};
+      <div id="pviz"></div><button class="quiet" id="runD">Simulate the pilot</button>`;
+    const val=nm=>+box.querySelector(`input[name="${nm}"]:checked`).value,drawP=()=>{document.getElementById("pviz").innerHTML=kpis([[Math.round(power2(st.d,val("n"),val("a"))*100)+"%","power"],[val("a").toFixed(2),"false-positive risk (α)"]])+powerViz(st.d,val("n"),val("a"));};
     box.querySelectorAll('input[name="n"],input[name="a"]').forEach(e=>e.addEventListener("change",drawP));drawP();
     const simR=makeRng((S.seed+99991)>>>0);let busyD=false;
     document.getElementById("runD").onclick=()=>{
       if(done||busyD)return;const nv=val("n"),av=val("a"),pw=power2(st.d,nv,av),pct=Math.round(pw*100);
       const tag=av>0.05?"alpha_shopping":(pw>=0.8?"correct":"underpowered");if(rec.first===null){rec.first=tag;rec.hintBefore=hintUsed;}
-      const sim=simR.u()<pw?"In this simulated pilot, the alert's benefit came out significant.":"In this simulated pilot, the difference wasn't significant, so the alert would be shelved even though it works: a Type II error.";
+      const hit=simR.u()<pw,sim=hit?"In this simulated pilot, the alert's benefit came out significant.":"In this simulated pilot, the difference wasn't significant, so the alert would be shelved even though it works: a Type II error.";
       if(tag==="correct"){done=true;S.danaDesign={n:nv,a:av};if(wrongs===0)cred(hintUsed?5:10);
-        reactOk(fb,unitNpc(unit),`<p><strong>Pilot results are in.</strong> Power is about ${pct}% with α = ${av.toFixed(2)}. ${sim}</p>`);
+        reactOk(fb,unitNpc(unit),`<p><strong>Simulated run of your design.</strong> Power is about ${pct}% with α = ${av.toFixed(2)}. ${hit?sim:`Even with about ${pct}% power, roughly ${100-pct} pilots in 100 miss a real benefit, and this simulated run was one of them: the difference wasn't significant (a Type II error).`}</p>`);
         box.querySelectorAll("input,#runD").forEach(e=>e.disabled=true);const hb=document.getElementById("hintBtn");if(hb)hb.remove();
         document.getElementById("next").innerHTML=`<button class="primary" id="nextBtn">${i===n-1?"Wrap up":"Next"}</button>`;document.getElementById("nextBtn").onclick=()=>showStep(unit,i+1,kind,lvl);
       }else{if(busyD)return;wrongs++;busyD=true;document.getElementById("runD").disabled=true;
         const msg=tag==="alpha_shopping"?`Power is about ${pct}%, but α = 0.10 doubles the chance of adopting a useless alert. Check the incident report.`:`Power is about ${pct}%, so there's roughly a ${100-pct}% chance of missing a real benefit. ${sim}`;
-        playWrong(fb,unitNpc(unit),`Running the pilot with ${nv} patients per group…`,`<p>${msg}</p>`,()=>cred(-4),()=>{busyD=false;document.getElementById("runD").disabled=false;});}
+        playWrong(fb,unitNpc(unit),`Simulating the pilot with ${nv} patients per group…`,`<p>${msg}</p>`,()=>cred(-4),()=>{busyD=false;document.getElementById("runD").disabled=false;});}
     };
   }
   if(st.type==="build"){let busyB=false;

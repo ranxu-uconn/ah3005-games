@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -121,7 +121,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -307,7 +307,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 .clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
 .dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
 .toast table{font-size:.82rem;min-width:0}
@@ -316,7 +316,7 @@ main>h2{margin-top:1.8rem}
 @media (max-width:620px){.side{grid-template-columns:1fr}}
 
 /* weeks 1-3: SPSS crosstabs and footnotes, the dashboard screen, paired figures, stacked design choices */
-.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.8rem;color:var(--muted);margin:.45rem 0 0;max-width:none}
+.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.9rem;color:var(--ink);margin:.45rem 0 0;max-width:none}
 .xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
 .xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
 .xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
@@ -349,7 +349,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:2,version:"1.1",
+const CONFIG={mission:2,version:"1.2",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission2-v1"};
@@ -451,19 +451,19 @@ function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:
 const PLAYED=w=>SEASON.weeks.includes(w);
 const WEEK={num:2,title:"Given what?",
   scene:"Monday, 7:50 a.m. An alarm chimes somewhere on the ED floor, then another, then a third. A nurse walks past you muttering \"false alarm\" like a prayer.",
-  pitch:"Dana's sepsis screen flags more patients than her nurses can handle, and the vendor swears it's 90% accurate. Greg is building a staffing model, Dr. Ruiz's fellow is calling everything normal, and Marcus has a histogram with too many hills.",
+  pitch:"Dana's sepsis screen flags more patients than her nurses can handle, and the vendor swears it catches 90% of sepsis cases. Greg is building a staffing model, Dr. Ruiz's fellow is calling everything normal, and Marcus has a histogram with too many hills.",
   topicLine:"This week: probability, conditional probability, and the binomial, Poisson, normal and t distributions. Check the clue in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
   opening:[["brooks","Dana's sepsis screen flags more patients than her nurses can handle. Before she changes anything, I want to know what the numbers actually say."],
            ["jordan","Probability week. Watch the word \"given\": it changes everything. Clues first, as always. I'll be here, with coffee and an unhealthy interest in coin flips."]],
   previously:d=>PLAYED(1)?"Last week you fixed the ED dashboard on your first day."+(d.flags.w1_greg_median?" Greg cancelled his consulting contract and has been suspiciously polite ever since.":" Greg's consulting contract was cancelled, eventually."):"",
   cameo:{},
-  expertThanks:"Thanks again! Add when they can't both happen. Multiply when one doesn't change the other. It's on a sticky note now.",
+  expertThanks:"Thanks again! Add when they can't both happen. Multiply when one doesn't change the other. The mug is on order.",
   callbacks:{
     dana:()=>PLAYED(1)?"You fixed my triage tile last week. Now it's the sepsis screen, and this one keeps me up at night.":"Dana Okafor, nurse manager. My sepsis screen is driving my nurses up the wall.",
     greg:d=>d.flags.w1_greg_median?"No contracts this week, I promise. Just a staffing model, and I want it right.":"I'm building a staffing model. No contracts involved. Yet.",
     ruiz:()=>PLAYED(1)?"Your email to the ED director worked. Now my fellow needs a lesson in what \"unusual\" means.":"Elena Ruiz, cardiology. My fellow needs a lesson in what \"unusual\" means.",
-    marcus:()=>PLAYED(1)?"Mrs. Alvarez says hello. She's the outlier, and proud of it. Now I've got a histogram that looks like a mountain range.":"Marcus Bell, rehab. I've got a histogram that looks like a mountain range.",
-    nair:()=>PLAYED(1)?"No pie charts this week! Just probabilities. How hard can that be?":"Priya Nair, Stroke Center! I have a probability question. How hard can it be?"},
+    marcus:()=>PLAYED(1)?"Remember the two speedy circles on my walking-speed plot? One was Mrs. Alvarez, and she's proud of it. Now I've got a histogram that looks like a mountain range.":"Marcus Bell, rehab. I've got a histogram that looks like a mountain range.",
+    nair:()=>PLAYED(1)?"No more pie charts for me, I promise. Just probabilities this week. How hard can that be?":"Priya Nair, Stroke Center! I have a probability question. How hard can it be?"},
   keyFlags:S=>{const f={w2_dana_given:firstRight("c1s2")};
     const t=[];if(f.w2_dana_given)t.push("dana");if(firstRight("c2s1"))t.push("greg");if(firstRight("c3s1"))t.push("ruiz");if(firstRight("c4s1"))t.push("marcus");if(firstRight("e1s1"))t.push("nair");
     if([firstRight("c1s2"),firstRight("c2s1"),firstRight("c3s1"),firstRight("c4s1")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
@@ -522,7 +522,7 @@ const WEEK={num:2,title:"Given what?",
 /* ---------- WEEK 2 DATA ---------- */
 function sepsisData(level){const R=makeRng((SEED()^0x5E5E)>>>0);let N,sep,tp,fp,sens,ppv;
   GEN_OK=0;for(let k=0;k<500;k++){N=R.int(1150,1350);sep=0;for(let i=0;i<N;i++)if(R.u()<(level?.04:.05))sep++;tp=0;for(let i=0;i<sep;i++)if(R.u()<.9)tp++;fp=0;for(let i=0;i<N-sep;i++)if(R.u()<.24)fp++;
-    sens=tp/sep;ppv=tp/(tp+fp);if(sens>=.87&&sens<=.93&&ppv>=.12&&ppv<=.2&&sep>=40){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w2 sepsis");
+    sens=tp/sep;ppv=tp/(tp+fp);if(Math.round(100*sens)===90&&ppv>=.12&&ppv<=.2&&sep>=40){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w2 sepsis");
   return {N,sep,tp,fp,fn:sep-tp,tn:N-sep-fp,sens,ppv,far:fp/(N-sep),T:[[tp,fp],[sep-tp,N-sep-fp]]};}
 function poisPmf(l,x){let p=Math.exp(-l);for(let i=1;i<=x;i++)p*=l/i;return p;}
 function poisData(level){const l=level?8:9;return {l,pmf:x=>poisPmf(l,x),cdf:x=>{let s=0;for(let i=0;i<=x;i++)s+=poisPmf(l,i);return s;}};}
@@ -572,15 +572,15 @@ function case1(R,level){ // Dana: P(sepsis | flagged) is not P(flagged | sepsis)
         miss:{tag:"given_reversed",fb:"That's the sepsis patients the screen missed."}}},
       {id:"c1s3",label:"Who's wrong?",type:"reply",channel:"chat",narr:"Another alarm chimes down the hall. Dana doesn't even turn her head.",
        show:`<div class="slider"><p><strong>Try it.</strong> Keep the screen exactly as good as it is. Change only how common sepsis is among the patients screened.</p>
-         <label for="prev">Patients with sepsis: <strong id="prevlab"></strong></label><input type="range" id="prev" min="1" max="40" step="1" value="${Math.round(100*D.sep/D.N)}">
+         <label for="prev">Patients with sepsis: <strong id="prevlab"></strong></label><input type="range" id="prev" min="1" max="40" step="0.1" value="${(100*D.sep/D.N).toFixed(1)}">
          <div id="prevviz"></div><p id="prevnote" class="where" aria-live="polite"></p></div>`,
        init:()=>{const sl=document.getElementById("prev"),draw=()=>{const p=+sl.value/100,ppv=D.sens*p/(D.sens*p+D.far*(1-p)),k=Math.round(100*ppv);
-           document.getElementById("prevlab").textContent=sl.value+"%";
+           document.getElementById("prevlab").textContent=(+sl.value).toFixed(1)+"%";
            document.getElementById("prevviz").innerHTML=people([{n:k,fill:"var(--teal)",lab:"flagged patients with sepsis"},{n:100-k,fill:"var(--amber)",lab:"flagged patients without sepsis"}],{label:`Out of every 100 flagged patients: ${k} have sepsis and ${100-k} don't.`,cap:"Every 100 flagged patients. Teal: has sepsis. Amber: doesn't."});
-           document.getElementById("prevnote").textContent=`If ${sl.value}% of patients had sepsis, about ${k} of every 100 flags would be real. The screen still catches ${pct(D.sens,0)} of sepsis cases either way.`;};
+           document.getElementById("prevnote").textContent=`If ${(+sl.value).toFixed(1)}% of patients had sepsis, about ${k} of every 100 flags would be real. The screen still catches ${pct(D.sens,0)} of sepsis cases either way.`;};
          sl.addEventListener("input",draw);draw();},
        prompt:"Dana wants to know who's wrong, the vendor or her nurses. Build your reply.",
-       hint:["Move the slider toward your hospital's real rate, then far to the right. Watch the teal dots.",`Both numbers are right; they condition on different groups. Because sepsis is uncommon, the many patients without it produce most of the flags.`],
+       hint:["Start at your hospital's real rate, then slide far to the right. Watch the teal dots.",`Both numbers are right; they condition on different groups. Because sepsis is uncommon, the many patients without it produce most of the flags.`],
        thread:["So which is it? Is the vendor lying, or are my nurses exaggerating?"],
        slots:[
         {label:"The vendor",options:[{t:`Neither. The vendor's ${pct(D.sens,0)} is P(flagged | sepsis): of patients with sepsis, how many got flagged,`,tag:"correct"},{t:`The vendor is lying: only ${pct(D.ppv,0)} is real,`,tag:"given_reversed",fb:`The vendor's number is true: ${D.tp} of ${D.sep} sepsis patients were flagged.`}]},
@@ -637,7 +637,7 @@ function case2(R,level){ // Greg: the builder (which distribution?), then a Pois
 }
 
 function case3(R,level){ // Dr. Ruiz: z-scores and tails on the normal; the t distribution for a small sample
-  const mu=128,sd=level?12:15,x0=level?146:158,z=(x0-mu)/sd,up=1-ncdf(z),df=7;
+  const mu=128,sd=level?12:15,x0=level?155:158,z=(x0-mu)/sd,up=1-ncdf(z),df=7;
   const calc=tbl("Normal calculator",`Systolic BP in Dr. Ruiz's clinic: normal, mean µ = ${mu}, SD σ = ${sd}`,["Value x","z-score","P(X ≤ x), lower tail","P(X &gt; x), upper tail"],[[x0,fx(z,2),fx(1-up,3),fx(up,3)]]);
   return {id:"c3",npc:"ruiz",title:"What counts as unusual",
     scene:"Dr. Ruiz's fellow is leaning in the doorway with a coffee he clearly needs. Dr. Ruiz does not offer him a chair.",
@@ -657,19 +657,19 @@ function case3(R,level){ // Dr. Ruiz: z-scores and tails on the normal; the t di
         {label:"The reading",options:[{t:`${x0} is ${fx(z,1)} standard deviations above the mean (z = ${fx(z,2)}),`,tag:"correct"},{t:`${x0} is ${x0-mu} standard deviations above the mean,`,tag:"z_units",fb:`${x0-mu} is the distance in mmHg. Divided by the SD of ${sd}, it's ${fx(z,1)} standard deviations.`}]},
         {label:"So",options:[{t:`and only about ${pct(up,1)} of her patients read that high or higher. It's unusual.`,tag:"correct"},{t:`and ${pct(1-up,1)} of her patients read that high or higher.`,tag:"lower_upper",fb:`${pct(1-up,1)} is the lower tail: patients at or below ${x0}.`}]}],
        okFb:level?"A z-score puts any reading on one scale: standard deviations from the mean. The calculator turns it into a tail area.":"Two SDs above the mean: the 68-95-99.7 rule says about 95% fall within two SDs, leaving roughly 2.5% above. The calculator agrees."},
-      {id:"c3s2",label:"Eight patients",type:"reply",channel:"chat",narr:"The fellow puts his coffee down. \"Fine. But my pilot will only have eight patients, and I'm using the normal curve for those too. The t distribution is just the normal with a fancier name.\"",
+      {id:"c3s2",label:"Heavier tails",type:"reply",channel:"chat",narr:"The fellow puts his coffee down. \"Fine. But I'm using the normal curve for everything. The t distribution is just the normal with a fancier name.\"",
        show:`<div class="slider"><label for="tdf">Degrees of freedom: <strong id="tdflab"></strong></label><input type="range" id="tdf" min="2" max="60" step="1" value="${df}"><div id="tviz"></div><p id="tnote" class="where" aria-live="polite"></p></div>`,
        init:()=>{const sl=document.getElementById("tdf"),draw=()=>{const d=+sl.value;document.getElementById("tdflab").textContent=d;document.getElementById("tviz").innerHTML=tPlot(d);
            document.getElementById("tnote").textContent=`Area beyond ±2: ${pct(tTail(d),1)} under this t, against ${pct(2*(1-ncdf(2)),1)} under the normal.`;};sl.addEventListener("input",draw);draw();},
-       prompt:"The fellow says the t distribution is just the normal with a fancier name. Build Dr. Ruiz's reply.",
+       prompt:"The fellow says the t distribution is just the normal with a fancier name. Build the reply Dr. Ruiz will give him.",
        hint:["Slide the degrees of freedom from 2 up to 60. Watch the shaded tails and the area beyond ±2.","The t is bell-shaped and centered at 0 like the standard normal, but with heavier tails, so values far from 0 are more likely. As the degrees of freedom grow, it gets closer and closer to the standard normal."],
-       thread:["Same bell curve, isn't it? Why bother with t?"],
+       thread:["He'll say, \"Same bell curve, isn't it? Why bother with t?\" What do I tell him?"],
        slots:[
         {label:"The t",options:[{t:`Same bell shape and center, but heavier tails: with 7 degrees of freedom, values beyond ±2 are nearly twice as likely as under the normal (${pct(tTail(7),1)} against ${pct(2*(1-ncdf(2)),1)}),`,tag:"correct"},{t:"It is the normal under another name,",tag:"t_tails",fb:"Set the slider to 7 and compare the shaded tails with the dashed curve: the t puts more area far from 0."},{t:"Thinner tails, so extreme values are rarer,",tag:"t_tails",fb:"The other way round: look at the area beyond ±2."}]},
         {label:"And",options:[{t:"and its shape depends on the degrees of freedom: the more there are, the closer it gets to the standard normal.",tag:"correct"},{t:"and it gets flatter as the degrees of freedom grow.",tag:"t_tails",fb:"Slide up to 60: the t gets less flat and nearly matches the normal."}]}],
        okFb:"Same center and symmetry as the normal, heavier tails, and closer to the normal as the degrees of freedom grow. The t is used when the population SD isn't known."}],
     outro:g=>g("c3s1")==="correct"
-      ?{ok:true,title:"The fellow learns something",text:'<em>The fellow quietly finishes his coffee and leaves.</em> Dr. Ruiz almost smiles. "Heavier tails. He\'ll remember that when his pilot comes back."'}
+      ?{ok:true,title:"The fellow learns something",text:'<em>The fellow quietly finishes his coffee and leaves.</em> Dr. Ruiz almost smiles. "Heavier tails. He\'ll remember that next time he reaches for the normal curve."'}
       :{ok:false,title:"The fellow learns something",text:'<em>Dr. Ruiz writes "z" and "t" on the whiteboard and underlines both.</em> "Tails matter. That\'s the lesson."'},
     takeaway:"A z-score measures distance from the mean in standard deviations; the tail area says how unusual a value is. The t distribution has heavier tails than the normal and approaches it as the degrees of freedom grow."};
 }
@@ -679,7 +679,7 @@ function marcusData(level){const R=makeRng((SEED()^0x4C4C)>>>0);
   const G=spec.map(([nm,m,s])=>({nm,v:exactSample(R,100,m+R.uni(-.06,.06),s).map(round1)}));G.forEach(g=>{g.m=mean(g.v);g.s=sdv(g.v);});
   const all=G.flatMap(g=>g.v);return {G,all,m:mean(all),s:sdv(all)};}
 function case4(R,level){ // Marcus: a lumpy histogram is three groups; which mean goes in the normal calculator
-  const M=marcusData(level),sp=M.G[0],cut=5,z=(cut-sp.m)/sp.s,up=1-ncdf(z),lo=-6,hi=8;
+  const M=marcusData(level),sp=M.G[0],cut=5,z=(cut-sp.m)/sp.s,up=1-ncdf(z),lo=-9,hi=8;
   const byGroup=M.G.map(g=>histo(g.v,{lo,hi,bw:.5,xlab:g.nm+": lean mass gain (lb)",h:130})).join("");
   const report=tbl("Report","Lean mass gain (lb) after 12 weeks. Means output.",["Group","Mean","N","Std. Deviation"],
     [...M.G.map((g,i)=>[g.nm,pk(fx(g.m,2),"m"+i),100,pk(fx(g.s,2),"s"+i)]),["Total",pk(fx(M.m,2),"mt"),300,pk(fx(M.s,2),"st")]]);
@@ -717,7 +717,7 @@ const CORE=[case1,case2,case3,case4];
 /* ---------- optional consult: Dr. Nair, adding and multiplying probabilities ---------- */
 function expertCase(){
   const memo=`<div class="art art-memo"><span class="sr">Printed note: </span><dl class="memo-head"><dt>From</dt><dd>Dr. Priya Nair</dd><dt>Re</dt><dd>Registry probabilities (help!!)</dd></dl>
-   <p><strong>A.</strong> Every stroke is coded ischemic <em>or</em> hemorrhagic, never both. P(ischemic) = 0.87, P(hemorrhagic) = 0.13.</p>
+   <p><strong>A.</strong> Every stroke is coded ischemic <em>or</em> hemorrhagic, never both (TIAs are logged separately). P(ischemic) = 0.87, P(hemorrhagic) = 0.13.</p>
    <p><strong>B.</strong> Two patients admitted on different days, Mr. K and Ms. T. Each has a 0.30 chance of needing rehab. Their chances don't affect each other.</p></div>`;
   return {id:"e1",npc:"nair",title:"Add or multiply?",
     scene:"Dr. Nair has two calculators on her desk and isn't sure which to trust.",
@@ -728,7 +728,7 @@ function expertCase(){
        options:[
         {t:"Add them: the two can't happen together (mutually exclusive)",tag:"correct",fb:"Right: P(A or B) = P(A) + P(B) when A and B can't both happen. Here they cover every stroke, so the total is 1."},
         {t:"Multiply them: they're independent",tag:"me_vs_indep",fb:"Multiplying gives the chance both happen. One stroke can't be both types."},
-        {t:"Add, then subtract the overlap",tag:"me_vs_indep",fb:"That's the general rule, and it works, but there's no overlap to subtract: no stroke is both."}]},
+        {t:"Add them, then subtract 0.87 × 0.13 for the overlap",tag:"me_vs_indep",fb:"That treats the types as independent. No stroke is both, so the overlap is 0: just add."}]},
       {id:"e1s2",label:"Note B",show:memo,prompt:"For note B: Mr. K needing rehab and Ms. T needing rehab are…",
        hint:"Ask whether both can happen, and whether one changes the chance of the other.",
        options:[
@@ -736,7 +736,7 @@ function expertCase(){
         {t:"Mutually exclusive: if one needs rehab, the other can't",tag:"me_vs_indep",fb:"Both patients can need rehab. Nothing stops it."},
         {t:"Both: independent events are always mutually exclusive",tag:"me_vs_indep",fb:"Independence doesn't mean mutually exclusive. If two events can't happen together, one strongly affects the other."}]}],
     outro:g=>g("e1s1")==="correct"
-      ?{ok:true,title:"Dr. Nair's summary",text:'"Add for or when they can\'t overlap, multiply for and when they\'re independent. I\'m putting that on a mug."'}
+      ?{ok:true,title:"Dr. Nair's summary",text:'"Add for \"or\" when they can\'t overlap, multiply for \"and\" when they\'re independent. I\'m putting that on a mug."'}
       :{ok:false,title:"Dr. Nair's summary",text:'"Mutually exclusive isn\'t independent. Okay. Okay! I\'ve got it now."'},
     takeaway:"Mutually exclusive events can't happen together, so their probabilities add. Independent events don't affect each other, so the probability both happen is the product. They aren't the same thing."};
 }
@@ -744,7 +744,7 @@ function expertCase(){
 /* ---------- reviews with Jordan ---------- */
 const FOLLOWUPS={
  fu_given:()=>JR("fu_given","Quick review: conditional probability","\"Given\" decides the denominator.",[
-  {id:"fu_g2_1",label:"The denominator",prompt:"75 men and 36 women; 25 of the men used cocaine 100+ times. Pick a man at random. The chance he's a heavy user is…",hint:"Given he's a man: the men are the denominator.",
+  {id:"fu_g2_1",label:"The denominator",prompt:"75 men and 36 women; 34 people (25 men, 9 women) used cocaine 100+ times. Pick a man at random. The chance he's a heavy user is…",hint:"Given he's a man: the men are the denominator.",
    options:[{t:"25/75",tag:"correct",fb:"Right: P(heavy user | male) = 25/75 = 0.33."},{t:"25/111",tag:"base_rate",fb:"That's P(male and heavy user), out of everyone."},{t:"25/34",tag:"given_reversed",fb:"That's P(male | heavy user)."}]},
   {id:"fu_g2_2",label:"Reversed",prompt:"P(positive test | disease) is high. Does that make P(disease | positive test) high?",hint:"Think about Dana's screen.",
    options:[{t:"Not necessarily: if the disease is rare, most positives can come from people without it",tag:"correct",fb:"Right."},{t:"Yes, they're the same thing",tag:"given_reversed",fb:"They share a numerator, not a denominator."},{t:"Yes, if the sample is large",tag:"given_reversed",fb:"Sample size doesn't turn one into the other."}]}],
@@ -752,8 +752,8 @@ const FOLLOWUPS={
  fu_dist:()=>JR("fu_dist","Quick review: which distribution","How the data are produced picks the distribution.",[
   {id:"fu_d_1",label:"Counts in time",prompt:"Monthly number of suicides reported in a county follows…",hint:"Events counted over a period of time.",
    options:[{t:"a Poisson distribution",tag:"correct",fb:"Right."},{t:"a normal distribution",tag:"dist_choice",fb:"These are whole-number counts of events in time."},{t:"a Bernoulli distribution",tag:"bern_vs_binom",fb:"Bernoulli is a single yes or no."}]},
-  {id:"fu_d_2",label:"Fixed n",prompt:"The number of 30 children who take part in school lunch follows…",hint:"Yeses out of a fixed number of tries.",
-   options:[{t:"a binomial distribution",tag:"correct",fb:"Right: n = 30 yes-or-no trials."},{t:"a Poisson distribution",tag:"binom_vs_pois",fb:"There's a fixed n of 30, so it's binomial."},{t:"a t distribution",tag:"dist_choice",fb:"t is for continuous statistics."}]}],
+  {id:"fu_d_2",label:"Fixed n",prompt:"The number of children, out of 30, who take part in the school lunch program follows…",hint:"Yeses out of a fixed number of tries.",
+   options:[{t:"a binomial distribution",tag:"correct",fb:"Right: n = 30 yes-or-no trials."},{t:"a Poisson distribution",tag:"binom_vs_pois",fb:"There's a fixed n of 30, so it's binomial."},{t:"a t distribution",tag:"dist_choice",fb:"The t is a continuous bell curve; this is a count of yeses out of 30."}]}],
   "One yes or no: Bernoulli. Yeses out of n: binomial. Events in a time period: Poisson. A bell-shaped measurement: normal."),
  fu_tails:()=>JR("fu_tails","Quick review: lower and upper tails","Which side of x are you asking about?",[
   {id:"fu_tl_1",label:"Lower tail",prompt:"The cumulative distribution function, P(X ≤ x), is…",hint:"Everything up to x.",
@@ -764,7 +764,7 @@ const FOLLOWUPS={
  fu_normal:()=>JR("fu_normal","Quick review: the normal curve and z","Two quick ones on the bell curve.",[
   {id:"fu_n_1",label:"68-95-99.7",prompt:"About what share of a normal distribution lies within 2 standard deviations of the mean?",hint:"The middle number of the rule.",
    options:[{t:"95%",tag:"correct",fb:"Right."},{t:"68%",tag:"z_units",fb:"That's within 1 SD."},{t:"99.7%",tag:"z_units",fb:"That's within 3 SDs."}]},
-  {id:"fu_n_2",label:"z",prompt:"Heights are normal with mean 70 and SD 3 inches. A height of 76 has z =",hint:"z = (x − µ) ÷ σ.",
+  {id:"fu_n_2",label:"z",prompt:"Heights are normal with mean 70 and SD 3 inches. A height of 76 is 6 inches above the mean. Its z-score is…",hint:"z counts how many SDs a value is from the mean.",
    options:[{t:"2",tag:"correct",fb:"Right: 6 inches is 2 SDs."},{t:"6",tag:"z_units",fb:"That's the distance in inches, not in SDs."},{t:"0.95",tag:"lower_upper",fb:"That's a probability, not a z-score."}]}],
   "z counts standard deviations from the mean, and about 68%, 95% and 99.7% fall within 1, 2 and 3 SDs."),
  fu_t:()=>JR("fu_t","Quick review: the t distribution","Normal's cautious cousin.",[
@@ -814,7 +814,7 @@ mergeClues();
 /* ---------- general helpers (shared by every week) ---------- */
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
-const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+const still=h=>h.replace(/<button class="pick"[^>]*>([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
