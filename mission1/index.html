@@ -37,14 +37,14 @@ main{max-width:780px;margin:0 auto;padding:1.6rem 1.1rem 4rem}
 h1{font-family:var(--serif);font-size:2rem;line-height:1.2;margin:.2rem 0 .9rem;font-weight:600}
 h2{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin:0 0 .8rem;font-weight:600}
 p{margin:0 0 .9rem;max-width:68ch}
-.where{color:var(--muted);font-size:.92rem;margin:0}
+.where{color:var(--ink);font-size:1rem;margin:0}
 .lede{font-size:1.1rem}
 .memo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:4px 10px 10px 4px;padding:1rem 1.2rem .3rem;margin:1.1rem 0 1.3rem}
 .memo-from{font-weight:600;margin-bottom:.45rem;font-size:.95rem;color:var(--teal-deep)}
 .memo p{max-width:none}
 .output{margin:1rem 0 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .8rem .5rem}
 .output figcaption{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.4rem}
-.out-note{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.out-note{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
 .scroll{overflow-x:auto}
 /* a table wider than the screen gets a right-edge shadow and becomes keyboard-scrollable */
 .scroll.more{box-shadow:inset -15px 0 12px -12px rgba(0,0,0,.4)}
@@ -121,7 +121,7 @@ main>h2{margin-top:1.8rem}
 .kpi span{font-size:.8rem;color:var(--muted)}
 .vizfig{margin:.5rem 0 1rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .6rem .3rem}
 .viz{display:block;width:100%;height:auto}
-.vizcap{font-size:.82rem;color:var(--muted);margin:.2rem 0 .1rem}
+.vizcap{font-size:.95rem;color:var(--ink);margin:.25rem 0 .1rem}
 .viz text{font:12px var(--sans);fill:var(--muted)}
 .viz .v-strong{fill:var(--ink);font-weight:600}
 .viz .v-reflab{fill:var(--amber);font-weight:600}
@@ -307,7 +307,7 @@ main>h2{margin-top:1.8rem}
 .art-sheet .rn{background:var(--paper);color:var(--muted);font-weight:400;text-align:center;width:1.8rem}
 .art-sheet tr.more td{color:var(--muted);font-style:italic}
 .toast .art-sheet table{min-width:100%}
-.sheet-key{font-size:.8rem;color:var(--muted);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
+.sheet-key{font-size:.92rem;color:var(--ink);padding:.3rem .6rem;margin:0;border-top:1px solid var(--line)}
 .clue-row{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .2rem .6rem}
 .dir .clue-btn{width:auto;font-size:.82rem;padding:.25rem .55rem}
 .toast table{font-size:.82rem;min-width:0}
@@ -316,7 +316,7 @@ main>h2{margin-top:1.8rem}
 @media (max-width:620px){.side{grid-template-columns:1fr}}
 
 /* weeks 1-3: SPSS crosstabs and footnotes, the dashboard screen, paired figures, stacked design choices */
-.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.8rem;color:var(--muted);margin:.45rem 0 0;max-width:none}
+.out-foot{font-family:Arial,Helvetica,sans-serif;font-size:.9rem;color:var(--ink);margin:.45rem 0 0;max-width:none}
 .xt tbody tr.grp>*{border-top:2px solid var(--line-strong)}
 .xt th[scope="rowgroup"]{text-align:left;vertical-align:top}
 .xt tbody th.stat{font-weight:400;color:var(--muted);text-align:left;white-space:normal;min-width:5.5rem;max-width:8rem;line-height:1.25}
@@ -349,7 +349,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:1,version:"1.0",
+const CONFIG={mission:1,version:"1.2",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission1-v1"};
@@ -469,7 +469,7 @@ const WEEK={num:1,title:"The messy dashboard",
     if(S.fuDone.length===0)t.push("jordan");
     return {flags:f,trust:t};},
   ending:f=>f.w1_greg_median?"You stopped a $400,000 contract on your first day by asking which average Greg was reading. Not bad.":"Greg's contract got stopped once the two medians were lined up. Next time, catch it before it reaches my desk.",
-  teaser:"Dana says her sepsis screen flags half the emergency department. She wants to know whether she's imagining it.",
+  teaser:"Dana's nurses say almost every sepsis alert is a false alarm. The vendor says its screen catches 90% of sepsis. Somebody is wrong.",
   hidden:()=>{const R=[["Pain",46],["Injury",31],["Fever",22],["Trouble breathing",16],["Something else",12]],tot=R.reduce((a,r)=>a+r[1],0);
    const pie=(()=>{const W=360,H=190,cx=96,cy=94,r=78;let a0=-Math.PI/2,g="";const cols=["#2A7F86","#C98A1B","#6A4FA3","#B5572D","#5B7083"];
      R.forEach((row,i)=>{const a1=a0+2*Math.PI*row[1]/tot,large=a1-a0>Math.PI?1:0;
@@ -478,9 +478,9 @@ const WEEK={num:1,title:"The messy dashboard",
      return vz(W,H,`Pie chart titled Reason for visit. Its labels read ${R.map(r=>r[0]+" "+r[1]+"%").join(", ")}, which add up to ${tot}%.`,g,"The vendor's pie chart, as it appears on the dashboard.");})();
    const t=tbl("Reason for visit","Intake question: \"Why are you here today? Check all that apply.\" 500 patients.",["Reason","Patients who checked it","% of patients"],
      [...R.map((r,i)=>[r[0],Math.round(r[1]*5),pk(r[1]+"%","r"+i)]),["Total",pk(R.reduce((a,r)=>a+Math.round(r[1]*5),0),"tn"),pk(tot+"%","tp")]]);
-   return {id:"hid",npc:"jordan",title:"The pie that adds up to "+tot+"%",
+   return {id:"hid",npc:"jordan",title:"The vendor's pie",
     scene:"Jordan has the dashboard on the big screen and is tilting their head at it, the way you'd look at a painting hung upside down.",
-    message:"<p>Off the books. Something on the dashboard's front page has been bothering me since the vendor installed it. Tell me what's wrong with this pie.</p>",
+    message:"<p>Off the books. Something on the dashboard's front page has been bothering me since the vendor installed it. The intake form let 500 patients check <strong>every</strong> reason that applied to them. Tell me what's wrong with this pie.</p>",
     steps:[
      {id:"hid1",label:"The number that gives it away",type:"point",show:pie+t,
       prompt:"Click the number that shows this data can't be a pie chart.",
@@ -506,7 +506,7 @@ const WEEK={num:1,title:"The messy dashboard",
     steps:[
      {id:"fin1",label:"The triage tile",type:"cards",claim:`<strong>ED director:</strong> "The tile says our average triage level is ${fx(D.meanLevel,1)}. Do we keep that number?"`,prompt:"Play your strongest evidence.",hint:"Think back to Dana: the numbers 1 to 5 put patients in order of urgency. They don't measure an amount.",
       cards:[{k:"Data",t:"Triage level is ordinal: replace the average with the count and percent of visits at each level",tag:"correct",fb:"The numbers are labels in order. Counts and percentages say exactly how many patients were at each level."},
-       {k:"Data",t:"Keep it: the levels are numbers, so the average works",tag:"codes_as_numbers",fb:"The numbers 1 to 5 are codes for an order. Level 4 isn't twice as urgent as level 2."},
+       {k:"Data",t:"Keep it: the levels are numbers, so the average works",tag:"codes_as_numbers",fb:"The numbers 1 to 5 are codes for an order. Level 4 isn't “twice” level 2 in any sense."},
        {k:"Graph",t:"Replace it with a histogram of triage levels",tag:"graph_choice",fb:"A histogram is for measured numbers. Five ordered categories call for counts and a bar chart."}]},
      {id:"fin2",label:"The length-of-stay tile",type:"cards",claim:`<strong>Board member:</strong> "St. Mary's says its typical stay is ${fx(G.smMed,1)} hours, and ours says ${fx(G.m,1)}. Are we an hour slower?"`,prompt:"Play your strongest evidence.",hint:"Think back to Greg: St. Mary's billboard reports a median, so compare it with our median.",
       cards:[{k:"Output",t:`No: our median is ${fx(G.md,1)} hours. The ${fx(G.m,1)} is our mean, pulled up by a few very long stays`,tag:"correct",fb:"Median against median, the two hospitals are about the same. The long right tail drags the mean, not the median."},
@@ -552,9 +552,9 @@ function case1(R,level){ // Dana: triage level is ordinal; frequency table, cumu
   const cumT=fx(100*D.c.slice(0,t).reduce((a,b)=>a+b,0)/valid,1);
   const picks={};for(let L=1;L<=5;L++){
     picks["f"+L]={tag:"count_not_pct",fb:"That's a count of visits. Dana asked for a share."};
-    picks["p"+L]={tag:L===t?"single_level":"pct_wrong_row",fb:L===t?`That's level ${t} on its own. Dana asked about levels 1 to ${t} together.`:`That's level ${L} on its own.`};
-    picks["v"+L]={tag:L===t?"single_level":"pct_wrong_row",fb:L===t?`That's level ${t} on its own. Dana asked about levels 1 to ${t} together.`:`That's level ${L} on its own.`};
-    picks["c"+L]=L===t?{tag:"correct",fb:`${cumT}%: the running total adds up every level from 1 down to ${t}.${level?" It uses the visits with a level recorded, which is what Dana wants.":""}`}:{tag:"cum_wrong_row",fb:`The running total on that row covers levels 1 to ${L}. Dana asked about levels 1 to ${t}.`};}
+    picks["p"+L]={tag:L===t?"single_level":"freq_wrong_row",fb:L===t?`That's level ${t} on its own. Dana asked about levels 1 to ${t} together.`:`That's level ${L} on its own.`};
+    picks["v"+L]={tag:L===t?"single_level":"freq_wrong_row",fb:L===t?`That's level ${t} on its own. Dana asked about levels 1 to ${t} together.`:`That's level ${L} on its own.`};
+    picks["c"+L]=L===t?{tag:"correct",fb:`${cumT}%: the running total adds up every level from 1 down to ${t}.${level?" It uses the visits with a level recorded, which is what the director asked for.":""}`}:{tag:"cum_wrong_row",fb:`The running total on that row covers levels 1 to ${L}. Dana asked about levels 1 to ${t}.`};}
   const dashT=dash([["Average triage level",fx(D.meanLevel,1),"all visits this month",true],["Visits this month",fx(all,0).replace(/\B(?=(\d{3})+(?!\d))/g,","),""],["Left without being seen","2.1%",""]],"TRIAGE");
   return {id:"c1",npc:"dana",title:"The average triage level",
     scene:"Dana is standing, not sitting, with the dashboard open on her phone. She turns it around before you've said hello.",
@@ -566,14 +566,14 @@ function case1(R,level){ // Dana: triage level is ordinal; frequency table, cumu
        thread:["Ask me anything about triage."],
        questions:[
         {q:"What do the numbers 1 to 5 stand for?",a:"Urgency. 1 is resuscitation, someone who is dying in front of you. 5 is nonurgent, like a prescription refill. The number just puts patients in order.",key:true},
-        {q:"Is a level 4 patient twice as urgent as a level 2?",a:"Ha. No. It's an order, not a measurement. The jump from 1 to 2 is enormous; the jump from 4 to 5 is tiny.",key:true},
+        {q:"Does level 4 mean twice as much of something as level 2?",a:"Ha. No. It's an order, not a measurement. Level 2 is more urgent than level 4, and that's all the numbers say. The jump from 1 to 2 is enormous; the jump from 4 to 5 is tiny.",key:true},
         {q:"Who assigns the level?",a:"The triage nurse, in about two minutes, at the front desk. Under a lot of pressure.",key:false}],
        slots:[
-        {label:"Triage level is",options:[{t:"Triage level is categorical and ordinal: ordered categories, not amounts,",tag:"correct"},{t:"Triage level is numerical, since it's recorded as a number,",tag:"codes_as_numbers",fb:"The numbers are codes. Level 4 isn't twice level 2, so you can't do arithmetic with them."},{t:"Triage level is nominal, with no order,",tag:"order_confusion",fb:"There's a clear order: 1 is the most urgent and 5 the least. Ordered categories are ordinal."}]},
+        {label:"Triage level is",options:[{t:"Triage level is categorical and ordinal: ordered categories, not amounts,",tag:"correct"},{t:"Triage level is numerical, since it's recorded as a number,",tag:"codes_as_numbers",fb:"The numbers are codes. Level 4 isn't “twice” level 2 in any sense, so you can't do arithmetic with them."},{t:"Triage level is nominal, with no order,",tag:"order_confusion",fb:"There's a clear order: 1 is the most urgent and 5 the least. Ordered categories are ordinal."}]},
         {label:"So the tile",options:[{t:"so the tile should show the count and percent of visits at each level, as a bar chart.",tag:"correct"},{t:"so the tile should keep the average level.",tag:"codes_as_numbers",fb:"An average of codes has no meaning. Counts and percentages do."},{t:"so the tile should show a histogram.",tag:"graph_choice",fb:"Histograms are for measured numbers. Categories get a bar chart."}]}],
        okFb:"Ordered categories: report how many patients fall in each, as counts and percentages. The rebuilt tile is shown above."},
       {id:"c1s2",label:"The director's question",type:"point",narr:"Dana sits down for the first time and pulls the printout toward her. \"Okay. Now I can actually answer him.\"",show:freq,
-       prompt:`Dana: "The director wants one number: what share of our visits were level 1 to ${t}, the most urgent?" Point her to it.`,
+       prompt:level?`Dana: "The director wants one number: of the visits with a triage level recorded, what share were level 1 to ${t}, the most urgent?" Point her to it.`:`Dana: "The director wants one number: what share of our visits were levels 1 and 2, the most urgent?" Point her to it.`,
        hint:[`Dana wants levels 1 to ${t} together. One column adds the levels up as it goes down the table.`,`Click the running total on the level ${t} row (${cumT}%).`],
        picks}],
     outro:g=>g("c1s1")==="correct"
@@ -634,7 +634,7 @@ function case3(R,level){ // Dr. Ruiz: same mean, different spread
   let A,B,mA,mB;
   GEN_OK=0;for(let k=0;k<600;k++){A=[];B=[];for(let i=0;i<60;i++){A.push(Math.max(4,Math.round(R.normal(8,1.4))));B.push(Math.max(2,Math.round(R.normal(level?7.6:8,4.3))));}
     mA=mean(A);mB=mean(B);const oA=A.filter(x=>x>10).length/60,oB=B.filter(x=>x>10).length/60;
-    if(Math.abs(mA-mB)<.15&&mA>7.6&&mA<8.4&&oB>=.25&&oA<=.07&&(!level||Math.abs(median(A)-median(B))<=1)){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w1 ruiz");
+    if(Math.abs(mA-mB)<.15&&mA>7.6&&mA<8.4&&oB>=.25&&oA<=.07&&boxStats(A).outs.length<=1&&(!level||Math.abs(median(A)-median(B))<=1)){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w1 ruiz");
   const sA=sdv(A),sB=sdv(B),oA=A.filter(x=>x>10).length/60,oB=B.filter(x=>x>10).length/60;
   const desc=pick=>{const P=(v,k)=>pick?pk(v,k):v;return tbl("Descriptives","Minutes from arrival to ECG, chest-pain patients, last month. 60 per desk.",["Statistic","Desk A (walk-in)","Desk B (ambulance bay)"],
     [["Mean",P(fx(mA,2),"am"),P(fx(mB,2),"bm")],["Median",P(fx(median(A),1),"amd"),P(fx(median(B),1),"bmd")],["Std. Deviation",P(fx(sA,2),"asd"),P(fx(sB,2),"bsd")],["Minimum",P(Math.min(...A),"amin"),P(Math.min(...B),"bmin")],["Maximum",P(Math.max(...A),"amax"),P(Math.max(...B),"bmax")]]);};
@@ -703,14 +703,14 @@ function case4(R,level){ // Marcus: the builder (types of variables), then a box
        spec:{name:"Falls tile",run:"Rebuild the tile",okHead:"Tile rebuilt.",runText:"Rebuilding the tile…",varHead:"Column",typeHead:"Values in the file",roleHead:"Type",noDesign:true,
         roles:[["","Choose a type"],["nominal","Nominal"],["ordinal","Ordinal"],["count","Count (discrete)"],["cont","Continuous"],["id","ID only"]],
         vars,want,why,tagOf,ok:"Each column is summarized the way its type allows."}},
-      {id:"c4s2",label:"Three circles",type:"reply",channel:"chat",narr:`Marcus taps the screen with the screwdriver handle. "What are those little circles? Typos?"`,
+      {id:"c4s2",label:(k===3?"Three":"Two")+" circles",type:"reply",channel:"chat",narr:`Marcus taps the screen with the screwdriver handle. "What are those little circles? Typos?"`,
        show:bp+sumT,
        prompt:"Marcus wants to know whether to delete the circled patients. Build your reply.",
        hint:["Read the summary table: it says where each whisker ends and which values lie outside.",`Outliers are the values outside the whiskers: here ${b.outs.map(f2).join(", ")}. An outlier is unusual, not automatically wrong, so check it before deciding anything.`],
        thread:[`Those ${k} circles. Should I just delete them?`],
        slots:[
         {label:"They are",options:[{t:`They're outliers: the ${k} speeds outside the whiskers (${b.outs.map(f2).join(", ")} m/s),`,tag:"correct"},{t:"They're the fastest and slowest patients, so they're outliers by definition,",tag:"outlier_rule",fb:"Every data set has a fastest and slowest patient. Only values outside the whiskers are outliers."},{t:"They're typing errors,",tag:"outlier_delete",fb:"Nothing says they're errors. They're unusual, which is a reason to check them."}]},
-        {label:"So",options:[{t:"so check those charts first. If they're real patients, they stay, and the median and IQR won't be thrown off by them.",tag:"correct"},{t:"so delete them, so the mean looks right.",tag:"outlier_delete",fb:"Deleting real patients changes the answer to a different question. Check them; if they're real, keep them."}]}],
+        {label:"So",options:[{t:"so check those patients' records first. If they're real patients, they stay, and the median and IQR won't be thrown off by them.",tag:"correct"},{t:"so delete them, so the mean looks right.",tag:"outlier_delete",fb:"Deleting real patients changes the answer to a different question. Check them; if they're real, keep them."}]}],
        okFb:"Outliers are the points outside the whiskers. Check them; don't delete real patients to make a number look nicer."}],
     outro:g=>g("c4s1")==="correct"
       ?{ok:true,title:"Marcus's tile",text:'<em>Marcus pats the monitor like a patient who did well.</em> "No more average fall location. And the fast ones? I bet that\'s Mrs. Alvarez. She power-walks to spite me."'}
@@ -766,7 +766,7 @@ const FOLLOWUPS={
    options:[{t:"the median",tag:"correct",fb:"Right."},{t:"the mean",tag:"mean_skew",fb:"The mean is pulled toward the tail."},{t:"the mode of the raw values",tag:"mean_skew",fb:"The mode is best for categories."}]}],
   "The mean uses every value and is pulled by a long tail; the median is the middle value and resists it."),
  fu_spread:()=>JR("fu_spread","Quick review: measuring spread","Same center, different spread. Here's how to measure it.",[
-  {id:"fu_s_1",label:"Two patients",prompt:"Patient A's BP readings: 95, 98, 95, 95, 96. Patient B's: 85, 106, 88, 105, 96. Both means are 96. Which has the larger standard deviation?",hint:"Look at how far each reading is from 96.",
+  {id:"fu_s_1",label:"Two patients",prompt:"Patient A's BP readings: 95, 98, 96, 95, 96. Patient B's: 85, 106, 88, 105, 96. Both means are 96. Which has the larger standard deviation?",hint:"Look at how far each reading is from 96.",
    options:[{t:"Patient B",tag:"correct",fb:"Right: B's readings sit much farther from the mean (SD about 9.6, against 1.2)."},{t:"Patient A",tag:"mean_only",fb:"A's readings all sit within 2 of the mean."},{t:"The same, since the means match",tag:"mean_only",fb:"Same center doesn't mean same spread."}]},
   {id:"fu_s_2",label:"Pairs",prompt:"Which spread goes with the median?",hint:"Both are built from the sorted middle of the data.",
    options:[{t:"The interquartile range (Q3 − Q1)",tag:"correct",fb:"Right: neither is pulled by extreme values."},{t:"The standard deviation",tag:"sd_vs_iqr",fb:"The SD pairs with the mean."},{t:"The range",tag:"range_extremes",fb:"The range uses only the two extremes."}]}],
@@ -786,17 +786,17 @@ const FOLLOWUPS={
    options:[{t:"check whether it's a real value or an error",tag:"correct",fb:"Right: real values stay."},{t:"delete it",tag:"outlier_delete",fb:"Only if it's a confirmed error."},{t:"replace it with the mean",tag:"outlier_delete",fb:"That invents data."}]}],
   "Outliers are the points outside the whiskers. Check them; keep the real ones and lean on the median and IQR."),
  fu_freq:()=>JR("fu_freq","Quick review: reading a frequency table","Four columns, four different questions.",[
-  {id:"fu_f_1",label:"Cumulative",prompt:"The Cumulative Percent on the level 3 row of a triage table is…",hint:"It's a running total.",
-   options:[{t:"the % of visits at level 1, 2 or 3",tag:"correct",fb:"Right: it adds every row so far."},{t:"the % at level 3 only",tag:"single_level",fb:"That's the Percent column."},{t:"the number of level 3 visits",tag:"count_not_pct",fb:"That's the Frequency column."}]},
-  {id:"fu_f_2",label:"Valid percent",prompt:"Percent and Valid Percent differ when…",hint:"One of them leaves something out.",
-   options:[{t:"some records are missing",tag:"correct",fb:"Right: Valid Percent divides by the records that have a value."},{t:"the categories are ordered",tag:"cum_wrong_row",fb:"Order doesn't matter here."},{t:"there are more than five rows",tag:"cum_wrong_row",fb:"The number of rows doesn't matter."}]}],
+  {id:"fu_f_1",label:"Cumulative",prompt:"The running total % on the level 3 row of a triage table (SPSS: Cumulative Percent) is…",hint:"It's a running total.",
+   options:[{t:"the % of visits at level 1, 2 or 3",tag:"correct",fb:"Right: it adds every row so far."},{t:"the % at level 3 only",tag:"single_level",fb:"That's the % at level 3 alone."},{t:"the number of level 3 visits",tag:"count_not_pct",fb:"That's the count."}]},
+  {id:"fu_f_2",label:"Valid percent",prompt:"\"% of all visits\" and \"% with a level\" (SPSS: Percent and Valid Percent) differ when…",hint:"One of them leaves something out.",
+   options:[{t:"some records are missing",tag:"correct",fb:"Right: \"% with a level\" divides only by the records that have a value."},{t:"the categories are ordered",tag:"cum_wrong_row",fb:"Order doesn't matter here."},{t:"there are more than five rows",tag:"cum_wrong_row",fb:"The number of rows doesn't matter."}]}],
   "Frequency counts, Percent divides by everyone, Valid Percent by those with a value, and Cumulative Percent keeps a running total.")
 };
 const FU_MAP={codes_as_numbers:"fu_types",order_confusion:"fu_types",numbers_as_categories:"fu_types",count_vs_cont:"fu_types",id_as_number:"fu_types",no_choice:"fu_types",build_wrong:"fu_types",
   mean_skew:"fu_center",skew_direction:"fu_center",output_misread:"fu_center",
   sd_vs_iqr:"fu_spread",range_extremes:"fu_spread",mean_only:"fu_spread",pct_wrong_row:"fu_spread",
   graph_choice:"fu_graphs",pie_overlap:"fu_graphs",outlier_rule:"fu_box",outlier_delete:"fu_box",
-  single_level:"fu_freq",cum_wrong_row:"fu_freq",count_not_pct:"fu_freq"};
+  single_level:"fu_freq",cum_wrong_row:"fu_freq",count_not_pct:"fu_freq",freq_wrong_row:"fu_freq"};
 
 /* ---------- the notes in each room ---------- */
 const CLUES=[
@@ -822,7 +822,7 @@ mergeClues();
 /* ---------- general helpers (shared by every week) ---------- */
 const pk=(v,key)=>`<button class="pick" data-pick="${key}">${v}</button>`;
 /* the same output again on a later step, read-only (no clickable cells) */
-const still=h=>h.replace(/<button class="pick" data-pick="[^"]*">([\s\S]*?)<\/button>/g,"$1");
+const still=h=>h.replace(/<button class="pick"[^>]*>([\s\S]*?)<\/button>/g,"$1");
 function fSurv(f,d1,d2){return f<=0?1:betai(d2/2,d1/2,d2/(d2+d1*f));}
 function vz(w,h,label,inner,cap){return `<figure class="vizfig"><svg class="viz" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>${cap?`<figcaption class="vizcap">${cap}</figcaption>`:""}</figure>`;}
 function sc(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0);}
