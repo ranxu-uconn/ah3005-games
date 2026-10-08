@@ -349,7 +349,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:2,version:"1.2",
+const CONFIG={mission:2,version:"1.3",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission2-v1"};
@@ -548,7 +548,7 @@ function case1(R,level){ // Dana: P(sepsis | flagged) is not P(flagged | sepsis)
   return {id:"c1",npc:"dana",title:"Ninety percent of what?",
     scene:"Dana has a vendor brochure in one hand and a list of last night's alarms in the other. The list is longer.",
     message:`<p>The vendor says the screen catches ${pct(D.sens,0)} of sepsis. My nurses say almost every flag is a false alarm. We screened ${fx(D.N,0).replace(/\B(?=(\d{3})+(?!\d))/g,",")} adults last month, and I had every chart reviewed. Somebody is wrong, and I need to know who.</p>`,
-    viz:ctab(false),
+    viz:"",
     steps:[
       {id:"c1s1",label:"Interviewing Dana",type:"interview",reveal:true,show:sheet,prompt:"Ask Dana about the screen, then tell her your plan.",
        hint:["Ask Dana what her nurses actually experience: they only ever see the patients the screen flags.","Her nurses' question starts with the flagged patients: among them, how many had sepsis? That's P(sepsis | flagged), a conditional probability."],
@@ -560,7 +560,7 @@ function case1(R,level){ // Dana: P(sepsis | flagged) is not P(flagged | sepsis)
        slots:[
         {label:"I'll look at",options:[{t:"I'll look only at the patients the screen flagged,",tag:"correct"},{t:"I'll look only at the patients who had sepsis,",tag:"given_reversed",fb:"That's how the vendor got its number. Your nurses start from a flag, not from a diagnosis."},{t:"I'll look at every patient screened,",tag:"base_rate",fb:"Every patient gives you how common sepsis is, not what a flag means."}]},
         {label:"And find",options:[{t:"and find the share who really had sepsis: P(sepsis | flagged).",tag:"correct"},{t:"and find the share who were flagged: P(flagged | sepsis).",tag:"given_reversed",fb:"That reverses the condition. Your nurses' question is: given a flag, how likely is sepsis?"}]}],
-       okFb:"Start from the group the question is about, and that group becomes the denominator. The chart review is shown above."},
+       okFb:"Start from the group the question is about, and that group becomes the denominator. The chart review is next."},
       {id:"c1s2",label:"Finding the number",type:"point",narr:"Dana pulls a chair around to your side of the desk so she can see the table too.",show:ctab(true),
        prompt:"Dana: \"Show me: out of the patients we flagged, what share really had sepsis?\" Point to it.",
        hint:["Dana's denominator is the flagged patients, so look in the Flagged row.","Click the Flagged row's \"% of patients with this screen result\" in the Yes column."],
