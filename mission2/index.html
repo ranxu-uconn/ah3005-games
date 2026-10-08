@@ -184,6 +184,7 @@ main>h2{margin-top:1.8rem}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
+.recap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:.7rem .95rem .3rem;margin:.4rem 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.5}.recap-h{font-weight:700;margin:0 0 .35rem}.recap p,.recap li{margin:.2rem 0 .45rem}.recap ul{margin:.2rem 0 .4rem;padding-left:1.2rem}
 .thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
 .thread.email{border-top:5px solid var(--teal);border-radius:6px}
 .mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
@@ -349,7 +350,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:2,version:"1.3",
+const CONFIG={mission:2,version:"1.5",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission2-v1"};
@@ -490,27 +491,27 @@ const WEEK={num:2,title:"Given what?",
       prompt:"Build your reply to Jordan.",hint:"Try both strategies. Then think about what Jordan knew when lifting a mug.",
       thread:["Go on, then. Why does switching work?"],
       slots:[
-       {label:"Because",options:[{t:"My first pick was right only 1 time in 3, and your reveal didn't change that,",tag:"correct"},{t:"Once one mug is gone, the other two are 50-50,",tag:"conditional_trap",fb:"That would be true if a mug were removed at random. You knew, and always lifted a decaf."}]},
-       {label:"So",options:[{t:"so the other mug carries the remaining 2 in 3. Switching wins about twice as often.",tag:"correct"},{t:"so it's luck either way.",tag:"conditional_trap",fb:`Switching won ${sw} of 1,000 games; staying won ${st}.`}]}],
+       {label:"Because",options:[{t:"My first pick was right only 1 time in 3, and your reveal didn't change that,",tag:"correct"},{t:"Once you lifted a decaf mug, only two are left, so each one now has a 1 in 2 chance,",tag:"conditional_trap",fb:"That would be true if a mug were removed at random. You knew, and always lifted a decaf."}]},
+       {label:"So",options:[{t:"so the other mug carries the remaining 2 in 3. Switching wins about twice as often.",tag:"correct"},{t:"so switching and staying each win about half the time; it's luck either way.",tag:"conditional_trap",fb:`Switching won ${sw} of 1,000 games; staying won ${st}.`}]}],
       okFb:"A probability can change with what you learn, but only through what the information actually tells you. Jordan's reveal said nothing new about your first mug."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan hands you the good coffee. "Most people stay. Most people drink decaf."'}),
     takeaway:"Conditional probability depends on how the information was produced. When the reveal isn't random, intuition about \"50-50\" fails."};},
-  finale:S=>{const D=sepsisData((S&&S.path&&S.path[0])||0),lv=(S&&S.path&&S.path[1])||0,P=poisData(lv),cut=lv?11:12;
+  finale:S=>{const D=sepsisData((S&&S.path&&S.path[0])||0),lv=(S&&S.path&&S.path[1])||0,P=poisData(lv),cut=lv?11:12,M=marcusData((S&&S.path&&S.path[3])||0);
    return {id:"fin",npc:"brooks",title:"The sepsis review",
     scene:"Dr. Brooks, Dana, and the vendor's sales rep sit around a small table. The rep has brought muffins. Nobody has touched them.",
     message:"<p>The quality committee wants answers before the sepsis screen's contract renews. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"Is the screen accurate?",type:"cards",claim:`<strong>Sales rep:</strong> "Our screen flags ${pct(D.sens,0)} of sepsis patients. Your nurses say most flags are false. Somebody's wrong."`,prompt:"Play your strongest evidence.",hint:"Think back to Dana: two percentages with the same numerator and different denominators.",
-      cards:[{k:"Data",t:`Neither: ${pct(D.sens,0)} is P(flagged | sepsis). The nurses see P(sepsis | flagged), only ${pct(D.ppv,0)}, because most screened patients don't have sepsis`,tag:"correct",fb:"Both numbers are true. They condition on different groups."},
-       {k:"Data",t:`The rep is wrong: only ${pct(D.ppv,0)} of flags are real`,tag:"given_reversed",fb:`The rep's number is real too: ${pct(D.sens,0)} of sepsis patients are flagged.`},
-       {k:"Data",t:`The nurses are wrong: ${pct(D.sens,0)} of flags are real`,tag:"given_reversed",fb:"That reverses the condition. Of flagged patients, few have sepsis."}]},
-     {id:"fin2",label:"The third nurse",type:"cards",claim:`<strong>Greg:</strong> "The model says P(X ≤ ${cut}) = ${fx(P.cdf(cut),3)}. So we need a third nurse ${pct(P.cdf(cut),0)} of the time?"`,prompt:"Play your strongest evidence.",hint:`Think back to Greg's table: "${cut} or fewer" and "more than ${cut}" are opposite tails.`,
-      cards:[{k:"Output",t:`No: ${fx(P.cdf(cut),3)} is the chance of ${cut} or fewer. The third nurse is needed for ${lv?"12 or more":"more than 12"}, the upper tail: ${fx(1-P.cdf(cut),3)}`,tag:"correct",fb:`About ${pct(1-P.cdf(cut),0)} of hours, not ${pct(P.cdf(cut),0)}.`},
-       {k:"Output",t:"Yes: the cumulative probability is the chance we're over the limit",tag:"lower_upper",fb:"The cumulative probability, P(X ≤ x), is the lower tail."},
-       {k:"Output",t:`No: use P(X = 12) = ${fx(P.pmf(12),3)}`,tag:"exact_vs_tail",fb:`That's exactly 12 arrivals, not ${lv?"12 or more":"more than 12"}.`}]},
-     {id:"fin3",label:"Marcus's program",type:"cards",claim:'<strong>Committee member:</strong> "Patients gained lean mass after Marcus\'s program. So the program caused the gain?"',prompt:"Play your strongest evidence.",hint:"Think about Marcus's design: everyone was measured before and after, and nobody was left out of the program.",
-      cards:[{k:"Design",t:"Not yet: everyone got the program and there was no comparison group, so we can't tell how much they'd have gained anyway",tag:"correct",fb:"A pre-post design without a control group can show change, not what caused it."},
-       {k:"Data",t:"Yes: the average gain was above zero",tag:"prepost_cause",fb:"Patients might have gained without the program. There's no comparison group to check."},
+     {id:"fin1",label:"Is the screen accurate?",type:"cards",claim:`<strong>Sales rep:</strong> "Our screen flags ${pct(D.sens,0)} of sepsis patients. Your nurses say most flags are false. Somebody's wrong."`,context:`<ul><li>Dana screened ${D.N.toLocaleString("en-US")} adults last month and had every chart reviewed: ${D.sep} had sepsis.</li><li>The screen flagged ${D.tp} of those ${D.sep} sepsis patients (${pct(D.sens,0)}).</li><li>It flagged ${D.tp+D.fp} patients in all, and ${D.tp} of them had sepsis (${pct(D.ppv,0)}).</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: two percentages with the same numerator and different denominators.",
+      cards:[{k:"Data",t:`Neither: ${pct(D.sens,0)} is P(flagged | sepsis). The nurses see P(sepsis | flagged), only ${pct(D.ppv,0)}, as sepsis is uncommon`,tag:"correct",fb:"Both numbers are true. They condition on different groups."},
+       {k:"Data",t:`The rep is wrong: only ${pct(D.ppv,0)} of flagged patients had sepsis, so the screen misses most cases`,tag:"given_reversed",fb:`False flags aren't missed cases. The rep's number is real too: ${pct(D.sens,0)} of sepsis patients are flagged.`},
+       {k:"Data",t:`The nurses are wrong: the screen flags ${pct(D.sens,0)} of sepsis patients, so ${pct(D.sens,0)} of its flags are real`,tag:"given_reversed",fb:"That reverses the condition. Of flagged patients, few have sepsis."}]},
+     {id:"fin2",label:"The third nurse",type:"cards",claim:`<strong>Greg:</strong> "The model says P(X ≤ ${cut}) = ${fx(P.cdf(cut),3)}. So we need a third nurse ${pct(P.cdf(cut),0)} of the time?"`,prompt:"Play your strongest evidence.",context:`<ul><li>Greg's staffing model: arrivals in one hour follow a Poisson distribution, with an average of ${P.l} per hour.</li><li>His rule: a third nurse in any hour with ${lv?"12 or more":"more than 12"} arrivals.</li></ul>`,hint:`Look at Greg's rule in the facts box: "${cut} or fewer" and "more than ${cut}" are opposite tails.`,
+      cards:[{k:"Output",t:`No: ${fx(P.cdf(cut),3)} is the chance of ${cut} or fewer. More than ${cut} is the upper tail: ${fx(1-P.cdf(cut),3)}`,tag:"correct",fb:`About ${pct(1-P.cdf(cut),0)} of hours, not ${pct(P.cdf(cut),0)}.`},
+       {k:"Output",t:`Yes: the cumulative probability, ${fx(P.cdf(cut),3)}, is the chance we're over the limit of ${cut} arrivals`,tag:"lower_upper",fb:"The cumulative probability, P(X ≤ x), is the lower tail."},
+       {k:"Output",t:`No: the third nurse is for hours with 12 arrivals, so use P(X = 12) = ${fx(P.pmf(12),3)}`,tag:"exact_vs_tail",fb:`That's exactly 12 arrivals, not ${lv?"12 or more":"more than 12"}.`}]},
+     {id:"fin3",label:"Marcus's program",type:"cards",claim:'<strong>Committee member:</strong> "Patients gained lean mass after Marcus\'s program. So the program caused the gain?"',context:`<ul><li>Marcus put 300 patients through his 12-week strength program: 100 with a sports injury, 100 after a knee replacement, 100 in the balance class (age 75+).</li><li>Every patient got the program. Lean mass was measured before and after; the average gain was ${fx(M.m,1)} lb.</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the design in the facts box: everyone was measured before and after, and nobody was left out of the program.",
+      cards:[{k:"Design",t:"Not yet: with no comparison group, we can't tell how much they'd have gained anyway",tag:"correct",fb:"A pre-post design without a control group can show change, not what caused it."},
+       {k:"Design",t:"Yes: patients were measured before and after, and the average gain was above zero",tag:"prepost_cause",fb:"Patients might have gained without the program. There's no comparison group to check."},
        {k:"Data",t:"Yes: the sports-injury group's gains were normally distributed",tag:"prepost_cause",fb:"The shape of the data says nothing about what caused the gain."}]}],
     outro:g=>({ok:true,title:"Committee decisions",
       text:[g("fin1")==="correct"?"Sepsis screen: kept, with the report showing both P(flagged | sepsis) and P(sepsis | flagged)":"Sepsis screen: kept, after both percentages were explained",
@@ -559,7 +560,7 @@ function case1(R,level){ // Dana: P(sepsis | flagged) is not P(flagged | sepsis)
         {q:"Does the alarm have to be that loud?",a:"Yes. Believe me, I asked.",key:false}],
        slots:[
         {label:"I'll look at",options:[{t:"I'll look only at the patients the screen flagged,",tag:"correct"},{t:"I'll look only at the patients who had sepsis,",tag:"given_reversed",fb:"That's how the vendor got its number. Your nurses start from a flag, not from a diagnosis."},{t:"I'll look at every patient screened,",tag:"base_rate",fb:"Every patient gives you how common sepsis is, not what a flag means."}]},
-        {label:"And find",options:[{t:"and find the share who really had sepsis: P(sepsis | flagged).",tag:"correct"},{t:"and find the share who were flagged: P(flagged | sepsis).",tag:"given_reversed",fb:"That reverses the condition. Your nurses' question is: given a flag, how likely is sepsis?"}]}],
+        {label:"And find",options:[{t:"and find the share who really had sepsis: P(sepsis | flagged).",tag:"correct"},{t:"and find the share of sepsis patients the screen flagged: P(flagged | sepsis).",tag:"given_reversed",fb:"That reverses the condition. Your nurses' question is: given a flag, how likely is sepsis?"}]}],
        okFb:"Start from the group the question is about, and that group becomes the denominator. The chart review is next."},
       {id:"c1s2",label:"Finding the number",type:"point",narr:"Dana pulls a chair around to your side of the desk so she can see the table too.",show:ctab(true),
        prompt:"Dana: \"Show me: out of the patients we flagged, what share really had sepsis?\" Point to it.",
@@ -583,8 +584,8 @@ function case1(R,level){ // Dana: P(sepsis | flagged) is not P(flagged | sepsis)
        hint:["Start at your hospital's real rate, then slide far to the right. Watch the teal dots.",`Both numbers are right; they condition on different groups. Because sepsis is uncommon, the many patients without it produce most of the flags.`],
        thread:["So which is it? Is the vendor lying, or are my nurses exaggerating?"],
        slots:[
-        {label:"The vendor",options:[{t:`Neither. The vendor's ${pct(D.sens,0)} is P(flagged | sepsis): of patients with sepsis, how many got flagged,`,tag:"correct"},{t:`The vendor is lying: only ${pct(D.ppv,0)} is real,`,tag:"given_reversed",fb:`The vendor's number is true: ${D.tp} of ${D.sep} sepsis patients were flagged.`}]},
-        {label:"Your nurses",options:[{t:`while your nurses see P(sepsis | flagged), about ${pct(D.ppv,0)}, because sepsis is uncommon and most flags come from the many patients without it.`,tag:"correct"},{t:"while your nurses are exaggerating; most flags are real.",tag:"given_reversed",fb:`Of the flagged patients, only ${pct(D.ppv,0)} had sepsis. The nurses are right.`}]}],
+        {label:"The vendor",options:[{t:`Neither. The vendor's ${pct(D.sens,0)} is P(flagged | sepsis): the share of sepsis patients who got flagged,`,tag:"correct"},{t:`The vendor is lying: of ${D.tp+D.fp} flagged patients, only ${D.tp} had sepsis, so only ${pct(D.ppv,0)} is real,`,tag:"given_reversed",fb:`Those numbers answer a different question. The vendor's number is true too: ${D.tp} of ${D.sep} sepsis patients were flagged.`}]},
+        {label:"Your nurses",options:[{t:`while your nurses see P(sepsis | flagged), about ${pct(D.ppv,0)}: sepsis is uncommon, so most flags come from patients without it.`,tag:"correct"},{t:`while your nurses are exaggerating: a screen that catches ${pct(D.sens,0)} of sepsis can't be wrong on most of its flags.`,tag:"given_reversed",fb:`Catching most sepsis cases says nothing about how many flags are false. Of the flagged patients, only ${pct(D.ppv,0)} had sepsis. The nurses are right.`}]}],
        okFb:"P(A | B) and P(B | A) share a numerator but not a denominator. When the condition is uncommon, they can be wildly different."}],
     outro:g=>g("c1s2")==="correct"
       ?{ok:true,title:"Dana's report",text:`<em>Dana circles ${pct(D.ppv,0)} on the table twice.</em> "My nurses aren't exaggerating, and the vendor isn't lying. That's the most annoying answer possible, and I believe it."`}
@@ -654,8 +655,8 @@ function case3(R,level){ // Dr. Ruiz: z-scores and tails on the normal; the t di
        hint:["Read the calculator: it gives the z-score and both tails for this reading.",`The z-score counts standard deviations from the mean. \"How unusual\" is the share of patients at least this high: the upper tail.`],
        thread:[`So? Is ${x0} unusual or not?`],
        slots:[
-        {label:"The reading",options:[{t:`${x0} is ${fx(z,1)} standard deviations above the mean (z = ${fx(z,2)}),`,tag:"correct"},{t:`${x0} is ${x0-mu} standard deviations above the mean,`,tag:"z_units",fb:`${x0-mu} is the distance in mmHg. Divided by the SD of ${sd}, it's ${fx(z,1)} standard deviations.`}]},
-        {label:"So",options:[{t:`and only about ${pct(up,1)} of her patients read that high or higher. It's unusual.`,tag:"correct"},{t:`and ${pct(1-up,1)} of her patients read that high or higher.`,tag:"lower_upper",fb:`${pct(1-up,1)} is the lower tail: patients at or below ${x0}.`}]}],
+        {label:"The reading",options:[{t:`${x0} is ${fx(z,1)} standard deviations above the mean (z = ${fx(z,2)}),`,tag:"correct"},{t:`${x0} is ${x0-mu} standard deviations above the mean of ${mu} (${x0} − ${mu} = ${x0-mu}),`,tag:"z_units",fb:`${x0-mu} is the distance in mmHg. Divided by the SD of ${sd}, it's ${fx(z,1)} standard deviations.`}]},
+        {label:"So",options:[{t:`and only about ${pct(up,1)} of her patients read that high or higher: unusual.`,tag:"correct"},{t:`and ${pct(1-up,1)} of her patients read that high or higher, so it's normal variation.`,tag:"lower_upper",fb:`${pct(1-up,1)} is the lower tail: patients at or below ${x0}.`}]}],
        okFb:level?"A z-score puts any reading on one scale: standard deviations from the mean. The calculator turns it into a tail area.":"Two SDs above the mean: the 68-95-99.7 rule says about 95% fall within two SDs, leaving roughly 2.5% above. The calculator agrees."},
       {id:"c3s2",label:"Heavier tails",type:"reply",channel:"chat",narr:"The fellow puts his coffee down. \"Fine. But I'm using the normal curve for everything. The t distribution is just the normal with a fancier name.\"",
        show:`<div class="slider"><label for="tdf">Degrees of freedom: <strong id="tdflab"></strong></label><input type="range" id="tdf" min="2" max="60" step="1" value="${df}"><div id="tviz"></div><p id="tnote" class="where" aria-live="polite"></p></div>`,
@@ -665,8 +666,8 @@ function case3(R,level){ // Dr. Ruiz: z-scores and tails on the normal; the t di
        hint:["Slide the degrees of freedom from 2 up to 60. Watch the shaded tails and the area beyond ±2.","The t is bell-shaped and centered at 0 like the standard normal, but with heavier tails, so values far from 0 are more likely. As the degrees of freedom grow, it gets closer and closer to the standard normal."],
        thread:["He'll say, \"Same bell curve, isn't it? Why bother with t?\" What do I tell him?"],
        slots:[
-        {label:"The t",options:[{t:`Same bell shape and center, but heavier tails: with 7 degrees of freedom, values beyond ±2 are nearly twice as likely as under the normal (${pct(tTail(7),1)} against ${pct(2*(1-ncdf(2)),1)}),`,tag:"correct"},{t:"It is the normal under another name,",tag:"t_tails",fb:"Set the slider to 7 and compare the shaded tails with the dashed curve: the t puts more area far from 0."},{t:"Thinner tails, so extreme values are rarer,",tag:"t_tails",fb:"The other way round: look at the area beyond ±2."}]},
-        {label:"And",options:[{t:"and its shape depends on the degrees of freedom: the more there are, the closer it gets to the standard normal.",tag:"correct"},{t:"and it gets flatter as the degrees of freedom grow.",tag:"t_tails",fb:"Slide up to 60: the t gets less flat and nearly matches the normal."}]}],
+        {label:"The t",options:[{t:`Same bell shape and center, but heavier tails: at 7 degrees of freedom, ${pct(tTail(7),1)} lies beyond ±2, against ${pct(2*(1-ncdf(2)),1)} for the normal,`,tag:"correct"},{t:"It is the normal under another name: the same bell shape, the same center at 0, and the same area beyond ±2,",tag:"t_tails",fb:"Set the slider to 7 and compare the shaded tails with the dashed curve: the t puts more area far from 0."},{t:"Same bell shape and center, but thinner tails: at 7 degrees of freedom, values beyond ±2 are rarer than under the normal,",tag:"t_tails",fb:"The other way round: the slider shows more area beyond ±2 under the t than under the normal."}]},
+        {label:"And",options:[{t:"and as the degrees of freedom grow, it gets closer to the standard normal.",tag:"correct"},{t:"and its shape depends on the degrees of freedom: the more there are, the flatter and wider it gets.",tag:"t_tails",fb:"Slide up to 60: the t gets less flat and nearly matches the normal."}]}],
        okFb:"Same center and symmetry as the normal, heavier tails, and closer to the normal as the degrees of freedom grow. The t is used when the population SD isn't known."}],
     outro:g=>g("c3s1")==="correct"
       ?{ok:true,title:"The fellow learns something",text:'<em>The fellow quietly finishes his coffee and leaves.</em> Dr. Ruiz almost smiles. "Heavier tails. He\'ll remember that next time he reaches for the normal curve."'}
@@ -695,8 +696,8 @@ function case4(R,level){ // Marcus: a lumpy histogram is three groups; which mea
        hint:["Switch to \"By group\" and look at each histogram's shape on its own.","The combined histogram mixes three groups with very different centers. Each group on its own looks roughly bell-shaped."],
        thread:["So? Normal or not?"],
        slots:[
-        {label:"All together",options:[{t:"Not all together: the histogram has separate peaks because it mixes three groups with different centers,",tag:"correct"},{t:"Yes: it's normal, just noisy,",tag:"mixed_groups",fb:"Noise doesn't make separate peaks. Switch to \"By group.\""},{t:"No: it's skewed by a few outliers,",tag:"mixed_groups",fb:"There aren't a few odd values; there are three whole groups."}]},
-        {label:"So",options:[{t:"so describe each group on its own; each one looks roughly bell-shaped.",tag:"correct"},{t:"so drop the smallest group and try again.",tag:"mixed_groups",fb:"Every group is real. Describe each one separately."}]}],
+        {label:"All together",options:[{t:"Not all together: it has separate peaks because it mixes three groups with different centers,",tag:"correct"},{t:"Yes: it's normal, just noisy, since 300 patients always give a few bumpy bins,",tag:"mixed_groups",fb:"Noise doesn't make separate peaks. Switch to \"By group.\""},{t:"No: it's skewed, with a few outliers in the tail pulling it off the bell shape,",tag:"mixed_groups",fb:"There aren't a few odd values; there are three whole groups, each with its own peak."}]},
+        {label:"So",options:[{t:"so describe each group on its own; each one looks roughly bell-shaped.",tag:"correct"},{t:"so drop the group with the lowest gains and check whether the rest looks bell-shaped.",tag:"mixed_groups",fb:"Every group is real, and dropping one still leaves two hills. Describe each one separately."}]}],
        okFb:"Several peaks usually means several groups mixed together. Describe and model each group separately."},
       {id:"c4s2",label:"The calculator",type:"point",narr:"Marcus opens a normal calculator on his phone and holds it out. \"What do I type in?\"",show:report,
        prompt:"Marcus: \"What's the chance a sports-injury patient gains more than 5 pounds? Which mean do I put in the calculator?\" Click it.",
@@ -727,13 +728,13 @@ function expertCase(){
        hint:"Can one stroke be both? If not, the events are mutually exclusive.",
        options:[
         {t:"Add them: the two can't happen together (mutually exclusive)",tag:"correct",fb:"Right: P(A or B) = P(A) + P(B) when A and B can't both happen. Here they cover every stroke, so the total is 1."},
-        {t:"Multiply them: they're independent",tag:"me_vs_indep",fb:"Multiplying gives the chance both happen. One stroke can't be both types."},
+        {t:"Multiply them: one type's chance doesn't change the other's (independent)",tag:"me_vs_indep",fb:"Multiplying gives the chance both happen. One stroke can't be both types."},
         {t:"Add them, then subtract 0.87 × 0.13 for the overlap",tag:"me_vs_indep",fb:"That treats the types as independent. No stroke is both, so the overlap is 0: just add."}]},
       {id:"e1s2",label:"Note B",show:memo,prompt:"For note B: Mr. K needing rehab and Ms. T needing rehab are…",
        hint:"Ask whether both can happen, and whether one changes the chance of the other.",
        options:[
-        {t:"Independent, not mutually exclusive: both can happen, and P(both) = 0.30 × 0.30",tag:"correct",fb:"Right: independence means one doesn't change the other's chance. That's not the same as mutually exclusive."},
-        {t:"Mutually exclusive: if one needs rehab, the other can't",tag:"me_vs_indep",fb:"Both patients can need rehab. Nothing stops it."},
+        {t:"Independent, not mutually exclusive: P(both) = 0.30 × 0.30",tag:"correct",fb:"Right: independence means one doesn't change the other's chance. That's not the same as mutually exclusive."},
+        {t:"Mutually exclusive: only one of them can need rehab, so P(K or T) = 0.30 + 0.30",tag:"me_vs_indep",fb:"Adding is for events that can't both happen. Both patients can need rehab; nothing stops it."},
         {t:"Both: independent events are always mutually exclusive",tag:"me_vs_indep",fb:"Independence doesn't mean mutually exclusive. If two events can't happen together, one strongly affects the other."}]}],
     outro:g=>g("e1s1")==="correct"
       ?{ok:true,title:"Dr. Nair's summary",text:'"Add for \"or\" when they can\'t overlap, multiply for \"and\" when they\'re independent. I\'m putting that on a mug."'}
@@ -747,13 +748,13 @@ const FOLLOWUPS={
   {id:"fu_g2_1",label:"The denominator",prompt:"75 men and 36 women; 34 people (25 men, 9 women) used cocaine 100+ times. Pick a man at random. The chance he's a heavy user is…",hint:"Given he's a man: the men are the denominator.",
    options:[{t:"25/75",tag:"correct",fb:"Right: P(heavy user | male) = 25/75 = 0.33."},{t:"25/111",tag:"base_rate",fb:"That's P(male and heavy user), out of everyone."},{t:"25/34",tag:"given_reversed",fb:"That's P(male | heavy user)."}]},
   {id:"fu_g2_2",label:"Reversed",prompt:"P(positive test | disease) is high. Does that make P(disease | positive test) high?",hint:"Think about Dana's screen.",
-   options:[{t:"Not necessarily: if the disease is rare, most positives can come from people without it",tag:"correct",fb:"Right."},{t:"Yes, they're the same thing",tag:"given_reversed",fb:"They share a numerator, not a denominator."},{t:"Yes, if the sample is large",tag:"given_reversed",fb:"Sample size doesn't turn one into the other."}]}],
+   options:[{t:"Not necessarily: if the disease is rare, most positives can come from people without it",tag:"correct",fb:"Right."},{t:"Yes: both measure the test's accuracy, so if one is high the other is too",tag:"given_reversed",fb:"They share a numerator, not a denominator, so they answer different questions."},{t:"Yes, as long as the sample is large enough for the percentages to be stable",tag:"given_reversed",fb:"Sample size doesn't turn one into the other."}]}],
   "P(A | B) divides by B; P(B | A) divides by A. They answer different questions."),
  fu_dist:()=>JR("fu_dist","Quick review: which distribution","How the data are produced picks the distribution.",[
   {id:"fu_d_1",label:"Counts in time",prompt:"Monthly number of suicides reported in a county follows…",hint:"Events counted over a period of time.",
    options:[{t:"a Poisson distribution",tag:"correct",fb:"Right."},{t:"a normal distribution",tag:"dist_choice",fb:"These are whole-number counts of events in time."},{t:"a Bernoulli distribution",tag:"bern_vs_binom",fb:"Bernoulli is a single yes or no."}]},
   {id:"fu_d_2",label:"Fixed n",prompt:"The number of children, out of 30, who take part in the school lunch program follows…",hint:"Yeses out of a fixed number of tries.",
-   options:[{t:"a binomial distribution",tag:"correct",fb:"Right: n = 30 yes-or-no trials."},{t:"a Poisson distribution",tag:"binom_vs_pois",fb:"There's a fixed n of 30, so it's binomial."},{t:"a t distribution",tag:"dist_choice",fb:"The t is a continuous bell curve; this is a count of yeses out of 30."}]}],
+   options:[{t:"a binomial distribution",tag:"correct",fb:"Right: n = 30 yes-or-no trials."},{t:"a Poisson distribution, since it counts children",tag:"binom_vs_pois",fb:"Counting isn't enough: there's a fixed n of 30, so it's binomial."},{t:"a t distribution",tag:"dist_choice",fb:"The t is a continuous bell curve; this is a count of yeses out of 30."}]}],
   "One yes or no: Bernoulli. Yeses out of n: binomial. Events in a time period: Poisson. A bell-shaped measurement: normal."),
  fu_tails:()=>JR("fu_tails","Quick review: lower and upper tails","Which side of x are you asking about?",[
   {id:"fu_tl_1",label:"Lower tail",prompt:"The cumulative distribution function, P(X ≤ x), is…",hint:"Everything up to x.",
@@ -771,19 +772,19 @@ const FOLLOWUPS={
   {id:"fu_tt_1",label:"Tails",prompt:"Compared with the standard normal, a t distribution with few degrees of freedom has…",hint:"Look at the edges of the curve.",
    options:[{t:"heavier tails",tag:"correct",fb:"Right: more area far from 0."},{t:"thinner tails",tag:"t_tails",fb:"The other way round."},{t:"a different center",tag:"t_tails",fb:"Both are centered at 0."}]},
   {id:"fu_tt_2",label:"Large df",prompt:"As the degrees of freedom grow, the t distribution…",hint:"Picture the slider in Dr. Ruiz's office moving to the right.",
-   options:[{t:"approaches the standard normal",tag:"correct",fb:"Right."},{t:"gets flatter",tag:"t_tails",fb:"It gets less flat."},{t:"becomes skewed",tag:"t_tails",fb:"It stays symmetric."}]}],
+   options:[{t:"approaches the standard normal",tag:"correct",fb:"Right."},{t:"gets flatter and more spread out",tag:"t_tails",fb:"It gets less flat."},{t:"becomes skewed to the right",tag:"t_tails",fb:"It stays symmetric."}]}],
   "The t distribution is symmetric like the normal, with heavier tails, and gets closer to the normal as the degrees of freedom grow."),
  fu_groups:()=>JR("fu_groups","Quick review: groups hiding in a histogram","Shape first, then numbers.",[
   {id:"fu_gr_1",label:"Peaks",prompt:"A histogram has three separate peaks. The most likely reason is…",hint:"Think about who is in the data.",
-   options:[{t:"it mixes groups with different centers",tag:"correct",fb:"Right: split it by group."},{t:"outliers",tag:"mixed_groups",fb:"A few odd values don't make whole peaks."},{t:"too few bins",tag:"mixed_groups",fb:"Fewer bins would hide peaks, not make them."}]},
+   options:[{t:"it mixes groups with different centers",tag:"correct",fb:"Right: split it by group."},{t:"a few outliers far from the center",tag:"mixed_groups",fb:"A few odd values don't make whole peaks."},{t:"too few bins, which lumps the values into a few piles",tag:"mixed_groups",fb:"Fewer bins would hide peaks, not make them."}]},
   {id:"fu_gr_2",label:"Which numbers",prompt:"To find a probability for one group, use…",hint:"The question is about one group.",
-   options:[{t:"that group's mean and SD",tag:"correct",fb:"Right."},{t:"the overall mean and SD",tag:"mixed_groups",fb:"Those mix in the other groups."},{t:"the median and IQR",tag:"sd_for_mean",fb:"The normal curve uses a mean and SD."}]}],
+   options:[{t:"that group's mean and SD",tag:"correct",fb:"Right."},{t:"the overall mean and SD of all the groups",tag:"mixed_groups",fb:"Those mix in the other groups."},{t:"the median and IQR",tag:"sd_for_mean",fb:"The normal curve uses a mean and SD."}]}],
   "Mixed groups make lumpy histograms. Describe each group separately, with its own mean and SD."),
  fu_rules:()=>JR("fu_rules","Quick review: mutually exclusive or independent","Two words that sound alike and aren't.",[
   {id:"fu_r2_1",label:"Two coins",prompt:"Flip two coins. A: the first is heads. B: the second is heads. A and B are…",hint:"Ask whether both can happen, and whether one changes the other.",
-   options:[{t:"independent but not mutually exclusive",tag:"correct",fb:"Right: P(A or B) = 0.5 + 0.5 − 0.25 = 0.75."},{t:"mutually exclusive",tag:"me_vs_indep",fb:"Both coins can land heads."},{t:"neither",tag:"me_vs_indep",fb:"One coin doesn't affect the other: independent."}]},
+   options:[{t:"independent but not mutually exclusive",tag:"correct",fb:"Right: P(A or B) = 0.5 + 0.5 − 0.25 = 0.75."},{t:"mutually exclusive, since they're separate coins",tag:"me_vs_indep",fb:"Separate coins don't stop both landing heads. Both can happen."},{t:"neither",tag:"me_vs_indep",fb:"One coin doesn't affect the other: independent."}]},
   {id:"fu_r2_2",label:"One coin",prompt:"Flip one coin. Heads and tails are…",hint:"Ask whether both can happen on one flip.",
-   options:[{t:"mutually exclusive: P(heads or tails) = 0.5 + 0.5",tag:"correct",fb:"Right."},{t:"independent",tag:"me_vs_indep",fb:"If it's heads, it's certainly not tails; that's strong dependence."},{t:"both",tag:"me_vs_indep",fb:"Mutually exclusive events with nonzero chances are never independent."}]}],
+   options:[{t:"mutually exclusive: P(heads or tails) = 0.5 + 0.5",tag:"correct",fb:"Right."},{t:"independent: P(heads and tails) = 0.5 × 0.5 = 0.25",tag:"me_vs_indep",fb:"If it's heads, it's certainly not tails; that's strong dependence. One flip can't be both, so P(heads and tails) = 0."},{t:"both: mutually exclusive and independent",tag:"me_vs_indep",fb:"Mutually exclusive events with nonzero chances are never independent."}]}],
   "Mutually exclusive: can't both happen, so add. Independent: one doesn't change the other, so multiply for both.")
 };
 const FU_MAP={given_reversed:"fu_given",base_rate:"fu_given",complement:"fu_given",count_not_pct:"fu_given",conditional_trap:"fu_given",
@@ -1154,7 +1155,7 @@ function showStep(unit,i,kind,lvl){
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
     <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
-    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>[Math.random(),o,k]).sort((x,y)=>x[0]-y[0]).map(([_,o,k])=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   markScrollers();
@@ -1243,7 +1244,7 @@ function showStep(unit,i,kind,lvl){
     box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
   }
   if(st.type==="cards"){
-    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    box.querySelector(".opts").outerHTML=`${st.context?`<div class="recap"><p class="recap-h">${st.contextTitle||"The facts on the table"}</p>${String(st.context).replace(/= (&lt;|<)/g,"$1 ")}</div>`:""}${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>[Math.random(),c,k]).sort((x,y)=>x[0]-y[0]).map(([_,c,k])=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
     lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
     box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
   }

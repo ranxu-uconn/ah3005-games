@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission 10: Holding everything else constant | AH/STAT 3005</title>
+<title>Mission 11: Yes or no | AH/STAT 3005</title>
 <style>
 
 :root{
@@ -337,13 +337,15 @@ main>h2{margin-top:1.8rem}
 .build .typ{white-space:normal}
 .narr{font-style:italic;color:var(--muted);margin:.3rem 0 .8rem;font-size:.98rem}
 
-/* weeks 9-10: SPSS regression and correlation tables fit a phone */
+/* week 13: the epilogue's cast list */
+.epi{list-style:none;padding:0;margin:.4rem 0 1rem}.epi li{display:flex;gap:.8rem;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem .9rem;margin:.55rem 0}.epi li>svg{flex:none;margin-top:.1rem}.epi-who{margin:0 0 .25rem;color:var(--muted);font-size:.95rem}.epi-who strong{color:var(--ink)}.epi-line{margin:.15rem 0;line-height:1.5}.epi-end{font-weight:700;font-size:1.1rem;margin:1.2rem 0 .4rem}
+/* weeks 9-13: SPSS regression and correlation tables fit a phone */
 @media (max-width:520px){table.reg thead th{min-width:2.3rem}table.reg th,table.reg td{padding:.34rem .2rem}table.reg tbody th{white-space:normal;min-width:4.6rem;max-width:7rem;line-height:1.25}}
 </style>
 </head>
 <body>
 <header class="bar"><div class="bar-in">
-  <div class="bar-title">Mission 10: Holding everything else constant</div>
+  <div class="bar-title">Mission 11: Yes or no</div>
   <div class="bar-meta">
     <span id="progress"></span>
     <span class="meter" role="img" id="meter" aria-label="Reputation">Reputation
@@ -353,10 +355,10 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:10,version:"1.4",
+const CONFIG={mission:11,version:"1.3",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
-  storageKey:"ahstat3005-mission10-v1"};
+  storageKey:"ahstat3005-mission11-v1"};
 function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);let ser=1.000000000190015;for(let j=0;j<6;j++){y+=1;ser+=c[j]/y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
 function betacf(a,b,x){const MAXIT=300,EPS=3e-12,FPMIN=1e-300;const qab=a+b,qap=a+1,qam=a-1;let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;for(let m=1;m<=MAXIT;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;}return h;}
 function betai(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
@@ -410,7 +412,7 @@ function gcount(suffix,title){try{if(window.goatcounter&&window.goatcounter.coun
 const SEASON_KEY="riverbend-season-v1";
 const CAST_IDS=["jordan","brooks","nair","marcus","dana","ruiz","greg"];
 // Append new flags at the END only, so older career codes keep working.
-const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample","w9_marcus_predict","w9_dana_residuals","w10_greg_adjusted","w10_ruiz_interaction"];
+const FLAG_BITS=["w4_nair_honest","w4_marcus_paired","w4_ruiz_inconclusive","w4_greg_portal","w5_greg_posthoc","w5_marcus_repeated","w5_dana_interaction","w6_zhang_slopes","w6_ruiz_adjusted","w6_dana_mixed","w6_greg_confound","w7_jamal_chisq","w7_dana_rowpct","w7_greg_builder","w7_ruiz_oddsratio","w8_farrow_sampling","w8_nair_ci","w8_marcus_design","w8_dana_pvalue","w1_greg_median","w2_dana_given","w3_greg_sample","w9_marcus_predict","w9_dana_residuals","w10_greg_adjusted","w10_ruiz_interaction","w11_dana_odds","w11_marcus_baserate","w12_dana_icc","w12_marcus_mixed"];
 const DANA_N=[25,50,100,180],DANA_A=[0.01,0.05,0.10],B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 function seasonDefault(){return {weeks:[],rep:50,trust:Object.fromEntries(CAST_IDS.map(k=>[k,1])),flags:{w4_ruiz_inconclusive:1},danaN:100,danaA:0.05};}
 let SEASON=seasonDefault(),MODE="nosave";
@@ -450,399 +452,399 @@ function hintCost(){return (SEASON.trust.jordan||1)>=3?2:3;}
 function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:0;}
 
 /* ============================================================
-   WEEK 10 STORY (from the Riverbend Story Bible): Greg's cost argument meets a confounder
+   WEEK 11 STORY (from the Riverbend Story Bible): every question ends in yes or no; Dana's sepsis pilot results
    ============================================================ */
 const PLAYED=w=>SEASON.weeks.includes(w);
-const WEEK={num:10,title:"Holding everything else constant",
-  scene:"Monday, 7:55 a.m. Greg has booked the big conference room for Thursday's budget committee and taped a sign to its door: \"HOSPITALIST PROGRAM: $1,900 PER STAY.\"",
-  pitch:"Greg wants to cut the hospitalist program because its patients cost more. Radiology's chief wants staffing numbers, Dr. Ruiz's reviewer asks whether her drug works the same for everyone, and Dr. Nair's model is significant while nothing in it is.",
-  topicLine:"This week: multiple linear regression, \"holding the others constant,\" confounding, dummy variables, interaction, multicollinearity and adjusted R². Check the clue in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
-  opening:[["brooks","Budget committee on Thursday. Greg has a number about the hospitalist program, and Radiology has a number about staffing. Both have to survive the question \"what else was different?\""],
-           ["jordan","Multiple regression: more than one predictor, and every coefficient now means \"holding the others constant.\" Clues first. Dr. Hale from Radiology is in the research wing. He talks fast."]],
-  previously:d=>PLAYED(9)?"Last week the research wing ran its first regressions."+(d.flags.w9_marcus_predict?" Marcus books sessions from his model now, but only for scores inside his data.":" Marcus has a new sign on his wall: no predictions outside the data."):"",
-  cameo:{dana:d=>d.flags.w9_dana_residuals?"Next week my sepsis alert pilot results come in, and the board's questions are all yes or no. I'm checking the residuals of everything now, by the way.":"Next week my sepsis alert pilot results come in, and the board's questions are all yes or no."},
+const AL=a=>a===0.1?"0.10":String(a);
+const WEEK={num:11,title:"Yes or no",
+  scene:"Monday, 7:40 a.m. Dana's sepsis pilot binder sits on the Quality Office table with a sticky note in Dr. Brooks's handwriting: \"The board wants a yes or a no.\"",
+  pitch:"Dana's sepsis alert pilot is finished, and every question about it ends in yes or no. Endocrinology wants to know who reaches blood sugar control, Marcus has a fall-risk model he's very proud of, and Greg has drawn a straight line through a column of 0s and 1s.",
+  topicLine:"This week: logistic regression for yes-or-no outcomes, odds and odds ratios (Exp(B)) with their confidence intervals, model fit, classification tables, sensitivity and specificity, and ROC curves. Check the clue in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  opening:[["brooks","Two weeks to the state review, and every question on my desk this week ends in yes or no. Did the alert work? Who falls? Who reaches control? I want answers that respect that."],
+           ["jordan","Logistic regression week. When the outcome is yes or no, we model the odds, not an average. Clues first. Dr. Mensah from Endocrinology is in the research wing, and he doesn't believe anything the first time."]],
+  previously:d=>PLAYED(10)?"Last week the budget committee kept the hospitalist program."+(d.flags.w10_greg_adjusted?" Greg now asks what else differs between two groups before he compares them.":" Greg is still rewriting his speech."):"",
+  cameo:{nair:()=>PLAYED(10)?"My correlation poster won second place at research day! Also, Jordan sounds like they're coming down with something. Just saying.":"Jordan sounds like they're coming down with something. Just saying."},
   mapExtra:()=>`<rect class="m-deco" x="${18*TS}" y="${8*TS+28}" width="${5*TS-8}" height="8" rx="4"/><text class="m-name" x="${20.4*TS}" y="${6*TS+16}" text-anchor="middle" opacity=".8">Research wing</text>`,
-  expertThanks:"Thanks again. Same F as the ANOVA, and every program compared with standard care. Neat.",
+  expertThanks:"Thanks again. Stage 2 against normal, and the interval that crosses 1. My fellow has it now.",
   callbacks:{
-    hale:()=>"Owen Hale, radiology. Short version: our reads are slow, I know why, and I want numbers that say so. Go.",
-    greg:d=>d.flags.w7_greg_builder?"Remember 4B? I was right then. This one is straight from billing too.":"Straight from billing, this one. Hard to argue with billing.",
-    ruiz:d=>d.flags.w6_ruiz_adjusted?"The full trial again. You adjusted it for baseline pressure last month. Now a reviewer wants to know whether it works the same for everyone.":"The full drug trial again. A reviewer wants to know whether it works the same for everyone.",
-    nair:()=>PLAYED(9)?"The correlation poster is printed, and people keep stopping by my office to read it! Now I have a real model, and something is very wrong with it.":"I have a real model now, and something is very wrong with it.",
-    marcus:d=>d.flags.w9_marcus_predict?"My booking sheet still has the red line across the top: only for scores inside my data. Quick one for you about my three programs.":"Quick one for you about my three programs."},
-  keyFlags:S=>{const f={w10_greg_adjusted:firstRight("c2s1"),w10_ruiz_interaction:firstRight("c3s2")};
-    const t=[];if(f.w10_greg_adjusted)t.push("greg");if(f.w10_ruiz_interaction)t.push("ruiz");if(firstRight("c4s1"))t.push("nair");if(firstRight("e1s1"))t.push("marcus");
-    if([firstRight("c1s1"),f.w10_greg_adjusted,f.w10_ruiz_interaction,firstRight("c4s1")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
+    mensah:()=>"Kofi Mensah, endocrinology. I hear you're careful. I'm going to find out.",
+    dana:d=>d.flags.w8_dana_pvalue?"The sepsis pilot is done. I already know not to write \"proves.\" Help me with the rest.":PLAYED(4)?"The sepsis pilot you designed is done, and the board wants a yes or a no.":"The sepsis pilot is done, and the board wants a yes or a no.",
+    marcus:d=>d.flags.w9_marcus_predict?"My session predictions worked so well that I built a fall-risk model. It's very accurate!":"I built a fall-risk model. It's very accurate!",
+    greg:d=>d.flags.w10_greg_adjusted?"Readmissions this time. I checked what else differs between patients first, like you said. And I used regression, like a professional.":"Readmissions this time. I used regression, like a professional.",
+    ruiz:()=>"A quick one about categories, if you have a minute."},
+  keyFlags:S=>{const f={w11_dana_odds:firstRight("c2s2"),w11_marcus_baserate:firstRight("c3s2")};
+    const t=[];if(f.w11_dana_odds)t.push("dana");if(f.w11_marcus_baserate)t.push("marcus");if(firstRight("c4s1"))t.push("greg");if(firstRight("e1s1"))t.push("ruiz");
+    if([firstRight("c1s1"),f.w11_dana_odds,f.w11_marcus_baserate,firstRight("c4s1")].reduce((a,b)=>a+b,0)>=3)t.push("brooks");
     if(S.fuDone.length===0)t.push("jordan");
     return {flags:f,trust:t};},
-  ending:f=>f.w10_greg_adjusted?"You took apart Greg's $1,900 with one extra variable. He's already asking which of his other numbers need it.":"Greg's $1,900 didn't survive severity. Next time, ask what else differs between the groups before anyone compares them.",
-  teaser:"Dana's sepsis alert pilot is finally finished, and the board's questions about it are all yes or no.",
-  hidden:()=>{const H=hiddenData10(),last=H.steps[H.steps.length-1];
-   const ms=regT(tbl("Model Summary (with 15 extra columns)","Dependent variable: turnaround (minutes)",["Model","R","R Square","Adjusted R Square","Std. Error of the Estimate"],
-     [["1",pk(f3(Math.sqrt(last.r2)),"r"),pk(f3(last.r2),"r2"),pk(f3(last.adj),"adj"),pk(fx(last.see,3),"see")]]));
-   return {id:"hid",npc:"jordan",title:"Fifteen extra columns",
-    scene:"Jordan is scrolling through a model with an alarming number of rows in the Coefficients table.",
-    message:`<p>Off the books. An intern added 15 extra columns to Dr. Hale's model: room numbers, the last digit of the patient's zip code, that sort of thing. R Square went up, so they think the model got better. Did it?</p>`,
+  ending:f=>f.w11_dana_odds?"You stopped \"twice as likely\" before it reached the board. Dana's slide says odds now, and it's right.":"The board slide said \"times as likely\" until the last minute. Odds and chances are not the same word.",
+  teaser:"Jordan has the flu, and next week the falls analysis across all twelve units is yours.",
+  hidden:()=>{const memo=[{t:"We modeled 30-day readmission with binary logistic regression.",tag:"ok_sentence",fb:"That's just what was done, and it's the right model for a yes-or-no outcome."},
+     {t:"Age's Exp(B) was 1.10, with a 95% CI of 1.04 to 1.17.",tag:"ok_sentence",fb:"That's the output, reported correctly."},
+     {t:"So each extra year of age raises the odds of readmission by 110%.",tag:"correct",fb:"That's the wrong sentence. An Exp(B) of 1.10 multiplies the odds by 1.10 for each extra year: about 10% higher odds, not 110%."},
+     {t:"Age stays in the model for the board report.",tag:"ok_sentence",fb:"That's a reasonable decision. Find the sentence that misreads the number."}];
+   const out=regT(tbl("Variables in the Equation","Outcome: readmitted within 30 days (1 = yes). Exp(B) is the odds ratio.",["","B","Sig.","Exp(B)","95% CI lower","95% CI upper"],[["Age (years)","0.095","&lt;.001","1.100","1.040","1.170"],["Constant","−8.112","&lt;.001","0.000",""," "]]));
+   return {id:"hid",npc:"jordan",title:"Ten percent, not 110",
+    scene:"Jordan has a memo in one hand and a tissue in the other, and doesn't look happy about either.",
+    message:"<p>Off the books. An intern's readmission memo is going to the board tomorrow. One sentence turns a small number into a huge one. Find it.</p>",
     steps:[
-     {id:"hid1",label:"Better or worse?",type:"point",
-      show:`<div class="slider"><label for="jk">Extra columns of noise: <strong id="jklab"></strong></label><input type="range" id="jk" min="0" max="15" step="1" value="15"><div id="jkviz"></div></div>${ms}`,
-      init:()=>{const sl=document.getElementById("jk"),draw=()=>{const k=+sl.value,s0=H.steps[0],s=H.steps[k];document.getElementById("jklab").textContent=k;
-        document.getElementById("jkviz").innerHTML=tbl("As columns are added","Same 4 real predictors plus "+k+" columns of noise",["","R Square","Adjusted R Square"],[["Real predictors only",f3(s0.r2),f3(s0.adj)],[`Plus ${k} noise columns`,f3(s.r2),f3(s.adj)]]);markScrollers();};
-        sl.addEventListener("input",draw);draw();},
-      prompt:"Click the number that shows the 15 extra columns didn't make the model better.",
-      hint:"One of these numbers always goes up when you add columns, even useless ones. The other one charges a price for each column.",
-      picks:{adj:{tag:"correct",fb:`Adjusted R Square fell from ${f3(H.steps[0].adj)} to ${f3(last.adj)}. It penalizes every extra predictor, so useless columns pull it down.`},
-       r2:{tag:"r2_rises",fb:"R Square rose, but R Square can never go down when you add a column, even a column of pure noise."},
-       r:{tag:"r2_rises",fb:"R rises with R Square. It can't tell useful columns from noise either."},see:{tag:"r2_rises",fb:"That's the typical size of a residual. The adjusted R Square answers the question more directly."}}},
-     {id:"hid2",label:"Explaining it",type:"reply",channel:"chat",prompt:"Build your reply to Jordan.",
-      hint:"Compare what happened to R Square and to adjusted R Square as columns were added.",
-      thread:["So what do I tell the intern?"],
+     {id:"hid1",label:"The wrong sentence",type:"spot",show:out,prompt:"Click the sentence in the intern's memo that misreads the output.",
+      hint:"Exp(B) is a multiplier on the odds. Ask what multiplying by 1.10 does.",draftTitle:"Intern's readmission memo (one sentence is wrong)",draft:memo},
+     {id:"hid2",label:"Explaining it",type:"reply",channel:"chat",prompt:"Build your reply to Jordan.",show:`<p class="where">The output the memo quotes:</p>${out}`,
+      hint:"Subtract 1 from Exp(B) to read it as a percent change in the odds.",
+      thread:["So what do I tell the intern? Gently. I'm too tired to be scary."],
       slots:[
-       {label:"R Square",options:[{t:"R Square always rises when you add predictors, even pure noise,",tag:"correct"},{t:"R Square rose with the 15 columns, so they explain something real about turnaround,",tag:"r2_rises",fb:"Noise columns raise R Square too, by fitting chance patterns."}]},
-       {label:"Adjusted",options:[{t:"so compare models with adjusted R Square, which fell here: drop the 15 columns.",tag:"correct"},{t:"so keep adding columns until R Square reaches 1, a perfect fit.",tag:"r2_rises",fb:"With enough columns R Square would hit 1, and the model would predict nothing new."}]}],
-      okFb:"Adjusted R Square only rises when a new predictor helps more than chance would. Use it to compare models with different numbers of predictors."}],
-    outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan deletes fifteen columns with visible satisfaction. "Zip code digits. Honestly."'}),
-    takeaway:"R² never falls when predictors are added. Adjusted R² penalizes extra predictors, so it's the one to compare across models."};},
-  finale:S=>{const G=gregData10((S.path&&S.path[1])||0),Hd=haleData(0),Rz=ruizData10((S.path&&S.path[2])||0),lv=(S.path&&S.path[2])||0,rad=Math.abs(Hd.m.b[2]),
-    sevAvg=h=>fx(mean(G.sev.filter((_,i)=>G.hos[i]===h)),1),radLo=Math.min(...Hd.rad),radHi=Math.max(...Hd.rad);
-   return {id:"fin",npc:"brooks",title:"The budget committee",
-    scene:"Thursday. Greg's sign is still on the door. Inside, a tray of sandwiches sits untouched next to a projector showing three regression tables.",
-    message:"<p>Three numbers are up for decisions today. Answer each question with your strongest evidence.</p>",
+       {label:"Exp(B) = 1.10",options:[{t:"An Exp(B) of 1.10 multiplies the odds by 1.10 per extra year: about 10% higher odds,",tag:"correct"},{t:"An Exp(B) of 1.10 means the chance of readmission rises 10 percentage points per year,",tag:"or_as_diff",fb:"Exp(B) works on the odds, as a multiplier. It isn't a change in percentage points of chance."},{t:"An Exp(B) of 1.10 means the odds rise by 110% per year,",tag:"or_pct",fb:"That's the memo's mistake. 1.10 means the odds become 110% of what they were: 10% higher."}]},
+       {label:"The interval",options:[{t:"and the interval, 1.04 to 1.17, stays above 1, so it's more than chance.",tag:"correct"},{t:"and the interval contains 1.10, so the effect is proven beyond chance.",tag:"ci_misread",fb:"Every interval contains its own estimate. What matters is whether it contains 1, meaning no change in the odds."}]}],
+      okFb:"Exp(B) − 1 is the change in the odds: 1.10 is 10% higher odds per unit, 0.80 is 20% lower."}],
+    outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan rewrites the sentence, sneezes, and rewrites it again. "Ten percent. I\'m going home early."'}),
+    takeaway:"Exp(B) multiplies the odds. Subtract 1 to read it as a percent change: 1.10 is 10% higher odds per unit, not 110%."};},
+  finale:S=>{const D=danaData11((S.path&&S.path[1])||0),M=marcusData11((S.path&&S.path[2])||0),K=mensahData((S.path&&S.path[0])||0),lk=(S.path&&S.path[0])||0;
+   return {id:"fin",npc:"brooks",title:"The sepsis board",
+    scene:"The board room smells like coffee and printer toner. Dana's slide is on the screen, and the chair is already reading the title out loud.",
+    message:"<p>Three yes-or-no questions on the agenda. Answer each with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"The hospitalist program",type:"cards",claim:'<strong>Greg:</strong> "Hospitalist patients cost $1,900 more per stay. We should cut the program."',prompt:"Play your strongest evidence.",contextTitle:"From Greg's billing comparison",
-      context:`<ul><li>Billing file, ${G.m1.n} stays. The ED sends the complicated admissions to the hospitalist service; every stay gets a severity score (1 to 10) at admission.</li><li>Average severity: ${sevAvg(1)} for hospitalist patients, ${sevAvg(0)} for other services.</li><li>Model 1, cost on hospitalist care alone: B = ${money(G.m1.b[1])}, Sig. = ${fP(G.m1.pv[1])}.</li><li>Model 2, cost on hospitalist care and severity: hospitalist B = ${money(G.m2.b[1])}, Sig. = ${fP(G.m2.pv[1])}.</li></ul>`,
-      hint:"Look at the facts box: compare the hospitalist B in Model 1 and Model 2.",
-      cards:[{k:"Output",t:G.level?`Holding severity constant, hospitalist patients cost about ${money(Math.abs(G.m2.b[1]))} less, not more: the $1,900 was severity`:`Holding severity constant, the difference is about ${money(G.m2.b[1])} and not significant: the $1,900 was severity`,tag:"correct",fb:"Severity was the confounder. Compared fairly, the program doesn't cost what Greg thought."},
-       {k:"Output",t:`Yes: the $1,900 comes straight from billing, covering all ${G.m1.n} stays, so it's the program's true cost per stay`,tag:"confound_ignored",fb:"Billing is accurate about the bills, and many stays don't fix bias. It can't say how sick the patients were."},
-       {k:"Output",t:"Yes: the overall model is significant, so the hospitalist difference is real",tag:"confound_ignored",fb:"The model's significance says nothing about whether the hospitalist difference survives adjustment."}]},
-     {id:"fin2",label:"Radiology staffing",type:"cards",claim:`<strong>Board member:</strong> "Each extra radiologist cuts about ${fx(rad,0)} minutes. So if we put eight on nights, we're done?"`,prompt:"Play your strongest evidence.",contextTitle:"From Dr. Hale's radiology model",
-      context:`<p>${Hd.m.n} CT exams. Turnaround (minutes) was regressed on orders that hour, shift (day, evening, night) and radiologists on duty that hour, which ranged from ${radLo} to ${radHi} in the data. Radiologists row: B = ${fx(Hd.m.b[2],1)}, Sig. = ${fP(Hd.m.pv[2])}.</p>`,
-      hint:"Look at the facts box: check how many radiologists were ever on duty in the data.",
-      cards:[{k:"Output",t:`No: the data only had 1 to 4 radiologists on duty, so eight is extrapolation`,tag:"correct",fb:"Inside the data, the coefficient holds the other predictors constant. Outside it, nobody knows."},
-       {k:"Output",t:`Yes: ${fx(rad,0)} minutes per radiologist, holding volume and shift constant, adds up`,tag:"extrapolate",fb:"That stretches the line far beyond the staffing levels in the data."},
-       {k:"Output",t:"Yes: the radiologists coefficient is significant, so it holds at any staffing level",tag:"extrapolate",fb:"Significance doesn't extend the range of the data."}]},
-     {id:"fin3",label:"Dr. Ruiz's drug",type:"cards",claim:`<strong>Draft abstract:</strong> "The drug lowered systolic blood pressure by ${fx(Rz.mi.b[1],0)} mmHg compared with placebo."`,prompt:"Play your strongest evidence.",contextTitle:"From Dr. Ruiz's drug trial",
-      context:`<ul><li>240 patients randomly assigned to the drug or placebo, ${Rz.nYes} of them with diabetes. Outcome: drop in systolic BP after 8 weeks (mmHg).</li><li>Model with drug, diabetes and Drug × Diabetes: drug B = ${fx(Rz.mi.b[1],1)}, Drug × Diabetes Sig. = ${fP(Rz.mi.pv[3])}.</li><li>Model without the interaction: drug B = ${fx(Rz.m0.b[1],1)}.</li><li>Drug B in each group separately: ${fx(Rz.sNo.b[1],1)} without diabetes, ${fx(Rz.sYes.b[1],1)} with diabetes.</li></ul>`,
-      hint:"Look at the facts box: the Drug × Diabetes Sig. decides how to report the drug effect.",
-      cards:lv?[{k:"Output",t:`No interaction (Sig. = ${fP(Rz.mi.pv[3])}), so report one effect from the model without it: about ${fx(Rz.m0.b[1],0)} mmHg`,tag:"correct",fb:"No evidence the effect differs, so one overall effect, from the model without the interaction."},
-         {k:"Output",t:"Keep it: the drug coefficient is the drug's effect for everyone",tag:"main_with_interaction",fb:"With the interaction in the model, the drug coefficient is the effect in the reference group only."},
-         {k:"Output",t:"Say the drug doesn't work in patients with diabetes, since the interaction wasn't significant",tag:"accept_null",fb:"A non-significant interaction means no evidence of a difference, not evidence the drug fails."}]
-       :[{k:"Output",t:`Reword it: the effect differs by diabetes (Sig. = ${fP(Rz.mi.pv[3])}): about ${fx(Rz.sNo.b[1],0)} mmHg without, ${fx(Rz.sYes.b[1],0)} with`,tag:"correct",fb:"When the effect differs, one number would be wrong for one of the groups."},
-         {k:"Output",t:`Keep it: ${fx(Rz.mi.b[1],0)} mmHg is the drug coefficient, its effect with diabetes held constant`,tag:"main_with_interaction",fb:"With the interaction in the model, that's the effect for patients without diabetes only."},
-         {k:"Output",t:"Reword it to one number, the average of the two groups' effects, to keep the abstract simple",tag:"main_with_interaction",fb:"An average hides that the drug works much less well in one group."}]}],
-    outro:g=>({ok:true,title:"Committee decisions",
-      text:[g("fin1")==="correct"?"Hospitalist program: kept; costs to be compared within severity levels from now on":"Hospitalist program: kept, after the adjusted number was explained",
-            g("fin2")==="correct"?"Radiology: one more night radiologist approved as a trial, not eight":"Radiology: staffing request scaled back to the range in the data",
-            g("fin3")==="correct"?"Dr. Ruiz's abstract: reworded before resubmission":"Dr. Ruiz's abstract: corrected on the second pass"].map(x=>"• "+x).join("<br>")+
+     {id:"fin1",label:"The alert",type:"cards",claim:`<strong>Board chair:</strong> "So patients with the new alert were ${f2(D.m.eb[1])} times as likely to get antibiotics within the hour?"`,prompt:"Play your strongest evidence.",contextTitle:"From Dana's sepsis alert pilot",
+      context:`<ul><li>${D.N} patients screened with the new alert and ${D.N} with the current screen; α = ${AL(D.A)}. Outcome: antibiotics within the hour, yes or no.</li><li>On time: ${D.pU}% with the current screen, ${D.pA}% with the new alert.</li><li>Logistic regression with age and ambulance arrival: alert Exp(B) = ${f2(D.m.eb[1])}, 95% CI ${f2(D.m.lo[1])} to ${f2(D.m.hi[1])}, Sig. = ${fP(D.m.pv[1])}.</li></ul>`,
+      hint:"Look at the facts box: Exp(B) compares odds, and the on-time percentages compare chances.",
+      cards:[{k:"Output",t:`No: the odds were ${f2(D.m.eb[1])} times as high, but the chance went from ${D.pU}% to ${D.pA}%, about ${f2(D.rr)} times as likely`,tag:"correct",fb:"An odds ratio overstates \"times as likely\" when the outcome is common."},
+       {k:"Output",t:"Yes: Exp(B) is the number of times as likely, with age and ambulance arrival held constant",tag:"or_as_rr",fb:"Exp(B) compares odds, not chances."},
+       D.sig?{k:"Output",t:`Yes: the alert's Sig. is below α = ${AL(D.A)}, so ${f2(D.m.eb[1])} times as likely is confirmed`,tag:"sig_vs_size",fb:"Significance says the difference is more than chance, not how big it is or in which units."}
+            :{k:"Output",t:`Yes: Exp(B) is ${f2(D.m.eb[1])}, so the alert is proven to work`,tag:"sig_vs_size",fb:`Above 1 in this pilot, but its Sig. is above α = ${AL(D.A)}. And Exp(B) compares odds, not chances.`}]},
+     {id:"fin2",label:"Fall screening",type:"cards",claim:`<strong>Board member:</strong> "Marcus's fall model is ${fx(100*M.c.acc,0)}% accurate. Can we stop the balance screening?"`,prompt:"Play your strongest evidence.",contextTitle:"From Marcus's fall model",
+      context:`<ul><li>${M.n} patients; logistic regression predicting a fall within 90 days of discharge from balance score and age, cutoff 0.5.</li><li>${M.falls} patients fell; ${fx(100*M.base,0)}% never fell.</li><li>Overall accuracy: ${fx(100*M.c.acc,0)}%. Of the ${M.falls} who fell, the model flagged ${M.c.tp} (sensitivity ${fx(100*M.c.sens,0)}%).</li><li>Balance score Sig. = ${fP(M.m.pv[1])}.</li></ul>`,
+      hint:"Look at the facts box: how many patients never fell, and how many of the fallers the model caught.",
+      cards:[{k:"Output",t:`No: ${fx(100*M.base,0)}% never fall, so calling everyone "no fall" scores ${fx(100*M.base,0)}%, and the model caught only ${fx(100*M.c.sens,0)}% of fallers`,tag:"correct",fb:"Accuracy rewards the common outcome. Sensitivity shows what the model misses."},
+       {k:"Output",t:`Yes: ${fx(100*M.c.acc,0)}% is above the usual 80% standard for a screening model`,tag:"acc_vs_sens",fb:"There's no such standard, and accuracy hides the fallers the model misses."},
+       {k:"Output",t:"Yes: the balance score's Sig. is below 0.05, so the model reliably flags patients who will fall",tag:"sig_vs_size",fb:"A significant predictor doesn't make the model good at catching fallers."}]},
+     {id:"fin3",label:"The education class",type:"cards",claim:lk?`<strong>Dr. Mensah's draft:</strong> "The education class raises the odds of control by ${fx(100*(K.m.eb[2]-1),0)}%."`:`<strong>Board member:</strong> "Patients who took the class had ${f2(K.m.eb[2])} times the odds of reaching control. So the class causes better control?"`,prompt:"Play your strongest evidence.",contextTitle:"From Dr. Mensah's diabetes clinic data",
+      context:`<ul><li>${K.n} clinic patients. Outcome: HbA1c under 7% at six months, yes or no.</li><li>Patients chose for themselves whether to take the education class.</li><li>Logistic regression with first-visit HbA1c, the class and age: class Exp(B) = ${f2(K.m.eb[2])}, 95% CI ${f2(K.m.lo[2])} to ${f2(K.m.hi[2])}, Sig. = ${fP(K.m.pv[2])}.</li></ul>`,
+      hint:lk?"Look at the facts box: check the class's 95% CI for Exp(B).":"Look at the facts box: note who decided which patients took the class.",
+      cards:lk?[{k:"Output",t:`Not on this evidence: the interval, ${f2(K.m.lo[2])} to ${f2(K.m.hi[2])}, includes 1, so no difference is still possible`,tag:"correct",fb:"An interval that includes 1 is consistent with no effect at all."},
+          {k:"Output",t:`Yes: Exp(B) is ${f2(K.m.eb[2])}, above 1, and its interval reaches up to ${f2(K.m.hi[2])}`,tag:"ci_includes1",fb:"Above 1 in this sample, but the interval includes 1."},
+          {k:"Output",t:"No: the class lowers the odds of control, since its interval starts below 1",tag:"or_below1",fb:"The estimate is above 1. The problem is the width of its interval."}]
+       :[{k:"Output",t:`Not proven: patients chose to attend, so motivation could explain part of the ${f2(K.m.eb[2])} odds ratio`,tag:"correct",fb:"Holding measured variables constant doesn't remove the ones nobody measured. A strong association, not proof of cause."},
+          {k:"Output",t:`Yes: an Exp(B) of ${f2(K.m.eb[2])} with an interval above 1 proves it, holding first-visit HbA1c and age constant`,tag:"causal_claim",fb:"A significant odds ratio from patients who chose the class shows association, not cause."},
+          {k:"Output",t:`Yes: at the same HbA1c and age, the class makes control ${f2(K.m.eb[2])} times as likely`,tag:"or_as_rr",fb:"That's odds, not likelihood, and it's still an association."}]}],
+    outro:g=>({ok:true,title:"Board decisions",
+      text:[D.sig?(g("fin1")==="correct"?"Sepsis alert: adopted; the slide reports the odds ratio and the on-time percentages":"Sepsis alert: adopted, after the slide was reworded from \"times as likely\""):(g("fin1")==="correct"?"Sepsis alert: a larger trial approved; the slide reports the odds ratio and the on-time percentages":"Sepsis alert: a larger trial approved, after the slide was reworded from \"times as likely\""),
+            g("fin2")==="correct"?"Fall model: balance screening stays; the model is judged on sensitivity first":"Fall model: balance screening stays, after a long look at the classification table",
+            g("fin3")==="correct"?"Education class: a randomized pilot approved before any expansion":"Education class: expansion paused until the evidence is clearer"].map(x=>"• "+x).join("<br>")+
         `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`}),
-    takeaway:"In multiple regression, each coefficient holds the other predictors constant. That's how a confounder gets taken out, and why interactions and the data's range still matter."};}};
+    takeaway:"For a yes-or-no outcome, Exp(B) is an odds ratio: it multiplies the odds, it isn't \"times as likely,\" and its interval must exclude 1. Judge a prediction model by sensitivity and specificity, not accuracy alone."};}};
 
-/* ---------- WEEK 10 DATA ---------- */
-function haleData(level){const R=makeRng((SEED()^0xA101)>>>0);let vol,rad,ev,ni,y,m;GEN_OK=0;
-  for(let k=0;k<400;k++){const n=R.int(300,360);vol=[];rad=[];ev=[];ni=[];y=[];
-    for(let i=0;i<n;i++){const u=R.u(),sh=u<.5?0:u<.8?1:2,v=Math.max(2,Math.min(25,Math.round(R.normal(sh===2?8:sh===1?12:14,4.5))));
-      const r=Math.max(1,Math.min(4,1+(v>9?1:0)+(v>16?1:0)+(sh===0&&R.u()<.4?1:0)-(sh===2&&R.u()<.5?1:0)));
-      vol.push(v);rad.push(r);ev.push(sh===1?1:0);ni.push(sh===2?1:0);y.push(Math.round(Math.max(5,25+1.8*v-9*r+4*(sh===1)+14*(sh===2)+R.normal(0,9))));}
-    m=ols(y,[vol,rad,ev,ni]);if(m.b[4]>10&&m.b[4]<18&&m.pv[4]<.001&&m.b[2]<-6&&m.b[2]>-12&&m.pv[2]<.001&&m.pv[1]<.001){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w10 hale");
-  return {vol,rad,ev,ni,y,m,names:["Orders that hour","Radiologists on duty","Evening shift (1 = yes)","Night shift (1 = yes)"]};}
-function gregData10(level){const R=makeRng((SEED()^0xA102^(level?3:0))>>>0);let sev,hos,cost,m1,m2;GEN_OK=0;
-  for(let k=0;k<800;k++){const n=R.int(380,440);sev=[];hos=[];cost=[];
-    for(let i=0;i<n;i++){const s=Math.max(1,Math.min(10,Math.round(R.normal(5,2))));const h=R.u()<1/(1+Math.exp(-(-3+0.55*s)))?1:0;
-      sev.push(s);hos.push(h);cost.push(Math.round((4000+(level?1590:1000)*s+(level?-900:150)*h+R.normal(0,2600))/10)*10);}
-    m1=ols(cost,[hos]);m2=ols(cost,[hos,sev]);
-    if(Math.round(m1.b[1]/100)===19&&m1.pv[1]<.001&&(level?(m2.b[1]<-500&&m2.pv[1]<.05):(m2.pv[1]>.2&&m2.b[1]>0&&m2.b[1]<450))){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w10 greg");
-  return {sev,hos,cost,m1,m2,level};}
-function ruizData10(level){const R=makeRng((SEED()^0xA103^(level?9:0))>>>0);let d,db,y,mi,m0,sNo,sYes;GEN_OK=0;
-  for(let k=0;k<500;k++){d=[];db=[];y=[];for(let i=0;i<240;i++){const dr=i<120?1:0,di=R.u()<.3?1:0;d.push(dr);db.push(di);y.push(round1(4+12*dr+1*di+(level?-2:-8)*dr*di+R.normal(0,8)));}
-    mi=ols(y,[d,db,d.map((v,i)=>v*db[i])]);m0=ols(y,[d,db]);
-    const no=y.map((v,i)=>db[i]?null:i).filter(v=>v!=null),ye=y.map((v,i)=>db[i]?i:null).filter(v=>v!=null);
-    sNo=ols(no.map(i=>y[i]),[no.map(i=>d[i])]);sYes=ols(ye.map(i=>y[i]),[ye.map(i=>d[i])]);
-    if(mi.b[1]>10&&mi.b[1]<14&&(level?mi.pv[3]>.25:(mi.pv[3]<.01&&sYes.b[1]>1.5&&sYes.b[1]<7))){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w10 ruiz");
-  const gm=(dr,di)=>mean(y.filter((_,i)=>d[i]===dr&&db[i]===di));
-  return {d,db,y,mi,m0,sNo,sYes,means:[[gm(0,0),gm(1,0)],[gm(0,1),gm(1,1)]],nYes:db.filter(v=>v).length};}
-function nairData10(level){const R=makeRng((SEED()^0xA104^(level?11:0))>>>0);let w,b,wa,y,m;GEN_OK=0;
-  for(let k=0;k<600;k++){const n=level?R.int(110,130):R.int(70,90);w=[];b=[];wa=[];y=[];
-    for(let i=0;i<n;i++){const wt=R.normal(82,16),ht=R.normal(1.70,.07),bmi=wt/(ht*ht),waist=40+0.55*wt+R.normal(0,3.5);
-      w.push(Math.round(wt));b.push(round1(bmi));wa.push(Math.round(waist));y.push(Math.round(108+0.22*wt+0.55*bmi+0.18*waist+R.normal(0,13)));}
-    m=ols(y,[w,b,wa]);if(m.pF<.001&&m.pv.slice(1).every(p=>p>.05)&&Math.max(...m.vif)>10&&m.vif.every(v=>v>4)){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w10 nair");
-  return {w,b,wa,y,m,n:y.length};}
-function hiddenData10(){const H=haleData(0),R=makeRng((SEED()^0xA105)>>>0);let steps;GEN_OK=0;
-  for(let k=0;k<200;k++){const X=[H.vol,H.rad,H.ev,H.ni];steps=[];
-    for(let j=0;j<=15;j++){if(j)X.push(H.y.map(()=>R.normal(0,1)));const m=ols(H.y,X);steps.push({r2:m.R2,adj:m.adjR2,see:Math.sqrt(m.MSE)});}
-    if(steps[15].adj<steps[0].adj-.002&&steps[15].r2>steps[0].r2+.01){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w10 hidden");
-  return {steps};}
-/* group means joined by lines, one line per subgroup: an interaction plot */
-function interPlot(means,o){const W=360,H=210,L=50,Rt=300,top=14,base=166,X=[L+50,Rt-50],lo=0,hi=Math.ceil(Math.max(...means.flat())/5)*5+5,Y=sc(lo,hi,base,top);
-  let g=ticks(lo,hi,5).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${t}</text>`).join("")+`<line class="v-axis" x1="${L}" x2="${Rt}" y1="${base}" y2="${base}"/>`;
-  ["Placebo","Drug"].forEach((t,i)=>{g+=`<text x="${X[i]}" y="${base+18}" text-anchor="middle">${t}</text>`;});
-  const sty=[["var(--teal)",""],["var(--amber)",'stroke-dasharray="6 4"']];
-  means.forEach((mm,k)=>{g+=`<line x1="${X[0]}" x2="${X[1]}" y1="${Y(mm[0])}" y2="${Y(mm[1])}" stroke="${sty[k][0]}" stroke-width="3" ${sty[k][1]}/>`+mm.map((v,i)=>`<circle cx="${X[i]}" cy="${Y(v)}" r="5" fill="${sty[k][0]}"/>`).join("")+
-    `<text x="${X[1]+8}" y="${Y(mm[1])+4}" class="v-strong">${o.labs[k]}</text>`;});
-  g+=`<text transform="translate(14,${(top+base)/2}) rotate(-90)" text-anchor="middle">${o.ylab}</text>`;
-  return vz(W,H,`Interaction plot of average ${o.ylab.toLowerCase()}: ${o.labs[0]}, placebo ${fx(means[0][0],1)} and drug ${fx(means[0][1],1)}; ${o.labs[1]}, placebo ${fx(means[1][0],1)} and drug ${fx(means[1][1],1)}.`,g,o.cap);}
+/* ---------- WEEK 11 DATA (seeded from the game, so each consult and the finale agree) ---------- */
+function mensahData_(level){const R=makeRng((SEED()^0xB101^(level?5:0))>>>0);let a1c,edu,age,y,m;GEN_OK=0;
+  for(let k=0;k<400;k++){const n=level?R.int(340,380):R.int(280,320);a1c=[];edu=[];age=[];y=[];
+    for(let i=0;i<n;i++){const a=round1(Math.max(6.8,Math.min(13.5,R.normal(9.2,1.4)))),e=R.u()<.45?1:0,g=R.int(32,80);
+      a1c.push(a);edu.push(e);age.push(g);y.push(R.u()<expit(-0.65-0.55*(a-9.2)+(level?0.45:0.85)*e+0.012*(g-58))?1:0);}
+    m=logit(y,[a1c,edu,age]);
+    const okA=m.pv[1]<.001&&m.eb[1]>.5&&m.eb[1]<.72,okE=level?(m.eb[2]>1.2&&m.eb[2]<2.2&&m.lo[2]<1&&m.pv[2]>.06):(m.eb[2]>1.7&&m.eb[2]<3.2&&m.lo[2]>1.05),pc=mean(y);
+    if(okA&&okE&&pc>.3&&pc<.5&&m.eb[3]>.98&&m.eb[3]<1.05){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w11 mensah");
+  return {a1c,edu,age,y,m,n:y.length,names:["HbA1c at first visit (%)","Education class (1 = took it)","Age (years)"]};}
+function danaData11_(level){const R=makeRng((SEED()^0xB102^(level?7:0))>>>0),N=SEASON.danaN||100,A=SEASON.danaA||.05,big=N>=100;let g,age,amb,y,m,pU,pA;GEN_OK=0;
+  for(let k=0;k<600;k++){g=[];age=[];amb=[];y=[];
+    for(let i=0;i<2*N;i++){const a=i<N?1:0,ag=Math.round(Math.max(20,Math.min(95,R.normal(62,15)))),b=R.u()<.45?1:0;
+      g.push(a);age.push(ag);amb.push(b);y.push(R.u()<expit(-0.05+(level?0.6:0.75)*a-0.08*(ag-62)/10+0.3*b)?1:0);}
+    m=logit(y,[g,age,amb]);const yU=y.filter((_,i)=>!g[i]),yA=y.filter((_,i)=>g[i]);pU=Math.round(100*mean(yU));pA=Math.round(100*mean(yA));
+    const sigOK=big?m.pv[1]<Math.min(A,level?.05:.02):m.pv[1]>=Math.max(A,.06);
+    const qA=mean(yA),qU=mean(yU),crude=(qA/(1-qA))/(qU/(1-qU));
+    if(sigOK&&m.eb[1]>1.6&&m.eb[1]<2.9&&Math.abs(m.eb[1]/crude-1)<.08&&pU>=40&&pU<=58&&pA-pU>=12&&pA-pU<=25&&m.eb[1]>1.2*pA/pU){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w11 dana");
+  const nA=N,nU=N,yA=y.filter((_,i)=>g[i]).reduce((s,v)=>s+v,0),yU=y.filter((_,i)=>!g[i]).reduce((s,v)=>s+v,0);
+  return {g,age,amb,y,m,N,A,sig:m.pv[1]<A,pU,pA,rr:pA/pU,T:[[yA,nA-yA],[yU,nU-yU]],names:["New alert (1 = alert)","Age (years)","Arrived by ambulance (1 = yes)"]};}
+function rocData11_(level){const R=makeRng((SEED()^0xB103^(level?3:0))>>>0);let y,s,r;GEN_OK=0;
+  for(let k=0;k<300;k++){const n=R.int(760,840);y=[];s=[];
+    for(let i=0;i<n;i++){const d=R.u()<(level?.06:.08)?1:0;y.push(d);s.push(Math.round(1000*expit(d?R.normal(level?-1.2:-0.9,1.1):R.normal(-2.9,1.1)))/1000);}
+    r=roc(y,s);if(r.auc>(level?.76:.83)&&r.auc<(level?.83:.9)){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w11 roc");
+  return {y,s,r,n:y.length,cases:y.reduce((a,v)=>a+v,0)};}
+function marcusData11_(level){const R=makeRng((SEED()^0xB104^(level?9:0))>>>0);let berg,age,y,m,c;GEN_OK=0;
+  for(let k=0;k<2000;k++){const n=level?R.int(430,470):R.int(380,420);berg=[];age=[];y=[];
+    for(let i=0;i<n;i++){const b=R.int(20,56),a=R.int(60,92);berg.push(b);age.push(a);y.push(R.u()<expit((level?-2.9:-2.85)-(level?0.11:0.1)*(b-42)+0.9*(a-75)/10)?1:0);}
+    m=logit(y,[berg,age]);c=classify(y,m.mu,.5);const base=1-mean(y);
+    if(c.acc>.84&&c.acc<.9&&c.sens>.05&&c.sens<.33&&base>.83&&base<.89&&c.acc-base>=.01&&c.acc-base<.04&&Math.round(100*c.acc)>Math.round(100*base)&&m.pv[1]<.01){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w11 marcus");
+  return {berg,age,y,m,c,base:1-mean(y),n:y.length,falls:y.reduce((a,v)=>a+v,0)};}
+function gregData11_(level){const R=makeRng((SEED()^0xB105^(level?13:0))>>>0);let x,y,lp,m,top;GEN_OK=0;const W=[30,22,15,10,8,6,4,2.5,1.5,1];
+  for(let k=0;k<600;k++){const n=R.int(330,370);x=[];y=[];
+    for(let i=0;i<n;i++){let u=R.u()*W.reduce((a,b)=>a+b,0),v=0;while(u>W[v]){u-=W[v];v++;}x.push(v);y.push(R.u()<expit(-3.0+(level?0.75:0.8)*v)?1:0);}
+    lp=ols(y,[x]);m=logit(y,[x]);top=Math.max(...x);const p0=lp.b[0],pT=lp.b[0]+lp.b[1]*top;
+    if(top>=8&&pT>1.03&&p0<-0.005&&m.pv[1]<.001){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w11 greg");
+  const pr=v=>lp.b[0]+lp.b[1]*v,obs=v=>{const s=y.filter((_,i)=>x[i]===v);return s.length?mean(s):null;};
+  return {x,y,lp,m,top,pr,obs,lo:Math.round(100*pr(0)),hi:Math.round(100*pr(top))};}
+
+/* each generator runs once per seed, level and saved design; later calls reuse the result */
+const _GC={};const memoGen=(name,fn)=>level=>{const k=name+"|"+SEED()+"|"+level+"|"+(SEASON.danaN||"")+"|"+(SEASON.danaA||"");return _GC[k]||(_GC[k]=fn(level));};
+const mensahData=memoGen("mensahData",mensahData_);
+const danaData11=memoGen("danaData11",danaData11_);
+const rocData11=memoGen("rocData11",rocData11_);
+const marcusData11=memoGen("marcusData11",marcusData11_);
+const gregData11=memoGen("gregData11",gregData11_);
 
 /* ============================================================
    CASES
    ============================================================ */
-function case1(R,level){ // Dr. Owen Hale (guest): the builder (multiple regression with a three-level factor)
-  const D=haleData(level),m=D.m;
-  const vars=[["exam_id","Exam ID","CT-55012 …"],["turnaround_min","Minutes from order to final read","42, 18, 77 …"],["orders_hour","Imaging orders in that hour","12, 5, 21 …"],["shift","Shift (day, evening, night)","day, night, day …"],["radiologists","Radiologists on duty that hour","2, 1, 3 …"],["report_words","Words in the final report","210, 95 …"]];
-  const want={exam_id:"none",turnaround_min:"outcome",orders_hour:"factor",shift:"factor",radiologists:"factor",report_words:"none"};
-  if(level){vars.push(["scanner","Scanner used (A, B or C)","A, C, B …"]);want.scanner="none";}
-  const why={exam_id:"is just a label.",turnaround_min:"is what Dr. Hale wants to explain: the outcome.",orders_hour:"is one of the three things Dr. Hale named: a predictor.",shift:"is one of the three things Dr. Hale named: a predictor, even though it's categorical.",
-    radiologists:"is one of the three things Dr. Hale named: a predictor.",report_words:"isn't one of the three things Dr. Hale named, and it's only known once the read is finished.",scanner:"isn't one of the three things Dr. Hale asked about."};
-  const out=regTables(m,{names:D.names,dv:"Turnaround (minutes)",pick:k=>["b0","b1","b2","b3","b4","beta4","p4","p3","r2"].includes(k)});
-  const nt=m.b[4],rad=m.b[2];
-  return {id:"c1",npc:"hale",title:"Why are the reads slow?",
-    scene:"Dr. Hale is pacing the research wing with a coffee in each hand. Neither is for you.",
-    message:`<p>Our CT reads are slow, and I know three reasons: how many orders come in that hour, which shift it is, and how many radiologists are on. I have ${m.n} exams. I want each reason's share of the blame, separately.</p>`,
-    viz:still(out.ms)+still(out.an),
+function case1(R,level){ // Dr. Kofi Mensah (guest): the builder (binary logistic regression)
+  const K=mensahData(level),m=K.m;
+  const vars=[["patient_id","Patient ID","D-1042 …"],["controlled_6mo","HbA1c under 7% at 6 months (yes or no)","yes, no, no …"],["a1c_6mo","HbA1c at 6 months (%)","6.8, 8.1, 7.4 …"],["baseline_a1c","HbA1c at the first visit (%)","9.4, 11.2 …"],["education","Took the diabetes education class (yes or no)","yes, no …"],["age","Age (years)","54, 67 …"]];
+  const want={patient_id:"none",controlled_6mo:"outcome",a1c_6mo:"none",baseline_a1c:"factor",education:"factor",age:"factor"};
+  if(level){vars.push(["exam_room","Exam room used","3, 1, 4 …"]);want.exam_room="none";}
+  const why={patient_id:"is just a label.",controlled_6mo:"is the yes-or-no result Dr. Mensah wants to explain: the outcome.",a1c_6mo:"is measured at six months, and it's what decides yes or no. Using it as a predictor would predict the outcome with itself.",
+    baseline_a1c:"is known at the first visit: a predictor.",education:"is one of the things Dr. Mensah asked about: a predictor, even though it's yes or no.",age:"is one of the things Dr. Mensah asked about: a predictor.",exam_room:"isn't part of Dr. Mensah's question."};
+  const pick=k=>["b1","b2","b3","b0","p1","p2","p3","or1","or2","or3","or0","lo1","hi1","lo2","hi2"].includes(k);
+  const out=logitTables(m,{names:K.names,dv:"HbA1c under 7% at 6 months (1 = yes)",pick});
+  const pctA=Math.round(100*(1-m.eb[1]));
+  return {id:"c1",npc:"mensah",title:"Who reaches control?",
+    scene:"Dr. Mensah sits very straight in the research wing, arms folded, a printed spreadsheet squared to the edge of the desk.",
+    message:`<p>I run the diabetes clinic. I want to know which patients reach an HbA1c under 7% within six months: yes or no. I have ${K.n} patients and a room full of opinions. Give me a model, not opinions.</p>`,
+    viz:still(out.summ),
     steps:[
-      {id:"c1s1",label:"Setting up the model",type:"build",narr:"\"Here's every column we have,\" Dr. Hale says, already halfway to the door. \"Don't use the ones that don't matter.\"",prompt:"Give each column its role, answer the question about shift, then run the model.",
-       show:`<p class="where"><strong>Outcome:</strong> what you want to explain. <strong>Predictor:</strong> one of the things that might explain it. <strong>Not used:</strong> not part of Dr. Hale's question, or measured too late.</p>`,
-       hint:["Dr. Hale named three things. Find them, and the one result he wants explained. Then think about how a three-category variable enters a regression.","Turnaround is the outcome; orders per hour, shift and radiologists on duty are the predictors. Shift has three categories, so it goes in as two 0/1 dummy variables, with day shift as the reference."],
-       spec:{name:"Multiple linear regression",run:"Run the model",okHead:"The model runs: multiple linear regression.",runText:"Running Dr. Hale's model…",varHead:"Column",typeHead:"Values in the file",roleHead:"Role",
+      {id:"c1s1",label:"Setting up the model",type:"build",narr:"Dr. Mensah slides the spreadsheet across without unfolding his arms. \"Every column we have. Convince me you know which ones matter.\"",prompt:"Give each column its role, answer the question about the model, then run it.",
+       show:`<p><strong>Outcome:</strong> what you want to explain. <strong>Predictor:</strong> something known before the outcome that might explain it. <strong>Not used:</strong> not part of the question, or measured too late.</p>`,
+       hint:["Find the yes-or-no result Dr. Mensah wants explained, and the three things he asked about. Then think about what a straight line does with 0s and 1s.","Control at six months is the outcome; first-visit HbA1c, the education class and age are predictors. HbA1c at six months decides the outcome, so it can't predict it. A yes-or-no outcome needs binary logistic regression."],
+       spec:{name:"Binary logistic regression",run:"Run the model",okHead:"The model runs: binary logistic regression.",runText:"Running Dr. Mensah's model…",varHead:"Column",typeHead:"Values in the file",roleHead:"Role",
         roles:[["","Choose a role"],["outcome","Outcome"],["factor","Predictor"],["none","Not used"]],
-        vars,want,why,tagOf:(v,w,g)=>v==="report_words"&&g==="factor"?"predictor_after":w==="outcome"||g==="outcome"?"outcome_misread":"extra_factor",
-        repeated:true,designTag:"dummy_coding",designLab:"Shift",
-        designQ:"Shift has three categories: day, evening and night. In the regression it goes in as…",designYes:"Two 0/1 dummy variables (evening, night), with day shift as the reference",designNo:"One variable coded 1 = day, 2 = evening, 3 = night",
-        designWhy:"coded 1, 2, 3, the model would assume evening sits exactly halfway between day and night. Three categories need two dummy variables; the third category is the reference.",
-        ok:"One numerical outcome, two numerical predictors, and shift as two dummy variables."}},
-      {id:"c1s2",label:level?"Volume":"Night shift",type:"point",narr:"Dr. Hale stops pacing long enough to read over your shoulder.",show:out.co,
-       prompt:level?"Dr. Hale: \"For each extra order in an hour, how much longer is the turnaround, if shift and staffing stay the same?\" Click it.":"Dr. Hale: \"How much longer do night reads take than day reads, for the same volume and staffing?\" Click it.",
-       hint:level?["Find the row for orders per hour, and the column in minutes.","B on the orders row is the extra minutes per extra order, holding shift and radiologists constant."]:["Night shift is a dummy variable compared with the reference, day shift. Find its row and the column in minutes.","B on the night shift row: the average extra minutes at night compared with day, holding volume and staffing constant."],
-       picks:level?{b1:{tag:"correct",fb:`${fx(m.b[1],2)} minutes per extra order, comparing hours with the same shift and the same number of radiologists.`},
-          b4:{tag:"wrong_row",fb:"That's the night shift row."},b2:{tag:"wrong_row",fb:"That's the radiologists row."},b3:{tag:"wrong_row",fb:"That's the evening shift row."},b0:{tag:"intercept_misread",fb:"That's the (Constant)."},beta4:{tag:"beta_units",fb:"That's a standardized coefficient."},p4:{tag:"output_misread",fb:"That's a significance."},p3:{tag:"output_misread",fb:"That's a significance."},r2:{tag:"r2_misread",fb:"That's the share of variation explained by the whole model."}}
-        :{b4:{tag:"correct",fb:`${fx(nt,1)} minutes: on average, night reads take that much longer than day reads (the reference), comparing hours with the same volume and the same number of radiologists.`},
-          b3:{tag:"dummy_ref",fb:"That's the evening shift row: evening compared with day."},b0:{tag:"intercept_misread",fb:"That's the (Constant): the predicted time for a day-shift hour with zero orders and zero radiologists, which never happens."},
-          b1:{tag:"wrong_row",fb:"That's the orders row."},b2:{tag:"wrong_row",fb:"That's the radiologists row."},beta4:{tag:"beta_units",fb:"That's the night shift's standardized coefficient. Dr. Hale wants minutes."},
-          p4:{tag:"output_misread",fb:"That's the night shift's significance: it says the difference isn't zero, not how big it is."},p3:{tag:"output_misread",fb:"That's the evening row's significance."},r2:{tag:"r2_misread",fb:"That's the share of variation explained by the whole model."}}},
-      {id:"c1s3",label:"More radiologists",type:"reply",channel:"chat",narr:"Dr. Hale puts both coffees down, which you take as a sign he's serious.",show:still(out.co),
-       prompt:"Dr. Hale wants to staff eight radiologists at night. Build your reply.",
-       hint:["Find the radiologists row, then check how many radiologists were ever on duty in the data (the clue in the wing says).",`B = ${fx(rad,1)}: each extra radiologist goes with about ${fx(Math.abs(rad),0)} fewer minutes, comparing hours with the same volume and shift. But the data only had 1 to 4 on duty.`],
-       thread:["So more radiologists, faster reads. Eight at night and we're done, right?"],
-       slots:[
-        {label:"The coefficient",options:[{t:`Each extra radiologist goes with about ${fx(Math.abs(rad),0)} fewer minutes, at the same volume and shift,`,tag:"correct"},{t:`Radiologists explain ${fx(Math.abs(rad),0)}% of turnaround time once volume and shift are held constant,`,tag:"r2_misread",fb:"B is minutes per radiologist, not a percentage, and holding volume and shift constant doesn't change that. The share explained is R Square, for the whole model."}]},
-        {label:"But",options:[{t:"but our data only had 1 to 4 on duty, so eight is far outside it.",tag:"correct"},{t:`so eight on duty would keep cutting ${fx(Math.abs(rad),0)} minutes each and bring turnaround near zero.`,tag:"extrapolate",fb:"That stretches the line to staffing levels nobody has seen. Inside 1 to 4, the coefficient holds; outside, nobody knows."}]}],
-       okFb:"Each coefficient holds the other predictors constant, and it only describes the range of the data."}],
-    outro:g=>g("c1s1")==="correct"
-      ?{ok:true,title:"Dr. Hale's request",text:'<em>Dr. Hale picks up both coffees and drinks from the wrong one.</em> "Night shift, volume, staffing, each with its own number. Exactly what I wanted. One more radiologist at night, then we measure again."'}
-      :{ok:false,title:"Dr. Hale's request",text:'"Shift as two dummies, day as the reference. Fine. Fast enough."'},
-    takeaway:"In multiple regression, each coefficient compares cases that are alike on the other predictors. A categorical predictor with three levels enters as two dummy variables, each compared with the reference."};
-}
-
-function case2(R,level){ // Greg: the confounder (severity) behind his $1,900
-  const G=gregData10(level),m1=G.m1,m2=G.m2;
-  const o1=regTables(m1,{names:["Hospitalist care (1 = yes)"],dv:"Cost per stay ($)",tag:"Model 1",prefix:"a",pick:k=>["b1","p1","b0"].includes(k)});
-  const o2=regTables(m2,{names:["Hospitalist care (1 = yes)","Severity score (1 to 10)"],dv:"Cost per stay ($)",tag:"Model 2",prefix:"c",pick:k=>["b1","p1","b2","b0"].includes(k)});
-  const meanH=mean(G.cost.filter((_,i)=>G.hos[i])),meanO=mean(G.cost.filter((_,i)=>!G.hos[i]));
-  const sevH=mean(G.sev.filter((_,i)=>G.hos[i])),sevO=mean(G.sev.filter((_,i)=>!G.hos[i]));
-  const R2=makeRng(77),jit=G.sev.map(s=>s+R2.uni(-.3,.3));
-  const K=v=>v/1000,ymax=Math.ceil(K(Math.max(...G.cost))/2)*2,ymin=Math.max(0,Math.floor(K(Math.min(...G.cost))/2)*2);
-  const plot=adj=>scatter({groups:[{x:jit.filter((_,i)=>!G.hos[i]),y:G.cost.filter((_,i)=>!G.hos[i]).map(K)},{x:jit.filter((_,i)=>G.hos[i]),y:G.cost.filter((_,i)=>G.hos[i]).map(K),shape:"sq"}],
-    xlo:0,xhi:11,ylo:ymin,yhi:ymax,xlab:"Severity score at admission (1 to 10)",ylab:"Cost per stay ($1,000s)",r:2.2,h:250,
-    fits:adj?[{f:s=>K(m2.b[0]+m2.b[2]*s),lo:1,hi:10},{f:s=>K(m2.b[0]+m2.b[1]+m2.b[2]*s),lo:1,hi:10,color:"var(--amber)",dash:true}]
-      :[{f:()=>K(meanO),lo:0.5,hi:10.5},{f:()=>K(meanH),lo:0.5,hi:10.5,color:"var(--amber)",dash:true}],
-    label:adj?`Cost against severity with two parallel lines from Model 2: at the same severity, the hospitalist line sits ${level?"below":"almost on top of"} the other line.`:`Cost against severity. Hospitalist patients (squares) sit mostly at higher severity. Their average cost is ${money(meanH)}, against ${money(meanO)} for other services.`,
-    cap:(adj?"Lines from Model 2, holding severity constant. ":`Flat lines: each group's overall average (${money(meanH)} hospitalist, ${money(meanO)} other). `)});
-  const legend=`<p><strong>Squares, dashed amber line: hospitalist patients</strong> (average severity ${fx(sevH,1)}, average cost ${money(meanH)}). <strong>Dots, solid dark line: other services</strong> (average severity ${fx(sevO,1)}, average cost ${money(meanO)}).</p>`;
-  return {id:"c2",npc:"greg",title:"$1,900 per stay",
-    scene:"Greg's spreadsheet is printed, highlighted and pinned to his door. He's practicing his committee speech to an empty chair.",
-    message:`<p>Patients on the hospitalist service cost $1,900 more per stay than everyone else's. ${m1.n} stays, straight from billing. On Thursday I'm proposing we cut the program. Check me, but quickly. I have a speech to practice.</p>`,
-    viz:still(o1.ms)+still(o2.ms),
-    steps:[
-      {id:"c2s1",label:"Interviewing Greg",type:"interview",reveal:true,prompt:"Ask Greg about his comparison, then tell him your plan.",
-       hint:["Ask Greg how patients end up on the hospitalist service, and what else the billing file records about them.","Hospitalists take the sickest patients, and sicker patients cost more. Severity is a confounder: put it in the model with hospitalist care and read the hospitalist coefficient holding severity constant."],
-       thread:["Fire away. I've rehearsed answers for everything."],
-       questions:[
-        {q:"How do patients end up on the hospitalist service?",a:"The ED calls the hospitalists for the complicated admissions. The sickest ones, mostly. Why?",key:true},
-        {q:"Does the billing file say how sick each patient was?",a:"Every stay gets a severity score from 1 to 10 at admission. It's a column. I didn't use it.",key:true},
-        {q:"Where does the $1,900 come from?",a:"Average cost per stay, hospitalist patients minus everyone else. Simple.",key:false},
-        {q:"Who chose the carpet in this office?",a:"I did. It's called \"executive slate.\" Next question.",key:false}],
-       slots:[
-        {label:"The $1,900",options:[{t:"The $1,900 isn't a fair comparison yet: hospitalists get the sickest patients, who cost more,",tag:"correct"},{t:`The $1,900 is fair: it's straight from billing and covers all ${m1.n} stays, too many to be biased,`,tag:"confound_ignored",fb:"Billing is right about the bills, and many stays shrink chance error, but not bias: the two groups of patients weren't equally sick to begin with."}]},
-        {label:"So",options:[{t:"so I'll regress cost on hospitalist care and severity together, holding severity constant.",tag:"correct"},{t:"so I'll compare hospitalist costs with the national average for hospitalist programs, to see if $1,900 is typical.",tag:"confound_ignored",fb:"A national benchmark still ignores how sick these particular patients were compared with everyone else's."}]}],
-       okFb:"A variable linked to both the group and the outcome is a confounder. Put it in the model, and each coefficient holds it constant. Both models' summaries are shown above; their coefficients come next."},
-      {id:"c2s2",label:"The fair comparison",type:"point",narr:"Greg stops rehearsing and sits down, which for Greg is a big concession.",show:o1.co+o2.co,
-       prompt:"Greg: \"Fine. Show me the hospitalist difference once severity is held constant.\" Click it.",
-       hint:["Model 2 includes severity. Look there, on the hospitalist row.","B on the hospitalist row of Model 2 is the cost difference between patients with the same severity score."],
-       picks:{cb1:{tag:"correct",fb:level?`${money(m2.b[1])}: holding severity constant, hospitalist patients cost about ${money(Math.abs(m2.b[1]))} less per stay (Sig. = ${fP(m2.pv[1])}). The sign flipped.`:`${money(m2.b[1])}: holding severity constant, the difference is small and not significant (Sig. = ${fP(m2.pv[1])}). Almost all of Greg's $1,900 was severity.`},
-        ab1:{tag:"confound_ignored",fb:"That's Model 1, Greg's $1,900, with severity ignored."},
-        cb2:{tag:"wrong_row",fb:"That's the severity row: each extra severity point goes with about that much more cost, holding hospitalist care constant. Greg asked about hospitalist care."},
-        cp1:{tag:"output_misread",fb:"That's the significance of the adjusted difference. Greg wants the difference itself, in dollars."},
-        ap1:{tag:"confound_ignored",fb:"That's Model 1's significance, with severity ignored."},
-        ab0:{tag:"intercept_misread",fb:"That's Model 1's (Constant): the average cost on other services."},cb0:{tag:"intercept_misread",fb:"That's Model 2's (Constant)."}}},
-      {id:"c2s3",label:"Telling Greg",type:"reply",channel:"chat",narr:"Greg looks at his sign through the open door. \"Do I need a new sign?\"",
-       show:`<div class="slider"><p><strong>Try it.</strong> Switch between comparing overall averages and comparing patients with the same severity.</p><div class="seg" role="group" aria-label="Comparison"><input type="radio" id="gc-o" name="gcshow" value="o" checked><label for="gc-o">Ignore severity</label><input type="radio" id="gc-a" name="gcshow" value="a"><label for="gc-a">Hold severity constant</label></div>${legend}<div id="gcviz"></div></div>`,
-       init:()=>{const draw=()=>{document.getElementById("gcviz").innerHTML=plot(document.querySelector('input[name="gcshow"]:checked').value==="a");};
-         document.querySelectorAll('input[name="gcshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
-       prompt:"Greg asks whether the program costs more or not. Build your reply.",
-       hint:["Switch the chart. Notice where the squares sit on the severity axis, and what happens to the gap between the lines.","Hospitalist patients are sicker, and sickness drives cost. Comparing patients with the same severity takes that out."],
-       thread:["So do hospitalists cost more, or not?"],
-       slots:[
-        {label:"The $1,900",options:[{t:"The $1,900 mostly reflects that hospitalists treat sicker patients: severity confounds it,",tag:"correct"},{t:"The $1,900 is what the program itself adds to each stay: Model 1 compares it with every other service,",tag:"confound_ignored",fb:"Model 1 leaves severity out, so it compares sicker patients with healthier ones. "+(level?"Switch to \"Hold severity constant\": at the same severity, hospitalist patients cost less, not more.":"Switch to \"Hold severity constant\": at the same severity, the gap mostly disappears.")}]},
-        {label:"Same severity",options:[level?{t:`and at the same severity, hospitalist patients cost about ${money(Math.abs(m2.b[1]))} less.`,tag:"correct"}:{t:`and at the same severity, the difference is only about ${money(m2.b[1])} and not significant.`,tag:"correct"},{t:"and hospitalist care still adds $1,900 at the same severity, since the bills don't change.",tag:"confound_ignored",fb:"Model 2's hospitalist coefficient is the same-severity comparison, and it's nowhere near $1,900. The bills don't change, but who's being compared does."}]}],
-       okFb:"Adjusting for a confounder compares like with like. Greg's number compared sicker patients with healthier ones."}],
-    outro:g=>g("c2s1")==="correct"
-      ?{ok:true,title:"Greg's sign",text:'<em>Greg takes down his sign and turns it over.</em> "Severity first, then the program. I\'m rewriting the speech. Shorter, at least."'}
-      :{ok:false,title:"Greg's sign",text:'<em>Greg folds the sign in half, then in half again.</em> "Sicker patients cost more. Who knew. Well. You did."'},
-    takeaway:"A confounder is linked to both the group and the outcome. Putting it in a multiple regression compares patients who are alike on it, and that can shrink, erase or even flip a difference."};
-}
-
-function case3(R,level){ // Dr. Ruiz: drug × diabetes interaction
-  const Z=ruizData10(level),mi=Z.mi;
-  const out=regTables(mi,{names:["Drug (1 = drug)","Diabetes (1 = yes)","Drug × Diabetes"],dv:"Drop in systolic BP at 8 weeks (mmHg)",pick:k=>["b1","b2","b3","p1","p3","pf"].includes(k)});
-  const strat=tbl("Drug effect in each group","Separate regressions of BP drop on drug, one per group",["Group","Patients","Drug B (mmHg)","Sig."],
-    [["No diabetes",240-Z.nYes,fx(Z.sNo.b[1],2),fP(Z.sNo.pv[1])],["Diabetes",Z.nYes,fx(Z.sYes.b[1],2),fP(Z.sYes.pv[1])]]);
-  const m0t=tbl("Model without the interaction","Drop in systolic BP on drug and diabetes",["Predictor","B","Sig."],[["Drug (1 = drug)",fx(Z.m0.b[1],2),fP(Z.m0.pv[1])],["Diabetes (1 = yes)",fx(Z.m0.b[2],2),fP(Z.m0.pv[2])]]);
-  const ip=interPlot(Z.means,{labs:["No diabetes","Diabetes"],ylab:"Average BP drop (mmHg)",cap:"Average drop in systolic BP at 8 weeks. Parallel lines would mean the drug works equally well in both groups."});
-  return {id:"c3",npc:"ruiz",title:"Does it work the same for everyone?",
-    scene:"Dr. Ruiz has the reviewer's letter on her desk, one sentence underlined twice.",
-    message:`<p>Our full trial, pooled with the two partner hospitals that ran the same protocol: 240 patients randomly assigned to the new blood pressure drug or placebo, with systolic pressure measured at enrollment and after 8 weeks. The outcome is the drop between the two, so a bigger number means more lowering. The reviewer asks whether the drug works as well in our ${Z.nYes} patients with diabetes. My fellow added an interaction term and wrote a sentence I don't trust.</p>`,
-    steps:[
-      {id:"c3s1",label:"The right row",type:"point",narr:"Dr. Ruiz turns the output toward you and taps the bottom row, then thinks better of telling you why.",show:out.co,
-       prompt:"Dr. Ruiz: \"Which number tells us whether the drug's effect is different in patients with diabetes?\" Click it.",
-       hint:["The interaction term is the one that lets the drug's effect differ by diabetes. Find its row.","Its Sig. tests whether the difference in effect is more than chance."],
-       picks:{p3:{tag:"correct",fb:level?`${fP(mi.pv[3])} on the Drug × Diabetes row: well above 0.05, so no evidence the drug works differently with diabetes.`:`${fP(mi.pv[3])} on the Drug × Diabetes row: the drug's effect differs significantly in patients with diabetes.`},
-        b3:{tag:"interaction_size",fb:"That's how much the effect differs in this sample. Whether that's more than chance is its Sig."},
-        p1:{tag:"main_with_interaction",fb:"That's the drug row. With the interaction in the model, it's about patients without diabetes only."},
-        b1:{tag:"main_with_interaction",fb:"That's the drug effect for patients without diabetes, the reference group."},
-        b2:{tag:"wrong_row",fb:"That's the diabetes row: the difference between groups on placebo."},pf:{tag:"output_misread",fb:"That's the whole model's test."}}},
-      {id:"c3s2",label:"The fellow's sentence",type:"reply",channel:"email",subject:"Re: reviewer comment 3",narr:`The fellow appears in the doorway. "The drug coefficient is ${fx(mi.b[1],1)}. So the drug lowers BP by ${fx(mi.b[1],0)} mmHg in everyone. Right?"`,
-       show:`<div class="slider"><p><strong>Try it.</strong> Switch between the interaction plot and the effect in each group.</p><div class="seg" role="group" aria-label="What to show"><input type="radio" id="ix-p" name="ixshow" value="p" checked><label for="ix-p">Interaction plot</label><input type="radio" id="ix-t" name="ixshow" value="t"><label for="ix-t">Effect in each group</label></div><div id="ixviz"></div></div>`,
-       init:()=>{const draw=()=>{const t=document.querySelector('input[name="ixshow"]:checked').value==="t";document.getElementById("ixviz").innerHTML=t?strat+(level?m0t:""):ip;markScrollers();};
-         document.querySelectorAll('input[name="ixshow"]').forEach(e=>e.addEventListener("change",draw));draw();},
-       prompt:"Build Dr. Ruiz's reply to the reviewer.",
-       hint:level?["Look at how parallel the two lines are, and at the interaction's Sig. from the last step.","No evidence the effect differs, so the drug coefficient from the interaction model (the no-diabetes group) isn't the one to report. Report the drug effect from the model without the interaction."]:["Switch to the effect in each group and compare the two drug B values.","With the interaction in the model, the drug coefficient is the effect for the reference group (no diabetes) only. The effect differs, so report it for each group."],
-       thread:["Reviewer 2: \"Does the treatment effect differ by diabetes status? Please clarify.\""],
+        vars,want,why,tagOf:(v,w,g)=>v==="a1c_6mo"&&g==="factor"?"predictor_after":w==="outcome"||g==="outcome"?"outcome_misread":"extra_factor",
+        repeated:true,designTag:"lpm_vs_logit",designLab:"Model",
+        designQ:"controlled_6mo is a yes-or-no outcome. Which model?",designYes:"Binary logistic regression: model the log odds of control",designNo:"Linear regression on the 0s and 1s",
+        designWhy:"a straight line through 0s and 1s can predict chances below 0% or above 100%. Logistic regression models the log odds, so every predicted chance stays between 0 and 1.",
+        ok:"A yes-or-no outcome, three predictors known at the first visit, and a model that keeps every predicted chance between 0 and 1."}},
+      {id:"c1s2",label:level?"First-visit HbA1c":"The education class",type:"point",narr:"Dr. Mensah unfolds his arms, which seems to be a good sign.",show:out.vars,
+       prompt:level?"Dr. Mensah: \"For each extra point of HbA1c at the first visit, how do the odds of control change, holding the class and age constant?\" Click it.":"Dr. Mensah: \"Compare patients who took the class with those who didn't, at the same first-visit HbA1c and age. How do their odds of control compare?\" Click it.",
+       hint:level?["Find the first-visit HbA1c row, and the column that turns B into an odds ratio.","Exp(B) on the HbA1c row: the factor that multiplies the odds of control for each extra point."]:["Find the education class row, and the column that turns B into an odds ratio.","Exp(B) on the education row: the odds of control for attendees divided by the odds for everyone else, holding the other predictors constant."],
+       picks:level?{or1:{tag:"correct",fb:`${f2(m.eb[1])}: each extra point of first-visit HbA1c multiplies the odds of control by ${f2(m.eb[1])}, about ${pctA}% lower odds, holding the class and age constant.`},
+          b1:{tag:"log_odds",fb:"That's B, the change in the log odds. Exp(B) turns it into an odds ratio people can read."},p1:{tag:"sig_vs_size",fb:"That's the Sig.: whether the change is more than chance, not how big it is."},
+          lo1:{tag:"ci_misread",fb:"That's the lower end of the 95% interval for Exp(B). The estimate itself is beside it."},hi1:{tag:"ci_misread",fb:"That's the upper end of the 95% interval for Exp(B)."},
+          or2:{tag:"wrong_row",fb:"That's the education class row."},or3:{tag:"wrong_row",fb:"That's the age row."},or0:{tag:"constant_misread",fb:"That's the Constant: the odds of control for a patient with zero on every predictor, which nobody is."},
+          b2:{tag:"wrong_row",fb:"That's B for the class."},b3:{tag:"wrong_row",fb:"That's B for age."},b0:{tag:"constant_misread",fb:"That's the Constant."},p2:{tag:"wrong_row",fb:"That's the class's Sig."},p3:{tag:"wrong_row",fb:"That's age's Sig."},lo2:{tag:"wrong_row",fb:"That's the class's interval."},hi2:{tag:"wrong_row",fb:"That's the class's interval."}}
+        :{or2:{tag:"correct",fb:`${f2(m.eb[2])}: attendees had ${f2(m.eb[2])} times the odds of control of non-attendees with the same first-visit HbA1c and age.`},
+          b2:{tag:"log_odds",fb:"That's B, the difference in log odds. Exp(B) turns it into an odds ratio."},p2:{tag:"sig_vs_size",fb:"That's the Sig.: whether the difference is more than chance, not how big it is."},
+          lo2:{tag:"ci_misread",fb:"That's the lower end of the 95% interval for Exp(B). The estimate is beside it."},hi2:{tag:"ci_misread",fb:"That's the upper end of the 95% interval for Exp(B)."},
+          or1:{tag:"wrong_row",fb:"That's the first-visit HbA1c row."},or3:{tag:"wrong_row",fb:"That's the age row."},or0:{tag:"constant_misread",fb:"That's the Constant: the odds of control for a patient with zero on every predictor, which nobody is."},
+          b1:{tag:"wrong_row",fb:"That's B for first-visit HbA1c."},b3:{tag:"wrong_row",fb:"That's B for age."},b0:{tag:"constant_misread",fb:"That's the Constant."},p1:{tag:"wrong_row",fb:"That's the HbA1c row's Sig."},p3:{tag:"wrong_row",fb:"That's age's Sig."},lo1:{tag:"wrong_row",fb:"That's the HbA1c row's interval."},hi1:{tag:"wrong_row",fb:"That's the HbA1c row's interval."}}},
+      {id:"c1s3",label:level?"The class's interval":"Reading Exp(B)",type:"reply",channel:"chat",narr:"Dr. Mensah picks up a pen, which he clearly intends to use against you.",show:still(out.vars),
+       prompt:level?"Dr. Mensah wants to announce that the class works. Build your reply.":"Dr. Mensah wants the first-visit HbA1c result in one sentence. Build it.",
+       hint:level?["Find the education row's 95% interval for Exp(B), and check whether it includes 1.",`The class's Exp(B) is ${f2(m.eb[2])}, but its interval, ${f2(m.lo[2])} to ${f2(m.hi[2])}, includes 1: no difference in the odds is still possible.`]:["Read the HbA1c row's Exp(B) and its interval. Then ask what multiplying the odds by a number below 1 does.",`Exp(B) = ${f2(m.eb[1])}: each extra point multiplies the odds of control by ${f2(m.eb[1])}, about ${pctA}% lower odds. The interval stays below 1, so it's more than chance.`],
+       thread:level?["The class works. Attendees do better. I want that in the newsletter."]:["So what does that HbA1c number mean, in words a clinic manager would understand?"],
        slots:level?[
-        {label:"The interaction",options:[{t:`The interaction wasn't significant (Sig. = ${fP(mi.pv[3])}): no evidence the effect differs with diabetes,`,tag:"correct"},{t:`The interaction wasn't significant (Sig. = ${fP(mi.pv[3])}), so the drug doesn't work in patients with diabetes,`,tag:"accept_null",fb:"Not significant means no evidence of a difference in the effect, not evidence that the drug fails."}]},
-        {label:"So",options:[{t:`so we report one drug effect from the model without the interaction: ${fx(Z.m0.b[1],1)} mmHg.`,tag:"correct"},{t:`so we report the drug coefficient from the interaction model, ${fx(mi.b[1],1)} mmHg, as the effect for everyone.`,tag:"main_with_interaction",fb:"In the interaction model that coefficient is the effect for patients without diabetes only."}]}]
+        {label:"The class",options:[{t:`Attendees had ${f2(m.eb[2])} times the odds of control, holding HbA1c and age constant,`,tag:"correct"},{t:`Attendees were ${f2(m.eb[2])} times as likely to reach control, holding first-visit HbA1c and age constant,`,tag:"or_as_rr",fb:"Exp(B) compares odds, not chances. With control this common, the two differ."}]},
+        {label:"But",options:[{t:`but the interval, ${f2(m.lo[2])} to ${f2(m.hi[2])}, includes 1, so the data can't rule out no effect at all.`,tag:"correct"},{t:`and since ${f2(m.eb[2])} is above 1 and the interval reaches ${f2(m.hi[2])}, the class clearly works.`,tag:"ci_includes1",fb:"Above 1 in this sample, and the upper end is high, but the interval also includes 1, so it's consistent with no difference in the odds."}]}]
        :[
-        {label:"With the interaction",options:[{t:`${fx(mi.b[1],1)} is the drug effect only for patients without diabetes, the reference group,`,tag:"correct"},{t:`${fx(mi.b[1],1)} is the drug effect for everyone, since the drug coefficient holds diabetes constant,`,tag:"main_with_interaction",fb:"That's how it reads without an interaction. Once an interaction is in the model, the drug coefficient belongs to the reference group: patients without diabetes."}]},
-        {label:"So report",options:[{t:`so we report both: about ${fx(Z.sNo.b[1],0)} mmHg without diabetes and about ${fx(Z.sYes.b[1],0)} with it.`,tag:"correct"},{t:"so we report one number, the average of the two groups' effects.",tag:"main_with_interaction",fb:"The effect differs. One number, even an average, would be wrong for one of the groups."}]}],
-       okFb:level?"No evidence of effect modification: report one effect, from the model without the interaction.":"When an interaction is significant, report the effect within each group. Never read the main effect alone as everyone's effect."}],
-    outro:g=>g("c3s2")==="correct"
-      ?{ok:true,title:"Dr. Ruiz replies to the reviewer",text:'<em>Dr. Ruiz signs the response letter and hands the fellow a copy.</em> "Main effects mean nothing alone once there\'s an interaction. Frame it."'}
-      :{ok:false,title:"Dr. Ruiz replies to the reviewer",text:'<em>Dr. Ruiz rewrites the fellow\'s sentence in red.</em> "Reference group. Remember the phrase."'},
-    takeaway:"An interaction term lets one predictor's effect depend on another. With it in the model, the main effect applies only to the reference group, so report effects within each group, or one effect if there's no interaction."};
+        {label:"Each point",options:[{t:`Each extra HbA1c point multiplies the odds of control by ${f2(m.eb[1])}, about ${pctA}% lower, holding the class and age constant,`,tag:"correct"},{t:`Each extra point of first-visit HbA1c lowers the chance of control by ${f2(m.eb[1])}, holding the class and age constant,`,tag:"or_as_diff",fb:"Exp(B) multiplies the odds. It isn't a change in the chance, even with the class and age held constant."},{t:`Each extra point lowers the odds of control by ${fx(100*m.eb[1],0)}%, holding the class and age constant,`,tag:"or_pct",fb:`An Exp(B) of ${f2(m.eb[1])} means the odds become ${fx(100*m.eb[1],0)}% of what they were: about ${pctA}% lower.`}]},
+        {label:"The interval",options:[{t:`and its interval, ${f2(m.lo[1])} to ${f2(m.hi[1])}, stays below 1, so the drop is more than chance.`,tag:"correct"},{t:`and since ${f2(m.eb[1])} is below 1 and so is its whole interval, the result isn't significant.`,tag:"or_below1",fb:"Below 1 just means lower odds. An interval that stays below 1 doesn't include 1, and that's what makes it significant."}]}],
+       okFb:level?"An odds ratio whose interval includes 1 is consistent with no effect. Report it, but don't claim it.":"Exp(B) multiplies the odds per unit of the predictor. Below 1 means lower odds, and the interval says whether the change is more than chance."}],
+    outro:g=>g("c1s1")==="correct"
+      ?{ok:true,title:"Dr. Mensah's verdict",text:'<em>Dr. Mensah unfolds his arms completely.</em> "Yes or no, modeled as odds. Nothing measured too late. Fine. You\'re careful."'}
+      :{ok:false,title:"Dr. Mensah's verdict",text:'<em>Dr. Mensah crosses out the six-month column on his printout.</em> "You can\'t predict the answer with the answer. Obvious, once it\'s said out loud."'},
+    takeaway:"A yes-or-no outcome calls for logistic regression, which models the log odds. Exp(B) is the odds ratio: it multiplies the odds for each unit of a predictor, holding the others constant."};
 }
 
-function case4(R,level){ // Dr. Nair: multicollinearity
-  const N=nairData10(level),m=N.m,names=["Weight (kg)","BMI","Waist (cm)"];
-  const out=regTables(m,{names,dv:"Systolic BP on arrival (mmHg)",vif:true,drop:["se","beta"],note:"Std. Error and Beta are left out here to make room for the collinearity statistics.",pick:k=>["pf","p1","p2","p3","vif1","vif2","vif3","tol1","tol2","tol3","r2"].includes(k)});
-  const ct=corrTable([N.w,N.b,N.wa],names,{note:"The three predictors, correlated with each other."});
-  const vmax=Math.max(...m.vif);
-  return {id:"c4",npc:"nair",title:"Significant, but nothing is",
-    scene:"Dr. Nair is holding her laptop out at arm's length, as if distance might help.",
-    message:`<p>I modeled blood pressure on arrival from weight, BMI and waist size, ${N.n} patients. The model is significant! But not one of the three predictors is. How can a model be significant when nothing in it is?</p>`,
+function case2(R,level){ // Dana: the sepsis pilot results (odds ratio vs times as likely) and the alert's cutoff (ROC)
+  const D=danaData11(level),m=D.m,RC=rocData11(level),N=D.N,A=SEASON.danaA||.05;
+  const xt=crosstab({title:"Antibiotics within 1 hour, by screen",note:"Pilot patients. SPSS calls the percentage row \"% within screen.\"",rowVar:"Screen",colVar:"Antibiotics within 1 hour",rows:["New alert","Current screen"],cols:["Yes","No"],T:D.T,stats:["count","row"],labels:{row:"% of this screen's patients"}});
+  const out=logitTables(m,{names:D.names,dv:"Antibiotics within 1 hour (1 = yes)",pick:k=>["b1","p1","or1","lo1","hi1","or2","or3","or0"].includes(k)});
+  const k0=kpis([[D.pA+"%","on time with the new alert"],[D.pU+"%","on time with the current screen"]]);
+  const design=PLAYED(4)?`the design we built in Week 4: <strong>${N} patients per group, α = ${AL(A)}</strong>`:`<strong>${N} patients per group, α = ${AL(A)}</strong>`;
+  return {id:"c2",npc:"dana",title:"Did the alert work?",
+    scene:"Dana has two binders open and a third under her arm. The third one is labeled \"BOARD.\"",
+    message:`<p>The sepsis alert pilot is finished: ${design}. Half the patients were screened with the new alert, half with the current screen. For the board, the question is yes or no: did each patient get antibiotics within the hour?</p>`,
+    viz:k0+still(xt),
     steps:[
-      {id:"c4s1",label:"The explanation",type:"point",narr:"Dr. Nair scrolls to the right edge of the Coefficients table. \"There are two more columns out here. I usually ignore them.\"",show:still(out.an)+out.co,
-       prompt:"Dr. Nair: \"Which number explains why the model is significant but none of the predictors are?\" Click it.",
-       hint:["Look at the last two columns of the Coefficients table, the collinearity statistics.","A VIF above 10 (or tolerance below 0.1) means a predictor overlaps heavily with the others."],
-       picks:{...Object.fromEntries([1,2,3].map(j=>["vif"+j,m.vif[j-1]>10?{tag:"correct",fb:`VIF = ${fx(m.vif[j-1],1)}, well above 10. The three predictors overlap so much that none adds much on its own. That's multicollinearity.`}:{tag:"collin_read",fb:`VIF = ${fx(m.vif[j-1],1)}: raised, but find the predictor whose VIF is above 10.`}])),
-        ...Object.fromEntries([1,2,3].map(j=>["tol"+j,1/m.vif[j-1]<.1?{tag:"correct",fb:`Tolerance = ${f3(1/m.vif[j-1])}, which is 1 ÷ VIF and below 0.1: heavy overlap with the other predictors, multicollinearity.`}:{tag:"collin_read",fb:`Tolerance = ${f3(1/m.vif[j-1])} (1 ÷ VIF): low, but find the one below 0.1.`}])),
-        pf:{tag:"collin_read",fb:"That's the overall test, and it's significant: together the predictors explain blood pressure. That's half of the puzzle, not the explanation."},
-        p1:{tag:"collin_read",fb:"That's one of the individual tests that isn't significant: the other half of the puzzle."},p2:{tag:"collin_read",fb:"That's one of the individual tests that isn't significant: the other half of the puzzle."},p3:{tag:"collin_read",fb:"That's one of the individual tests that isn't significant: the other half of the puzzle."},
-        r2:{tag:"r2_misread",fb:"That's how much the model explains together. The question is why the parts don't look significant."}}},
-      {id:"c4s2",label:"What to do",type:"reply",channel:"chat",narr:"Dr. Nair reaches for the delete key with great enthusiasm.",show:ct,
-       prompt:"Dr. Nair wants to drop all three predictors. Build your reply.",
-       hint:["Look at how strongly weight, BMI and waist correlate with each other.","They carry nearly the same information. Together they predict blood pressure; separately, none has much unique contribution. Keep one, or combine them, and refit."],
-       thread:["None of them is significant. I'll drop all three, then?"],
+      {id:"c2s1",label:"The alert's number",type:"point",narr:"Dana flips to the page with the output. \"Jordan ran it with age and ambulance arrival in the model, so the groups are compared fairly.\"",show:out.vars,
+       prompt:"Dana: \"The board wants one number for the alert: how much higher were the odds of on-time antibiotics with it, at the same age and arrival type?\" Click it.",
+       hint:["Find the new alert's row, and the column that turns B into an odds ratio.","Exp(B) on the alert row: the odds of on-time antibiotics with the alert divided by the odds with the current screen, holding age and arrival constant."],
+       picks:{or1:{tag:"correct",fb:`${f2(m.eb[1])}: the odds of on-time antibiotics were ${f2(m.eb[1])} times as high with the new alert, holding age and arrival type constant `+(D.sig?`(Sig. = ${fP(m.pv[1])}, below the planned α of ${AL(A)}).`:`(but Sig. = ${fP(m.pv[1])}, above the planned α of ${AL(A)}: with ${N} patients per group, the pilot can't rule out chance).`)},
+        b1:{tag:"log_odds",fb:"That's B, on the log odds scale. Exp(B) turns it into an odds ratio."},p1:{tag:"sig_vs_size",fb:"That's the Sig.: whether the difference is more than chance at the α you planned. Dana asked how much higher."},
+        lo1:{tag:"ci_misread",fb:"That's the lower end of the interval for Exp(B)."},hi1:{tag:"ci_misread",fb:"That's the upper end of the interval for Exp(B)."},
+        or2:{tag:"wrong_row",fb:"That's the age row."},or3:{tag:"wrong_row",fb:"That's the ambulance row."},or0:{tag:"constant_misread",fb:"That's the Constant."}}},
+      {id:"c2s2",label:"The board slide",type:"reply",channel:"chat",narr:"Dana turns her laptop around. The slide title is already in very large letters.",
+       show:`<div class="art art-flyer"><span class="sr">Draft slide: </span><p class="flyer-title">NEW ALERT: ${f2(m.eb[1])} TIMES AS LIKELY</p><p class="flyer-sub">to get antibiotics within the hour</p></div>`,
+       prompt:"Dana wants to know if her slide title is right. Build your reply.",
+       hint:["Compare the slide's \"times as likely\" with the two on-time percentages shown above.",`Exp(B) = ${f2(m.eb[1])} compares odds. The chances went from ${D.pU}% to ${D.pA}%, about ${f2(D.rr)} times as likely. On-time antibiotics are common, so the odds ratio is bigger than the ratio of chances.`],
+       thread:["That's the slide title. It's good, right? It's going on the screen in two hours."],
        slots:[
-        {label:"The problem",options:[{t:`The three overlap so much (VIF up to ${fx(vmax,0)}) that none adds much alone, though together they predict blood pressure,`,tag:"correct"},{t:"None of the three is related to blood pressure: each one's Sig. is above 0.05 with the other two held constant,",tag:"collin_drop",fb:"Each Sig. only tests what a predictor adds beyond the other two, and these overlap. The overall F test is significant: together they clearly are related. They're just too similar to separate."}]},
-        {label:"So",options:[{t:"so keep one of them, say BMI, and refit.",tag:"correct"},{t:"so drop all three and say body size doesn't matter.",tag:"collin_drop",fb:"That throws away a real relationship: the overall F test says together they predict blood pressure. Keep one, or combine them."}]}],
-       okFb:"Multicollinearity: a significant model with insignificant predictors, and at least one VIF above 10. Keep one of the overlapping predictors, or combine them."}],
+        {label:`The ${f2(m.eb[1])}`,options:[{t:`Not quite: ${f2(m.eb[1])} is an odds ratio. The odds were ${f2(m.eb[1])} times as high with the alert,`,tag:"correct"},{t:`Yes: an Exp(B) of ${f2(m.eb[1])} means patients with the alert were ${f2(m.eb[1])} times as likely to get antibiotics on time,`,tag:"or_as_rr",fb:"\"Times as likely\" compares chances, a risk ratio. Exp(B) compares odds, and when the outcome is common the two come apart."}]},
+        {label:"In chances",options:[{t:`while the chance went from ${D.pU}% to ${D.pA}%, about ${f2(D.rr)} times as likely: the odds ratio overstates it.`,tag:"correct"},{t:`and the chance of on-time antibiotics went up by ${f2(m.eb[1])} percentage points, the change Exp(B) measures.`,tag:"or_as_diff",fb:`The chance went up by ${D.pA-D.pU} percentage points, from ${D.pU}% to ${D.pA}%. Exp(B) isn't a difference in percentage points.`}]}],
+       okFb:"An odds ratio compares odds. When the outcome is common, it's noticeably bigger than the ratio of chances, so say \"odds\" or report the percentages."},
+      {id:"c2s3",label:"Fewer false alarms",type:"reply",channel:"email",subject:"Re: can we cut the false alarms?",narr:`Dana's phone buzzes: the board chair. "They want fewer false alarms," she says. "The alert gives every patient a risk score, and it fires above a cutoff. Last month: ${RC.n} patients, ${RC.cases} with sepsis."`,
+       show:`<div class="slider"><p><strong>Try it.</strong> The alert fires when a patient's risk score is at or above the cutoff. Move the cutoff and watch what it catches and what it costs.</p><label for="ct">Cutoff: <strong id="ctlab"></strong></label><input type="range" id="ct" min="0.02" max="0.6" step="0.01" value="0.10"><div id="ctk"></div><div id="ctviz"></div></div>`,
+       init:()=>{const sl=document.getElementById("ct"),draw=()=>{const c=+sl.value,k=classify(RC.y,RC.s,c);document.getElementById("ctlab").textContent=fx(c,2);
+           document.getElementById("ctk").innerHTML=kpis([[fx(100*k.sens,0)+"%","sensitivity: sepsis cases caught"],[fx(100*k.spec,0)+"%","specificity: patients without sepsis left alone"],[String(k.fp),"false alarms"],[String(k.fn),"sepsis cases missed"],[f3(RC.r.auc),"AUC (area under the ROC curve)"]]);
+           document.getElementById("ctviz").innerHTML=rocPlot(RC.r,{mark:{fpr:1-k.spec,tpr:k.sens},label:`ROC curve of the alert's risk score, AUC ${f3(RC.r.auc)}. At a cutoff of ${fx(c,2)}, sensitivity is ${fx(100*k.sens,0)}% and the false positive rate is ${fx(100*(1-k.spec),0)}%.`,cap:"The ringed point is the current cutoff. Moving the cutoff moves the point along the curve; the curve itself doesn't change."});};
+         sl.addEventListener("input",draw);draw();},
+       prompt:"The board wants to raise the cutoff to cut false alarms. Build Dana's reply.",
+       hint:["Move the cutoff up and down. Watch sensitivity, specificity and the AUC.","A higher cutoff fires less often: fewer false alarms (higher specificity) but more missed sepsis (lower sensitivity). The AUC describes the whole curve, so it doesn't move."],
+       thread:["Board chair: \"Raise the cutoff. Fewer alarms, same alert. What's the catch?\""],
+       slots:[
+        {label:"Raising the cutoff",options:[{t:"Raising the cutoff cuts false alarms (higher specificity) but misses more sepsis (lower sensitivity),",tag:"correct"},{t:"Raising the cutoff cuts false alarms (specificity goes up) and catches more sepsis too (sensitivity goes up),",tag:"roc_tradeoff",fb:"Move the slider: as false alarms fall, missed cases rise. It's a trade-off."},{t:"Raising the cutoff lowers the alert's AUC, since fewer patients get flagged,",tag:"roc_auc",fb:"The AUC summarizes the whole curve. A cutoff picks a point on it."}]},
+        {label:"The AUC",options:[{t:`and the AUC, ${f3(RC.r.auc)}, belongs to the whole curve: the board must choose which misses it can accept.`,tag:"correct"},{t:"so choose the cutoff with the highest AUC, since a higher AUC means fewer misses and fewer false alarms.",tag:"roc_auc",fb:"Every cutoff has the same AUC: it belongs to the curve, not to a point on it."}]}],
+       okFb:"A cutoff trades sensitivity against specificity. The ROC curve shows every possible trade, and the AUC summarizes the whole curve: 0.5 is a coin flip, 1.0 is perfect."}],
+    outro:g=>g("c2s2")==="correct"
+      ?{ok:true,title:"Dana's slide",text:`<em>Dana deletes the slide title and types a new one: "On time: ${D.pU}% → ${D.pA}% (odds ratio ${f2(m.eb[1])})."</em> "Longer, but true. The board can handle long."`+(D.sig?"":` <em>She adds a second line:</em> "Not significant with ${N} per group. We need a bigger trial."`)}
+      :{ok:false,title:"Dana's slide",text:'<em>Dana stares at the old title for a long moment, then deletes it.</em> "Odds, not chances. Week 7 all over again. I knew that."'},
+    takeaway:"Exp(B) in logistic regression is an odds ratio. When the outcome is common, it overstates \"times as likely,\" so report the percentages too. A cutoff trades sensitivity for specificity; the AUC describes the whole ROC curve."};
+}
+
+function case3(R,level){ // Marcus: an accurate model that catches almost no one (base rate, sensitivity)
+  const M=marcusData11(level),c=M.c;
+  const ct=classTable(c,{no:"No fall",yes:"Fell",cut:.5,pick:k=>["tn","fp","fn","tp","spec","sens","acc"].includes(k)});
+  const base=fx(100*M.base,0),acc=fx(100*c.acc,0),sens=fx(100*c.sens,0);
+  return {id:"c3",npc:"marcus",title:`${acc}% accurate`,
+    scene:"Marcus has printed his model's accuracy in a very large font and taped it to the parallel bars.",
+    message:`<p>I built a model that predicts which patients fall within 90 days of discharge, from their balance score and age. ${M.n} patients. It's ${acc}% accurate! Insurance is going to love this. Can we start using it to decide who gets fall screening?</p>`,
+    viz:"",
+    steps:[
+      {id:"c3s1",label:"The patients who fell",type:"point",narr:"Marcus points at the bottom of the table with pride. \"There. Overall percentage.\"",show:ct,
+       prompt:"Before anything else: of the patients who actually fell, what share did Marcus's model catch? Click it.",
+       hint:["Find the row for patients who actually fell, and the column that says how many of them the model got right.",`The percentage correct on the "Fell (actually)" row is the sensitivity: ${sens}%.`],
+       picks:{sens:{tag:"correct",fb:`${sens}%: of the ${M.falls} patients who fell, the model flagged only ${c.tp}. That's the sensitivity.`},
+        acc:{tag:"acc_vs_sens",fb:"That's overall accuracy, and most of it was earned on patients who didn't fall."},
+        spec:{tag:"acc_vs_sens",fb:"That's the share of non-fallers the model got right: the specificity."},
+        tp:{tag:"count_not_pct",fb:"That's a count: the fallers the model caught. The question asks for a share."},fn:{tag:"count_not_pct",fb:"That's a count: the fallers the model missed."},
+        tn:{tag:"count_not_pct",fb:"That's a count of non-fallers predicted correctly."},fp:{tag:"count_not_pct",fb:"That's a count of false alarms."}}},
+      {id:"c3s2",label:`About that ${acc}%`,type:"reply",channel:"chat",narr:"Marcus takes the printout off the parallel bars and holds it like a diploma.",
+       show:kpis([[acc+"%","overall accuracy"],[base+"%","of patients never fell"],[sens+"%","of fallers caught (sensitivity)"]])+still(ct),
+       prompt:"Marcus wants to know if his model is ready. Build your reply.",
+       hint:["Compare the accuracy with the share of patients who never fell.",`If the model said "no fall" for everyone, it would be right ${base}% of the time. ${acc}% barely beats that, and it caught only ${sens}% of fallers.`],
+       thread:[`${acc}%! That's an A-minus. Ready to roll out?`],
+       slots:[
+        {label:`The ${acc}%`,options:[{t:`${acc}% sounds strong, but ${base}% never fell, so calling everyone "no fall" would score ${base}%,`,tag:"correct"},{t:`${acc}% means the model caught ${acc}% of the patients who fell and missed only the rest,`,tag:"acc_vs_sens",fb:`That's sensitivity, and it's ${sens}%. Accuracy counts every correct prediction, mostly the many non-fallers.`}]},
+        {label:"So",options:[{t:`and it caught only ${sens}% of fallers: judge it by sensitivity, and try a lower cutoff.`,tag:"correct"},{t:"so raise the cutoff from 0.5 to 0.9: it would flag only patients it's sure about and be even more accurate.",tag:"cutoff_dir",fb:"A higher cutoff would call even fewer patients \"will fall\" and catch even fewer fallers."}]}],
+       okFb:"When one outcome is common, accuracy can look high while the model misses almost every case. Check the base rate, sensitivity and specificity."}],
+    outro:g=>g("c3s2")==="correct"
+      ?{ok:true,title:"Marcus's model",text:`<em>Marcus crosses out "${acc}% ACCURATE" and writes "catches ${sens}% of fallers" underneath, smaller.</em> "Less exciting. More honest. I'll lower the cutoff and try again."`}
+      :{ok:false,title:"Marcus's model",text:'<em>Marcus takes the sign down and folds it carefully.</em> "Most of my patients never fall. Of course \'nobody falls\' looks accurate."'},
+    takeaway:"Accuracy rewards the common outcome. A model can look highly accurate by predicting \"no\" for nearly everyone, so read sensitivity and specificity in the classification table."};
+}
+
+function case4(R,level){ // Greg: a straight line through 0s and 1s (linear probability model), then model fit
+  const G=gregData11(level),m=G.m;
+  const sheet=regT(tbl("Greg's spreadsheet","Linear regression of readmitted (1 = yes, 0 = no) on prior admissions",["Prior admissions in the last year","Patients","Readmitted (actual %)","Greg's predicted chance"],
+    [...Array(G.top+1).keys()].map(v=>{const n=G.x.filter(z=>z===v).length,o=G.obs(v);return [v,n,o==null?"–":fx(100*o,0)+"%",(G.pr(v)<0||G.pr(v)>1)?`<strong>${fx(100*G.pr(v),0)}%</strong>`:fx(100*G.pr(v),0)+"%"];})));
+  const curve=probPlot(G.x,G.y,{xlo:0,xhi:G.top,ylo:-0.15,yhi:1.15,xlab:"Prior admissions in the last year",ylab:"Chance of readmission",
+    fits:[{f:v=>G.pr(v),color:"var(--amber)",dash:true,lab:"straight line",labX:G.top,dy:-8},{f:v=>expit(m.b[0]+m.b[1]*v),color:"var(--teal)",lab:"logistic curve",labX:G.top*0.55,dy:-10}],
+    label:`Readmitted (1) or not (0) against prior admissions. The straight line runs from ${G.lo}% to ${G.hi}%, outside 0 to 100%; the logistic S-curve stays inside.`,cap:"Dots are patients (jittered so they don't overlap). The dashed box marks 0% to 100%."});
+  const fit=regT(tbl("Model fit","Readmitted within 30 days, binary logistic regression. SPSS prints −2 Log likelihood; AIC = −2 Log likelihood + 2 × the number of parameters, shown here so you don't have to compute it. Smaller AIC means a better balance of fit and simplicity.",["","Intercept only","With prior admissions"],
+    [["−2 Log likelihood",pk(fx(m.m2LL0,1),"ll0"),pk(fx(m.m2LL,1),"ll1")],["AIC",pk(fx(m.aic0,1),"aic0"),pk(fx(m.aic,1),"aic1")]]));
+  const omni=regT(tbl("Omnibus Tests of Model Coefficients","Does the model with prior admissions fit better than the intercept-only model?",["","Chi-square","df","Sig."],[["Model",pk(fx(m.chi,3),"chi"),1,pk(fP(m.pChi),"op")]]));
+  return {id:"c4",npc:"greg",title:"A straight line through yes and no",
+    scene:"Greg has a laptop open on a stack of budget binders, and he's looking at it the way you look at a car that's making a new noise.",
+    message:`<p>I predicted 30-day readmissions from prior admissions, ${G.x.length} patients. Same regression as my cost model. It works great in the middle. At the edges it says some patients have a ${G.lo}% chance of readmission and others ${G.hi}%. Is that a problem? Be honest. Quickly.</p>`,
+    viz:curve,
+    steps:[
+      {id:"c4s1",label:"Interviewing Greg",type:"interview",reveal:true,show:sheet,prompt:"Ask Greg about his model, then tell him your plan.",
+       hint:["Ask Greg what the outcome is and how he got his predictions.","Readmission is yes or no. A straight line through 0s and 1s can predict impossible chances below 0% or above 100%. Binary logistic regression keeps every predicted chance between 0 and 1."],
+       thread:["Ask. I've got ten minutes before the next budget meeting."],
+       questions:[
+        {q:"What exactly is the outcome?",a:"Readmitted within 30 days. One means yes, zero means no. It's in the file as a number, so I treated it as a number.",key:true},
+        {q:"How did you get the predictions?",a:"Linear regression, same as my cost model. Draw the best straight line, read off the chance. What could go wrong?",key:true},
+        {q:"Who has the most prior admissions?",a:`${G.top}. Mrs. K. She knows the night staff by name.`,key:false},
+        {q:"Can the board read odds?",a:"The board can read anything with a dollar sign in front of it.",key:false}],
+       slots:[
+        {label:"The problem",options:[{t:`Readmission is yes or no, so a line can predict impossible chances, like your ${G.lo}% and ${G.hi}%,`,tag:"correct"},{t:"The line is fine; just round any prediction below 0% up to 0% and anything above 100% down to 100%,",tag:"lpm",fb:"Rounding hides the symptom. A straight line is the wrong shape for a chance."},{t:"Readmission is coded as a number, 0 or 1, so linear regression is the right tool for it,",tag:"lpm",fb:"Coded 0 and 1, it's still yes or no. A straight line through it can leave 0 to 100%."}]},
+        {label:"So",options:[{t:"so I'll use binary logistic regression, which keeps predicted chances between 0 and 1.",tag:"correct"},{t:"so I'll use a chi-square test of readmission by prior admissions, which handles yes-or-no outcomes.",tag:"chisq_vs_logit",fb:"Chi-square compares categories. Prior admissions is a number from 0 up; logistic regression handles numerical predictors."}]}],
+       okFb:"A yes-or-no outcome needs a model for the chance, bent to stay between 0 and 1: logistic regression. Both lines are shown above."},
+      {id:"c4s2",label:"Is it any better?",type:"point",narr:"Greg leans in. \"Fine, the S-curve. But does prior admissions actually help, or did you just draw a prettier line?\"",show:fit+omni,
+       prompt:"Click a number that shows adding prior admissions improves the fit by more than chance, even after paying for the extra predictor.",
+       hint:["One number in the fit table always drops when you add a predictor. Another charges a price for it, and the omnibus test checks it formally.","Smaller AIC is better, and the omnibus Sig. tests the improvement. Either one answers Greg."],
+       picks:{op:{tag:"correct",fb:`The omnibus test: Sig. ${fP(m.pChi)}. Adding prior admissions improves the fit by much more than chance would.`},
+        aic1:{tag:"correct",fb:`AIC ${fx(m.aic,1)} with prior admissions against ${fx(m.aic0,1)} without: smaller is better, even after the penalty for the extra predictor.`},
+        ll1:{tag:"fit_ll",fb:"−2 Log likelihood always drops when you add a predictor, just as R Square always rises. AIC charges for the extra predictor, and the omnibus test checks the drop."},
+        ll0:{tag:"fit_ll",fb:"That's the intercept-only model's −2 Log likelihood. On its own it has no meaning; it only makes sense compared with another model."},
+        aic0:{tag:"fit_ll",fb:"That's the intercept-only model's AIC. Compare it with the model's AIC."},
+        chi:{tag:"fit_ll",fb:"That's the omnibus chi-square, the drop in −2 Log likelihood. Its Sig. says whether the drop is more than chance."}}}],
     outro:g=>g("c4s1")==="correct"
-      ?{ok:true,title:"Dr. Nair's model",text:'<em>Dr. Nair deletes two of the three columns and reruns the model.</em> "BMI, significant! I knew it was in there somewhere!"'}
-      :{ok:false,title:"Dr. Nair's model",text:'"The far-right columns matter. I\'m never ignoring them again. Probably."'},
-    takeaway:"When predictors are highly correlated, the model can be significant overall while no single predictor is. A VIF above 5 or 10 flags it; keep one predictor or combine them."};
+      ?{ok:true,title:"Greg's new chart",text:`<em>Greg deletes the straight line, then stares at the S-curve for a while.</em> "It bends. Nothing over 100%. The board will like that, even if they don't know why."`}
+      :{ok:false,title:"Greg's new chart",text:'<em>Greg writes "0 to 100%" on a sticky note and puts it on his monitor.</em> "Chances can\'t go below zero. I knew that. I just didn\'t know my line didn\'t."'},
+    takeaway:"A straight line through 0s and 1s (a linear probability model) can predict chances outside 0 to 100%. Logistic regression bends to stay inside. Compare models with AIC or the omnibus test, not −2 Log likelihood alone."};
 }
 
 const CORE=[case1,case2,case3,case4];
 
-/* ---------- optional consult: Marcus, regression and ANOVA are the same model ---------- */
+/* ---------- optional consult: Dr. Ruiz, a categorical predictor and its reference group ---------- */
 function expertCase(){
-  const memo=`<div class="art art-memo"><span class="sr">Printed output: </span><dl class="memo-head"><dt>From</dt><dd>Jordan, for Marcus</dd><dt>Re</dt><dd>Six-minute walk gain by program, 90 patients</dd></dl>
-   <p><strong>One-way ANOVA:</strong> F = 9.41, Sig. &lt; .001</p><p><strong>Regression with two dummies</strong> (standard care = reference): intensive B = 46.2 m, home-based B = &minus;8.1 m, model F = 9.41, Sig. &lt; .001</p></div>`;
-  return {id:"e1",npc:"marcus",title:"ANOVA or regression?",
-    scene:"Marcus has two printouts side by side and is looking from one to the other like a spot-the-difference puzzle.",
-    message:"<p>Jordan ran my three programs two ways, an ANOVA and a regression, and got the same F. Is that a coincidence?</p>",
+  const memo=`<div class="art art-memo"><span class="sr">Printed output: </span><dl class="memo-head"><dt>From</dt><dd>Dr. Ruiz's fellow</dd><dt>Re</dt><dd>Cardiac event within 2 years (yes or no), by blood pressure category</dd></dl>
+   <p>Binary logistic regression, also holding age and smoking constant. Reference category: <strong>normal blood pressure</strong>.</p></div>${regT(tbl("Variables in the Equation (blood pressure rows)","Exp(B) is the odds ratio against the reference, normal blood pressure.",["Category","Exp(B)","95% CI lower","95% CI upper"],[["Elevated","1.30","0.80","2.11"],["Stage 1","1.85","1.12","3.05"],["Stage 2","3.10","1.88","5.11"]]))}`;
+  return {id:"e1",npc:"ruiz",title:"Against what?",
+    scene:"Dr. Ruiz is reading her fellow's output with a red pen uncapped and ready.",
+    message:"<p>My fellow put blood pressure category into a logistic regression, and now he's reading every number as if it were compared with nothing. Help me correct him.</p>",
     steps:[
-      {id:"e1s1",label:"Same F",show:memo,prompt:"Why did the ANOVA and the regression give the same F?",
-       hint:"Think about what two dummy variables can represent.",
+      {id:"e1s1",label:"Stage 2",show:memo,prompt:"What does Exp(B) = 3.10 for stage 2 mean?",
+       hint:"A categorical predictor's odds ratios each compare one category with the reference category.",
        options:[
-        {t:"With group dummies, a regression is the same model as a one-way ANOVA",tag:"correct",fb:"Right: the dummies let the regression fit a separate mean for each program, exactly like ANOVA."},
-        {t:"Coincidence: both landed on F = 9.41 with these 90 patients; another sample would differ",tag:"dummy_ref",fb:"It will match in every sample. With group dummies, they're the same model written two ways."},
-        {t:"Jordan made a copy-paste mistake: a regression F tests slopes, not group means",tag:"dummy_ref",fb:"Jordan would be offended. With dummies, the regression's coefficients are group differences, so its F tests the same thing as the ANOVA."}]},
-      {id:"e1s2",label:"Intensive B",show:memo,prompt:"What does intensive B = 46.2 m mean?",
-       hint:"Each dummy's coefficient compares that group with the reference group.",
+        {t:"Stage 2 patients had 3.1 times the odds of a cardiac event of those with normal blood pressure, holding age and smoking constant",tag:"correct",fb:"Right: every category is compared with the reference, normal blood pressure."},
+        {t:"Patients with stage 2 had 3.1 times the odds of a cardiac event of patients with stage 1, holding age and smoking constant",tag:"ref_group",fb:"Each category is compared with the reference, normal blood pressure, not with the category next to it."},
+        {t:"Patients with stage 2 had a 3.1% higher chance of a cardiac event, holding age and smoking constant",tag:"or_as_diff",fb:"Exp(B) multiplies the odds. It isn't a percentage-point change in chance."}]},
+      {id:"e1s2",label:"Elevated",show:memo,prompt:"Elevated blood pressure: Exp(B) = 1.30, 95% CI 0.80 to 2.11. What can Dr. Ruiz say?",
+       hint:"Check whether the interval includes 1, meaning no difference in the odds.",
        options:[
-        {t:"Intensive patients gained 46.2 m more, on average, than standard-care patients",tag:"correct",fb:"Right: each dummy compares its group with the reference, standard care."},
-        {t:"Intensive-program patients gained 46.2 m on average, with the home-based dummy held at 0",tag:"dummy_ref",fb:"That would be the group's mean. B is a difference from the reference group, standard care."},
-        {t:"Intensive patients gained 46.2 m more, on average, than home-based patients, the other program",tag:"dummy_ref",fb:"Both dummies are compared with standard care, not with each other."}]}],
+        {t:"No evidence the odds differ from normal blood pressure: the interval includes 1",tag:"correct",fb:"Right: an interval that includes 1 is consistent with no difference."},
+        {t:"Elevated blood pressure raises the odds by 30%, so it's proven, since 2.11 is well above 1",tag:"ci_includes1",fb:"30% higher in this sample, but the interval also reaches down to 0.80: it includes 1."},
+        {t:"Elevated blood pressure lowers the odds, since 0.80 is below 1",tag:"ci_misread",fb:"0.80 is just the lower end of the interval. The interval runs from lower to higher odds."}]}],
     outro:g=>g("e1s1")==="correct"
-      ?{ok:true,title:"Marcus's two printouts",text:'"Same model, two outfits. And every program measured against standard care. I like it."'}
-      :{ok:false,title:"Marcus's two printouts",text:'"Dummies compare with the reference group. Got it."'},
-    takeaway:"A regression with N − 1 dummy variables is the same model as a one-way ANOVA. Each dummy's coefficient is that group's difference from the reference group."};
+      ?{ok:true,title:"The fellow, corrected",text:'Dr. Ruiz caps her pen. "Against normal. Every row, against normal. He\'s writing it on the whiteboard."'}
+      :{ok:false,title:"The fellow, corrected",text:'"Reference category. I\'ll make him say it out loud."'},
+    takeaway:"For a categorical predictor, each Exp(B) compares one category with the reference category. An interval that includes 1 is consistent with no difference in the odds."};
 }
 
 /* ---------- reviews with Jordan ---------- */
 const FOLLOWUPS={
- fu_mlr:()=>JR("fu_mlr","Quick review: holding the others constant","What a coefficient means once there's more than one predictor.",[
-  {id:"fu_ml_1",label:"Interpretation",prompt:"Change in hemoglobin = α + 0.002 × water + β₂ × baseline. The 0.002 means…",hint:"Compare two people alike on the other predictor.",
-   options:[{t:"one more liter goes with 0.002 more change, at the same baseline hemoglobin",tag:"correct",fb:"Right."},{t:"one more liter goes with 0.002 more change, ignoring baseline hemoglobin entirely",tag:"controlling_for",fb:"That's how you'd read a slope from a model without baseline. In this model, the coefficient compares people with the same baseline."},{t:"water explains 0.2% of the change, after baseline is accounted for",tag:"r2_misread",fb:"The share explained comes from R Square, not from a slope."}]},
-  {id:"fu_ml_3",label:"Beyond the data",prompt:"The data had 1 to 4 radiologists on duty. Using the model to predict turnaround with 8 on duty is…",hint:"Look at the range the model was fitted on.",
-   options:[{t:"extrapolation: the data can't say whether the line holds that far out",tag:"correct",fb:"Right."},{t:"fine, because the coefficient is significant, so it applies at any staffing level",tag:"extrapolate",fb:"Significance doesn't extend the range of the data."},{t:"fine, because the other predictors are held constant",tag:"extrapolate",fb:"Holding the others constant doesn't extend the range either."}]},
-  {id:"fu_ml_2",label:"Why add predictors",prompt:"One reason to use multiple regression is to…",hint:"Think about Greg's $1,900.",
-   options:[{t:"tease out the effect of confounding variables",tag:"correct",fb:"Right."},{t:"make R Square as large as possible",tag:"r2_rises",fb:"R Square rises with any predictor, even noise. That's not the goal."},{t:"avoid having to check assumptions",tag:"controlling_for",fb:"The assumptions still apply."}]}],
-  "Each coefficient compares cases that are alike on the other predictors. That's how a confounder is taken out."),
- fu_confound:()=>JR("fu_confound","Quick review: confounders","Why a raw difference can mislead.",[
-  {id:"fu_cf_1",label:"Definition",prompt:"A confounder is a variable that…",hint:"It's tied to both sides.",
-   options:[{t:"is related to both the group and the outcome",tag:"correct",fb:"Right."},{t:"is related only to the outcome, adding noise",tag:"confound_ignored",fb:"Then it wouldn't bias the group comparison. A confounder is tied to the group too."},{t:"is measured after the outcome",tag:"predictor_after",fb:"That's a different problem."}]},
-  {id:"fu_cf_2",label:"Adjusting",prompt:"After adding severity, the hospitalist difference falls from $1,900 to $150. This means…",hint:"Compare like with like.",
-   options:[{t:"most of the $1,900 was due to differences in severity",tag:"correct",fb:"Right."},{t:"the model with severity is wrong, since billing shows the full $1,900",tag:"confound_ignored",fb:"Billing shows the raw difference. The model with severity is the fairer comparison."},{t:"hospitalists cost $2,050, the $1,900 plus the $150",tag:"confound_ignored",fb:"Adjusting doesn't add the numbers."}]}],
-  "A confounder is linked to both group and outcome. Adjusting for it compares like with like."),
- fu_dummy:()=>JR("fu_dummy","Quick review: dummy variables","Categories in a regression.",[
-  {id:"fu_du_1",label:"How many",prompt:"Activity level has four groups. How many dummy variables go in the model?",hint:"One group is the reference.",
-   options:[{t:"3, each compared with a reference group",tag:"correct",fb:"Right."},{t:"4, one per group, each with its own coefficient",tag:"dummy_coding",fb:"All four would be perfectly collinear. One group has to be the reference."},{t:"1, coded 1 to 4 from least to most active",tag:"dummy_coding",fb:"That forces equal steps between groups."}]},
-  {id:"fu_du_2",label:"Meaning",prompt:"GPA = 3 + 0.5 × female (0 = male, 1 = female). The 0.5 means…",hint:"The dummy compares with the group coded 0.",
-   options:[{t:"females average 0.5 higher than males",tag:"correct",fb:"Right."},{t:"females average a GPA of 0.5",tag:"dummy_ref",fb:"That's a difference, not a mean."},{t:"gender explains 50% of GPA",tag:"r2_misread",fb:"That's not what B measures."}]}],
-  "A categorical predictor with N groups needs N − 1 dummies. Each coefficient is a difference from the reference group."),
- fu_inter:()=>JR("fu_inter","Quick review: interaction","When one effect depends on another variable.",[
-  {id:"fu_in_1",label:"Meaning",prompt:"A significant drug × sex interaction means…",hint:"Effect modification.",
-   options:[{t:"the drug's effect differs between men and women",tag:"correct",fb:"Right."},{t:"the drug works for everyone, men and women alike",tag:"main_with_interaction",fb:"The interaction says the effect isn't the same for everyone."},{t:"men and women differ on placebo",tag:"interaction_size",fb:"That's the sex main effect."}]},
-  {id:"fu_in_3",label:"Not significant",prompt:"The drug × diabetes interaction has Sig. = .40. That means…",hint:"Not significant isn't the same as no difference.",
-   options:[{t:"no evidence the effect differs by diabetes: report one effect",tag:"correct",fb:"Right: no evidence of a difference, not proof that there is none."},{t:"the drug doesn't work in patients with diabetes, since .40 is above 0.05",tag:"accept_null",fb:"The interaction tests whether the effect differs, not whether it works."},{t:"the drug works exactly the same in both groups",tag:"accept_null",fb:"Not significant isn't proof of equal effects."}]},
-  {id:"fu_in_2",label:"Main effect",prompt:"With an interaction term in the model, the drug's own coefficient is…",hint:"Look at what the other variable equals when its dummy is 0.",
-   options:[{t:"the drug effect in the reference group only",tag:"correct",fb:"Right: don't read it as everyone's effect."},{t:"the drug effect for everyone, on average",tag:"main_with_interaction",fb:"With an interaction in the model, it's the effect in the reference group only, not an average."},{t:"meaningless, always",tag:"main_with_interaction",fb:"It has a meaning, just a narrow one."}]}],
-  "An interaction means one predictor's effect depends on another. Report effects within each group; don't read the main effect alone."),
- fu_collin:()=>JR("fu_collin","Quick review: multicollinearity","When predictors tell the same story.",[
-  {id:"fu_cl_1",label:"Symptom",prompt:"The overall F test is significant, but no individual t test is. The most likely explanation is…",hint:"Look at how the predictors relate to each other.",
-   options:[{t:"multicollinearity: the predictors are highly correlated",tag:"correct",fb:"Right."},{t:"the F test is wrong: if no single predictor is significant, the model can't be either",tag:"collin_read",fb:"The F test is fine: it tests the predictors together. Overlapping predictors can be jointly strong but individually weak."},{t:"the outcome isn't normal",tag:"collin_read",fb:"That wouldn't produce this pattern."}]},
-  {id:"fu_cl_2",label:"VIF",prompt:"A VIF of 14 means…",hint:"The rule of thumb is 5 or 10.",
-   options:[{t:"that predictor overlaps heavily with the others",tag:"correct",fb:"Right."},{t:"the predictor is 14 times as important",tag:"collin_read",fb:"VIF measures overlap, not importance."},{t:"nothing, VIF is only for ANOVA, not regression",tag:"collin_read",fb:"It's a regression diagnostic."}]}],
-  "Highly correlated predictors share their explanatory power. VIF above 5 or 10 flags it; keep one or combine them.")
+ fu_logit:()=>JR("fu_logit","Quick review: when to use logistic regression","Yes-or-no outcomes need their own model.",[
+  {id:"fu_lg_1",label:"Which model",prompt:"You want to predict whether a patient is readmitted (yes or no) from age and number of medications. Which model?",hint:"Look at the outcome first.",
+   options:[{t:"Binary logistic regression",tag:"correct",fb:"Right: a yes-or-no outcome with numerical predictors."},{t:"Linear regression with a 0/1 outcome",tag:"lpm",fb:"A straight line through 0s and 1s can predict chances below 0% or above 100%."},{t:"A chi-square test",tag:"chisq_vs_logit",fb:"Chi-square handles categorical predictors. Age and medications are numbers."}]},
+  {id:"fu_lg_2",label:"Why not a line",prompt:"The main problem with a linear probability model is that…",hint:"Think about Greg's spreadsheet.",
+   options:[{t:"its predicted chances can fall below 0 or rise above 1",tag:"correct",fb:"Right, and its errors can't be normal with only two outcomes."},{t:"it can't use more than one predictor",tag:"lpm",fb:"It can. The shape is the problem."},{t:"it always gives a non-significant slope for 0/1 data",tag:"lpm",fb:"Significance isn't the issue."}]},
+  {id:"fu_lg_3",label:"Measured too late",prompt:"To predict control at six months, HbA1c measured at six months should be…",hint:"Ask when it was measured.",
+   options:[{t:"left out: it's how the outcome itself is defined",tag:"correct",fb:"Right: a predictor has to be known before the outcome."},{t:"the main predictor, since it predicts control best",tag:"predictor_after",fb:"Using it would predict the outcome with itself."},{t:"the outcome, as a number",tag:"outcome_misread",fb:"Dr. Mensah's question is yes or no."}]}],
+  "Logistic regression is for yes-or-no outcomes. It models the log odds, so predicted chances stay between 0 and 1. Predictors must be known before the outcome."),
+ fu_or:()=>JR("fu_or","Quick review: reading Exp(B)","The odds ratio, carefully.",[
+  {id:"fu_or_1",label:"A number",prompt:"Smoking's Exp(B) is 14.4 for lung cancer, holding other predictors constant. That means…",hint:"Exp(B) multiplies the odds.",
+   options:[{t:"smokers had 14.4 times the odds of lung cancer of non-smokers",tag:"correct",fb:"Right."},{t:"smokers were 14.4 times as likely as non-smokers to get lung cancer",tag:"or_as_rr",fb:"That's chances. Exp(B) compares odds."},{t:"smokers had a 14.4% higher chance",tag:"or_as_diff",fb:"Exp(B) isn't a percentage-point change."}]},
+  {id:"fu_or_2",label:"Percent",prompt:"Each extra year of age has Exp(B) = 0.88. The odds…",hint:"Subtract 1.",
+   options:[{t:"drop by about 12% per year",tag:"correct",fb:"Right: 0.88 − 1 = −0.12."},{t:"drop by 88% per year",tag:"or_pct",fb:"The odds become 88% of what they were: 12% lower."},{t:"rise by 0.88 per year",tag:"or_below1",fb:"Below 1 means lower odds."}]},
+  {id:"fu_or_3",label:"The interval",prompt:"An odds ratio of 1.6 with a 95% CI of 0.9 to 2.8 means…",hint:"Check whether the interval includes 1.",
+   options:[{t:"the data are consistent with no difference in the odds",tag:"correct",fb:"Right: the interval includes 1."},{t:"the odds are 60% higher, proven, since the interval reaches 2.8",tag:"ci_includes1",fb:"Not with 1 inside the interval: it runs from 0.9 to 2.8."},{t:"the odds are lower, since 0.9 is below 1",tag:"ci_misread",fb:"0.9 is just the lower end."}]}],
+  "Exp(B) multiplies the odds. Subtract 1 for the percent change, say \"odds,\" not \"likely,\" and check whether the interval includes 1."),
+ fu_class:()=>JR("fu_class","Quick review: judging predictions","Four numbers from one table.",[
+  {id:"fu_cl_1",label:"Sensitivity",prompt:"Sensitivity is the share of…",hint:"Think of the people who actually have the condition.",
+   options:[{t:"people with the condition that the model flags",tag:"correct",fb:"Right: true positives ÷ all actual positives."},{t:"people without the condition that the model leaves alone",tag:"acc_vs_sens",fb:"That's specificity."},{t:"all predictions that are correct",tag:"acc_vs_sens",fb:"That's accuracy."}]},
+  {id:"fu_cl_2",label:"Accuracy",prompt:"72% of a sample have lung cancer. A model is 82% accurate. How impressive is that?",hint:"Compare it with what guessing \"everyone has it\" would score.",
+   options:[{t:"Less than it sounds: calling everyone \"yes\" already scores 72%",tag:"correct",fb:"Right: always compare accuracy with the base rate."},{t:"Very: anything above 80% accuracy is excellent for a cancer model",tag:"acc_vs_sens",fb:"Accuracy has to be compared with the base rate."},{t:"It means 82% of the patients with cancer are caught by the model",tag:"acc_vs_sens",fb:"That would be sensitivity."}]},
+  {id:"fu_cl_3",label:"Precision",prompt:"Precision is the share of…",hint:"Start from the model's positive calls.",
+   options:[{t:"positive predictions that are truly positive",tag:"correct",fb:"Right: true positives ÷ everything called positive."},{t:"true positives among everyone who actually has the condition",tag:"acc_vs_sens",fb:"That's sensitivity."},{t:"negatives called negative",tag:"acc_vs_sens",fb:"That's specificity."}]}],
+  "Sensitivity: cases caught. Specificity: non-cases left alone. Precision: positive calls that are right. Accuracy: all correct, which always has to be compared with the base rate."),
+ fu_roc:()=>JR("fu_roc","Quick review: ROC curves","Every cutoff at once.",[
+  {id:"fu_rc_1",label:"Axes",prompt:"An ROC curve plots…",hint:"One axis is what you catch, the other is what it costs.",
+   options:[{t:"sensitivity against 1 − specificity, one point per cutoff",tag:"correct",fb:"Right."},{t:"accuracy against the cutoff, one point per cutoff",tag:"roc_auc",fb:"That's a different chart."},{t:"predicted chances against observed outcomes, one per patient",tag:"roc_auc",fb:"That's not what an ROC curve plots."}]},
+  {id:"fu_rc_2",label:"AUC",prompt:"An AUC of 0.50 means the model…",hint:"Picture the diagonal line.",
+   options:[{t:"is no better than a coin flip",tag:"correct",fb:"Right: 1.0 is perfect separation."},{t:"is right half the time at the best cutoff",tag:"roc_auc",fb:"AUC summarizes every cutoff, not one."},{t:"is perfect",tag:"roc_auc",fb:"That's 1.0."}]},
+  {id:"fu_rc_3",label:"Cutoff",prompt:"Raising the cutoff for a positive call usually…",hint:"Fewer people are called positive.",
+   options:[{t:"raises specificity and lowers sensitivity",tag:"correct",fb:"Right: fewer false alarms, more misses."},{t:"raises both sensitivity and specificity",tag:"roc_tradeoff",fb:"It's a trade-off."},{t:"lowers the AUC, since fewer cases are caught",tag:"roc_auc",fb:"The AUC belongs to the whole curve."}]}],
+  "An ROC curve shows sensitivity against the false positive rate for every cutoff. The AUC summarizes it: 0.5 is a coin flip, 1.0 is perfect."),
+ fu_fit:()=>JR("fu_fit","Quick review: model fit","Comparing logistic models.",[
+  {id:"fu_ft_1",label:"AIC",prompt:"Two logistic models of the same outcome: AIC 1,744 and AIC 1,790. Which fits better?",hint:"Smaller is better.",
+   options:[{t:"The one with AIC 1,744",tag:"correct",fb:"Right: AIC only means something compared with another model."},{t:"The one with AIC 1,790",tag:"fit_ll",fb:"Smaller AIC is better."},{t:"You can't tell without R Square",tag:"fit_ll",fb:"AIC is enough to compare them."}]},
+  {id:"fu_ft_2",label:"−2 Log likelihood",prompt:"Adding a predictor lowered −2 Log likelihood. That alone shows…",hint:"Like R Square in linear regression.",
+   options:[{t:"nothing yet: it always drops when you add a predictor",tag:"correct",fb:"Right: use AIC or the omnibus test."},{t:"the predictor matters, since the fit improved",tag:"fit_ll",fb:"It drops even for a useless predictor."},{t:"the model got worse, since the number went down",tag:"fit_ll",fb:"Smaller −2 Log likelihood means better fit to this sample."}]}],
+  "−2 Log likelihood and AIC only mean something in comparison. Smaller is better; AIC charges for each extra predictor.")
 };
-const FU_MAP={controlling_for:"fu_mlr",r2_misread:"fu_mlr",r2_rises:"fu_mlr",extrapolate:"fu_mlr",wrong_row:"fu_mlr",intercept_misread:"fu_mlr",beta_units:"fu_mlr",output_misread:"fu_mlr",
-  outcome_misread:"fu_mlr",predictor_after:"fu_mlr",extra_factor:"fu_mlr",no_choice:"fu_dummy",no_design:"fu_dummy",build_wrong:"fu_mlr",
-  confound_ignored:"fu_confound",dummy_coding:"fu_dummy",dummy_ref:"fu_dummy",
-  interaction_size:"fu_inter",main_with_interaction:"fu_inter",accept_null:"fu_inter",collin_read:"fu_collin",collin_drop:"fu_collin"};
+const FU_MAP={lpm_vs_logit:"fu_logit",lpm:"fu_logit",chisq_vs_logit:"fu_logit",predictor_after:"fu_logit",outcome_misread:"fu_logit",extra_factor:"fu_logit",no_choice:"fu_logit",no_design:"fu_logit",build_wrong:"fu_logit",
+  log_odds:"fu_or",or_as_rr:"fu_or",or_as_diff:"fu_or",or_pct:"fu_or",or_below1:"fu_or",ci_misread:"fu_or",ci_includes1:"fu_or",wrong_row:"fu_or",constant_misread:"fu_or",sig_vs_size:"fu_or",ref_group:"fu_or",causal_claim:"fu_or",
+  acc_vs_sens:"fu_class",count_not_pct:"fu_class",cutoff_dir:"fu_class",roc_tradeoff:"fu_roc",roc_auc:"fu_roc",fit_ll:"fu_fit"};
 
 /* ---------- the notes in each room ---------- */
 const CLUES=[
- {idx:0,id:"h_board",name:"Radiology whiteboard",x:19,y:7,html:l=>`
-  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>CT turnaround: why slow?</h3><p class="mk">1. orders per hour</p><p class="mk">2. shift (day / evening / night)</p><p class="mk">3. radiologists on duty (1 to 4)</p><p class="mk mk-red">Each one's share of the blame, SEPARATELY</p></div>
-  ${stickyArt("Never more than 4 radiologists on at once. Report length is counted after the read.","O.H.",1.5)}`},
- {idx:1,id:"g_sign",name:"Greg's sign",x:13,y:11,html:l=>`
-  <div class="art art-flyer"><span class="sr">Sign: </span><p class="flyer-title">HOSPITALIST PROGRAM: $1,900 PER STAY</p><p class="flyer-sub">Budget committee, Thursday</p><p>Average cost per stay: hospitalist service minus all other services. Source: billing.</p></div>
-  ${stickyArt("Billing file columns: stay_id, service (hospitalist or other), cost, severity_score (1 to 10, at admission).","Greg",-1.5)}`},
- {idx:2,id:"r_letter",name:"Reviewer's letter",x:16,y:3,html:l=>`
-  <div class="art art-memo"><span class="sr">Letter: </span><dl class="memo-head"><dt>From</dt><dd>Reviewer 2</dd><dt>Re</dt><dd>BP drug trial manuscript</dd></dl>
-   <p>3. Does the treatment effect differ by diabetes status? Please clarify.</p></div>
-  ${stickyArt("Fellow added drug × diabetes. Then read the drug coefficient as everyone's effect. CHECK.","E.R.",1.5)}`},
- {idx:3,id:"n_laptop",name:"Nair's model notes",x:5,y:3,html:l=>`
-  <div class="art art-memo"><span class="sr">Notes: </span><dl class="memo-head"><dt>Outcome</dt><dd>Systolic BP on arrival</dd><dt>Predictors</dt><dd>weight, BMI, waist</dd></dl>
-   <p>Overall model: significant!<br>Weight: not significant. BMI: not significant. Waist: not significant.<br>???</p></div>`}
+ {idx:0,id:"k_board",name:"Endocrinology whiteboard",x:19,y:7,html:l=>`
+  <div class="art art-wb"><span class="sr">Whiteboard: </span><h3>WHO REACHES CONTROL?</h3><p class="mk">Control = HbA1c under 7% at 6 months: YES or NO</p><p class="mk">Ideas: first-visit HbA1c, the education class, age</p><p class="mk mk-red">Prove it to me. K.M.</p></div>
+  ${stickyArt("The 6-month HbA1c is how we decide yes or no. Don't use it to predict itself.","K.M.",1.5)}`},
+ {idx:1,id:"d_binder",name:"Dana's pilot binder",x:6,y:12,html:l=>`
+  <div class="art art-memo"><span class="sr">Binder cover: </span><dl class="memo-head"><dt>Study</dt><dd>Sepsis alert pilot</dd><dt>Design</dt><dd>${SEASON.danaN||100} per group, α = ${AL(SEASON.danaA||.05)}${PLAYED(4)?" (from Week 4)":""}</dd><dt>For the board</dt><dd>Antibiotics within 1 hour: yes or no</dd></dl></div>
+  ${stickyArt("Board wants two answers: did it work? And can we cut the false alarms?","Dana",-2)}`},
+ {idx:2,id:"m_sign",name:"Marcus's sign",x:9,y:3,html:l=>{const M=marcusData11(l);return `
+  <div class="art art-flyer"><span class="sr">Sign: </span><p class="flyer-title">FALL-RISK MODEL: ${fx(100*M.c.acc,0)}% ACCURATE!</p><p class="flyer-sub">Rehab Clinic, ${M.n} patients</p><p>Predicts falls within 90 days of discharge from balance score and age.</p></div>
+  ${stickyArt("Most of my patients never fall, thank goodness.","Marcus",1.8)}`;}},
+ {idx:3,id:"g_sheet",name:"Greg's spreadsheet",x:13,y:11,html:l=>{const G=gregData11(l);return `
+  <div class="art art-memo"><span class="sr">Spreadsheet printout: </span><dl class="memo-head"><dt>Model</dt><dd>Linear regression</dd><dt>Outcome</dt><dd>Readmitted within 30 days (1 = yes, 0 = no)</dd></dl>
+   <p>Predicted chance with 0 prior admissions: <strong>${G.lo}%</strong><br>Predicted chance with ${G.top} prior admissions: <strong>${G.hi}%</strong></p></div>
+  ${stickyArt("Close enough??","Greg",-1.5)}`;}}
 ];
 mergeClues();
 
@@ -861,7 +863,7 @@ function sdv(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0
 function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1));const mu=mean(x),sd=sdv(x);return x.map(v=>m+(v-mu)/sd*s);}
 function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
 
-function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
+function portrait(p,size=64){if(p.video)return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><rect x="9" y="12" width="46" height="31" rx="3" fill="var(--card)" stroke="${p.color}" stroke-width="3"/><circle cx="32" cy="24" r="6.5" fill="${p.color}"/><path d="M21 41c2-7 6-10 11-10s9 3 11 10z" fill="${p.color}"/><rect x="5" y="45" width="54" height="6" rx="2" fill="${p.color}"/></svg>`;return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
 
 /* ---------- WEEKS 1 TO 3: SHARED HELPERS ---------- */
 let GEN_OK=0;const GEN_MISS=[];
@@ -1031,6 +1033,132 @@ function residPlot(m,o){o=o||{};const lo=Math.min(-3.5,Math.floor(Math.min(...m.
   return scatter({x:m.zpred,y:m.zres,xlo:-3,xhi:3,ylo:lo,yhi:hi,xlab:"Predicted value (standardized)",ylab:"Residual (standardized)",r:2.6,h:o.h||220,
     fits:[{f:()=>0,color:"var(--muted)",dash:true}],label:o.label,cap:o.cap||"Residual plot. Each dot is one patient: how far the model's prediction missed (up and down) against the prediction itself (left to right)."});}
 
+/* ---------- WEEKS 11 TO 13: LOGISTIC AND POISSON REGRESSION, MIXED MODELS, SURVIVAL ---------- */
+function gammq(a,x){if(x<=0)return 1;if(x<a+1){let ap=a,sum=1/a,del=sum;for(let n=0;n<500;n++){ap+=1;del*=x/ap;sum+=del;if(Math.abs(del)<Math.abs(sum)*1e-14)break;}return 1-sum*Math.exp(-x+a*Math.log(x)-lgamma(a));}
+  let b=x+1-a,c=1/1e-300,d=1/b,h=d;for(let i=1;i<500;i++){const an=-i*(i-a);b+=2;d=an*d+b;if(Math.abs(d)<1e-300)d=1e-300;c=b+an/c;if(Math.abs(c)<1e-300)c=1e-300;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<1e-14)break;}return Math.exp(-x+a*Math.log(x)-lgamma(a))*h;}
+function chiSurv(x,df){return x<=0?1:gammq(df/2,x/2);}
+const expit=v=>1/(1+Math.exp(-v)),zP=z=>2*(1-ncdf(Math.abs(z))),f2=v=>fx(v,2);
+/* a generalized linear model fitted by iteratively reweighted least squares: family "logit" (yes/no) or "poisson" (counts) */
+function glmFit(y,X,family){const n=y.length,p=X.length,k=p+1,rows=y.map((_,i)=>[1,...X.map(c=>c[i])]),ybar=mean(y);
+  let b=Array(k).fill(0);b[0]=family==="logit"?Math.log(ybar/(1-ybar)):Math.log(ybar);let inv,mu;
+  for(let it=0;it<60;it++){const eta=rows.map(r=>r.reduce((s,v,j)=>s+v*b[j],0));mu=eta.map(e=>family==="logit"?expit(e):Math.exp(e));
+    const w=mu.map(m=>Math.max(family==="logit"?m*(1-m):m,1e-10)),z=eta.map((e,i)=>e+(y[i]-mu[i])/w[i]);
+    const XtWX=Array.from({length:k},(_,a)=>Array.from({length:k},(_,c)=>rows.reduce((s,r,i)=>s+r[a]*w[i]*r[c],0)));
+    const XtWz=Array.from({length:k},(_,a)=>rows.reduce((s,r,i)=>s+r[a]*w[i]*z[i],0));
+    inv=matInv(XtWX);const nb=inv.map(r=>r.reduce((s,v,j)=>s+v*XtWz[j],0)),d=Math.max(...nb.map((v,j)=>Math.abs(v-b[j])));b=nb;if(d<1e-10)break;}
+  const eta=rows.map(r=>r.reduce((s,v,j)=>s+v*b[j],0));mu=eta.map(e=>family==="logit"?expit(e):Math.exp(e));
+  const w=mu.map(m=>Math.max(family==="logit"?m*(1-m):m,1e-10));
+  inv=matInv(Array.from({length:k},(_,a)=>Array.from({length:k},(_,c)=>rows.reduce((s,r,i)=>s+r[a]*w[i]*r[c],0))));
+  const se=b.map((_,j)=>Math.sqrt(inv[j][j])),wald=b.map((v,j)=>(v/se[j])**2),pv=wald.map(v=>chiSurv(v,1));
+  const eb=b.map(Math.exp),lo=b.map((v,j)=>Math.exp(v-1.96*se[j])),hi=b.map((v,j)=>Math.exp(v+1.96*se[j]));
+  let LL,LL0;
+  if(family==="logit"){LL=y.reduce((s,v,i)=>s+(v?Math.log(mu[i]):Math.log(1-mu[i])),0);LL0=n*(ybar*Math.log(ybar)+(1-ybar)*Math.log(1-ybar));}
+  else{LL=y.reduce((s,v,i)=>s+v*Math.log(mu[i])-mu[i]-lgamma(v+1),0);LL0=y.reduce((s,v)=>s+v*Math.log(ybar)-ybar-lgamma(v+1),0);}
+  const chi=2*(LL-LL0),cs=1-Math.exp(2*(LL0-LL)/n),nk=cs/(1-Math.exp(2*LL0/n));
+  const dev=family==="poisson"?2*y.reduce((s,v,i)=>s+(v>0?v*Math.log(v/mu[i]):0)-(v-mu[i]),0):-2*LL,pear=family==="poisson"?y.reduce((s,v,i)=>s+(v-mu[i])**2/mu[i],0):null;
+  return {n,p,k,b,se,wald,pv,eb,lo,hi,mu,LL,LL0,m2LL:-2*LL,m2LL0:-2*LL0,chi,pChi:chiSurv(chi,p),cs,nk,aic:-2*LL+2*k,aic0:-2*LL0+2,dev,dfRes:n-k,pear};}
+const logit=(y,X)=>glmFit(y,X,"logit"),poisson=(y,X)=>glmFit(y,X,"poisson");
+/* classification at a cut value: counts, sensitivity, specificity, accuracy, precision */
+function classify(y,score,cut){let tp=0,fp=0,tn=0,fn=0;y.forEach((v,i)=>{const pr=score[i]>=cut;if(v&&pr)tp++;else if(v)fn++;else if(pr)fp++;else tn++;});
+  const P=tp+fn,N=tn+fp;return {tp,fp,tn,fn,P,N,sens:P?tp/P:0,spec:N?tn/N:0,acc:(tp+tn)/(P+N),prec:tp+fp?tp/(tp+fp):0};}
+/* ROC curve points and the area under it (the chance a random case scores above a random non-case) */
+function roc(y,score){const pos=score.filter((_,i)=>y[i]),neg=score.filter((_,i)=>!y[i]);let a=0;
+  pos.forEach(s=>neg.forEach(t=>{a+=s>t?1:s===t?.5:0;}));const auc=a/(pos.length*neg.length);
+  const cuts=[...new Set(score)].sort((p,q)=>q-p),pts=[{fpr:0,tpr:0}];cuts.forEach(c=>{const k=classify(y,score,c);pts.push({fpr:1-k.spec,tpr:k.sens,cut:c});});pts.push({fpr:1,tpr:1});return {auc,pts};}
+function rocPlot(R,o){o=o||{};const W=360,H=o.h||250,L=46,Rt=340,top=12,base=H-44,X=sc(0,1,L,Rt),Y=sc(0,1,base,top);
+  let g=[0,.2,.4,.6,.8,1].map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${fx(t,1)}</text>`).join("")+axis(X,0,1,base,L,Rt);
+  g+=`<line x1="${X(0)}" y1="${Y(0)}" x2="${X(1)}" y2="${Y(1)}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4"/><text x="${X(.62)}" y="${Y(.5)+4}" class="v-reflab">coin flip (AUC 0.5)</text>`;
+  g+=`<polyline points="${R.pts.map(p=>`${X(p.fpr)},${Y(p.tpr)}`).join(" ")}" fill="none" stroke="var(--teal)" stroke-width="3"/>`;
+  if(o.mark)g+=`<circle cx="${X(o.mark.fpr)}" cy="${Y(o.mark.tpr)}" r="7" fill="var(--card)" stroke="var(--amber)" stroke-width="3"/>`;
+  g+=`<text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">False positive rate (1 − specificity)</text><text transform="translate(12,${(top+base)/2}) rotate(-90)" text-anchor="middle">Sensitivity</text>`;
+  return vz(W,H,o.label||`ROC curve with an area under the curve of ${f3(R.auc)}.`,g,o.cap);}
+/* SPSS-style logistic regression output. pick(key) decides clickable cells; keys: b j, se j, w j, p j, or j, lo j, hi j (j = 1..p, 0 = Constant), ll, cs, nk, chi, op */
+function logitTables(m,o){o=o||{};const P=(v,k)=>o.pick&&o.pick(k)?pk(v,(o.prefix||"")+k):v,names=o.names,dv=o.dv,lab=o.tag?` (${o.tag})`:"";
+  const order=[...names.map((_,i)=>i+1),0];
+  const vars=regT(tbl("Variables in the Equation"+lab,`Outcome: ${dv}. Exp(B) is the odds ratio; the interval is its 95% confidence interval. SPSS also prints df = 1 for every row.`,
+    ["","B","S.E.","Wald","Sig.","Exp(B)","95% CI lower","95% CI upper"],
+    order.map(j=>[j?names[j-1]:"Constant",P(fx(m.b[j],3),"b"+j),P(fx(m.se[j],3),"se"+j),P(fx(m.wald[j],3),"w"+j),P(fP(m.pv[j]),"p"+j),P(fx(m.eb[j],3),"or"+j),j?P(fx(m.lo[j],3),"lo"+j):"",j?P(fx(m.hi[j],3),"hi"+j):""])));
+  const summ=regT(tbl("Model Summary"+lab,`Outcome: ${dv}`,["Step","−2 Log likelihood","Cox & Snell R Square","Nagelkerke R Square"],[["1",P(fx(m.m2LL,3),"ll"),P(f3(m.cs),"cs"),P(f3(m.nk),"nk")]]));
+  const omni=regT(tbl("Omnibus Tests of Model Coefficients"+lab,"Does the model with the predictors fit better than the intercept-only model?",["","Chi-square","df","Sig."],[["Model",P(fx(m.chi,3),"chi"),m.p,P(fP(m.pChi),"op")]]));
+  return {vars,summ,omni};}
+/* SPSS-style classification table at a cut value */
+function classTable(c,o){o=o||{};const P=(v,k)=>o.pick&&o.pick(k)?pk(v,k):v,no=o.no||"No",yes=o.yes||"Yes",lab=o.lab||"Observed";
+  return regT(tbl("Classification Table",`Cut value = ${fx(o.cut||.5,2)}. Each row is what actually happened; each column is what the model predicted.`,[lab,`Predicted ${no}`,`Predicted ${yes}`,"Percentage correct"],
+    [[`${no} (actually)`,P(c.tn,"tn"),P(c.fp,"fp"),P(fx(100*c.spec,1),"spec")],[`${yes} (actually)`,P(c.fn,"fn"),P(c.tp,"tp"),P(fx(100*c.sens,1),"sens")],["Overall percentage","","",P(fx(100*c.acc,1),"acc")]]));}
+/* SPSS-style generalized linear model (Poisson) parameter estimates. keys: b j, se j, w j, p j, eb j, lo j, hi j */
+function glmTable(m,o){o=o||{};const P=(v,k)=>o.pick&&o.pick(k)?pk(v,k):v,names=o.names;
+  return regT(tbl("Parameter Estimates",`Outcome: ${o.dv}. Poisson distribution, log link (SPSS: Generalized Linear Models). Exp(B) multiplies the expected count; the interval is its 95% Wald confidence interval.`,
+    ["Parameter","B","Std. Error","Wald Chi-Square","Sig.","Exp(B)","95% CI lower","95% CI upper"],
+    [0,...names.map((_,i)=>i+1)].map(j=>[j?names[j-1]:"(Intercept)",P(fx(m.b[j],3),"b"+j),P(fx(m.se[j],3),"se"+j),P(fx(m.wald[j],3),"w"+j),P(fP(m.pv[j]),"p"+j),P(fx(m.eb[j],3),"eb"+j),P(fx(m.lo[j],3),"lo"+j),P(fx(m.hi[j],3),"hi"+j)])));}
+
+/* ---------- linear mixed models for balanced data (every group measured on the same schedule) ----------
+   Y is an array of groups, each an array of n values; x is the shared within-group schedule (or null).
+   With balanced data the moment estimators below match REML whenever the variances come out positive. */
+function lmmNull(Y){const J=Y.length,n=Y[0].length,gm=Y.map(mean),mu=mean(gm);
+  const SSW=Y.reduce((s,g,j)=>s+g.reduce((t,v)=>t+(v-gm[j])**2,0),0),MSW=SSW/(J*(n-1)),MSB=n*gm.reduce((s,v)=>s+(v-mu)**2,0)/(J-1);
+  const s2e=MSW,s2u=Math.max(0,(MSB-MSW)/n),seMu=Math.sqrt(MSB/(J*n)),t=mu/seMu;
+  const seE=Math.sqrt(2*MSW*MSW/(J*(n-1))),seU=Math.sqrt(2/(n*n)*(MSB*MSB/(J-1)+MSW*MSW/(J*(n-1))));
+  return {J,n,fixed:[{name:"Intercept",est:mu,se:seMu,df:J-1,t,p:twoSidedP(t,J-1)}],
+    cov:[{name:"Residual",est:s2e,se:seE},{name:"Intercept variance",est:s2u,se:seU,grp:true}].map(c=>({...c,z:c.est/c.se,p:zP(c.est/c.se)})),s2e,s2u,icc:s2u/(s2u+s2e)};}
+function lmmRI(Y,x){const J=Y.length,n=x.length,xb=mean(x),Sxx=x.reduce((s,v)=>s+(v-xb)**2,0),gm=Y.map(mean),mu=mean(gm);
+  const b1=Y.reduce((s,g)=>s+g.reduce((t,v,i)=>t+(x[i]-xb)*v,0),0)/(J*Sxx),b0=mu-b1*xb;
+  const SSE=Y.reduce((s,g,j)=>s+g.reduce((t,v,i)=>t+(v-gm[j]-b1*(x[i]-xb))**2,0),0),dfE=J*(n-1)-1,s2e=SSE/dfE;
+  const MSB=n*gm.reduce((s,v)=>s+(v-mu)**2,0)/(J-1),s2u=Math.max(0,(MSB-s2e)/n);
+  const se1=Math.sqrt(s2e/(J*Sxx)),c1=1/(n*J),c2=xb*xb/(J*Sxx),v0=c1*MSB+c2*s2e,se0=Math.sqrt(v0),df0=v0*v0/((c1*MSB)**2/(J-1)+(c2*s2e)**2/dfE);
+  const seE=Math.sqrt(2*s2e*s2e/dfE),seU=Math.sqrt(2/(n*n)*(MSB*MSB/(J-1)+s2e*s2e/dfE));
+  return {J,n,fixed:[{name:"Intercept",est:b0,se:se0,df:df0,t:b0/se0,p:twoSidedP(b0/se0,df0)},{name:"slope",est:b1,se:se1,df:dfE,t:b1/se1,p:twoSidedP(b1/se1,dfE)}],
+    cov:[{name:"Residual",est:s2e,se:seE},{name:"Intercept variance",est:s2u,se:seU,grp:true}].map(c=>({...c,z:c.est/c.se,p:zP(c.est/c.se)})),s2e,s2u,icc:s2u/(s2u+s2e)};}
+function lmmRS(Y,x){const J=Y.length,n=x.length,xb=mean(x),Sxx=x.reduce((s,v)=>s+(v-xb)**2,0);
+  const fits=Y.map(g=>{const m=mean(g),b=g.reduce((t,v,i)=>t+(x[i]-xb)*v,0)/Sxx,a=m-b*xb,sse=g.reduce((t,v,i)=>t+(v-a-b*x[i])**2,0);return {a,b,sse};});
+  const s2e=fits.reduce((s,f)=>s+f.sse,0)/(J*(n-2)),va=sdv(fits.map(f=>f.a))**2,vb=sdv(fits.map(f=>f.b))**2;
+  const s2u1=Math.max(0,vb-s2e/Sxx),s2u0=Math.max(0,va-s2e*(1/n+xb*xb/Sxx)),b0=mean(fits.map(f=>f.a)),b1=mean(fits.map(f=>f.b));
+  const se0=Math.sqrt(va/J),se1=Math.sqrt(vb/J),seE=Math.sqrt(2*s2e*s2e/(J*(n-2))),seU0=Math.sqrt(2*va*va/(J-1)),seU1=Math.sqrt(2*vb*vb/(J-1));
+  return {J,n,fixed:[{name:"Intercept",est:b0,se:se0,df:J-1,t:b0/se0,p:twoSidedP(b0/se0,J-1)},{name:"slope",est:b1,se:se1,df:J-1,t:b1/se1,p:twoSidedP(b1/se1,J-1)}],
+    cov:[{name:"Residual",est:s2e,se:seE},{name:"Intercept variance",est:s2u0,se:seU0,grp:true},{name:"slope variance",est:s2u1,se:seU1,grp:true,slope:true}].map(c=>({...c,z:c.est/c.se,p:zP(c.est/c.se)})),s2e,s2u0,s2u1,fits};}
+/* SPSS MIXED output. o.slope names the slope variable, o.subj the grouping. keys: fe j / fse j / ft j / fp j and ce j / cse j / cz j / cp j */
+function mixedTables(m,o){o=o||{};const P=(v,k)=>o.pick&&o.pick(k)?pk(v,k):v,slope=o.slope||"x",subj=o.subj||"subject",d=o.d||3;
+  const fe=regT(tbl("Estimates of Fixed Effects",`Outcome: ${o.dv}. SPSS also prints a 95% confidence interval for each estimate.`,["Parameter","Estimate","Std. Error","df","t","Sig."],
+    m.fixed.map((f,j)=>[f.name==="slope"?slope:f.name,P(fx(f.est,d),"fe"+j),P(fx(f.se,d),"fse"+j),fx(f.df,f.df%1?3:0),P(fx(f.t,3),"ft"+j),P(fP(f.p),"fp"+j)])));
+  const cv=regT(tbl("Estimates of Covariance Parameters",`Outcome: ${o.dv}. Variances: how much ${o.within||"the measurements"} vary within a ${subj} (Residual) and how much ${subj}s differ from one another.`,["Parameter","Estimate","Std. Error","Wald Z","Sig."],
+    m.cov.map((c,j)=>[c.grp?`${c.slope?slope:"Intercept"} variance [${subj}]`:"Residual",P(fx(c.est,d),"ce"+j),P(fx(c.se,d),"cse"+j),P(fx(c.z,3),"cz"+j),P(fP(c.p),"cp"+j)])));
+  return {fe,cv};}
+/* one thin line per group and a heavy average line: repeated measurements over time */
+function spaghetti(Y,x,o){const W=360,H=o.h||240,L=48,Rt=344,top=12,base=H-44,all=Y.flat(),lo=o.ylo??Math.floor(Math.min(...all)/50)*50,hi=o.yhi??Math.ceil(Math.max(...all)/50)*50,X=sc(Math.min(...x),Math.max(...x),L,Rt),Yc=sc(lo,hi,base,top);
+  let g=ticks(lo,hi,5).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Yc(t)}" y2="${Yc(t)}"/><text x="${L-5}" y="${Yc(t)+4}" text-anchor="end">${t}</text>`).join("")+axis(X,Math.min(...x),Math.max(...x),base,L,Rt);
+  Y.forEach(gp=>{g+=`<polyline points="${gp.map((v,i)=>`${X(x[i])},${Yc(v)}`).join(" ")}" fill="none" stroke="var(--muted)" stroke-width="1.2" opacity=".55"/>`;});
+  const avg=x.map((_,i)=>mean(Y.map(gp=>gp[i])));g+=`<polyline points="${avg.map((v,i)=>`${X(x[i])},${Yc(v)}`).join(" ")}" fill="none" stroke="var(--ink)" stroke-width="3.5"/><text x="${Rt-4}" y="${Yc(avg[avg.length-1])-10}" text-anchor="end" class="v-strong">average</text>`;
+  g+=`<text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">${o.xlab}</text><text transform="translate(12,${(top+base)/2}) rotate(-90)" text-anchor="middle">${o.ylab}</text>`;
+  return vz(W,H,o.label,g,o.cap);}
+
+/* ---------- survival: Kaplan-Meier curves and the log-rank test ---------- */
+function kmFit(t,e){const idx=t.map((_,i)=>i).sort((a,b)=>t[a]-t[b]||e[b]-e[a]);let atRisk=t.length,s=1;const steps=[{t:0,s:1}],cens=[];
+  for(let k=0;k<idx.length;){const tt=t[idx[k]];let d=0,c=0;while(k<idx.length&&t[idx[k]]===tt){if(e[idx[k]])d++;else c++;k++;}
+    if(d){s*=1-d/atRisk;steps.push({t:tt,s});}if(c)cens.push({t:tt,s});atRisk-=d+c;}
+  return {steps,cens,at:u=>{let v=1;steps.forEach(p=>{if(p.t<=u)v=p.s;});return v;}};}
+function logRank(t,e,g){const times=[...new Set(t.filter((_,i)=>e[i]))].sort((a,b)=>a-b);let O1=0,E1=0,V=0;
+  times.forEach(u=>{let n=0,n1=0,d=0,d1=0;t.forEach((v,i)=>{if(v>=u){n++;if(g[i])n1++;}if(v===u&&e[i]){d++;if(g[i])d1++;}});
+    O1+=d1;E1+=d*n1/n;if(n>1)V+=d*(n1/n)*(1-n1/n)*(n-d)/(n-1);});
+  const chi=(O1-E1)**2/V;return {chi,df:1,p:chiSurv(chi,1),O1,E1};}
+function kmPlot(fits,o){const W=360,H=o.h||250,L=46,Rt=330,top=12,base=H-44,X=sc(0,o.tmax,L,Rt),Y=sc(o.ylo||0,1,base,top);
+  let g=ticks(o.ylo||0,1,5).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${fx(t,1)}</text>`).join("")+axis(X,0,o.tmax,base,L,Rt);
+  const sty=[["var(--teal)",""],["var(--amber)",'stroke-dasharray="7 4"']];
+  const ly=fits.map(f=>Y(f.at(o.tmax))+4);if(ly.length===2&&Math.abs(ly[0]-ly[1])<15){const m=(ly[0]+ly[1])/2,up=ly[0]<=ly[1]?0:1;ly[up]=m-7.5;ly[1-up]=m+7.5;}
+  fits.forEach((f,k)=>{let pts=[],prev=1;f.steps.forEach(p=>{pts.push(`${X(p.t)},${Y(prev)}`,`${X(p.t)},${Y(p.s)}`);prev=p.s;});pts.push(`${X(o.tmax)},${Y(prev)}`);
+    g+=`<polyline points="${pts.join(" ")}" fill="none" stroke="${sty[k][0]}" stroke-width="3" ${sty[k][1]}/>`;
+    f.cens.forEach(c=>{g+=`<line x1="${X(c.t)}" x2="${X(c.t)}" y1="${Y(c.s)-5}" y2="${Y(c.s)+5}" stroke="${sty[k][0]}" stroke-width="2"/>`;});
+    g+=`<text x="${Rt+4}" y="${ly[k]}" class="v-strong">${o.labs[k]}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">${o.xlab}</text><text transform="translate(12,${(top+base)/2}) rotate(-90)" text-anchor="middle">${o.ylab}</text>`;
+  return vz(W+24,H,o.label,g,o.cap);}
+/* a yes/no outcome against one predictor: the dots, a straight line and the logistic S-curve */
+function probPlot(x,y,o){const W=360,H=o.h||240,L=46,Rt=344,top=12,base=H-44,X=sc(o.xlo,o.xhi,L,Rt),Y=sc(o.ylo,o.yhi,base,top),R=makeRng(91);
+  let g=ticks(o.ylo,o.yhi,5).map(t=>`<line class="v-grid" x1="${L}" x2="${Rt}" y1="${Y(t)}" y2="${Y(t)}"/><text x="${L-5}" y="${Y(t)+4}" text-anchor="end">${Math.round(t*100)}%</text>`).join("")+axis(X,o.xlo,o.xhi,base,L,Rt);
+  g+=`<rect x="${L}" y="${Y(1)}" width="${Rt-L}" height="${Y(0)-Y(1)}" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>`;
+  x.forEach((v,i)=>{g+=`<circle class="v-dot" cx="${X(v+R.uni(-.25,.25))}" cy="${Y(y[i]+R.uni(-.03,.03))}" r="2.2" opacity=".5"/>`;});
+  (o.fits||[]).forEach(f=>{const pts=[];for(let k=0;k<=80;k++){const xv=o.xlo+(o.xhi-o.xlo)*k/80,yv=Math.max(o.ylo,Math.min(o.yhi,f.f(xv)));pts.push(`${X(xv)},${Y(yv)}`);}
+    g+=`<polyline points="${pts.join(" ")}" fill="none" stroke="${f.color}" stroke-width="3" ${f.dash?'stroke-dasharray="7 4"':""}/>`;if(f.lab)g+=`<text x="${X(f.labX)}" y="${Y(Math.max(o.ylo,Math.min(o.yhi,f.f(f.labX))))+(f.dy||-8)}" text-anchor="end" class="v-strong">${f.lab}</text>`;});
+  g+=`<text x="${(L+Rt)/2}" y="${H-6}" text-anchor="middle">${o.xlab}</text><text transform="translate(12,${(top+base)/2}) rotate(-90)" text-anchor="middle">${o.ylab}</text>`;
+  return vz(W,H,o.label,g,o.cap);}
+
 /* ============================================================
    HOSPITAL MAP
    ============================================================ */
@@ -1038,12 +1166,12 @@ const COLS=24,ROWS=15,TS=40;
 const ROOMS=[{id:"stroke",name:"Stroke Center",x0:0,y0:0,x1:7,y1:5,door:[4,5],c:"r1"},{id:"rehabc",name:"Rehab Clinic",x0:7,y0:0,x1:15,y1:5,door:[11,5],c:"r2"},{id:"cardio",name:"Cardiology",x0:15,y0:0,x1:23,y1:5,door:[19,5],c:"r3"},
   {id:"stats",name:"Statistics",x0:0,y0:9,x1:5,y1:14,door:[3,9],c:"r4"},{id:"nursing",name:"Nursing Office",x0:5,y0:9,x1:12,y1:14,door:[8,9],c:"r5"},{id:"finance",name:"Finance Office",x0:12,y0:9,x1:17,y1:14,door:[14,9],c:"r6"},{id:"admin",name:"Quality Office",x0:17,y0:9,x1:23,y1:14,door:[20,9],c:"r7"}];
 const NPCS=[
-  {id:"hale",room:"Research wing",x:21,y:7,name:"Dr. Owen Hale",role:"chief of radiology (guest)",initials:"OH",color:"#4A63C4",kind:"core",idx:0},
-  {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance",initials:"GW",color:"#9A6B12",kind:"core",idx:1},
-  {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist",initials:"ER",color:"#A33B5A",kind:"core",idx:2},
-  {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director",initials:"PN",color:"#B5572D",kind:"core",idx:3},
-  {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead (optional)",initials:"MB",color:"#2D6FA3",kind:"expert"},
-  {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"nurse manager",initials:"DO",color:"#2F7D4F",kind:"cameo"},
+  {id:"mensah",room:"Research wing",x:21,y:7,name:"Dr. Kofi Mensah",role:"endocrinologist (guest)",initials:"KM",color:"#4A63C4",kind:"core",idx:0},
+  {id:"dana",room:"Nursing Office",x:8,y:12,name:"Dana Okafor, RN",role:"nurse manager",initials:"DO",color:"#2F7D4F",kind:"core",idx:1},
+  {id:"marcus",room:"Rehab Clinic",x:11,y:2,name:"Marcus Bell, PT",role:"rehabilitation lead",initials:"MB",color:"#2D6FA3",kind:"core",idx:2},
+  {id:"greg",room:"Finance Office",x:14,y:12,name:"Greg Walton",role:"VP of finance",initials:"GW",color:"#9A6B12",kind:"core",idx:3},
+  {id:"ruiz",room:"Cardiology",x:19,y:2,name:"Dr. Elena Ruiz",role:"cardiologist (optional)",initials:"ER",color:"#A33B5A",kind:"expert"},
+  {id:"nair",room:"Stroke Center",x:3,y:2,name:"Dr. Priya Nair",role:"stroke program director",initials:"PN",color:"#B5572D",kind:"cameo"},
   {id:"jordan",room:"Statistics",x:2,y:12,name:"Jordan Lee",role:"senior statistician",initials:"JL",color:"#6A4FA3",kind:"stats"},
   {id:"brooks",room:"Quality Office",x:20,y:12,name:"Dr. Helen Brooks",role:"chief quality officer",initials:"HB",color:"#15656C",kind:"admin"}];
 const AVATARS=[["#E0A526","Gold"],["#D2553F","Coral"],["#3F8FD2","Sky"],["#7A5CC7","Violet"]];
@@ -1071,7 +1199,7 @@ function signText(){return `Sign-offs ${S.done.length}/4`;}
 
 /* ---------- character feedback (reactions + short play-out on wrong moves) ---------- */
 const REACT_OK={
-  hale:["Good. Next.","Fine. Fast enough.","Right. That's the number.","Yes. Keep up."],
+  mensah:["Hm. Correct.","Fine. I accept that.","Yes. That's the careful answer.","Good. Continue."],
   nair:["Yes! That's exactly what I needed.","Perfect. I can work with that.","Oh, that's clean. Good.","Right, right. Keep going.","I like how fast you saw that."],
   marcus:["That matches what I see with patients.","Okay, that makes sense to me.","Good. Even I can follow that.","Yep. That's the one.","Huh. The math agrees with the gym."],
   ruiz:["Correct. Precisely.","Yes. That's defensible.","Good. No overreach.","That holds up.","Exactly the careful answer."],
@@ -1081,7 +1209,7 @@ const REACT_OK={
   zhang:["Ah. Yes, that is clearer.","Good. I can explain that to a patient.","Thank you. I would have gotten that wrong.","That is the careful answer. I appreciate it."],
   jordan:["There it is.","Good. That's the idea.","Exactly. You've earned a coffee.","Yes. See how that works?","Nice. You're getting it."]};
 const REACT_NO={
-  hale:["No. Try again, quickly.","That's not what I asked.","I don't have time for that answer.","Wrong row, I think."],
+  mensah:["No. I don't accept that.","That isn't what the output says.","Try again. Slowly.","I'd fail a fellow for that."],
   nair:["Wait, are you sure? That sounds too good.","Hold on. Dr. Brooks would send that back.","Hmm. That doesn't match your notes.","That's not what I expected you to say."],
   marcus:["That doesn't match what I've seen.","Hang on, that can't be right.","Hmm. My patients would disagree.","You lost me there."],
   ruiz:["No. I don't think that holds up.","That's an overreach.","I wouldn't sign that.","Check that again."],
@@ -1168,7 +1296,7 @@ function mapSvg(){
   CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
     s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
   NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
-    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
+    s+=`<g class="npc" data-id="${p.id}">${p.video?`<rect x="${cx-18}" y="${cy-15}" width="36" height="24" rx="3" fill="${p.color}" stroke="#fff" stroke-width="2"/><rect x="${cx-22}" y="${cy+9}" width="44" height="6" rx="2" fill="${p.color}" stroke="#fff" stroke-width="1.5"/>`:`<circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/>`}<text class="m-init" x="${cx}" y="${cy+(p.video?1:4)}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.mapName||p.name.split(",")[0]}</text>`;
     if(st!=="wait")s+=`<g transform="translate(${cx+14},${cy-22})"><circle r="10" class="${st==="need"?"mk-need":"mk-done"}"/><text class="mk-t" y="5" text-anchor="middle">${st==="need"?"!":"✓"}</text></g>`;
     s+=`</g>`;});
   s+=`<g id="player" style="transition:transform .11s linear" transform="translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})"><circle r="16" fill="${S.avatar}" stroke="#fff" stroke-width="3"/><text class="m-init" y="4" text-anchor="middle">You</text></g>`;
@@ -1192,7 +1320,7 @@ function renderMap(){
   if(S.pendingFU)toast(`Jordan from Statistics wants a quick word. Head to the <strong>Statistics</strong> office.`);
   focusMap();
 }
-function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
+function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}${p.video?" (on video)":""}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
 function bindDir(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>goTo(NPCS.find(p=>p.id===b.dataset.go)));app.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>goTo(CLUES.find(c=>c.id===b.dataset.clue)));}
 function refreshMap(){const svg=document.getElementById("mapsvg");if(!svg)return;const pos=S.pos;svg.innerHTML=mapSvg();document.getElementById("dir").innerHTML=dirHtml();bindDir();}
 function inspect(c){
@@ -1391,7 +1519,7 @@ function showOutro(unit,kind,lvl){
   box.innerHTML=`<div class="outro"><div class="status ${oc.ok?"":"mixed"}"><span class="status-icon" aria-hidden="true">${oc.ok?"✓":"↺"}</span><div><p class="status-title">${oc.title}</p><p>${oc.text}</p></div></div>
     <p class="takeaway"><strong>Takeaway:</strong> ${unit.takeaway}</p><div class="actions"><button class="primary" id="cont">${kind==="finale"?"File the report and see my results":"Back to the hallway"}</button></div></div>`;
   const h=box.querySelector(".status-title");box.querySelector(".outro").scrollIntoView({behavior:"smooth",block:"start"});
-  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;S.phase="done";applySeason();save();gcount("finished",`Episode ${WEEK.num} finished`);renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
+  document.getElementById("cont").onclick=()=>{if(kind==="finale"){S.finaleDone=true;if(WEEK.epilogue){save();finalReport();return;}S.phase="done";applySeason();save();gcount("finished",`Episode ${WEEK.num} finished`);renderSummary();}else unitDone(unit,kind,lvl);};document.getElementById("cont").focus({preventScroll:true});
 }
 function unitDone(unit,kind,lvl){
   let msg="";
@@ -1409,11 +1537,11 @@ function unitDone(unit,kind,lvl){
 function finalReport(){
   if(WEEK.finale&&!S.finaleDone){const b=NPCS.find(q=>q.id==="brooks");return startUnit(WEEK.finale(S),"finale",null,b);}
   mapActive=false;const p=NPCS.find(q=>q.id==="brooks");
-  app.innerHTML=`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
+  app.innerHTML=WEEK.epilogue?WEEK.epilogue(S):`<div class="talk-head">${portrait(p)}<div><p class="where">${p.room}</p><h1 tabindex="-1">Filing the quality report</h1><p class="who">${p.name}, ${p.role}</p></div></div>
     <div class="bubble"><p>${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}</p></div>
     <div class="actions"><button class="primary" id="file">File the report and see my results</button><button class="quiet" id="back">Not yet, back to the floor</button></div>`;
   app.querySelector("h1").focus();
-  document.getElementById("file").onclick=()=>{S.phase="done";applySeason();save();renderSummary();};
+  document.getElementById("file").onclick=()=>{S.phase="done";applySeason();save();if(WEEK.epilogue)gcount("finished",`Episode ${WEEK.num} finished`);renderSummary();};
   document.getElementById("back").onclick=()=>renderMap();
 }
 function buildPayload(){
@@ -1432,12 +1560,12 @@ function renderSummary(){
   const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
   const status=id=>{const v=valueOf(S.results[id]);return v==="correct"?`<span class="st ok">First try</span>`:v==="correct_hint"?`<span class="st ok">First try, with a hint</span>`:`<span class="st retry">Took another try</span>`;};
   const payload=buildPayload(),configured=!!CONFIG.qualtricsUrl;
-  const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>Your season is saved on this browser. To continue on another device, keep this code somewhere safe:</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
+  const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>${WEEK.codeNote||"Your season is saved on this browser. To continue on another device, keep this code somewhere safe:"}</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
     :`<div class="submit-box" style="margin:1rem 0"><h2>Played without saving</h2><p>Nothing was saved on this device.</p><p id="ccWrap"><button class="linkish" id="showc">Get a career code anyway</button></p></div>`;
   app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
     <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this week's hidden problem.</p>`:""}
     <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
-    <div class="bubble"><p><strong>Next week:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    <div class="bubble"><p><strong>${WEEK.teaserLabel||"Next week:"}</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
     ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
     <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
   window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});

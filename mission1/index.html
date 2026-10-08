@@ -184,6 +184,7 @@ main>h2{margin-top:1.8rem}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
+.recap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:.7rem .95rem .3rem;margin:.4rem 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.5}.recap-h{font-weight:700;margin:0 0 .35rem}.recap p,.recap li{margin:.2rem 0 .45rem}.recap ul{margin:.2rem 0 .4rem;padding-left:1.2rem}
 .thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
 .thread.email{border-top:5px solid var(--teal);border-radius:6px}
 .mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
@@ -349,7 +350,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:1,version:"1.2",
+const CONFIG={mission:1,version:"1.4",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission1-v1"};
@@ -494,28 +495,28 @@ const WEEK={num:1,title:"The messy dashboard",
       hint:"Think about what a pie promises: one slice per patient. Then think about which graph can show each reason on its own.",
       thread:["Right. I have to tell the vendor something polite. What do I say?"],
       slots:[
-       {label:"The problem",options:[{t:"Patients could pick more than one reason, so the categories overlap and can't split one whole.",tag:"correct"},{t:"Pie charts can't show more than four categories.",tag:"pie_overlap",fb:"A pie can have five slices. The trouble is that these slices overlap."},{t:"The percentages were rounded badly.",tag:"pie_overlap",fb:"Rounding moves a total by a point or two, not by "+(tot-100)+"."}]},
-       {label:"The fix",options:[{t:"Use a bar chart with one bar per reason, each showing the % of patients who checked it.",tag:"correct"},{t:"Rescale the slices so they add to 100%.",tag:"pie_overlap",fb:"That would change every number into something nobody measured."}]}],
+       {label:"The problem",options:[{t:"Patients could check more than one reason, so the slices overlap and can't split one whole.",tag:"correct"},{t:"Pie charts can't show more than four categories, and this one has five.",tag:"pie_overlap",fb:"A pie can have five slices. The trouble is that these slices overlap."},{t:"The percentages were rounded badly, so the slices add up to more than they should.",tag:"pie_overlap",fb:"Rounding moves a total by a point or two, not by "+(tot-100)+"."}]},
+       {label:"The fix",options:[{t:"Use a bar chart: one bar per reason, showing the % of patients who checked it.",tag:"correct"},{t:"Shrink every slice by the same factor so they add up to 100% and the pie is one whole again.",tag:"pie_overlap",fb:"That would change every number into something nobody measured: 46% of patients really did check pain."}]}],
       okFb:"A pie needs categories that don't overlap and together cover everyone. Check-all-that-apply data belongs in a bar chart."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "One bar per reason. The vendor said \'great catch,\' which is vendor for \'please don\'t tell anyone.\'"'}),
     takeaway:"A pie chart only works when every person falls in exactly one slice. If categories overlap, use a bar chart."};},
-  finale:S=>{const G=gregData(),D=danaData(SEED(),0);
+  finale:S=>{const G=gregData(),D=danaData(SEED(),0),Rz=ruizData(typeof coreRng==="function"?coreRng(2):makeRng((SEED()+2*1013+7)>>>0),(S&&S.path&&S.path[2])||0);
    return {id:"fin",npc:"brooks",title:"The dashboard review",
     scene:"Dr. Brooks has the dashboard printed out, every tile, laid across the conference table like evidence. She's written a question mark on three of them.",
     message:"<p>The ED director wants the dashboard fixed before it goes to the board. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"The triage tile",type:"cards",claim:`<strong>ED director:</strong> "The tile says our average triage level is ${fx(D.meanLevel,1)}. Do we keep that number?"`,prompt:"Play your strongest evidence.",hint:"Think back to Dana: the numbers 1 to 5 put patients in order of urgency. They don't measure an amount.",
-      cards:[{k:"Data",t:"Triage level is ordinal: replace the average with the count and percent of visits at each level",tag:"correct",fb:"The numbers are labels in order. Counts and percentages say exactly how many patients were at each level."},
-       {k:"Data",t:"Keep it: the levels are numbers, so the average works",tag:"codes_as_numbers",fb:"The numbers 1 to 5 are codes for an order. Level 4 isn't “twice” level 2 in any sense."},
+     {id:"fin1",label:"The triage tile",type:"cards",claim:`<strong>ED director:</strong> "The tile says our average triage level is ${fx(D.meanLevel,1)}. Do we keep that number?"`,context:`<ul><li>Every ED visit gets a triage level from the triage nurse: 1 Resuscitation, 2 Emergent, 3 Urgent, 4 Less urgent, 5 Nonurgent.</li><li>Last month ${D.N.toLocaleString("en-US")} visits had a level. The tile reports their average: ${fx(D.meanLevel,1)}.</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: the numbers 1 to 5 put patients in order of urgency. They don't measure an amount.",
+      cards:[{k:"Data",t:"Triage level is ordinal: replace the average with the count and percent at each level",tag:"correct",fb:"The numbers are labels in order. Counts and percentages say exactly how many patients were at each level."},
+       {k:"Data",t:`Keep it: the levels are numbers from 1 to 5, so an average of ${fx(D.meanLevel,1)} sums up how urgent a typical visit is`,tag:"codes_as_numbers",fb:"The numbers 1 to 5 are codes for an order. Level 4 isn't “twice” level 2 in any sense, so their average has no meaning."},
        {k:"Graph",t:"Replace it with a histogram of triage levels",tag:"graph_choice",fb:"A histogram is for measured numbers. Five ordered categories call for counts and a bar chart."}]},
-     {id:"fin2",label:"The length-of-stay tile",type:"cards",claim:`<strong>Board member:</strong> "St. Mary's says its typical stay is ${fx(G.smMed,1)} hours, and ours says ${fx(G.m,1)}. Are we an hour slower?"`,prompt:"Play your strongest evidence.",hint:"Think back to Greg: St. Mary's billboard reports a median, so compare it with our median.",
+     {id:"fin2",label:"The length-of-stay tile",type:"cards",claim:`<strong>Board member:</strong> "St. Mary's says its typical stay is ${fx(G.smMed,1)} hours, and ours says ${fx(G.m,1)}. Are we an hour slower?"`,context:`<ul><li>Our ED, ${G.v.length} stays last week: mean ${fx(G.m,1)} hours, median ${fx(G.md,1)} hours.</li><li>Most patients leave within a few hours; ${G.long} stays ran over 10 hours, patients waiting for an inpatient bed.</li><li>St. Mary's billboard: typical patient home in ${fx(G.smMed,1)} hours (small print: “median ED length of stay”).</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: St. Mary's billboard reports a median, so compare it with our median.",
       cards:[{k:"Output",t:`No: our median is ${fx(G.md,1)} hours. The ${fx(G.m,1)} is our mean, pulled up by a few very long stays`,tag:"correct",fb:"Median against median, the two hospitals are about the same. The long right tail drags the mean, not the median."},
-       {k:"Output",t:"Yes: our average is higher, so we're slower",tag:"mean_skew",fb:"Their number is a median. Comparing our mean with their median isn't a fair fight."},
+       {k:"Output",t:`Yes: our ${fx(G.m,1)} is about an hour above their ${fx(G.smMed,1)}, so our typical patient stays longer`,tag:"mean_skew",fb:"Their number is a median. Comparing our mean with their median isn't a fair fight."},
        {k:"Data",t:"Drop the longest stays, and our average will match theirs",tag:"outlier_delete",fb:"Those are real patients waiting for a bed. Compare medians instead of deleting people."}]},
-     {id:"fin3",label:"The chest-pain tile",type:"cards",claim:'<strong>ED director:</strong> "Both triage desks average about 8 minutes to an ECG, under our 10-minute target. So both desks are fine?"',prompt:"Play your strongest evidence.",hint:"Think back to Dr. Ruiz: the averages match, but look at how spread out each desk's times are.",
-      cards:[{k:"Output",t:"No: Desk B's standard deviation is far larger than Desk A's, and many of its patients wait more than 10 minutes",tag:"correct",fb:"Same center, very different spread. The patients in Desk B's long tail are the ones the target is for."},
+     {id:"fin3",label:"The chest-pain tile",type:"cards",claim:'<strong>ED director:</strong> "Both triage desks average about 8 minutes to an ECG, under our 10-minute target. So both desks are fine?"',context:`<ul><li>Dr. Ruiz pulled minutes from arrival to ECG for last month's chest-pain patients, 60 per triage desk. Target: an ECG within 10 minutes.</li><li>Desk A (walk-in): mean ${fx(Rz.mA,1)}, median ${fx(median(Rz.A),1)}, SD ${fx(Rz.sA,1)}; ${pct(Rz.oA,0)} waited over 10 minutes.</li><li>Desk B (ambulance bay): mean ${fx(Rz.mB,1)}, median ${fx(median(Rz.B),1)}, SD ${fx(Rz.sB,1)}; ${pct(Rz.oB,0)} waited over 10 minutes.</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: the averages match, but compare how spread out each desk's times are.",
+      cards:[{k:"Output",t:"No: Desk B's standard deviation is far larger, and many of its patients wait over 10 minutes",tag:"correct",fb:"Same center, very different spread. The patients in Desk B's long tail are the ones the target is for."},
        {k:"Output",t:"Yes: the averages are the same, so the desks perform the same",tag:"mean_only",fb:"An average says nothing about how spread out the times are."},
-       {k:"Output",t:"Yes: the medians are both under 10 minutes",tag:"mean_only",fb:"The median is still a center. It can't show how many patients wait too long."}]}],
+       {k:"Output",t:"Yes: both medians are under 10 minutes, so over half of each desk's patients meet the target",tag:"mean_only",fb:"Half the patients meeting the target isn't the goal. The median is still a center. It can't show how many patients wait too long."}]}],
     outro:g=>({ok:true,title:"Dashboard decisions",
       text:[g("fin1")==="correct"?"Triage tile: now shows the count and percent at each level":"Triage tile: fixed to counts and percents, on the second pass",
             g("fin2")==="correct"?"Length-of-stay tile: now shows the median and IQR; the consulting contract is cancelled":"Length-of-stay tile: switched to the median, after a detour; the contract is cancelled",
@@ -569,8 +570,8 @@ function case1(R,level){ // Dana: triage level is ordinal; frequency table, cumu
         {q:"Does level 4 mean twice as much of something as level 2?",a:"Ha. No. It's an order, not a measurement. Level 2 is more urgent than level 4, and that's all the numbers say. The jump from 1 to 2 is enormous; the jump from 4 to 5 is tiny.",key:true},
         {q:"Who assigns the level?",a:"The triage nurse, in about two minutes, at the front desk. Under a lot of pressure.",key:false}],
        slots:[
-        {label:"Triage level is",options:[{t:"Triage level is categorical and ordinal: ordered categories, not amounts,",tag:"correct"},{t:"Triage level is numerical, since it's recorded as a number,",tag:"codes_as_numbers",fb:"The numbers are codes. Level 4 isn't “twice” level 2 in any sense, so you can't do arithmetic with them."},{t:"Triage level is nominal, with no order,",tag:"order_confusion",fb:"There's a clear order: 1 is the most urgent and 5 the least. Ordered categories are ordinal."}]},
-        {label:"So the tile",options:[{t:"so the tile should show the count and percent of visits at each level, as a bar chart.",tag:"correct"},{t:"so the tile should keep the average level.",tag:"codes_as_numbers",fb:"An average of codes has no meaning. Counts and percentages do."},{t:"so the tile should show a histogram.",tag:"graph_choice",fb:"Histograms are for measured numbers. Categories get a bar chart."}]}],
+        {label:"Triage level is",options:[{t:"Triage level is ordinal: ordered categories, not amounts,",tag:"correct"},{t:"Triage level is numerical: it's recorded as a number from 1 to 5, so it can be averaged like any measurement,",tag:"codes_as_numbers",fb:"Being recorded as a number doesn't make it a measurement. The numbers are codes: level 4 isn't “twice” level 2 in any sense, so you can't do arithmetic with them."},{t:"Triage level is nominal: five separate labels with no order between them,",tag:"order_confusion",fb:"There's a clear order: 1 is the most urgent and 5 the least. Ordered categories are ordinal."}]},
+        {label:"So the tile",options:[{t:"so the tile should show the count and percent at each level, in a bar chart.",tag:"correct"},{t:"so the tile should keep the average level, which shows how urgent a typical visit is on the 1 to 5 scale.",tag:"codes_as_numbers",fb:"An average of codes has no meaning: the steps between levels aren't equal amounts. Counts and percentages do."},{t:"so the tile should show a histogram of the five levels.",tag:"graph_choice",fb:"Histograms are for measured numbers. Categories get a bar chart."}]}],
        okFb:"Ordered categories: report how many patients fall in each, as counts and percentages. The rebuilt tile is shown above."},
       {id:"c1s2",label:"The director's question",type:"point",narr:"Dana sits down for the first time and pulls the printout toward her. \"Okay. Now I can actually answer him.\"",show:freq,
        prompt:level?`Dana: "The director wants one number: of the visits with a triage level recorded, what share were level 1 to ${t}, the most urgent?" Point her to it.`:`Dana: "The director wants one number: what share of our visits were levels 1 and 2, the most urgent?" Point her to it.`,
@@ -612,8 +613,8 @@ function case2(R,level){ // Greg: skewed length of stay; mean vs median; IQR
        hint:["Switch the chart and watch which line moves. Then look at where the long stays sit.","A long tail to the right is a right skew. A few very long stays pull the mean toward them; the median, the middle patient, hardly moves."],
        thread:["Fine, so they're both averages. Why is ours so different from itself?"],
        slots:[
-        {label:"The shape",options:[{t:`The stays are skewed right: most patients leave in a few hours, but ${G.long} waited over 10 hours for a bed,`,tag:"correct"},{t:"The stays are skewed left: most patients stay a long time,",tag:"skew_direction",fb:"The long tail points toward the long stays, on the right. That's a right skew."},{t:"The stays are symmetric, so the gap is just rounding,",tag:"skew_direction",fb:`An hour isn't rounding. Look at the tail on the right.`}]},
-        {label:"So",options:[{t:"and those few long stays pull the mean up, while the median, the middle patient, hardly moves.",tag:"correct"},{t:"and the median is wrong because it ignores the long stays.",tag:"mean_skew",fb:"The median doesn't ignore them; it just isn't dragged by how long they were. That's why it describes the typical patient better here."}]}],
+        {label:"The shape",options:[{t:`The stays are skewed right: most leave within a few hours, but ${G.long} waited over 10 hours for a bed,`,tag:"correct"},{t:"The stays are skewed left: most patients stay a long time, and a few leave within an hour,",tag:"skew_direction",fb:"Most patients leave within a few hours, and the long tail points toward the long stays, on the right. That's a right skew."},{t:"The stays are symmetric, so an hour's gap between the mean and the median is just rounding,",tag:"skew_direction",fb:`An hour isn't rounding. Look at the tail on the right.`}]},
+        {label:"So",options:[{t:"and those few long stays pull the mean up, while the median, the middle patient, hardly moves.",tag:"correct"},{t:"and the median is the misleading one, since it ignores how long those overnight stays were.",tag:"mean_skew",fb:"The median doesn't ignore them; it just isn't dragged by how long they were. That's why it describes the typical patient better here."}]}],
        okFb:"With a right skew, the mean sits above the median. For the typical patient, report the median."},
       {id:"c2s3",label:"The spread on the tile",type:"point",narr:"Greg tears up the cover page of the contract, slowly, so you can watch.",show:desc(true),
        prompt:"Greg: \"The tile gets the median. Now I want one number for how much stays vary, one that a few marathon stays can't throw off.\" Click it.",
@@ -630,12 +631,15 @@ function case2(R,level){ // Greg: skewed length of stay; mean vs median; IQR
     takeaway:"In skewed data the mean is pulled toward the tail. Describe the typical value with the median, and its spread with the IQR."};
 }
 
-function case3(R,level){ // Dr. Ruiz: same mean, different spread
-  let A,B,mA,mB;
+/* Dr. Ruiz's chest-pain ECG times (case 3's data; the finale replays the same stream as coreRng(2)) */
+function ruizData(R,level){let A,B,mA,mB;
   GEN_OK=0;for(let k=0;k<600;k++){A=[];B=[];for(let i=0;i<60;i++){A.push(Math.max(4,Math.round(R.normal(8,1.4))));B.push(Math.max(2,Math.round(R.normal(level?7.6:8,4.3))));}
     mA=mean(A);mB=mean(B);const oA=A.filter(x=>x>10).length/60,oB=B.filter(x=>x>10).length/60;
     if(Math.abs(mA-mB)<.15&&mA>7.6&&mA<8.4&&oB>=.25&&oA<=.07&&boxStats(A).outs.length<=1&&(!level||Math.abs(median(A)-median(B))<=1)){GEN_OK=1;break;}}if(!GEN_OK)GEN_MISS.push("w1 ruiz");
   const sA=sdv(A),sB=sdv(B),oA=A.filter(x=>x>10).length/60,oB=B.filter(x=>x>10).length/60;
+  return {A,B,mA,mB,sA,sB,oA,oB};}
+function case3(R,level){ // Dr. Ruiz: same mean, different spread
+  const {A,B,mA,mB,sA,sB,oA,oB}=ruizData(R,level);
   const desc=pick=>{const P=(v,k)=>pick?pk(v,k):v;return tbl("Descriptives","Minutes from arrival to ECG, chest-pain patients, last month. 60 per desk.",["Statistic","Desk A (walk-in)","Desk B (ambulance bay)"],
     [["Mean",P(fx(mA,2),"am"),P(fx(mB,2),"bm")],["Median",P(fx(median(A),1),"amd"),P(fx(median(B),1),"bmd")],["Std. Deviation",P(fx(sA,2),"asd"),P(fx(sB,2),"bsd")],["Minimum",P(Math.min(...A),"amin"),P(Math.min(...B),"bmin")],["Maximum",P(Math.max(...A),"amax"),P(Math.max(...B),"bmax")]]);};
   const bp=boxPlots([{name:"Desk A",v:A},{name:"Desk B",v:B}],{lo:0,hi:Math.max(22,Math.ceil(Math.max(...B)/2)*2+2),xlab:"Minutes from arrival to ECG",ref:10,refLab:"10-min target",L:62});
@@ -658,8 +662,8 @@ function case3(R,level){ // Dr. Ruiz: same mean, different spread
        hint:["Look at how wide each box and its whiskers are, and how many of Desk B's patients sit past the dashed line.","The centers match but the spreads don't. The patients in Desk B's spread are the ones who miss the target."],
        thread:["Director: \"Both desks average 8 minutes. Why are we still talking about this?\""],
        slots:[
-        {label:"The averages",options:[{t:"Both desks do average about 8 minutes, but Desk B's times are spread much more widely,",tag:"correct"},{t:"The averages are the same, so the desks perform the same,",tag:"mean_only",fb:"An average can't show spread. Look at the width of Desk B's box and whiskers."},{t:"Desk B is slower on average,",tag:"mean_only",fb:`The averages are ${fx(mA,1)} and ${fx(mB,1)}: about the same.`}]},
-        {label:"Which means",options:[{t:`so ${pct(oB,0)} of Desk B's chest-pain patients wait more than 10 minutes. The tile should show spread, not just the average.`,tag:"correct"},{t:"so the tile should switch to the median, which fixes it.",tag:"mean_only",fb:`Desk B's median is ${fx(median(B),1)}, also under 10. Any center hides the spread.`}]}],
+        {label:"The averages",options:[{t:"Both desks do average about 8 minutes, but Desk B's times are far more spread out,",tag:"correct"},{t:"The averages are the same, about 8 minutes at each desk, meaning the two desks perform the same for chest pain,",tag:"mean_only",fb:"An average can't show spread. Look at the width of Desk B's box and whiskers."},{t:"Desk B is slower on average, since it takes the ambulance patients,",tag:"mean_only",fb:`The averages are ${fx(mA,1)} and ${fx(mB,1)}: about the same.`}]},
+        {label:"Which means",options:[{t:`so ${pct(oB,0)} of Desk B's patients wait over 10 minutes. The tile needs spread, not just an average.`,tag:"correct"},{t:"so the tile should switch to the median, which isn't pulled by Desk B's slowest patients and will show the real wait.",tag:"mean_only",fb:`Desk B's median is ${fx(median(B),1)}, also under 10. Any center hides the spread, and the spread is where the late patients are.`}]}],
        okFb:"Two groups can share a center and still behave very differently. Report a spread alongside every center."}],
     outro:g=>g("c3s1")==="correct"
       ?{ok:true,title:"Dr. Ruiz hits send",text:'<em>Dr. Ruiz peels the "AVERAGES?" sticky note off her monitor and throws it away.</em> "Good. You looked at the spread before anyone asked."'}
@@ -710,7 +714,7 @@ function case4(R,level){ // Marcus: the builder (types of variables), then a box
        thread:[`Those ${k} circles. Should I just delete them?`],
        slots:[
         {label:"They are",options:[{t:`They're outliers: the ${k} speeds outside the whiskers (${b.outs.map(f2).join(", ")} m/s),`,tag:"correct"},{t:"They're the fastest and slowest patients, so they're outliers by definition,",tag:"outlier_rule",fb:"Every data set has a fastest and slowest patient. Only values outside the whiskers are outliers."},{t:"They're typing errors,",tag:"outlier_delete",fb:"Nothing says they're errors. They're unusual, which is a reason to check them."}]},
-        {label:"So",options:[{t:"so check those patients' records first. If they're real patients, they stay, and the median and IQR won't be thrown off by them.",tag:"correct"},{t:"so delete them, so the mean looks right.",tag:"outlier_delete",fb:"Deleting real patients changes the answer to a different question. Check them; if they're real, keep them."}]}],
+        {label:"So",options:[{t:"so check their records first. If they're real patients, they stay; the median and IQR aren't thrown off by them.",tag:"correct"},{t:"so delete them before the tile is rebuilt, since points outside the whiskers pull the mean and SD away from the typical patient.",tag:"outlier_delete",fb:"Outside the whiskers means unusual, not wrong. Deleting real patients changes the answer to a different question. Check them; if they're real, keep them."}]}],
        okFb:"Outliers are the points outside the whiskers. Check them; don't delete real patients to make a number look nicer."}],
     outro:g=>g("c4s1")==="correct"
       ?{ok:true,title:"Marcus's tile",text:'<em>Marcus pats the monitor like a patient who did well.</em> "No more average fall location. And the fast ones? I bet that\'s Mrs. Alvarez. She power-walks to spite me."'}
@@ -739,7 +743,7 @@ function expertCase(){
        hint:"Stroke type is a category. Think about what you can do with categories.",
        options:[
         {t:"The count and percent of each type, in a bar chart (or a pie)",tag:"correct",fb:"Categories are summarized by counts and percentages. Each patient has exactly one type, so a pie works too."},
-        {t:"The mean and standard deviation of stroke type",tag:"codes_as_numbers",fb:"Stroke type isn't a number, so it has no mean."},
+        {t:"The mean and standard deviation of stroke type, coded 1 = ischemic, 2 = hemorrhagic, 3 = TIA",tag:"codes_as_numbers",fb:"Coding the types as 1, 2 and 3 doesn't make them amounts. Stroke type isn't a number, so it has no mean."},
         {t:"A histogram of stroke type",tag:"graph_choice",fb:"Histograms are for measured numbers. Categories get a bar chart."}]}],
     outro:g=>g("e1s1")==="correct"
       ?{ok:true,title:"Dr. Nair's slides",text:'"A histogram! Look, you can see the shape. Oh, and a long tail on the right. I\'ll ask about those patients."'}
@@ -755,11 +759,11 @@ const FOLLOWUPS={
   {id:"fu_t_2",label:"Ordered groups",prompt:"Age recorded as adolescent, young adult, or adult is…",hint:"There's an order, but no measured amount.",
    options:[{t:"ordinal",tag:"correct",fb:"Right: ordered categories."},{t:"a count",tag:"numbers_as_categories",fb:"Nothing is being counted."},{t:"interval",tag:"codes_as_numbers",fb:"The groups aren't equal-width amounts."}]},
   {id:"fu_t_3",label:"Counts",prompt:"Number of pregnancies is…",hint:"Whole numbers, no decimals.",
-   options:[{t:"numerical, a count (discrete)",tag:"correct",fb:"Right."},{t:"ordinal",tag:"numbers_as_categories",fb:"It's a real amount: two pregnancies is twice one."},{t:"continuous",tag:"count_vs_cont",fb:"You can't have 1.5 pregnancies."}]}],
+   options:[{t:"numerical, a count (discrete)",tag:"correct",fb:"Right."},{t:"ordinal, since it goes 0, 1, 2, 3 in order",tag:"numbers_as_categories",fb:"It's a real amount: two pregnancies is twice one. Numbers that count an amount are numerical, not ordered labels."},{t:"numerical, continuous",tag:"count_vs_cont",fb:"You can't have 1.5 pregnancies."}]}],
   "Codes for categories are nominal (no order) or ordinal (ordered). Counts and measurements are numerical."),
  fu_center:()=>JR("fu_center","Quick review: mean or median","Two centers, and when each one tells the truth.",[
   {id:"fu_c_1",label:"An outlier",prompt:"Heart rates of 74, 80, 79, 85, 81. The 74 is mistyped as 47. What happens?",hint:"The mean uses every value's size; the median only cares about which value is in the middle.",
-   options:[{t:"The mean drops a lot; the median barely changes",tag:"correct",fb:"Right: the mean goes from 79.8 to 74.4, and the median from 80 to 80."},{t:"Both drop the same amount",tag:"mean_skew",fb:"The median only cares about which value is in the middle."},{t:"Neither changes",tag:"mean_skew",fb:"The mean uses every value, so it moves."}]},
+   options:[{t:"The mean drops a lot; the median barely changes",tag:"correct",fb:"Right: the mean goes from 79.8 to 74.4, and the median from 80 to 80."},{t:"Both drop by about the same amount, since each one uses all five values",tag:"mean_skew",fb:"The median only cares about which value is in the middle, not how big the other values are."},{t:"Neither changes much, since it's one typo out of five readings",tag:"mean_skew",fb:"The mean uses every value, so a 27-point typo moves it by more than 5."}]},
   {id:"fu_c_2",label:"Skew",prompt:"A distribution has a long tail to the right. Usually…",hint:"The tail pulls one center toward it.",
    options:[{t:"the mean is above the median",tag:"correct",fb:"Right: the long right tail pulls the mean up."},{t:"the median is above the mean",tag:"skew_direction",fb:"That's a left skew."},{t:"they're equal",tag:"skew_direction",fb:"Only when the shape is symmetric."}]},
   {id:"fu_c_3",label:"Typical",prompt:"To describe the typical value of a skewed variable, report…",hint:"Pick the center that resists a long tail.",
@@ -769,13 +773,13 @@ const FOLLOWUPS={
   {id:"fu_s_1",label:"Two patients",prompt:"Patient A's BP readings: 95, 98, 96, 95, 96. Patient B's: 85, 106, 88, 105, 96. Both means are 96. Which has the larger standard deviation?",hint:"Look at how far each reading is from 96.",
    options:[{t:"Patient B",tag:"correct",fb:"Right: B's readings sit much farther from the mean (SD about 9.6, against 1.2)."},{t:"Patient A",tag:"mean_only",fb:"A's readings all sit within 2 of the mean."},{t:"The same, since the means match",tag:"mean_only",fb:"Same center doesn't mean same spread."}]},
   {id:"fu_s_2",label:"Pairs",prompt:"Which spread goes with the median?",hint:"Both are built from the sorted middle of the data.",
-   options:[{t:"The interquartile range (Q3 − Q1)",tag:"correct",fb:"Right: neither is pulled by extreme values."},{t:"The standard deviation",tag:"sd_vs_iqr",fb:"The SD pairs with the mean."},{t:"The range",tag:"range_extremes",fb:"The range uses only the two extremes."}]}],
+   options:[{t:"The interquartile range (Q3 − Q1)",tag:"correct",fb:"Right: neither is pulled by extreme values."},{t:"The standard deviation (typical distance from the center)",tag:"sd_vs_iqr",fb:"The SD is the typical distance from the mean, and it pairs with the mean."},{t:"The range (maximum − minimum)",tag:"range_extremes",fb:"The range uses only the two extremes."}]}],
   "The standard deviation measures typical distance from the mean; the IQR covers the middle half and pairs with the median."),
  fu_graphs:()=>JR("fu_graphs","Quick review: which graph","The graph depends on the type of variable.",[
   {id:"fu_g_1",label:"A number",prompt:"What graph would you make for a continuous variable, like birth weight?",hint:"Measured numbers get binned or summarized along a number line.",
    options:[{t:"A histogram and a box plot",tag:"correct",fb:"Right."},{t:"A pie chart and a bar graph",tag:"graph_choice",fb:"Those are for categories."},{t:"A box plot and a scatter plot",tag:"graph_choice",fb:"A scatter plot needs two numerical variables."}]},
   {id:"fu_g_2",label:"Pie rules",prompt:"A pie chart works only when…",hint:"Think about what the slices add up to.",
-   options:[{t:"every person falls in exactly one category",tag:"correct",fb:"Right: the slices must add to 100%."},{t:"there are fewer than five categories",tag:"pie_overlap",fb:"The number of slices isn't the rule."},{t:"the data are numerical",tag:"graph_choice",fb:"Pies are for categories."}]}],
+   options:[{t:"every person falls in exactly one category",tag:"correct",fb:"Right: the slices must add to 100%."},{t:"there are fewer than five categories",tag:"pie_overlap",fb:"The number of slices isn’t the rule. The slices must add to 100%, with each person in one."},{t:"the data are numerical",tag:"graph_choice",fb:"Pies are for categories."}]}],
   "Categories: counts, percentages, bar charts (pies only for categories that don't overlap). Numbers: histograms and box plots."),
  fu_box:()=>JR("fu_box","Quick review: reading a box plot","Five numbers and a few circles.",[
   {id:"fu_b_1",label:"The box",prompt:"The box in a box plot spans…",hint:"It holds the middle half of the data.",
@@ -783,11 +787,11 @@ const FOLLOWUPS={
   {id:"fu_b_2",label:"Outliers",prompt:"On a box plot, an outlier is…",hint:"Look at where the circles are drawn.",
    options:[{t:"any value outside the whiskers",tag:"correct",fb:"Right."},{t:"the largest and smallest values",tag:"outlier_rule",fb:"Those can sit at the whisker ends."},{t:"any value above Q3",tag:"outlier_rule",fb:"A quarter of the data is above Q3."}]},
   {id:"fu_b_3",label:"What to do",prompt:"You find an outlier. First you should…",hint:"Unusual isn't the same as wrong.",
-   options:[{t:"check whether it's a real value or an error",tag:"correct",fb:"Right: real values stay."},{t:"delete it",tag:"outlier_delete",fb:"Only if it's a confirmed error."},{t:"replace it with the mean",tag:"outlier_delete",fb:"That invents data."}]}],
+   options:[{t:"check whether it's a real value or an error",tag:"correct",fb:"Right: real values stay."},{t:"delete it, so it can't distort the mean",tag:"outlier_delete",fb:"Only if it's a confirmed error. Real values stay, even unusual ones."},{t:"replace it with the median, which outliers don't affect",tag:"outlier_delete",fb:"That invents data. Check the value first; real values stay."}]}],
   "Outliers are the points outside the whiskers. Check them; keep the real ones and lean on the median and IQR."),
  fu_freq:()=>JR("fu_freq","Quick review: reading a frequency table","Four columns, four different questions.",[
   {id:"fu_f_1",label:"Cumulative",prompt:"The running total % on the level 3 row of a triage table (SPSS: Cumulative Percent) is…",hint:"It's a running total.",
-   options:[{t:"the % of visits at level 1, 2 or 3",tag:"correct",fb:"Right: it adds every row so far."},{t:"the % at level 3 only",tag:"single_level",fb:"That's the % at level 3 alone."},{t:"the number of level 3 visits",tag:"count_not_pct",fb:"That's the count."}]},
+   options:[{t:"the % of visits at level 1, 2 or 3",tag:"correct",fb:"Right: it adds every row so far."},{t:"the % of visits at level 3 alone",tag:"single_level",fb:"That's the “% with a level” column on the level 3 row. The running total adds every row so far."},{t:"the number of level 3 visits",tag:"count_not_pct",fb:"That's the count."}]},
   {id:"fu_f_2",label:"Valid percent",prompt:"\"% of all visits\" and \"% with a level\" (SPSS: Percent and Valid Percent) differ when…",hint:"One of them leaves something out.",
    options:[{t:"some records are missing",tag:"correct",fb:"Right: \"% with a level\" divides only by the records that have a value."},{t:"the categories are ordered",tag:"cum_wrong_row",fb:"Order doesn't matter here."},{t:"there are more than five rows",tag:"cum_wrong_row",fb:"The number of rows doesn't matter."}]}],
   "Frequency counts, Percent divides by everyone, Valid Percent by those with a value, and Cumulative Percent keeps a running total.")
@@ -1162,7 +1166,7 @@ function showStep(unit,i,kind,lvl){
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
     <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
-    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>[Math.random(),o,k]).sort((x,y)=>x[0]-y[0]).map(([_,o,k])=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   markScrollers();
@@ -1251,7 +1255,7 @@ function showStep(unit,i,kind,lvl){
     box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
   }
   if(st.type==="cards"){
-    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    box.querySelector(".opts").outerHTML=`${st.context?`<div class="recap"><p class="recap-h">${st.contextTitle||"The facts on the table"}</p>${String(st.context).replace(/= (&lt;|<)/g,"$1 ")}</div>`:""}${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>[Math.random(),c,k]).sort((x,y)=>x[0]-y[0]).map(([_,c,k])=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
     lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
     box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
   }

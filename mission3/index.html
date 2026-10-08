@@ -184,6 +184,7 @@ main>h2{margin-top:1.8rem}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
+.recap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:.7rem .95rem .3rem;margin:.4rem 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.5}.recap-h{font-weight:700;margin:0 0 .35rem}.recap p,.recap li{margin:.2rem 0 .45rem}.recap ul{margin:.2rem 0 .4rem;padding-left:1.2rem}
 .thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
 .thread.email{border-top:5px solid var(--teal);border-radius:6px}
 .mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
@@ -349,7 +350,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:3,version:"1.2",
+const CONFIG={mission:3,version:"1.4",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission3-v1"};
@@ -483,33 +484,33 @@ const WEEK={num:3,title:"Twenty patients",
      {id:"hid1",label:"What kind of study?",show:sct,prompt:"What kind of study produced this graph?",
       hint:"Look at who was measured (whole countries) and whether anyone assigned the chocolate.",
       options:[{t:"Observational: whole countries compared at one point in time",tag:"correct",fb:"Right. Nobody assigned chocolate, and the units are countries, not people."},
-       {t:"A randomized experiment",tag:"design_roles",fb:"Nobody randomized countries to eat chocolate."},
-       {t:"A case-control study",tag:"design_roles",fb:"Nobody was chosen for having won a prize and then compared with matched non-winners."}]},
+       {t:"A randomized experiment, with countries as the units",tag:"design_roles",fb:"Nobody randomized countries to eat chocolate."},
+       {t:"A case-control study comparing Nobel winners with non-winners",tag:"design_roles",fb:"Nobody was chosen for having won a prize and then compared with matched non-winners."}]},
      {id:"hid2",label:"Talking him out of it",type:"reply",channel:"chat",prompt:"Build your reply to Jordan's cousin.",
       hint:"Think about what else differs between countries that eat a lot of chocolate and countries that don't.",
       thread:["Cousin: \"The line goes up! Chocolate makes you smarter. Prove me wrong.\""],
       slots:[
-       {label:"The study",options:[{t:"The study compares countries, not people, and nobody was assigned chocolate,",tag:"correct"},{t:"The study proves chocolate makes people smarter,",tag:"causal_claim",fb:"It shows an association between countries, nothing about any one person."}]},
-       {label:"Likely",options:[{t:"and wealthier countries can afford both more chocolate and more research: a confounder.",tag:"correct"},{t:"and the Nobel committee probably likes chocolate.",tag:"causal_claim",fb:"Funny, but a third variable such as national wealth is the serious explanation."}]}],
+       {label:"The study",options:[{t:"The study compares countries, not people, and nobody was assigned chocolate,",tag:"correct"},{t:"The study proves chocolate makes people smarter, since the line goes up so steadily,",tag:"causal_claim",fb:"It shows an association between countries, nothing about any one person."}]},
+       {label:"Likely",options:[{t:"and richer countries can afford more chocolate and more research: a confounder.",tag:"correct"},{t:"and the steeper the line, the stronger chocolate's effect on the brain.",tag:"causal_claim",fb:"A steep line is a strong association between countries, not an effect on anyone's brain. A third variable such as national wealth is the likely explanation."}]}],
       okFb:"An association between groups, with a likely confounder, from a study where nobody assigned the exposure: no causal claim."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan breaks off a square of chocolate and hands it to you. "For morale, not for the Nobel."'}),
     takeaway:"Observational associations, especially between whole countries, can come from confounders. Without assigning the exposure, be very careful about cause."};},
-  finale:S=>{const D=auditData();
+  finale:S=>{const D=auditData(),nS=((S&&S.path&&S.path[1])||0)?40:45;
    return {id:"fin",npc:"brooks",title:"The board report",
     scene:"The board report is on the table in draft, with three paragraphs highlighted in yellow. A slice of Greg's cake sits beside it, untouched.",
     message:"<p>Three paragraphs in this report came from your consults this week. The board will read every word. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"Patient satisfaction",type:"cards",claim:'<strong>Board member:</strong> "95% of our patients are satisfied. Can we print that?"',prompt:"Play your strongest evidence.",hint:"Think back to Greg: the survey came from volunteers on one night shift.",
-      cards:[{k:"Design",t:"No: those were 20 volunteers from one night shift, not a random sample of all our patients",tag:"correct",fb:"The number describes those 20 people. A random sample across every shift could describe all patients."},
-       {k:"Data",t:"Yes: 95% is so high that the sample can't be far off",tag:"biased_sample",fb:"A biased sample can be far off no matter how impressive its number looks."},
-       {k:"Design",t:"Yes, once Greg surveys 200 more night-shift patients",tag:"size_fixes_bias",fb:"More of the same patients shrinks the scatter, not the bias."}]},
-     {id:"fin2",label:"The SCAD study",type:"cards",claim:'<strong>Committee member:</strong> "Why didn\'t Dr. Ruiz just follow energy-drink users forward and count who gets SCAD?"',prompt:"Play your strongest evidence.",hint:"Think back to Dr. Ruiz: SCAD is rare.",
-      cards:[{k:"Design",t:"SCAD is rare: following thousands of people for years would find almost no cases. A case-control study starts from the cases",tag:"correct",fb:"Rare outcome, start from the cases: that's what case-control designs are for."},
-       {k:"Design",t:"Because case-control studies prove causation",tag:"causal_claim",fb:"They don't. They show association, more efficiently for rare outcomes."},
-       {k:"Design",t:"Because cohort studies can't measure energy drinks",tag:"design_roles",fb:"A cohort could measure them. It just wouldn't see enough SCAD."}]},
-     {id:"fin3",label:"Hand hygiene",type:"cards",claim:`<strong>Draft:</strong> "Compliance was ${pct(D.ph,0)} (95% CI ${pct(D.lo,1)} to ${pct(D.hi,1)}), so there is a 95% chance the true rate is in this range."`,prompt:"Play your strongest evidence.",hint:"Think back to Dana: the 95% describes the method that made the interval.",
-      cards:[{k:"Reasoning",t:"Reword it: if we repeated the audit many times, about 95% of the intervals built this way would contain the true rate",tag:"correct",fb:"The 95% belongs to the method. Any one interval either contains the true rate or doesn't."},
-       {k:"Reasoning",t:"Keep it: that's what 95% confidence means",tag:"ci_misread",fb:"The true rate is fixed. The 95% describes how often the method works."},
+     {id:"fin1",label:"Patient satisfaction",type:"cards",claim:'<strong>Board member:</strong> "95% of our patients are satisfied. Can we print that?"',context:`<ul><li>Greg's survey: the first 20 patients on Tuesday's night shift who agreed to answer (a few declined). 19 of the 20 said they were satisfied.</li><li>The board report covers every ED patient this year, about 41,000 visits: 45% on the day shift, 35% evening, 20% night.</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: the survey came from volunteers on one night shift.",
+      cards:[{k:"Design",t:"No: 20 night-shift volunteers aren't a random sample of all our patients",tag:"correct",fb:"The number describes those 20 people. A random sample across every shift could describe all patients."},
+       {k:"Data",t:"Yes: 95% is so high that even a sample of 20 volunteers can't be far off",tag:"biased_sample",fb:"A biased sample can be far off no matter how impressive its number looks."},
+       {k:"Design",t:"Yes, once Greg surveys 200 more night-shift patients so the sample is big enough",tag:"size_fixes_bias",fb:"More of the same patients shrinks the scatter, not the bias."}]},
+     {id:"fin2",label:"The SCAD study",type:"cards",claim:'<strong>Committee member:</strong> "Why didn\'t Dr. Ruiz just follow energy-drink users forward and count who gets SCAD?"',context:`<ul><li>SCAD is a tear in a heart artery. Riverbend has seen ${nS} cases in ten years.</li><li>Dr. Ruiz's study starts from those ${nS} cases, adds ${2*nS} patients of the same age and sex without SCAD, and asks everyone about their energy drinks in the year before.</li></ul>`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: work out how many SCAD cases Riverbend sees in a year.",
+      cards:[{k:"Design",t:"SCAD is rare: following people forward would find almost no cases, so start from the cases",tag:"correct",fb:"Rare outcome, start from the cases: that's what case-control designs are for."},
+       {k:"Design",t:"Because a case-control study proves causation, and a cohort only shows association",tag:"causal_claim",fb:"Case-control studies don't prove cause. They show association, more efficiently for rare outcomes."},
+       {k:"Design",t:"Because a cohort can't measure energy drinks: people only report them after getting sick",tag:"design_roles",fb:"A cohort measures drinking at the start, before anyone is sick. It just wouldn't see enough SCAD."}]},
+     {id:"fin3",label:"Hand hygiene",type:"cards",claim:`<strong>Draft:</strong> "Compliance was ${pct(D.ph,0)} (95% CI ${pct(D.lo,1)} to ${pct(D.hi,1)}), so there is a 95% chance the true rate is in this range."`,prompt:"Play your strongest evidence.",context:`<p>Dana combined this week's hand-hygiene audits on one unit: auditors watched ${D.n} chances to clean hands, and hands were cleaned ${D.x} times. The draft reports the 95% confidence interval from these audits.</p>`,hint:"Look at the facts box: this is one set of audits and one interval. The 95% describes the method that made it.",
+      cards:[{k:"Reasoning",t:"Reword it: over many repeated audits, about 95% of intervals built this way would contain the true rate",tag:"correct",fb:"The 95% belongs to the method. Any one interval either contains the true rate or doesn't."},
+       {k:"Reasoning",t:`Keep it: once the audit is done, the true rate has a 95% chance of being between ${pct(D.lo,1)} and ${pct(D.hi,1)}`,tag:"ci_misread",fb:"The true rate is fixed. The 95% describes how often the method works."},
        {k:"Reasoning",t:`Reword it: 95% of nurses comply between ${pct(D.lo,0)} and ${pct(D.hi,0)} of the time`,tag:"ci_misread",fb:"The interval estimates one overall rate, not a range for individual nurses."}]}],
     outro:g=>({ok:true,title:"Board report",
       text:[g("fin1")==="correct"?"Satisfaction: the 95% is out; a random survey across every shift is scheduled":"Satisfaction: the 95% is out, after some debate",
@@ -570,8 +571,8 @@ function case1(R,level){ // Greg: population vs sample, bias vs sampling error
         {q:"Who is the board report about?",a:"Every ED patient this year. About 41,000 visits. The board wants one number for all of them.",key:true},
         {q:"Who made the cake?",a:"I did. Lemon. Don't change the subject.",key:false}],
        slots:[
-        {label:"The population",options:[{t:"Your population is every ED patient this year, but your sample is 20 volunteers from one night shift,",tag:"correct"},{t:"Your population is the 20 patients you surveyed,",tag:"pop_vs_sample",fb:"Those 20 are the sample. The board report is about all ED patients, which is the population."}]},
-        {label:"So",options:[{t:"so it may not represent all patients. Draw patients at random from every shift.",tag:"correct"},{t:"so it's fine: 95% is too high to be a fluke.",tag:"biased_sample",fb:"A high number from the wrong people is still the wrong number. Who was asked matters more than how impressive the answer looks."}]}],
+        {label:"The population",options:[{t:"Your population is every ED patient this year; your sample is 20 night-shift volunteers,",tag:"correct"},{t:"Your population is the 20 patients you surveyed, since they're the ones whose answers you have,",tag:"pop_vs_sample",fb:"Those 20 are the sample. The board report is about all ED patients, which is the population."}]},
+        {label:"So",options:[{t:"so it may not represent all patients. Draw patients at random from every shift.",tag:"correct"},{t:"so it's fine: with 95% satisfied, the result is too strong to be a fluke of who answered.",tag:"biased_sample",fb:"A high number from the wrong people is still the wrong number. Who was asked matters more than how impressive the answer looks."}]}],
        okFb:"A sample speaks for a population only if it was drawn from that population fairly. One night shift of volunteers speaks for one night shift of volunteers."},
       {id:"c1s2",label:"A bigger sample?",type:"reply",channel:"chat",narr:"Greg sets his fork down. \"Fine. Then I'll survey 200 people on night shifts. Bigger sample, problem solved.\"",
        show:`<div class="slider"><p><strong>Try it.</strong> Each plan was run 40 times. Every dot is one survey's result. The dashed line is the true rate for all patients, ${truth}%.</p>
@@ -582,8 +583,8 @@ function case1(R,level){ // Greg: population vs sample, bias vs sampling error
        hint:["Compare the first two plans: watch whether the cloud of dots moves toward the dashed line or just gets tighter.","More of the same patients makes the results less scattered but leaves them centered in the wrong place. Only a random sample from every shift centers on the truth."],
        thread:["Two hundred people! Surely that's enough?"],
        slots:[
-        {label:"A bigger sample",options:[{t:"A bigger sample makes the results less scattered, but 200 night-shift volunteers still miss the day and evening patients,",tag:"correct"},{t:"A bigger sample fixes it: 200 is plenty,",tag:"size_fixes_bias",fb:"Look at the second plan: the dots bunch tightly, around the wrong value."}]},
-        {label:"Instead",options:[{t:"so pick patients at random from every shift, in proportion to how many each shift sees.",tag:"correct"},{t:"so survey only day-shift patients instead.",tag:"biased_sample",fb:"That just swaps one shift's bias for another's."}]}],
+        {label:"A bigger sample",options:[{t:"A bigger sample scatters less, but 200 night-shift volunteers still leave out day and evening patients,",tag:"correct"},{t:"A bigger sample fixes it: with 200 patients, the results stop jumping around and settle on the true rate,",tag:"size_fixes_bias",fb:"Look at the second plan: the dots bunch tightly, around the wrong value. Less scatter isn't the same as the right center."}]},
+        {label:"Instead",options:[{t:"so pick patients at random from every shift, in proportion to how many each shift sees.",tag:"correct"},{t:"so survey 200 day-shift patients instead, since the day shift sees the most patients.",tag:"biased_sample",fb:"That just swaps one shift's bias for another's. Every shift's patients need a fair chance of being picked."}]}],
        okFb:"Sample size controls random scatter; how you sample controls bias. Stratified random sampling by shift gives every patient a fair chance."},
       {id:"c1s3",label:"Who gets a survey",type:"point",narr:"Greg pulls up last year's visit counts. \"Fine. Random, every shift. Three people sent me plans already.\"",
        show:`<p><strong>Who comes to the ED:</strong> share of last year's visits on each shift</p>${kpis([["45%","day shift"],["35%","evening shift"],["20%","night shift"]])}`+
@@ -626,8 +627,8 @@ function case2(R,level){ // Dr. Ruiz: the builder (case-control design), then as
        hint:["Ask what kind of study this is, and whether anyone assigned the energy drinks.","A case-control study shows an association. Arguing for cause takes more: the drinking came first (temporality), more drinks go with higher risk (dose-response), and other studies agree (consistency)."],
        thread:["Cases drank almost three times as much. That's causation, right?"],
        slots:[
-        {label:"This study",options:[{t:"This shows an association: cases drank more than similar people without SCAD,",tag:"correct"},{t:"This proves energy drinks cause SCAD,",tag:"causal_claim",fb:"Nobody assigned the drinks, so something else could explain the difference."}]},
-        {label:"For a cause",options:[{t:"and to argue cause we'd check that the drinking came first, that heavier drinkers are more often cases, and that other studies agree.",tag:"correct"},{t:"and with more patients it would prove cause.",tag:"causal_claim",fb:"More patients make the association more precise, not causal. Nobody assigned the drinks."}]}],
+        {label:"This study",options:[{t:"This shows an association: cases drank more than similar people without SCAD,",tag:"correct"},{t:"This proves energy drinks cause SCAD: cases drank almost three times as much as their controls,",tag:"causal_claim",fb:"Nobody assigned the drinks, so something else could explain the difference, however big it is."}]},
+        {label:"For a cause",options:[{t:"and for cause we'd need more: proof the drinking came first, more risk with more drinks, and agreement from other studies.",tag:"correct"},{t:"and with a few hundred more cases and controls, a difference this large would prove cause on its own.",tag:"causal_claim",fb:"More patients make the association more precise, not causal. Nobody assigned the drinks."}]}],
        okFb:"Observational designs show association. Causal arguments lean on criteria like temporality, dose-response and consistency, or on an experiment."}],
     outro:g=>g("c2s1")==="correct"
       ?{ok:true,title:"Dr. Ruiz approves",text:'<em>Dr. Ruiz signs the protocol and hands the fellow a copy of the Bradford Hill criteria.</em> "Read it twice. Then come back and tell me what you\'re allowed to say."'}
@@ -667,7 +668,7 @@ function case3(R,level){ // Dr. Nair: checking normality, and what changes a con
        hint:["Try 90%, 95% and 99% with the same patients, then move the slider with the level fixed.","A lower confidence level narrows the interval by making you less sure. More patients narrows it at the same confidence."],
        thread:["So, 90%? It's narrower, and nobody reads the small print."],
        slots:[
-        {label:"Switching to 90%",options:[{t:"Switching to 90% does narrow it, but only because we'd be less confident: the method would miss the true mean more often,",tag:"correct"},{t:"Switching to 90% narrows it at no cost,",tag:"ci_free_lunch",fb:"The cost is confidence: a 90% method misses the true mean twice as often as a 95% one."}]},
+        {label:"Switching to 90%",options:[{t:"Switching to 90% narrows it only by making us less confident: the method misses the true mean more often,",tag:"correct"},{t:"Switching to 90% narrows it at no cost, since the patients, the mean and the SD all stay exactly the same,",tag:"ci_free_lunch",fb:"The data stay the same, but the cost is confidence: a 90% method misses the true mean twice as often as a 95% one."}]},
         {label:"The honest way",options:[{t:"and the honest way to narrow it at 95% is more patients.",tag:"correct"},{t:"and the honest way is to drop the patients farthest from the mean.",tag:"outlier_delete",fb:"Dropping real patients doesn't narrow the truth, only the interval."}]}],
        okFb:"Higher confidence means a wider interval; a larger sample means a narrower one. Only the sample size narrows it for free."}],
     outro:g=>g("c3s1")==="correct"
@@ -694,8 +695,8 @@ function case4(R,level){ // Dana: sampling variability and the CLT; what a confi
        hint:["Look at the 25-chance audits: how many land as low as 64% or as high as 80%? Then try bigger audits.","Each audit is a sample, and samples vary. With bigger samples the results vary less and pile up in a bell shape around the truth: the central limit theorem."],
        thread:["So which one do I write up?"],
        slots:[
-        {label:"The audits",options:[{t:"Maybe neither: each audit is a sample of 25, and samples that small easily land 8 points either side of the truth,",tag:"correct"},{t:"The 64% auditor: the results should match,",tag:"sampling_var",fb:"Two honest samples of 25 rarely match. Look how wide the histogram is at 25."}]},
-        {label:"Bigger audits",options:[{t:"and bigger audits vary less, with results piling up in a bell shape around the true rate.",tag:"correct"},{t:"and a big enough audit always gives exactly the true rate.",tag:"clt_exact",fb:"Bigger audits vary less, but they still vary."}]}],
+        {label:"The audits",options:[{t:"Maybe neither: audits of 25 are small samples, and those easily land 8 points either side of the truth,",tag:"correct"},{t:"The 64% auditor: two audits of the same unit in the same week should match, so the lower one slipped,",tag:"sampling_var",fb:"Two honest samples of 25 rarely match. Look how wide the histogram is at 25."}]},
+        {label:"Bigger audits",options:[{t:"and bigger audits vary less, piling up in a bell shape around the true rate.",tag:"correct"},{t:"and a big enough audit, say 200 chances, always gives exactly the true rate of 72%.",tag:"clt_exact",fb:"Bigger audits vary less, but they still vary."}]}],
        okFb:"Sample results vary from sample to sample. Their distribution narrows as samples grow and becomes bell-shaped: the central limit theorem."},
       {id:"c4s2",label:"The report sentence",type:"reply",channel:"email",subject:"Hand hygiene audit, final",narr:"Dana combines the audits with the rest of the week's: 200 chances in all. She starts typing the report, then stops.",
        show:tbl("Hand hygiene audit","All audits this week combined",["Statistic","Value"],[["Chances watched (n)",A.n],["Hands cleaned (x)",A.x],["Compliance (p̂)",pct(A.ph,0)],["95% CI, lower",pct(A.lo,1)],["95% CI, upper",pct(A.hi,1)]]),
@@ -704,7 +705,7 @@ function case4(R,level){ // Dana: sampling variability and the CLT; what a confi
        thread:["How do I say what the interval means without getting it wrong?"],
        slots:[
         {label:"The interval",options:[{t:`The interval, ${pct(A.lo,1)} to ${pct(A.hi,1)}, estimates the unit's true compliance rate,`,tag:"correct"},{t:`The interval shows that most nurses comply between ${pct(A.lo,0)} and ${pct(A.hi,0)} of the time,`,tag:"ci_misread",fb:"It estimates one overall rate, not a range for individual nurses."}]},
-        {label:"And 95% means",options:[{t:"and if we repeated the audit many times, about 95% of intervals built this way would contain the true rate.",tag:"correct"},{t:"and there's a 95% chance the true rate is in this interval.",tag:"ci_misread",fb:"The true rate is fixed: it's in this interval or it isn't. The 95% describes the method."},{t:"and 95% of future audits will land in this interval.",tag:"ci_misread",fb:"Future audits will vary more than that. The interval is about the true rate."}]}],
+        {label:"And 95% means",options:[{t:"and across many repeated audits, about 95% of intervals built this way would contain the true rate.",tag:"correct"},{t:"and there's a 95% chance that the unit's true rate is somewhere inside this particular interval.",tag:"ci_misread",fb:"The true rate is fixed: it's in this interval or it isn't. The 95% describes the method."},{t:"and if we repeated the audit many times, about 95% of the new results would land in this interval.",tag:"ci_misread",fb:"Future audits will vary more than that. The interval is about the true rate, not about where new audit results land."}]}],
        okFb:"The 95% belongs to the method, not to any one interval."}],
     outro:g=>g("c4s1")==="correct"
       ?{ok:true,title:"Nobody gets written up",text:'<em>Dana tears up the write-up form she had ready.</em> "Two honest auditors and a small sample. I owe one of them a coffee and an apology."'}
@@ -725,13 +726,13 @@ function expertCase(){
        hint:"Everyone got the class, and each patient was measured before and after.",
        options:[
         {t:"Quasi-experimental: before and after, with no comparison group",tag:"correct",fb:"Right: there's an intervention, but no control group and no randomization."},
-        {t:"A randomized controlled trial",tag:"design_roles",fb:"Nobody was randomized, and nobody went without the class."},
+        {t:"A randomized controlled trial: every patient was assigned the class",tag:"design_roles",fb:"Nobody was randomized, and nobody went without the class. Assigning everyone isn't a trial with a control group."},
         {t:"A case-control study",tag:"design_roles",fb:"Nobody was chosen for having an outcome."}]},
       {id:"e1s2",label:"Making it stronger",show:board,prompt:"What would make Marcus's evidence much stronger?",
        hint:"Ask what the patients would have scored without the class.",
        options:[
-        {t:"Randomly assign patients to the class or to usual care, and compare the two groups' change",tag:"correct",fb:"Right: a randomized comparison group shows how much patients improve anyway, so the difference can be credited to the class."},
-        {t:"Measure the same 32 patients a third time",tag:"prepost_cause",fb:"More measurements of the same group still have nothing to compare with."},
+        {t:"Randomly assign patients to the class or usual care, and compare the groups' change",tag:"correct",fb:"Right: a randomized comparison group shows how much patients improve anyway, so the difference can be credited to the class."},
+        {t:"Measure the same 32 patients a third time, six months later, to show that the gains last",tag:"prepost_cause",fb:"More measurements of the same group still have nothing to compare with."},
         {t:"Recruit only the patients most likely to improve",tag:"biased_sample",fb:"That would make the class look better without showing it works."}]}],
     outro:g=>g("e1s1")==="correct"
       ?{ok:true,title:"Marcus's plan",text:'"So my patients improved, but I can\'t say how much is the class. Next session, half get the class first, by lottery. I\'ll make the lottery fun."'}
@@ -743,7 +744,7 @@ function expertCase(){
 const FOLLOWUPS={
  fu_sampling:()=>JR("fu_sampling","Quick review: samples and populations","Who are you describing, and who did you ask?",[
   {id:"fu_sa_1",label:"Population",prompt:"A study of childhood obesity samples 610 children aged 6 to 10. The population is…",hint:"The group the conclusions are about.",
-   options:[{t:"all children aged 6 to 10 the study wants to describe",tag:"correct",fb:"Right."},{t:"the 610 children",tag:"pop_vs_sample",fb:"That's the sample."},{t:"all children",tag:"pop_vs_sample",fb:"The population should be clearly defined: ages 6 to 10."}]},
+   options:[{t:"all children aged 6 to 10 the study is about",tag:"correct",fb:"Right."},{t:"the 610 children aged 6 to 10 who were measured",tag:"pop_vs_sample",fb:"That's the sample."},{t:"all children",tag:"pop_vs_sample",fb:"The population should be clearly defined: ages 6 to 10."}]},
   {id:"fu_sa_2",label:"Stratified",prompt:"Sampling separately within each shift, in proportion to its size, is…",hint:"Groups first, then random within each.",
    options:[{t:"stratified sampling",tag:"correct",fb:"Right."},{t:"cluster sampling",tag:"biased_sample",fb:"Cluster sampling picks whole groups at random."},{t:"convenience sampling",tag:"biased_sample",fb:"Convenience sampling takes whoever is easiest."}]},
   {id:"fu_sa_3",label:"Size and bias",prompt:"A biased sample is made ten times larger. Its bias…",hint:"Size shrinks scatter.",
@@ -755,7 +756,7 @@ const FOLLOWUPS={
   {id:"fu_de_2",label:"Before and after",prompt:"Measuring patients before and after an intervention, with no control group, is…",hint:"Intervention, but no comparison.",
    options:[{t:"quasi-experimental",tag:"correct",fb:"Right."},{t:"a randomized controlled trial",tag:"design_roles",fb:"Nobody was randomized."},{t:"a cohort study",tag:"design_roles",fb:"The researchers gave the intervention."}]},
   {id:"fu_de_3",label:"Blocking",prompt:"When would you use a randomized block design?",hint:"Nuisance factors.",
-   options:[{t:"When nuisance factors, like age or sex, need to be controlled",tag:"correct",fb:"Right: randomize within each block."},{t:"When participants have already been completely randomized",tag:"design_roles",fb:"Blocking happens before randomizing."},{t:"When there are clusters of data",tag:"design_roles",fb:"That's a cluster design."}]}],
+   options:[{t:"When nuisance factors, like age or sex, need controlling",tag:"correct",fb:"Right: randomize within each block."},{t:"When participants have already been completely randomized",tag:"design_roles",fb:"Blocking happens before randomizing."},{t:"When the data come in clusters, like patients within clinics",tag:"design_roles",fb:"That's a cluster design."}]}],
   "Rare outcomes: case-control. Intervention without a control: quasi-experimental. Nuisance factors: block on them."),
  fu_causal:()=>JR("fu_causal","Quick review: association and cause","When can you say \"causes\"?",[
   {id:"fu_ca_1",label:"Temporality",prompt:"Which Bradford Hill criterion says the cause must come before the effect?",hint:"Order in time.",
@@ -765,21 +766,21 @@ const FOLLOWUPS={
   "Observational studies show association. Experiments, or criteria like temporality and dose-response, support cause."),
  fu_clt:()=>JR("fu_clt","Quick review: sampling distributions","What happens when you sample again and again.",[
   {id:"fu_cl_1",label:"Sampling distribution",prompt:"The sampling distribution of the mean is…",hint:"Many samples, one mean each.",
-   options:[{t:"the distribution of sample means over many repeated samples",tag:"correct",fb:"Right."},{t:"the distribution of the data in one sample",tag:"sampling_var",fb:"That's the sample's own distribution."},{t:"the population's distribution",tag:"sampling_var",fb:"The population has its own shape; the sample means have theirs."}]},
+   options:[{t:"the distribution of sample means over many repeated samples",tag:"correct",fb:"Right."},{t:"the distribution of the individual values in one large sample",tag:"sampling_var",fb:"That's the sample's own distribution."},{t:"the population's distribution",tag:"sampling_var",fb:"The population has its own shape; the sample means have theirs."}]},
   {id:"fu_cl_2",label:"The CLT",prompt:"With a large sample (over about 30), the sampling distribution of the sample mean is approximately normal…",hint:"The central limit theorem.",
-   options:[{t:"whatever the shape of the population",tag:"correct",fb:"Right."},{t:"only if the population is normal",tag:"clt_exact",fb:"A normal population is the special case where the mean is normal at any n; the CLT says large samples don't need it."},{t:"never",tag:"clt_exact",fb:"That's exactly what the CLT promises."}]}],
+   options:[{t:"whatever the shape of the population",tag:"correct",fb:"Right."},{t:"only if the population itself is normal",tag:"clt_exact",fb:"A normal population is the special case where the mean is normal at any n; the CLT says large samples don't need it."},{t:"never",tag:"clt_exact",fb:"That's exactly what the CLT promises."}]}],
   "Sample statistics vary from sample to sample. For large samples the mean's sampling distribution is approximately normal."),
  fu_ci:()=>JR("fu_ci","Quick review: confidence intervals","What the 95% promises, and what changes the width.",[
   {id:"fu_ci_1",label:"Meaning",prompt:"A 95% CI for mean BMI is 20 to 25. Which is correct?",hint:"The 95% describes the method.",
-   options:[{t:"If we sampled again and again, about 95% of intervals built this way would contain the true mean",tag:"correct",fb:"Right."},{t:"There is a 95% chance the true mean is between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed; this interval contains it or doesn't."},{t:"The mean will fall between 20 and 25 95% of the time",tag:"ci_misread",fb:"The true mean doesn't move around."}]},
+   options:[{t:"If we sampled again and again, about 95% of intervals built this way would contain the true mean",tag:"correct",fb:"Right."},{t:"There is a 95% chance that the true mean BMI lies somewhere between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed; this interval contains it or doesn't."},{t:"If we sampled again and again, the sample mean would fall between 20 and 25 about 95% of the time",tag:"ci_misread",fb:"The 95% is about intervals catching the true mean, not about where new sample means land. Each new sample gives a new interval."}]},
   {id:"fu_ci_2",label:"Width",prompt:"Which makes a confidence interval narrower?",hint:"One costs data; one costs confidence.",
-   options:[{t:"A larger sample, at the same confidence level",tag:"correct",fb:"Right."},{t:"A higher confidence level",tag:"ci_free_lunch",fb:"Higher confidence makes it wider."},{t:"Removing patients far from the mean",tag:"outlier_delete",fb:"That changes the data, not the truth."}]}],
+   options:[{t:"A larger sample, at the same confidence level",tag:"correct",fb:"Right."},{t:"A higher confidence level, like 99% instead of 95%",tag:"ci_free_lunch",fb:"Higher confidence makes it wider."},{t:"Removing patients far from the mean",tag:"outlier_delete",fb:"That changes the data, not the truth."}]}],
   "A confidence level describes the method. More data narrows the interval; lower confidence narrows it at a price."),
  fu_normality:()=>JR("fu_normality","Quick review: checking normality","Two plots and two tests.",[
   {id:"fu_no_1",label:"Q-Q plot",prompt:"On a normal Q-Q plot, normal data…",hint:"Look at the reference line.",
-   options:[{t:"fall close to the straight reference line",tag:"correct",fb:"Right."},{t:"form a bell shape",tag:"normality_stat",fb:"That's a histogram."},{t:"fall in a horizontal band",tag:"normality_stat",fb:"That would mean every value is about the same."}]},
+   options:[{t:"fall close to the straight reference line",tag:"correct",fb:"Right."},{t:"form a bell shape around the middle of the plot",tag:"normality_stat",fb:"That's a histogram."},{t:"fall in a horizontal band",tag:"normality_stat",fb:"That would mean every value is about the same."}]},
   {id:"fu_no_2",label:"The test",prompt:"Shapiro-Wilk gives Sig. = .41. You conclude…",hint:"Compare with 0.05.",
-   options:[{t:"the distribution is not statistically different from normal",tag:"correct",fb:"Right."},{t:"the data are not normal",tag:"normality_stat",fb:"That would need Sig. below 0.05."},{t:"the data are proven exactly normal",tag:"normality_stat",fb:"Sig. above 0.05 means no detectable difference from normal, not proof of it."}]}],
+   options:[{t:"the distribution is not statistically different from normal",tag:"correct",fb:"Right."},{t:"the data are not normal, since Sig. is well above 0.05",tag:"normality_stat",fb:"It's the other way round: that would need Sig. below 0.05."},{t:"the data are proven to be normal, since Sig. is above 0.05",tag:"normality_stat",fb:"Sig. above 0.05 means no detectable difference from normal, not proof of it."}]}],
   "Normal data follow the Q-Q line, and a Shapiro-Wilk Sig. above 0.05 means the distribution is not statistically different from normal.")
 };
 const FU_MAP={pop_vs_sample:"fu_sampling",biased_sample:"fu_sampling",size_fixes_bias:"fu_sampling",
@@ -1150,7 +1151,7 @@ function showStep(unit,i,kind,lvl){
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
     <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
-    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>[Math.random(),o,k]).sort((x,y)=>x[0]-y[0]).map(([_,o,k])=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   markScrollers();
@@ -1239,7 +1240,7 @@ function showStep(unit,i,kind,lvl){
     box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
   }
   if(st.type==="cards"){
-    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    box.querySelector(".opts").outerHTML=`${st.context?`<div class="recap"><p class="recap-h">${st.contextTitle||"The facts on the table"}</p>${String(st.context).replace(/= (&lt;|<)/g,"$1 ")}</div>`:""}${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>[Math.random(),c,k]).sort((x,y)=>x[0]-y[0]).map(([_,c,k])=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
     lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
     box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
   }

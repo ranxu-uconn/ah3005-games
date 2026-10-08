@@ -184,6 +184,7 @@ main>h2{margin-top:1.8rem}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
+.recap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:.7rem .95rem .3rem;margin:.4rem 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.5}.recap-h{font-weight:700;margin:0 0 .35rem}.recap p,.recap li{margin:.2rem 0 .45rem}.recap ul{margin:.2rem 0 .4rem;padding-left:1.2rem}
 .thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
 .thread.email{border-top:5px solid var(--teal);border-radius:6px}
 .mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
@@ -352,7 +353,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:9,version:"1.1",
+const CONFIG={mission:9,version:"1.3",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission9-v1"};
@@ -494,7 +495,7 @@ const WEEK={num:9,title:"One line, many readings",
       thread:["So what do I tell the intern? Nicely."],
       slots:[
        {label:"r near zero",options:[{t:"An r near zero only rules out a straight-line relationship,",tag:"correct"},{t:"An r near zero proves there's no relationship of any kind,",tag:"corr_linear",fb:"The scatterplot shows a strong pattern. It just isn't a straight line."}]},
-       {label:"Here",options:[{t:"and here visits rise on both the coldest and the hottest days: a U shape. Always plot the data first.",tag:"correct"},{t:"and here a few outliers cancel each other out.",tag:"corr_linear",fb:"It isn't a few points. The whole cloud bends."}]}],
+       {label:"Here",options:[{t:"and here visits rise on both the coldest and the hottest days: a U shape.",tag:"correct"},{t:"and here a few outliers on the coldest and hottest days cancel each other out.",tag:"corr_linear",fb:"It isn't a few points on the extreme days. The whole cloud bends."}]}],
       okFb:"Correlation measures linear relationships only. A curve can have r = 0 and still be strong."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "The intern took it well. They\'ve made a scatterplot of everything since. Everything."'}),
     takeaway:"An r near zero means no straight-line relationship, not no relationship. Plot the data before trusting a correlation."};},
@@ -503,18 +504,24 @@ const WEEK={num:9,title:"One line, many readings",
     scene:"The committee meets in the research wing because it's the only room with enough chairs. The paint smell has not faded.",
     message:"<p>Three regressions from this week are on the agenda. Answer each question with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"Tomás's slope",type:"cards",claim:`<strong>Committee member:</strong> "The slope is ${fx(T.m.b[1],1)}. So every extra day on the ventilator adds ${fx(T.m.b[1],1)} hours of weaning for every patient?"`,prompt:"Play your strongest evidence.",hint:"Think back to Tomás: the line describes an average, and the patients scatter around it.",
-      cards:[{k:"Output",t:`On average: each extra day goes with about ${fx(T.m.b[1],1)} more hours. Individual patients scatter widely around the line (R² = ${f3(T.m.R2)})`,tag:"correct",fb:"The slope is an average difference. The line explains part of the variation, not all of it."},
-       {k:"Output",t:"Yes: the slope is the exact effect for each patient",tag:"slope_misread",fb:"Patients scatter around the line. The slope describes the average."},
+     {id:"fin1",label:"Tomás's slope",type:"cards",claim:`<strong>Committee member:</strong> "The slope is ${fx(T.m.b[1],1)}. So every extra day on the ventilator adds ${fx(T.m.b[1],1)} hours of weaning for every patient?"`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: the slope describes an average, and R² says how much of the variation the line explains.",
+      contextTitle:"From Tomás's weaning data",
+      context:`<ul><li>Tomás regressed weaning time (hours) on days on the ventilator before the first weaning trial, for ${T.m.n} patients, each in the file once.</li><li>Output: B = ${fB(T.m.b[1])} hours per day, Beta = ${f3(T.m.beta[1])}, ${pT(T.m.pv[1])}; R² = ${f3(T.m.R2)}.</li></ul>`,
+      cards:[{k:"Output",t:`On average only: about ${fx(T.m.b[1],1)} more hours per extra day, and patients scatter widely (R² = ${f3(T.m.R2)})`,tag:"correct",fb:"The slope is an average difference. The line explains part of the variation, not all of it."},
+       {k:"Output",t:"Yes: the slope is significant, so it's the exact effect for each patient on the ventilator",tag:"slope_misread",fb:"Significance says the slope isn't zero. Patients scatter around the line; the slope describes the average."},
        {k:"Output",t:`No: the effect is the Beta, ${f3(T.m.beta[1])}`,tag:"beta_units",fb:"Beta is in standard deviations, not hours. The slope in hours is B."}]},
-     {id:"fin2",label:"Marcus's model",type:"cards",claim:`<strong>Committee member:</strong> "Can Marcus use his model to book sessions for a new patient with a balance score of ${M.ext}?"`,prompt:"Play your strongest evidence.",hint:"Think back to Marcus: his data only covered a certain range of balance scores.",
-      cards:[{k:"Data",t:`Not from this model: his patients scored ${M.lo} to ${M.hi}, so ${M.ext} is outside the data. That's extrapolation`,tag:"correct",fb:"The line describes the range it was fitted on. Beyond it, nobody knows if it stays straight."},
+     {id:"fin2",label:"Marcus's model",type:"cards",claim:`<strong>Committee member:</strong> "Can Marcus use his model to book sessions for a new patient with a balance score of ${M.ext}?"`,prompt:"Play your strongest evidence.",hint:"Look at the facts box: Marcus's data only covered a certain range of balance scores.",
+      contextTitle:"From Marcus's sessions model",
+      context:`<ul><li>Marcus regressed therapy sessions needed on balance score at intake (Berg scale, 0 to 56) for ${M.m.n} patients.</li><li>Intake scores in his data ran from ${M.lo} to ${M.hi}.</li><li>Output: B = ${fB(M.m.b[1])} sessions per point, ${pT(M.m.pv[1])}; R² = ${f3(M.m.R2)}.</li></ul>`,
+      cards:[{k:"Output",t:`No: his patients scored ${M.lo} to ${M.hi}, so ${M.ext} is outside the data. That's extrapolation`,tag:"correct",fb:"The line describes the range it was fitted on. Beyond it, nobody knows if it stays straight."},
        {k:"Output",t:"Yes: the slope is significant, so the line holds for any score",tag:"extrapolate",fb:"Significance says the slope isn't zero within the data. It says nothing about scores nobody had."},
-       {k:"Output",t:`Yes: R² is ${f3(M.m.R2)}, which is high`,tag:"extrapolate",fb:"R² describes the fit to the patients in the data, not to scores outside them."}]},
-     {id:"fin3",label:"Dana's line",type:"cards",claim:'<strong>Dana\'s draft:</strong> "The straight line was significant, so time to antibiotics rises steadily with ED census." Ready to publish?',prompt:"Play your strongest evidence.",hint:"Think back to Dana: the residual plot for the straight line had a shape.",
-      cards:[{k:"Chart",t:"No: the residuals curve, so the delay isn't steady. It stays flat, then climbs fast when the ED is very full, and a model with a squared census term fits that curve",tag:"correct",fb:"A significant line can still be the wrong shape. The residual plot showed it."},
-       {k:"Output",t:"Yes: a significant slope means the straight line is the right model",tag:"sig_fit",fb:"Significance says the slope isn't zero, not that a straight line is the right shape."},
-       {k:"Data",t:"Yes, after dropping the busiest days as outliers",tag:"outlier_delete",fb:"The busiest days are real, and they're exactly where the curve shows up."}]}],
+       {k:"Output",t:`Yes: R² is ${f3(M.m.R2)}, which is high, so the line fits well enough for any patient`,tag:"extrapolate",fb:"R² describes the fit to the patients in the data, not to scores outside them."}]},
+     {id:"fin3",label:"Dana's line",type:"cards",claim:'<strong>Dana\'s draft:</strong> "The straight line was significant, so time to antibiotics rises steadily with ED census." Ready to publish?',prompt:"Play your strongest evidence.",hint:"Look at the facts box: the straight line's residual plot had a shape.",
+      contextTitle:"From Dana's sepsis alerts",
+      context:`<ul><li>Dana regressed minutes to first antibiotic on ED census (patients in the ED when the alert fired) for ${D.m1.n} sepsis alerts, with census from ${Math.min(...D.c)} to ${Math.max(...D.c)}.</li><li>Straight line: B = ${fB(D.m1.b[1])} minutes per patient, ${pT(D.m1.pv[1])}, R² = ${f3(D.m1.R2)}.</li><li>Its residual plot: residuals sit above zero on average at the lowest and highest census, and below zero in the middle.</li><li>With census squared added, that term's row: ${pT(D.m2.pv[2])}.</li></ul>`,
+      cards:[{k:"Chart",t:"No: the residuals curve, so the delay isn't steady. It stays flat, then climbs fast when the ED is very full",tag:"correct",fb:"A significant line can still be the wrong shape. The residual plot showed it."},
+       {k:"Output",t:"Yes: the slope is highly significant, so the straight line is the right model for the delays",tag:"sig_fit",fb:"Significance says the slope isn't zero, not that a straight line is the right shape."},
+       {k:"Data",t:"Yes, after dropping the busiest days as outliers: the straight line fits the rest of the alerts",tag:"outlier_delete",fb:"The busiest days are real, and they're exactly where the curve shows up. Dropping them hides the problem."}]}],
     outro:g=>({ok:true,title:"Committee decisions",
       text:[g("fin1")==="correct"?"Weaning study: reported as an average difference per day, with R²":"Weaning study: reworded to an average difference, on the second pass",
             g("fin2")==="correct"?`Marcus's model: used only for balance scores from ${M.lo} to ${M.hi}`:"Marcus's model: limited to the scores in his data, after some debate",
@@ -576,7 +583,7 @@ function case1(R,level){ // Tomás Reyes, RRT (guest): simple linear regression,
         {q:"Which ventilator brand is best?",a:"Ha. Whichever one isn't beeping. Is that... a statistics question?",key:false}],
        slots:[
         {label:"I'll model",options:[{t:"I'll model weaning time (hours) as the outcome,",tag:"correct"},{t:"I'll model days on the ventilator as the outcome,",tag:"outcome_misread",fb:"Tomás wants to explain weaning time. Days on the ventilator come first, so they're the predictor."}]},
-        {label:"Using",options:[{t:"with days on the ventilator beforehand as the predictor, in a simple linear regression.",tag:"correct"},{t:"and just report the correlation, since one number says it all.",tag:"corr_vs_reg",fb:"A correlation says how strongly the two move together. Tomás wants how many more hours per extra day: that's the slope of a regression."},{t:"comparing short and long ventilator stays with a t test.",tag:"wrong_test",fb:"Splitting days into two groups throws information away. Both variables are numbers: regression."}]}],
+        {label:"Using",options:[{t:"with prior days on the ventilator as the predictor, in a simple linear regression.",tag:"correct"},{t:"and just report the correlation between hours and days, since one number says it all.",tag:"corr_vs_reg",fb:"A correlation says how strongly the two move together. Tomás wants how many more hours per extra day: that's the slope of a regression."},{t:"comparing weaning hours for short and long ventilator stays with a t test.",tag:"wrong_test",fb:"Splitting days into two groups throws information away. Both variables are numbers: regression."}]}],
        okFb:"Two numerical variables, one explaining the other: simple linear regression. The scatterplot and output are shown above."},
       {id:"c1s2",label:level?"The intercept":"The slope",type:"point",narr:"Tomás pulls his chair closer to the screen. \"Okay, which of these numbers is mine?\"",show:outD.co,
        prompt:level?"Tomás: \"What would this line predict for a patient on the ventilator for zero days?\" Click the number.":"Tomás: \"For each extra day on the ventilator, how many more hours does weaning take, on average?\" Click the number.",
@@ -596,8 +603,8 @@ function case1(R,level){ // Tomás Reyes, RRT (guest): simple linear regression,
        hint:["Switch between days and hours and compare B, then t and Sig., row by row.","Changing units rescales the slope (per hour instead of per day), but t, Sig. and R² stay the same: it's the same relationship."],
        thread:["If I switch to hours, the slope gets tiny. Does that mean the effect is 24 times weaker?"],
        slots:[
-        {label:"The slope",options:[{t:"The slope gets 24 times smaller only because it's now per hour instead of per day,",tag:"correct"},{t:"The slope stays the same number whatever the units,",tag:"units_slope",fb:"Switch to hours and look at B: it changes."}]},
-        {label:"But",options:[{t:"and t, Sig. and R² don't change at all. It's the same relationship, measured in different units.",tag:"correct"},{t:"so the relationship really is 24 times weaker.",tag:"units_slope",fb:"Compare t and Sig. in both versions: they're identical. Only the unit of the slope changed."}]}],
+        {label:"The slope",options:[{t:"The slope gets 24 times smaller only because it's per hour now, not per day,",tag:"correct"},{t:"The slope stays the same number whatever the units, because the relationship hasn't changed,",tag:"units_slope",fb:"The relationship hasn't changed, but B is in the data's units. Switch to hours and look at B: it changes."}]},
+        {label:"But",options:[{t:"and t, Sig. and R² don't change: same relationship, different units.",tag:"correct"},{t:"so the relationship really is 24 times weaker, and R² should drop to match.",tag:"units_slope",fb:"Compare t, Sig. and R² in both versions: they're identical. Only the unit of the slope changed."}]}],
        okFb:"Units change the size of the slope, never the strength of the evidence. t, the p-value and R² don't move."}],
     outro:g=>g("c1s1")==="correct"
       ?{ok:true,title:"Tomás's number",text:`<em>Tomás writes "${fx(m.b[1],1)} hours per day, on average" on the empty whiteboard, then adds "(per DAY)" underneath.</em> "The therapists will love being right."`}
@@ -632,11 +639,11 @@ function case2(R,level){ // Dr. Nair: correlation, strength and sign (harder lev
        hint:level?["Look at how much the dots in the age plot actually trend, and at r² shown above the chart.",`With ${N.n} patients, even a tiny correlation can be significant. r = ${f3(rr[0][3])} is weak: age goes with about ${pct(rr[0][3]**2,0)} of the variation in door-to-needle time.`]:["Look at the scatterplot: notice which way the dots trend, and how tightly they cluster.","The sign gives the direction; the size gives the strength. r = "+f3(rr[0][2])+" is a moderate negative relationship."],
        thread:level?["Age is significantly correlated with our times! That's a finding, right?"]:["Negative correlations are the weak ones, right? I'll leave it off."],
        slots:level?[
-        {label:"Significant",options:[{t:`It's significant because we have ${N.n} patients, but r = ${f3(rr[0][3])} is weak,`,tag:"correct"},{t:"It's significant, so it's a strong relationship,",tag:"sig_vs_strength",fb:`Significance says r probably isn't zero. Its size, ${f3(rr[0][3])}, says how strong it is: weak.`}]},
-        {label:"So",options:[{t:`and age goes with only about ${pct(rr[0][3]**2,0)} of the variation in times. Not a headline.`,tag:"correct"},{t:"and older age causes slower treatment.",tag:"causal_claim",fb:"A correlation can't show cause, and this one is tiny anyway."}]}]
+        {label:"Significant",options:[{t:`It's significant because we have ${N.n} patients, but r = ${f3(rr[0][3])} is weak,`,tag:"correct"},{t:`It's significant with ${N.n} patients, so it's a real and strong relationship,`,tag:"sig_vs_strength",fb:`Significance says r probably isn't zero. Its size, ${f3(rr[0][3])}, says how strong it is: weak.`}]},
+        {label:"So",options:[{t:`and age goes with only about ${pct(rr[0][3]**2,0)} of the variation: not a headline.`,tag:"correct"},{t:"and older age causes slower treatment, so it belongs on the poster.",tag:"causal_claim",fb:"A correlation can't show cause, and this one is tiny anyway."}]}]
        :[
-        {label:"Negative",options:[{t:`No: ${f3(rr[0][2])} is a moderate relationship. The sign gives the direction, the size gives the strength,`,tag:"correct"},{t:"Yes: negative correlations are weaker than positive ones,",tag:"corr_sign",fb:"The sign only says which way the dots slope. −0.5 and +0.5 are equally strong."}]},
-        {label:"In words",options:[{t:"and it means patients with more severe strokes tend to be treated faster.",tag:"correct"},{t:"and it means more severe strokes tend to wait longer.",tag:"corr_direction",fb:"Negative means one goes up as the other goes down: more severe, shorter door-to-needle."}]}],
+        {label:"Negative",options:[{t:`No: ${f3(rr[0][2])} is moderate. The sign gives the direction, the size the strength,`,tag:"correct"},{t:`Yes: ${f3(rr[0][2])} is below zero, and negative correlations are weaker than positive ones,`,tag:"corr_sign",fb:"Being below zero only says which way the dots slope. −0.5 and +0.5 are equally strong."}]},
+        {label:"In words",options:[{t:"and it means patients with more severe strokes tend to be treated faster.",tag:"correct"},{t:"and it means patients with more severe strokes tend to wait longer for treatment.",tag:"corr_direction",fb:"Negative means one goes up as the other goes down: more severe, shorter door-to-needle."}]}],
        okFb:level?"With a big sample, a weak correlation can be significant. Report the size, not just the asterisk.":"The sign of r is the direction; its size is the strength. Negative relationships can be strong."}],
     outro:g=>g("c2s1")==="correct"
       ?{ok:true,title:"Dr. Nair's poster",text:`<em>Dr. Nair types the headline in an even larger font.</em> ${level?'"CT time and door-to-needle time move together! Age stays off the headline: significant isn\'t the same as strong. Noted!"':'"CT time and door-to-needle time move together! And the severity one goes on there too. Negative isn\'t weak. Noted!"'}`}
@@ -687,8 +694,8 @@ function case3(R,level){ // Marcus: the builder (simple regression), R², then e
        hint:["Move the slider into the shaded band and back out. The band is where Marcus's patients actually scored.",`His patients scored ${M.lo} to ${M.hi}. Predicting at ${M.ext} extends the line beyond the data: extrapolation, which the data can't support.`],
        thread:[`The line says about ${fx(M.pred,0)} sessions for a score of ${M.ext}. Book them?`],
        slots:[
-        {label:"The line",options:[{t:`The line only describes patients who scored ${M.lo} to ${M.hi}; ${M.ext} is outside that, so ${fx(M.pred,0)} is an extrapolation,`,tag:"correct"},{t:"A straight line works for any score; that's the point of a model,",tag:"extrapolate",fb:"Nobody in the data scored like this patient. The relationship could bend outside the range we saw."}]},
-        {label:"So",options:[{t:"so plan this patient's sessions clinically, and collect data on scores like this before predicting them.",tag:"correct"},{t:`so book ${fx(M.pred,0)} sessions, since the slope is significant.`,tag:"extrapolate",fb:"A significant slope describes the data's range, not scores outside it."}]}],
+        {label:"The line",options:[{t:`The line only describes scores ${M.lo} to ${M.hi}, so ${fx(M.pred,0)} for a score of ${M.ext} is an extrapolation,`,tag:"correct"},{t:`The line fits scores ${M.lo} to ${M.hi} well, so it works for any score; that's the point of a model,`,tag:"extrapolate",fb:"It fits inside the data, but nobody in the data scored like this patient. The relationship could bend outside the range we saw."}]},
+        {label:"So",options:[{t:"so plan this patient's sessions clinically and gather data on scores like this.",tag:"correct"},{t:`so book ${fx(M.pred,0)} sessions now, since the slope is significant and R² is ${f3(m.R2)}.`,tag:"extrapolate",fb:"A significant slope and R² describe the data's range, not scores outside it."}]}],
        okFb:"Predict inside the range of the data. Beyond it, the line is a guess with a formula attached."}],
     outro:g=>g("c3s3")==="correct"
       ?{ok:true,title:"Marcus's booking sheet",text:`<em>Marcus writes "only for scores ${M.lo} to ${M.hi}" across the top of the booking sheet in red.</em> "Insurance gets a number. My unusual patients get me."`}
@@ -718,8 +725,8 @@ function case4(R,level){ // Dana: the residual plot shows a curve; a squared ter
        hint:["In a good residual plot the dots scatter randomly around the zero line. Look at the left end, the middle and the right end.","The residuals sit above zero at both ends and below it in the middle: a curve the straight line missed. A squared census term lets the model bend."],
        thread:["The slope is significant. Isn't that enough?"],
        slots:[
-        {label:"The residuals",options:[{t:"The residuals curve: above zero at both ends, below it in the middle, so a straight line misses the shape,",tag:"correct"},{t:"The residuals are a random cloud around zero, so the line is fine,",tag:"resid_read",fb:"Look at the ends of the plot: most residuals there are above zero, and in the middle most are below. That's a pattern, not a random cloud."},{t:"The residuals fan out, so the spread grows with census,",tag:"resid_read",fb:"A fan would widen from one side to the other. This plot bends: up, down, up."}]},
-        {label:"So",options:[{t:"so add census squared to the model (a polynomial regression) and check the residuals again.",tag:"correct"},{t:"so drop the busiest days as outliers.",tag:"outlier_delete",fb:"The busiest days are real alerts, and they're where the curve is."}]}],
+        {label:"The residuals",options:[{t:"The residuals curve: above zero at both ends, below in the middle, so the line misses the shape,",tag:"correct"},{t:"The residuals are a random cloud around zero, with as many above the line as below, so the line is fine,",tag:"resid_read",fb:"Overall there are as many above as below, but look at the ends of the plot: most residuals there are above zero, and in the middle most are below. That's a pattern, not a random cloud."},{t:"The residuals fan out, so the spread grows with census,",tag:"resid_read",fb:"A fan would widen from one side to the other. This plot bends: up, down, up."}]},
+        {label:"So",options:[{t:"so add census squared (a polynomial regression) and check the residuals again.",tag:"correct"},{t:"so drop the busiest days as outliers and refit the straight line without them.",tag:"outlier_delete",fb:"The busiest days are real alerts, and they're where the curve is. Refitting without them hides the problem."}]}],
        okFb:"A significant slope doesn't mean the right shape. The residual plot shows what the line missed."},
       {id:"c4s2",label:"Is the curve real?",type:"point",narr:"Jordan reruns the model with census squared and emails it over. Dana opens it on her phone.",
        show:`<div class="slider"><p><strong>Try it.</strong> Switch between the straight line and the curve, and watch the residuals.</p><div class="seg" role="group" aria-label="Which model"><input type="radio" id="dm-l" name="dmshow" value="l" checked><label for="dm-l">Straight line</label><input type="radio" id="dm-c" name="dmshow" value="c"><label for="dm-c">With census squared</label></div><div id="dmviz" class="pair"></div></div>${o2.ms}${o2.co}`,
@@ -751,15 +758,15 @@ function expertCase(){
       {id:"e1s1",label:"What Beta means",show:memo,prompt:"What does Beta = .41 mean?",
        hint:"Beta is the slope after both variables are standardized: measured in standard deviations.",
        options:[
-        {t:"One standard deviation more weight goes with .41 standard deviation higher blood pressure, on average",tag:"correct",fb:"Right. Standardizing puts both variables on the same scale, which is why Beta is handy for comparing predictors measured in different units."},
-        {t:"Each extra kilogram goes with 0.41 mmHg higher pressure",tag:"beta_units",fb:"That would be B, and B is 0.62 mmHg per kg."},
-        {t:"Weight explains 41% of blood pressure",tag:"r2_misread",fb:"The share explained is R Square, not Beta."}]},
+        {t:"One standard deviation more weight goes with .41 standard deviation higher BP, on average",tag:"correct",fb:"Right. Standardizing puts both variables on the same scale, which is why Beta is handy for comparing predictors measured in different units."},
+        {t:"Each extra kilogram of body weight goes with 0.41 mmHg higher systolic blood pressure, on average",tag:"beta_units",fb:"That would be B, and B is 0.62 mmHg per kg."},
+        {t:"Weight explains 41% of the variation in blood pressure among the 80 patients",tag:"r2_misread",fb:"The share explained is R Square, not Beta."}]},
       {id:"e1s2",label:"One predictor",show:memo,prompt:"With only one predictor, the standardized coefficient Beta equals…",
        hint:"Both variables are on a standard scale, and one familiar number already measures a linear relationship on that scale.",
        options:[
         {t:"the correlation r between weight and blood pressure",tag:"correct",fb:"Right. In simple regression, Beta = r, and R Square = r²."},
-        {t:"R Square",tag:"r2_misread",fb:"R Square is r squared: here about .17."},
-        {t:"the slope in mmHg per kg",tag:"beta_units",fb:"That's B, in the data's own units."}]}],
+        {t:"R Square, the share of blood pressure variation explained by weight",tag:"r2_misread",fb:"R Square is r squared: here about .17."},
+        {t:"the slope B, in mmHg per kg of weight",tag:"beta_units",fb:"That's B, in the data's own units: 0.62 mmHg per kg."}]}],
     outro:g=>g("e1s1")==="correct"
       ?{ok:true,title:"The fellow, corrected",text:'Dr. Ruiz caps her pen. "Standard deviations, not percent. He\'ll rewrite the paragraph tonight."'}
       :{ok:false,title:"The fellow, corrected",text:'"Beta is in standard deviations. B is in the units. I\'ll have him write it out ten times."'},
@@ -776,31 +783,31 @@ const FOLLOWUPS={
   "Outcome: what you want to explain or predict. Predictor: what you use to predict it, known in advance."),
  fu_slope:()=>JR("fu_slope","Quick review: reading the Coefficients table","Which number answers which question.",[
   {id:"fu_sl_1",label:"The slope",prompt:"Change in hemoglobin = 2.647 + 0.0022 × (tap water, L). The 0.0022 means…",hint:"It's the B on the predictor's row.",
-   options:[{t:"each extra liter goes with 0.0022 units more change in hemoglobin, on average",tag:"correct",fb:"Right."},{t:"the predicted change for someone who drinks no tap water",tag:"intercept_misread",fb:"That's the intercept, 2.647."},{t:"tap water explains 0.22% of hemoglobin change",tag:"r2_misread",fb:"The share explained comes from R Square, not from a slope."}]},
+   options:[{t:"each extra liter goes with 0.0022 more change in hemoglobin, on average",tag:"correct",fb:"Right."},{t:"the predicted change in hemoglobin for someone who drinks no tap water at all",tag:"intercept_misread",fb:"That's the intercept, 2.647."},{t:"tap water explains 0.22% of the variation in hemoglobin change",tag:"r2_misread",fb:"The share explained comes from R Square, not from a slope."}]},
   {id:"fu_sl_2",label:"Units",prompt:"If water is recorded in 100-liter units instead of liters, what changes?",hint:"Same relationship, different ruler.",
-   options:[{t:"The slope B (100 times larger), but not t or the p-value",tag:"correct",fb:"Right."},{t:"Everything, including the p-value",tag:"units_slope",fb:"The test doesn't depend on units."},{t:"Nothing",tag:"units_slope",fb:"B is in the data's units, so it changes."}]}],
+   options:[{t:"The slope B (100 times larger), but not t or the p-value",tag:"correct",fb:"Right."},{t:"Everything: B, t and the p-value all change with the new units",tag:"units_slope",fb:"The test doesn't depend on units: t and the p-value stay the same."},{t:"Nothing, because it's the same relationship",tag:"units_slope",fb:"It is the same relationship, but B is in the data's units, so it changes."}]}],
   "B is the average change per unit of the predictor. Units change B, never t, the p-value or R²."),
  fu_corr:()=>JR("fu_corr","Quick review: correlation","Size, sign, and significance.",[
   {id:"fu_co_1",label:"Sign",prompt:"r = −0.60 between water drunk and hemoglobin means…",hint:"Negative: one goes up as the other goes down.",
-   options:[{t:"a medium-strong negative relationship: more water, lower hemoglobin",tag:"correct",fb:"Right."},{t:"a weak relationship, since it's negative",tag:"corr_sign",fb:"The size is 0.60; the sign is only the direction."},{t:"more water, higher hemoglobin",tag:"corr_direction",fb:"That would be a positive r."}]},
+   options:[{t:"a medium-strong negative relationship: more water, lower hemoglobin",tag:"correct",fb:"Right."},{t:"a weak relationship, since negative correlations are the weak ones",tag:"corr_sign",fb:"The size is 0.60; the sign is only the direction."},{t:"more water, higher hemoglobin",tag:"corr_direction",fb:"That would be a positive r."}]},
   {id:"fu_co_2",label:"Significance",prompt:"With 5,000 patients, r = 0.05 is significant. That means…",hint:"Significant and strong aren't the same thing.",
-   options:[{t:"r probably isn't zero, but the relationship is very weak",tag:"correct",fb:"Right."},{t:"the relationship is strong",tag:"sig_vs_strength",fb:"Big samples make tiny correlations significant."},{t:"one causes the other",tag:"causal_claim",fb:"Correlation isn't cause."}]},
+   options:[{t:"r probably isn't zero, but the relationship is very weak",tag:"correct",fb:"Right."},{t:"the relationship is strong, since it held up across 5,000 patients",tag:"sig_vs_strength",fb:"Big samples make tiny correlations significant. Size, not sample, says how strong."},{t:"one of the two variables causes the other",tag:"causal_claim",fb:"Correlation isn't cause."}]},
   {id:"fu_co_3",label:"Zero",prompt:"r = 0 means…",hint:"r measures one particular kind of relationship.",
    options:[{t:"no straight-line relationship",tag:"correct",fb:"Right: there could still be a curve."},{t:"no relationship of any kind",tag:"corr_linear",fb:"A U shape can have r = 0."},{t:"the variables are identical",tag:"corr_self",fb:"That would be r = 1."}]}],
   "Size of r is the strength, sign is the direction, and r only measures straight-line relationships."),
  fu_resid:()=>JR("fu_resid","Quick review: residual plots","What the leftover pattern tells you.",[
   {id:"fu_re_1",label:"Good",prompt:"A residual plot with no problems looks like…",hint:"Nothing left for the model to explain.",
-   options:[{t:"a random band of dots around zero",tag:"correct",fb:"Right."},{t:"a U shape",tag:"resid_read",fb:"That means a curve was missed."},{t:"a fan that widens",tag:"resid_read",fb:"That means unequal variance."}]},
+   options:[{t:"a random band of dots around zero",tag:"correct",fb:"Right."},{t:"a U shape centered on the zero line",tag:"resid_read",fb:"That means a curve was missed."},{t:"a fan that widens",tag:"resid_read",fb:"That means unequal variance."}]},
   {id:"fu_re_2",label:"Curve",prompt:"A curved residual plot suggests…",hint:"The straight line is the wrong shape.",
    options:[{t:"adding a squared term (polynomial regression)",tag:"correct",fb:"Right."},{t:"deleting the points at the ends",tag:"outlier_delete",fb:"Those points are where the curve shows."},{t:"that the model is fine because the slope is significant",tag:"sig_fit",fb:"Significance doesn't check the shape."}]},
   {id:"fu_re_3",label:"R² went up",prompt:"Adding a squared term raised R Square from .20 to .26. That alone shows…",hint:"R Square can't go down when a term is added.",
-   options:[{t:"nothing yet: check the new term's own Sig.",tag:"correct",fb:"Right: R Square never falls when you add a term, so the term's test decides."},{t:"the curve is real",tag:"r2_rises",fb:"R Square rises with any added term, even a useless one."},{t:"the straight line was wrong",tag:"r2_rises",fb:"The residual plot and the new term's test say that, not the rise in R Square."}]}],
+   options:[{t:"nothing yet: check the new term's own Sig.",tag:"correct",fb:"Right: R Square never falls when you add a term, so the term's test decides."},{t:"the curve is real, since R Square went up by .06",tag:"r2_rises",fb:"R Square rises with any added term, even a useless one."},{t:"the straight line was wrong",tag:"r2_rises",fb:"The residual plot and the new term's test say that, not the rise in R Square."}]}],
   "Residuals should scatter randomly around zero. A curve calls for a squared term; a fan means unequal spread."),
  fu_extrap:()=>JR("fu_extrap","Quick review: prediction","Where a fitted line can be trusted.",[
   {id:"fu_ex_1",label:"Range",prompt:"A model was fitted on adults aged 30 to 60. Predicting for an 85-year-old is…",hint:"Outside the data.",
-   options:[{t:"extrapolation, which the data can't support",tag:"correct",fb:"Right."},{t:"fine if R² is high",tag:"extrapolate",fb:"R² describes the fit inside the data."},{t:"fine if the slope is significant",tag:"extrapolate",fb:"Significance doesn't extend the range."}]},
+   options:[{t:"extrapolation, which the data can't support",tag:"correct",fb:"Right."},{t:"fine as long as R² is high and the line fits well",tag:"extrapolate",fb:"R² describes the fit inside the data."},{t:"fine if the slope is significant",tag:"extrapolate",fb:"Significance doesn't extend the range."}]},
   {id:"fu_ex_2",label:"The equation",prompt:"The prediction equation Ŷ = a + bX has no error term because…",hint:"It's the fitted line itself.",
-   options:[{t:"it gives the line's predicted average, not any one patient's actual value",tag:"correct",fb:"Right."},{t:"the model has no error",tag:"slope_misread",fb:"Real patients scatter around the line."},{t:"R² is 1",tag:"r2_misread",fb:"R² is rarely 1."}]}],
+   options:[{t:"it gives the predicted average, not any one patient's value",tag:"correct",fb:"Right."},{t:"the model has no error once the least-squares line is fitted",tag:"slope_misread",fb:"Real patients scatter around the line."},{t:"R² is 1",tag:"r2_misread",fb:"R² is rarely 1."}]}],
   "Predict only inside the range the line was fitted on, and remember the prediction is an average.")
 };
 const FU_MAP={outcome_misread:"fu_regbuild",corr_vs_reg:"fu_regbuild",wrong_test:"fu_regbuild",predictor_after:"fu_regbuild",extra_factor:"fu_regbuild",no_choice:"fu_regbuild",no_design:"fu_regbuild",design_wrong:"fu_regbuild",build_wrong:"fu_regbuild",
@@ -1237,7 +1244,7 @@ function showStep(unit,i,kind,lvl){
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
     <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
-    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>[Math.random(),o,k]).sort((x,y)=>x[0]-y[0]).map(([_,o,k])=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   markScrollers();
@@ -1326,7 +1333,7 @@ function showStep(unit,i,kind,lvl){
     box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
   }
   if(st.type==="cards"){
-    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    box.querySelector(".opts").outerHTML=`${st.context?`<div class="recap"><p class="recap-h">${st.contextTitle||"The facts on the table"}</p>${String(st.context).replace(/= (&lt;|<)/g,"$1 ")}</div>`:""}${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>[Math.random(),c,k]).sort((x,y)=>x[0]-y[0]).map(([_,c,k])=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
     lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
     box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
   }

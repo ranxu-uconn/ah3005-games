@@ -184,6 +184,7 @@ main>h2{margin-top:1.8rem}
 .tile[aria-pressed="true"]{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
 .headline{font-family:var(--serif);font-size:1.15rem;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:6px;padding:.7rem 1rem;margin:.7rem 0}
 .claim{font-size:1.05rem}
+.recap{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:.7rem .95rem .3rem;margin:.4rem 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.5}.recap-h{font-weight:700;margin:0 0 .35rem}.recap p,.recap li{margin:.2rem 0 .45rem}.recap ul{margin:.2rem 0 .4rem;padding-left:1.2rem}
 .thread{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.7rem 0}
 .thread.email{border-top:5px solid var(--teal);border-radius:6px}
 .mailhead{display:flex;flex-direction:column;gap:.1rem;font-size:.88rem;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.55rem}
@@ -337,7 +338,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:8,version:"1.8",
+const CONFIG={mission:8,version:"2.0",
   // Qualtrics survey link (same survey as Missions 4 to 6)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission8-v1"};
@@ -478,25 +479,30 @@ const WEEK={num:8,title:"The mock survey",
       thread:["She'll ask next: what if she wants a quarter of a day instead of half?"],
       slots:[
        {label:"How many",options:[{t:"Halving the margin takes about four times as many charts,",tag:"correct"},{t:"Halving the margin takes about twice as many charts,",tag:"samplesize_round",fb:"E is squared in the formula, so halving it multiplies n by four, not two."}]},
-       {label:"So",options:[{t:"so precision gets expensive fast.",tag:"correct"},{t:"so it's an easy change.",tag:"samplesize_round",fb:"Four times the charts is a lot of extra auditing."}]}],
+       {label:"So",options:[{t:"so precision gets expensive fast.",tag:"correct"},{t:"so it's an easy change to the audit we already planned.",tag:"samplesize_round",fb:"Four times the charts is a lot of extra auditing, not an easy change."}]}],
       okFb:"Precision is expensive: every halving of the margin of error quadruples the sample."}],
     outro:()=>({ok:true,title:"Hidden problem solved",text:'Jordan: "89 for half a day, about four times that for a quarter. I\'ll send her both and let her pick."'}),
     takeaway:"Always round a sample size up. Halving the margin of error takes about four times as many observations."}),
-  finale:S=>({id:"fin",npc:"brooks",title:"The exit interview",
+  finale:S=>{const L=i=>(S.path&&S.path[i])||0,Rg=i=>makeRng(((S.seed||0)+i*1013+7)>>>0); // Rg(i) = coreRng(i): the same seeded data the consult used
+   const N=case2(Rg(1),L(1)).facts;
+   return {id:"fin",npc:"brooks",title:"The exit interview",
     scene:"Ms. Farrow closes her binder slowly. Dr. Brooks folds her hands. Nobody touches the coffee.",
     message:"<p>Ms. Farrow closes her binder. Dr. Brooks is in the room. Three last questions, and then the practice survey's findings. Answer each with your strongest evidence.</p>",
     steps:[
-     {id:"fin1",label:"What 95% promises",type:"cards",claim:'<strong>Ms. Farrow:</strong> "Your stroke report gives a 95% confidence interval. What, exactly, does the 95% promise?"',prompt:"Play your strongest evidence.",hint:"The 95% belongs to the method of building intervals, not to any one interval.",
-      cards:[{k:"Reasoning",t:"If we repeated the sampling many times, about 95% of the intervals built this way would contain the true mean",tag:"correct",fb:"That's the definition. Any one interval either contains the true mean or it doesn't."},
-       {k:"Reasoning",t:"There's a 95% chance the true mean is inside this interval",tag:"ci_misread",fb:"That's the classic misreading: the true mean is fixed, so any one interval either contains it or doesn't."},
-       {k:"Data",t:"95% of our patients had times inside the interval",tag:"ci_misread",fb:"A confidence interval is about the mean, not individual patients."}]},
-     {id:"fin2",label:"Overtime and falls",type:"cards",claim:'<strong>Ms. Farrow:</strong> "Units with more overtime had more falls. Did Riverbend conclude that overtime causes falls?"',prompt:"Play your strongest evidence.",hint:"Think back to Greg's overtime proposal: a third variable that could drive both overtime and falls.",
-      cards:[{k:"Reasoning",t:"No: patient acuity could drive both, so it had to be measured and held constant before drawing any conclusion",tag:"correct",fb:"Name the confounder and measure it. That's the answer a surveyor wants."},
-       {k:"Data",t:"Yes: units with more overtime clearly had more falls",tag:"confound_causal",fb:"A strong association is exactly what a confounder can produce."},
+     {id:"fin1",label:"What 95% promises",type:"cards",contextTitle:"From Dr. Nair's stroke report",
+      context:`<p>Page four of the annual report summarizes door-to-needle times for the stroke center's last ${N.n} patients: mean ${fx(N.m,1)} minutes, median ${fx(N.md,1)} minutes, and a 95% confidence interval for the mean of ${fx(N.lo,1)} to ${fx(N.hi,1)} minutes.</p>`,claim:'<strong>Ms. Farrow:</strong> "Your stroke report gives a 95% confidence interval. What, exactly, does the 95% promise?"',prompt:"Play your strongest evidence.",hint:"The 95% belongs to the method of building intervals, not to any one interval.",
+      cards:[{k:"Reasoning",t:"Over many repeated samples, about 95% of the intervals built this way would contain the true mean",tag:"correct",fb:"That's the definition. Any one interval either contains the true mean or it doesn't."},
+       {k:"Reasoning",t:"There's a 95% chance the true mean door-to-needle time is inside this particular interval",tag:"ci_misread",fb:"That's the classic misreading: the true mean is fixed, so any one interval either contains it or doesn't."},
+       {k:"Data",t:"95% of our patients had door-to-needle times inside the interval, so it covers nearly everyone",tag:"ci_misread",fb:"A confidence interval is about the mean, not individual patients."}]},
+     {id:"fin2",label:"Overtime and falls",type:"cards",contextTitle:"From Greg's overtime proposal",
+      context:"<ul><li>Greg's file had one row per unit for all 14 units: its nurse overtime and its fall rate. Nothing was assigned; it recorded what each unit already did.</li><li>Units in the top quarter for overtime had roughly twice the falls of the bottom quarter.</li><li>When Greg proposed capping overtime, the file had no measure of patient acuity.</li></ul>",claim:'<strong>Ms. Farrow:</strong> "Units with more overtime had more falls. Did Riverbend conclude that overtime causes falls?"',prompt:"Play your strongest evidence.",hint:"Look at the facts box for a third variable that could drive both overtime and falls.",
+      cards:[{k:"Reasoning",t:"No: patient acuity could drive both, so it had to be measured and held constant first",tag:"correct",fb:"Name the confounder and measure it. That's the answer a surveyor wants."},
+       {k:"Data",t:"Yes: units with more overtime clearly had more falls, and tired staff make mistakes",tag:"confound_causal",fb:"A strong association, plus a plausible story, is exactly what a confounder can produce."},
        {k:"Reasoning",t:"No: observational data can't tell us anything",tag:"confound_causal",fb:"Too strong. Measured confounders can be adjusted for."}]},
-     {id:"fin3",label:"Times the risk",type:"cards",narr:"Greg, who has been hovering by the door, quietly takes a seat.",claim:'<strong>Ms. Farrow:</strong> "Your committee minutes say the risk of readmission on 4B was more than one and a half times the risk on other units. Where does that number come from?"',prompt:"Play your strongest evidence.",hint:"\"Times the risk\" compares two risks.",
-      cards:[{k:"Output",t:"The risk ratio: 4B's readmission rate divided by the rate on the other units",tag:"correct",fb:"Two risks, divided. That's what \"times the risk\" means."},
-       {k:"Output",t:"The odds ratio from the crosstab",tag:"or_as_rr",fb:"Odds aren't probabilities. The odds ratio was larger."},
+     {id:"fin3",label:"Times the risk",type:"cards",contextTitle:"From the bed planning committee",
+      context:"<ul><li>The committee compared 30-day readmission on Unit 4B with the other three medical units combined, one row per patient's first discharge this year.</li><li>4B had the highest readmission rate of the four units. Because it is the smallest unit, it also had the smallest share of all their readmissions.</li><li>The crosstab output gave both a risk ratio and an odds ratio for 4B against the other units.</li></ul>",narr:"Greg, who has been hovering by the door, quietly takes a seat.",claim:'<strong>Ms. Farrow:</strong> "Your committee minutes say the risk of readmission on 4B was more than one and a half times the risk on other units. Where does that number come from?"',prompt:"Play your strongest evidence.",hint:"\"Times the risk\" compares two risks.",
+      cards:[{k:"Output",t:"The risk ratio: 4B's readmission rate divided by other units' rate",tag:"correct",fb:"Two risks, divided. That's what \"times the risk\" means."},
+       {k:"Output",t:"The odds ratio from the crosstab: 4B's odds of readmission over other units' odds",tag:"or_as_rr",fb:"Odds aren't probabilities. The odds ratio was larger."},
        {k:"Data",t:"4B's share of all the hospital's readmissions",tag:"column_pct",fb:"That's a column percentage, and it mostly reflects 4B's size."}]}],
     outro:g=>{const F=SEASON.flags,lines=[g("fin1")==="correct"?"Confidence intervals: explained correctly":"Confidence intervals: explained on the second try",
         g("fin2")==="correct"?"Overtime and falls: no causal claim, confounder named":"Overtime and falls: confounder named after some prompting",
@@ -512,7 +518,7 @@ const WEEK={num:8,title:"The mock survey",
       return {ok:true,title:"Practice survey findings",
         text:lines.map(x=>"• "+x).join("<br>")+(past.length?`<br><br><strong>Your earlier calls, reviewed:</strong><br>${past.map(x=>"• "+x).join("<br>")}`:`<br><br><em>No earlier reports of yours are on file, so the survey reviewed this week only.</em>`)+
           `<br><br><strong>Dr. Brooks:</strong> "${WEEK.ending({...SEASON.flags,...WEEK.keyFlags(S).flags})}"`};},
-    takeaway:"Every number in a report needs a sentence that says exactly what it means and no more."})};
+    takeaway:"Every number in a report needs a sentence that says exactly what it means and no more."};}};
 
 
 /* ---------- general helpers (shared by every week) ---------- */
@@ -715,10 +721,10 @@ function case1(R,level){ // Marion Farrow, State Department of Health (guest): s
     int:level?{tag:"correct",fb:"Interval: a 5-degree gap means the same everywhere, but 0 °F isn't \"no temperature,\" so 70 °F isn't twice as warm as 35 °F."}:{tag:"scale_confusion",fb:"Interval: equal gaps, but no true zero. It does have order, though, and equal steps, so it's more than ordinal."},
     age:{tag:"scale_confusion",fb:"Ratio: age has a true zero, so 80 is twice 40."}};
   const designRows=level?[
-    {label:"The NSAID study",options:[{t:"Dr. Ruiz's NSAID study was a case-control study,",tag:"correct"},{t:"Dr. Ruiz's NSAID study was a cohort study,",tag:"design_confusion",fb:"A cohort starts from people without the outcome and follows them forward. This study started from people who had already had a heart attack and looked back at their NSAID use. That's case-control."}]},
-    {label:"The knee protocol",options:[{t:"and Marcus's knee protocol was a before-and-after study with no control group.",tag:"correct"},{t:"and Marcus's knee protocol was a randomized controlled trial.",tag:"design_confusion",fb:"Nobody was randomized and there was no control group: the same patients, before and after."}]}]
+    {label:"The NSAID study",options:[{t:"Dr. Ruiz's NSAID study was a case-control study,",tag:"correct"},{t:"Dr. Ruiz's NSAID study was a cohort study of NSAID users and heart attacks,",tag:"design_confusion",fb:"A cohort starts from people without the outcome and follows them forward. This study started from people who had already had a heart attack and looked back at their NSAID use. That's case-control."}]},
+    {label:"The knee protocol",options:[{t:"and Marcus's knee protocol was a before-and-after study with no control group.",tag:"correct"},{t:"and Marcus's knee protocol was a randomized controlled trial, since every patient got the same protocol.",tag:"design_confusion",fb:"Everyone getting the same protocol is the opposite of a trial: nobody was randomized and there was no control group. The same patients, before and after."}]}]
    :[
-    {label:"The BP trial",options:[{t:"Dr. Ruiz's BP trial was a randomized controlled trial,",tag:"correct"},{t:"Dr. Ruiz's BP trial was a cohort study,",tag:"design_confusion",fb:"Patients were randomly assigned to drug or placebo. That makes it an experiment."}]},
+    {label:"The BP trial",options:[{t:"Dr. Ruiz's BP trial was a randomized controlled trial,",tag:"correct"},{t:"Dr. Ruiz's BP trial was a cohort study that followed 80 patients for 8 weeks,",tag:"design_confusion",fb:"It did follow 80 patients for 8 weeks, but they were randomly assigned to drug or placebo. Assigning the treatment makes it an experiment: a randomized controlled trial."}]},
     {label:"The NSAID study",options:[{t:"and her NSAID study was a case-control study.",tag:"correct"},{t:"and her NSAID study was a randomized trial.",tag:"design_confusion",fb:"Nobody was assigned to take NSAIDs. The study started from heart attack patients and looked back."}]}];
   return {id:"c1",npc:"farrow",title:"How did you choose these charts?",
     scene:"Ms. Farrow writes your name at the top of a fresh page and underlines it, twice. She smiles. Her pen does not.",
@@ -733,8 +739,8 @@ function case1(R,level){ // Marion Farrow, State Department of Health (guest): s
         {q:"Did every chart have a chance to be picked?",a:strat?"Yes, within its own unit.":"Yes. Every unit had the same chance, and every chart on a chosen unit is in.",key:true},
         {q:"Is the state taking over Riverbend?",a:"Not today. Ask me again in December.",key:false}],
        slots:[
-        {label:"The sample",options:strat?[{t:"That's a stratified random sample: charts were drawn at random within every unit,",tag:"correct"},{t:"That's a simple random sample: charts were drawn from one big list,",tag:"sampling_confusion",fb:"Here the list was split by unit first, then charts were drawn within each unit. That's stratified."},{t:"That's a cluster sample: whole units were taken,",tag:"sampling_confusion",fb:"A cluster sample takes everyone in a few chosen groups. Here charts were drawn within every unit."}]
-          :[{t:"That's a cluster sample: whole units were drawn at random, and every chart on them was taken,",tag:"correct"},{t:"That's a stratified random sample: charts were drawn within every unit,",tag:"sampling_confusion",fb:"Stratified would draw some charts from every unit. Here 4 whole units were picked."},{t:"That's a simple random sample: charts were drawn from one big list,",tag:"sampling_confusion",fb:"Here whole units were picked first, not charts from one list."}]},
+        {label:"The sample",options:strat?[{t:"That's a stratified random sample: charts were drawn at random within every unit,",tag:"correct"},{t:"That's a simple random sample: every chart on the discharge list had a chance to be picked,",tag:"sampling_confusion",fb:"Every chart did have a chance, but only within its own unit: the list was split by unit first, then charts were drawn within each unit. That's stratified, not simple random."},{t:"That's a cluster sample: whole units were taken,",tag:"sampling_confusion",fb:"A cluster sample takes everyone in a few chosen groups. Here charts were drawn within every unit."}]
+          :[{t:"That's a cluster sample: 4 whole units were drawn at random, and all their charts taken,",tag:"correct"},{t:"That's a stratified random sample: the units were the strata, and charts were drawn from them,",tag:"sampling_confusion",fb:"Grouping by unit isn't enough. Stratified would draw some charts from every one of the 8 units; here 4 whole units were picked at random and every chart on them was taken."},{t:"That's a simple random sample: charts were drawn from one big list,",tag:"sampling_confusion",fb:"Here whole units were picked first, not charts from one list."}]},
         {label:"Why",options:[{t:strat?"so even a small unit like 4B is represented.":"which is cheaper than visiting all eight units.",tag:"correct"},{t:"which guarantees the sample matches the hospital exactly.",tag:"sampling_confusion",fb:"No random sample guarantees that. It makes big differences unlikely, not impossible."}]}],
        okFb:strat?"Stratify when every group must be represented; draw at random within each one.":"Cluster sampling picks whole groups at random. It's cheaper, but charts within a cluster tend to resemble each other."},
       {id:"c1s2",label:"Measurement scales",type:"point",
@@ -786,9 +792,9 @@ function case2(R,level){ // Dr. Nair: describing skewed data, outliers, and what
       "Box: Q1 to Q3, with the median inside. Lines on each side: the whiskers, ending at the numbers shown. Circles: outliers, outside the whiskers.");})();
   const k=v.filter(x=>x>fence).length;
   const errSent=level?`In 95% of future quarters, our mean door-to-needle time will fall between ${fx(lo,1)} and ${fx(hi,1)} minutes.`
-    :`There is a 95% chance that our true mean door-to-needle time lies between ${fx(lo,1)} and ${fx(hi,1)} minutes.`;
+    :`There is a 95% chance our true mean door-to-needle time is between ${fx(lo,1)} and ${fx(hi,1)} minutes.`;
   const longest=Math.max(...v),second=s[n-2];
-  return {id:"c2",npc:"nair",title:"Page four of the annual report",
+  return {id:"c2",npc:"nair",title:"Page four of the annual report",facts:{n,m,md,lo,hi},
     scene:"Dr. Nair is pacing when you arrive. The annual report lies open on her desk, page four flagged with three sticky notes.",
     message:`<p>The surveyor is reading the door-to-needle section of this year's report. ${n} patients. She asked why we quote the median, and she circled one sentence. Help!</p>`,
     steps:[
@@ -803,19 +809,19 @@ function case2(R,level){ // Dr. Nair: describing skewed data, outliers, and what
        hint:["Drag the slider and watch which line moves. Then look at which side of the plot has the long tail.","The times are right-skewed: a few very long cases. The mean follows them; the median barely moves, so it describes a typical patient better."],
        thread:["Your report leads with the median, not the mean. Why?"],
        slots:[
-        {label:"The times",options:[{t:"The times are right-skewed: a few very long cases pull the mean up,",tag:"correct"},{t:"The times are roughly normal, so the mean and median agree,",tag:"skew_confusion",fb:"Look at the dot plot: most times bunch together, with a long tail to the right. Drag the slider and watch the mean move."},{t:"The long cases pull the median up,",tag:"skew_confusion",fb:"Drag the slider: the median hardly moves. The mean does."}]},
-        {label:"So",options:[{t:"so the median describes a typical patient better here.",tag:"correct"},{t:"so the median is always better than the mean.",tag:"skew_confusion",fb:"Not always. For symmetric data the mean works well and uses every value."}]}],
+        {label:"The times",options:[{t:"The times are right-skewed: a few very long cases pull the mean up,",tag:"correct"},{t:"The times are roughly normal, so the mean and median agree,",tag:"skew_confusion",fb:"Look at the dot plot: most times bunch together, with a long tail to the right. Drag the slider and watch the mean move."},{t:"The times are skewed, and the long cases pull the median up,",tag:"skew_confusion",fb:"Drag the slider: the median hardly moves when the longest case changes. It's the mean the long cases pull up."}]},
+        {label:"So",options:[{t:"so the median describes a typical patient better here.",tag:"correct"},{t:"so the median is always a better summary than the mean, whatever the shape.",tag:"skew_confusion",fb:"Not always. For symmetric data the mean works well and uses every value; the median wins here because these times are skewed."}]}],
        okFb:"For skewed data, the median describes the typical patient; the mean is pulled toward the tail."},
       {id:"c2s2",label:"Outliers",type:"reply",channel:"chat",narr:"Nair circles the dots beyond the upper whisker in red, then hesitates.",show:box+sumTbl,
        prompt:"Dr. Nair wants to know whether the surveyor is just picking on the longest cases. Build your reply.",
        hint:["Look at the box plot: find where the upper whisker ends, and the circles beyond it.",`Only times outside the whiskers are outliers; the upper whisker ends at ${wHi} minutes. They're real patients, so they stay in the data, which is why the report leads with the median.`],
        thread:[`She says ${k} of our times are "outliers." Is she just picking the longest ones?`],
        slots:[
-        {label:"The rule",options:[{t:`No: a time is an outlier only if it falls outside the box plot's whiskers, and ${k} of ours do,`,tag:"correct"},
-          {t:"Yes: any time over the 60-minute target is an outlier,",tag:"outlier_rule",fb:"The 60-minute target is a goal, not an outlier rule. On a box plot, outliers are the points outside the whiskers."},
-          {t:"Yes: the five longest times always count as outliers,",tag:"outlier_rule",fb:`Only times outside the whiskers count. Here that's ${k}, not five: look for the circles beyond the upper whisker.`}]},
-        {label:"So",options:[{t:"but they're real patients, so they stay in, and that's why we lead with the median.",tag:"correct"},
-          {t:"so we should delete them before the report goes out.",tag:"outlier_rule",fb:"They're real patients. Deleting real data to improve a number isn't honest; leading with the median handles them."}]}],
+        {label:"The rule",options:[{t:`No: only times outside the box plot's whiskers are outliers, and ${k} of ours are,`,tag:"correct"},
+          {t:"Yes: any time over the 60-minute national target counts as an outlier,",tag:"outlier_rule",fb:"The 60-minute target is a goal, not an outlier rule. On a box plot, outliers are the points outside the whiskers."},
+          {t:"Yes: the five longest times always count as outliers, however close they sit to the rest,",tag:"outlier_rule",fb:`Only times outside the whiskers count. Here that's ${k}, not five: look for the circles beyond the upper whisker.`}]},
+        {label:"So",options:[{t:"but they're real patients, so they stay in, and we lead with the median.",tag:"correct"},
+          {t:"so we should delete them before the report goes out, to protect the mean.",tag:"outlier_rule",fb:"They do pull the mean, but they're real patients. Deleting real data to improve a number isn't honest; leading with the median handles them."}]}],
        okFb:"An outlier is a point outside the box plot's whiskers, not just a long time. Real patients stay in the data; the median isn't thrown by them."},
       {id:"c2s3",label:"The circled sentence",type:"spot",show:`<p class="where">The report's door-to-needle summary:</p>${tbl("Descriptives","Door-to-needle time, minutes",["Statistic","Value"],[["N",n],["Mean",fx(m,1)],["Median",fx(md,1)],["Std. Deviation",fx(sd,1)],["95% CI for Mean, Lower",fx(lo,1)],["95% CI for Mean, Upper",fx(hi,1)]])}`,
        narr:"Nair reads page four aloud, faster and faster, then stops at the third sentence.",
@@ -826,7 +832,7 @@ function case2(R,level){ // Dr. Nair: describing skewed data, outliers, and what
         {t:`Median door-to-needle time for our last ${n} patients was ${fx(md,1)} minutes.`,tag:"ci_misread",fb:"That's an accurate summary of the data."},
         {t:`The mean was ${fx(m,1)} minutes (95% CI ${fx(lo,1)} to ${fx(hi,1)}), pulled up by ${k} unusually long cases.`,tag:"ci_misread",fb:"That reports the interval without claiming what it means. Fine."},
         {t:errSent,tag:"correct",fb:level?"That's one of the common misconceptions listed in the lecture slides: the interval doesn't predict where future means will fall. The 95% describes the method: across repeated samples, about 95% of intervals built this way contain the true mean.":"That's the classic misreading. The true mean is fixed; it's either in the interval or not. The 95% describes the method: across repeated samples, about 95% of intervals built this way contain the true mean."},
-        {t:"We have not yet shown that our average beats the 60-minute national target.",tag:"ci_misread",fb:`True: the interval runs from ${fx(lo,1)} to ${fx(hi,1)}, which includes 60.`}]}],
+        {t:"We have not yet shown that our average beats the 60-minute national target, since the interval includes 60.",tag:"ci_misread",fb:`True: the interval runs from ${fx(lo,1)} to ${fx(hi,1)}, which includes 60.`}]}],
     outro:g=>g("c2s3")==="correct"
       ?{ok:true,title:"Dr. Nair fixes page four",text:'<em>Nair is already typing before you finish.</em> "Found it before she finished reading! I\'m rewriting that sentence right now!"'}
       :{ok:false,title:"Dr. Nair fixes page four",text:'<em>Nair groans into her hands, then sits up straight.</em> "That sentence has been in every report for three years. Not anymore!"'},
@@ -896,8 +902,8 @@ function case4(R,level){ // Dana: what a p-value means, errors and power (her We
        hint:["A p-value is calculated assuming the null hypothesis is true. Ask what that assumption lets it describe.","p = .03: if teach-back made no difference, a gap at least this large would turn up about 3% of the time. That's evidence against H₀, not the probability that H₀ is true."],
        thread:["She says my sentence is \"the most common mistake in the state.\" What should it say?"],
        slots:[
-        {label:"p = .03 means",options:[{t:"If teach-back made no difference, a gap at least this large would happen only about 3% of the time.",tag:"correct"},{t:"There's a 3% chance teach-back doesn't work.",tag:"p_as_prob_null",fb:"That's the sentence she circled. A p-value assumes teach-back makes no difference, so it can't be the chance that it makes no difference."},{t:"Teach-back works for 97% of patients.",tag:"p_misread",fb:"A p-value says nothing about how many patients benefit."}]},
-        {label:"So",options:[{t:"That's evidence that teach-back helps, not proof.",tag:"correct"},{t:"That proves teach-back works.",tag:"proof_overclaim",fb:"It's evidence, not proof. With α = 0.05 we accept up to a 5% false-positive risk."}]}],
+        {label:"p = .03 means",options:[{t:"If teach-back made no difference, a gap at least this large would happen about 3% of the time.",tag:"correct"},{t:"There's a 3% chance teach-back doesn't work, so a 97% chance its higher scores are real.",tag:"p_as_prob_null",fb:"That's the sentence she circled, plus its flip side. A p-value assumes teach-back makes no difference, so it can't be the chance that it makes no difference, or that it works."},{t:"Teach-back works for 97% of patients, because only 3% of the gap in scores is due to chance.",tag:"p_misread",fb:"A p-value says nothing about how many patients benefit, or what share of a gap is due to chance."}]},
+        {label:"So",options:[{t:"That's evidence that teach-back helps, not proof.",tag:"correct"},{t:"That proves teach-back works, since .03 is below α = 0.05.",tag:"proof_overclaim",fb:"Being below α = 0.05 makes the result significant: evidence, not proof. With α = 0.05 we accept up to a 5% false-positive risk."}]}],
        okFb:"A p-value is about the data, assuming H₀ is true. It is never the probability that H₀ is true."},
       {id:"c4s2",label:"Will the pilot catch it?",type:"reply",channel:"email",subject:"Re: sepsis pilot plan",narr:"Dana taps the sample size on the plan. \"My nurses are enrolling every one of those patients. I want it to count.\"",
        show:`<div class="slider"><p><strong>Try it.</strong> The pilot is looking for an effect of size d = ${d}. Change the design and watch the power.</p>
@@ -915,7 +921,7 @@ function case4(R,level){ // Dana: what a p-value means, errors and power (her We
        thread:["If your sepsis pilot finds no significant difference, what error should worry you most, and how did you guard against it?"],
        slots:[
         {label:"The worry",options:[{t:"The worry is a Type II error: missing an alert that really works. Its chance is 1 − power,",tag:"correct"},{t:"The worry is a Type I error: missing an alert that really works. Its chance is α,",tag:"errors_confusion",fb:"Missing a real effect is a Type II error, with chance 1 − power. A Type I error is a false alarm, with chance α."}]},
-        {label:"The guard",options:[{t:"so the pilot enrolls enough patients for high power.",tag:"correct"},{t:"so we raised α to 0.10 to get more power.",tag:"alpha_power",fb:"That raises power, but it doubles the false-alarm risk. Adding patients is the safer lever."}]}],
+        {label:"The guard",options:[{t:"so the pilot enrolls enough patients for high power.",tag:"correct"},{t:"so we lowered α to 0.01, which makes a real effect easier to detect.",tag:"alpha_power",fb:"Lowering α makes a real effect harder to detect, not easier: power goes down. Adding patients is the lever that raises power."}]}],
        okFb:"Plan for power before collecting data. More patients raise power without raising the false-positive risk."}],
     outro:g=>g("c4s1")==="correct"
       ?{ok:true,title:"Dana signs off",text:'<em>Dana prints the new sentence and tapes it to her monitor while you watch.</em> "Evidence, not proof, and not \'a 3% chance.\' My nurses deserve numbers that mean what they say."'}
@@ -940,9 +946,9 @@ function expertCase(){
        prompt:"Dr. Ruiz: \"The surveyor read my pilot's interval and asked what it shows. What do I say?\"",
        hint:"Check whether 0, meaning no difference, is inside the interval, and whether a meaningful reduction is inside it too.",
        options:[
-        {t:"It's inconclusive: the interval includes 0 (no effect) and also reductions big enough to matter",tag:"correct",fb:"Exactly. A pilot this small can't settle it either way, which is why the full trial was needed."},
-        {t:"The drug doesn't work, because the interval includes 0",tag:"ci_misread",fb:"Including 0 means \"no effect\" can't be ruled out. It doesn't show there is no effect: reductions of up to 11.6 mmHg are in the interval too."},
-        {t:"The drug works, because most of the interval is below 0",tag:"ci_misread",fb:"The interval still includes 0, so \"no effect\" can't be ruled out."}]}],
+        {t:"It's inconclusive: the interval includes 0 and also reductions big enough to matter",tag:"correct",fb:"Exactly. A pilot this small can't settle it either way, which is why the full trial was needed."},
+        {t:"The drug doesn't work: the interval includes 0, so the pilot found no effect on blood pressure",tag:"ci_misread",fb:"Including 0 means \"no effect\" can't be ruled out. It doesn't show there is no effect: reductions of up to 11.6 mmHg are in the interval too."},
+        {t:"The drug works: blood pressure fell 4.4 mmHg on average, and most of the interval is below 0",tag:"ci_misread",fb:"The mean did fall 4.4 mmHg, but the interval still includes 0, so \"no effect\" can't be ruled out."}]}],
     outro:g=>g("e1s1")==="correct"
       ?{ok:true,title:"Dr. Ruiz has her answer",text:'<em>Dr. Ruiz peels the \"n = 15\" note off her monitor and drops it in the bin.</em> "Too few patients, too wide an interval, so we ran the full trial. That is the answer I wanted."'}
       :{ok:false,title:"Dr. Ruiz has her answer",text:'<em>Dr. Ruiz writes it down.</em> "More patients, narrower interval. I knew that once."'},
@@ -968,7 +974,7 @@ const FOLLOWUPS={
   {id:"fu_d_1",label:"Case-control",prompt:"A study starts with 50 patients who had a stroke and 100 who didn't, then asks both groups about past smoking. That's…",hint:"It starts from the outcome.",
    options:[{t:"a case-control study",tag:"correct",fb:"Right: start from the outcome, look back at exposure."},{t:"a cohort study",tag:"design_confusion",fb:"A cohort starts from people without the outcome and follows them forward."},{t:"a randomized trial",tag:"design_confusion",fb:"Nobody was assigned to smoke."}]},
   {id:"fu_d_2",label:"Cohort",prompt:"2,000 adults are enrolled, smoking is recorded, and everyone is followed for 10 years to see who has a stroke. That's…",hint:"Exposure first, outcome later.",
-   options:[{t:"a prospective cohort study",tag:"correct",fb:"Right."},{t:"a case-control study",tag:"design_confusion",fb:"That would start from people who already had a stroke."},{t:"a cross-sectional study",tag:"design_confusion",fb:"Cross-sectional is one time point. These people were followed."}]}],
+   options:[{t:"a prospective cohort study",tag:"correct",fb:"Right."},{t:"a case-control study of stroke",tag:"design_confusion",fb:"That would start from people who already had a stroke."},{t:"a cross-sectional study",tag:"design_confusion",fb:"Cross-sectional is one time point. These people were followed."}]}],
   "Experiments assign the exposure. Cohorts follow people forward; case-control studies start from the outcome and look back; cross-sectional studies look once."),
  fu_describe:()=>JR("fu_describe","Quick review: describing skewed data","Two quick ones on shape and outliers.",[
   {id:"fu_ds_1",label:"Mean and median",prompt:"Data are right-skewed. Which is usually true?",hint:"The tail pulls the mean.",
@@ -978,15 +984,15 @@ const FOLLOWUPS={
   "For skewed data, report the median. On a box plot, points outside the whiskers are outliers."),
  fu_ci:()=>JR("fu_ci","Quick review: confidence intervals","The most misread number in any report.",[
   {id:"fu_ci_1",label:"What 95% means",prompt:"A 95% CI for mean BMI is 20 to 25. Which statement is correct?",hint:"The 95% belongs to the method.",
-   options:[{t:"If we sampled again and again, about 95% of intervals built this way would contain the true mean",tag:"correct",fb:"Right."},{t:"There's a 95% chance the true mean is between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed: it's in this interval or it isn't."},{t:"The mean will fall between 20 and 25 in 95% of future samples",tag:"ci_misread",fb:"The interval doesn't predict future sample means."}]},
+   options:[{t:"Over many repeated samples, about 95% of intervals built this way contain the true mean",tag:"correct",fb:"Right."},{t:"There's a 95% chance the true mean BMI is between 20 and 25",tag:"ci_misread",fb:"The true mean is fixed: it's in this interval or it isn't."},{t:"The sample mean will fall between 20 and 25 in about 95% of future samples like this one",tag:"ci_misread",fb:"The interval doesn't predict future sample means."}]},
   {id:"fu_ci_2",label:"Narrower",prompt:"Which makes a confidence interval narrower?",hint:"Look at the standard error.",
    options:[{t:"A larger sample",tag:"correct",fb:"Right: the standard error shrinks with √n."},{t:"A higher confidence level",tag:"ci_misread",fb:"99% intervals are wider than 95% intervals."},{t:"More variable data",tag:"ci_misread",fb:"More spread makes it wider."}]}],
   "A 95% confidence interval comes from a method that captures the true value in about 95% of repeated samples."),
  fu_pvalue:()=>JR("fu_pvalue","Quick review: p-values","Two quick ones on what a p-value can say.",[
   {id:"fu_pv_1",label:"The definition",prompt:"p = .02 means…",hint:"It's calculated assuming H₀ is true.",
-   options:[{t:"if H₀ were true, results at least this extreme would occur about 2% of the time",tag:"correct",fb:"Right."},{t:"there's a 2% chance H₀ is true",tag:"p_as_prob_null",fb:"A p-value assumes H₀; it can't be the probability of H₀."},{t:"the effect is 2% of the mean",tag:"p_misread",fb:"A p-value isn't an effect size."}]},
+   options:[{t:"if H₀ were true, results at least this extreme would occur about 2% of the time",tag:"correct",fb:"Right."},{t:"there's a 2% chance H₀ is true, so a 98% chance the treatment has a real effect",tag:"p_as_prob_null",fb:"A p-value assumes H₀; it can't be the probability of H₀, or of the treatment working."},{t:"the effect is 2% of the mean",tag:"p_misread",fb:"A p-value isn't an effect size."}]},
   {id:"fu_pv_2",label:"Failing to reject",prompt:"p = .40 with α = 0.05. What can you say?",hint:"Absence of evidence…",
-   options:[{t:"The data don't give enough evidence against H₀",tag:"correct",fb:"Right: not the same as showing H₀ is true."},{t:"H₀ is proven true",tag:"proof_overclaim",fb:"Failing to reject isn't proof."},{t:"There's a 40% chance the treatment works",tag:"p_as_prob_null",fb:"A p-value isn't the probability of either hypothesis."}]}],
+   options:[{t:"There isn't enough evidence against H₀",tag:"correct",fb:"Right: not the same as showing H₀ is true."},{t:"H₀ is proven true, since p is far above 0.05",tag:"proof_overclaim",fb:"Failing to reject isn't proof, however large p is."},{t:"There's a 40% chance the treatment works",tag:"p_as_prob_null",fb:"A p-value isn't the probability of either hypothesis."}]}],
   "A p-value describes the data assuming H₀ is true. Small p is evidence against H₀; large p is a lack of evidence, not proof of H₀."),
  fu_power:()=>JR("fu_power","Quick review: errors and power","Two errors, one lever.",[
   {id:"fu_pw_1",label:"Type I",prompt:"A Type I error is…",hint:"A false positive.",
@@ -1339,7 +1345,7 @@ function showStep(unit,i,kind,lvl){
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">Variable</th><th scope="col">Type</th><th scope="col">Role</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="Role for ${v[0]}"><option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"?"":`<fieldset id="designQ"><legend>Was anyone measured more than once (in more than one group)?<span class="rowstat"></span></legend><div class="radios"><label><input type="radio" name="rep" value="yes"> Yes</label><label><input type="radio" name="rep" value="no"> No</label></div></fieldset>`}
     <button class="quiet" id="runB">Run analysis</button>`:""}
-    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
+    <div class="opts" role="group" aria-label="Your reply">${(st.options||[]).map((o,k)=>[Math.random(),o,k]).sort((x,y)=>x[0]-y[0]).map(([_,o,k])=>`<button class="opt" data-k="${k}"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">${o.t}</span><span class="sr st-sr"></span></button>`).join("")}</div>
     <div id="hintArea"><div id="hintText" class="hint" aria-live="polite"></div><button class="linkish" id="hintBtn">${unit.npc==="jordan"?"Ask":"Call"} Jordan for a hint (costs ${hintCost()} reputation)</button></div><div class="fb" id="fb" aria-live="polite"></div><div id="next"></div></div>`;
   if(st.init)st.init();
   markScrollers();
@@ -1428,7 +1434,7 @@ function showStep(unit,i,kind,lvl){
     box.querySelectorAll(".sent").forEach(b=>b.onclick=()=>choose(b,st.draft[+b.dataset.k],`You flag that sentence for ${firstName(who)}…`));
   }
   if(st.type==="cards"){
-    box.querySelector(".opts").outerHTML=`${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
+    box.querySelector(".opts").outerHTML=`${st.context?`<div class="recap"><p class="recap-h">${st.contextTitle||"The facts on the table"}</p>${String(st.context).replace(/= (&lt;|<)/g,"$1 ")}</div>`:""}${st.claim?`<div class="bubble claim">${st.claim}</div>`:""}<div class="cards" role="group" aria-label="Evidence cards">${st.cards.map((c,k)=>[Math.random(),c,k]).sort((x,y)=>x[0]-y[0]).map(([_,c,k])=>`<button class="ecard" data-k="${k}"><span class="etag">${c.k||"Evidence"}</span>${c.t}</button>`).join("")}</div>`;
     lockAll=()=>box.querySelectorAll(".ecard").forEach(b=>b.setAttribute("aria-disabled","true"));
     box.querySelectorAll(".ecard").forEach(b=>b.onclick=()=>choose(b,st.cards[+b.dataset.k],"You lay your evidence card on the table…"));
   }
