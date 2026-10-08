@@ -352,7 +352,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:10,version:"1.1",
+const CONFIG={mission:10,version:"1.2",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission10-v1"};
@@ -640,7 +640,7 @@ function case2(R,level){ // Greg: the confounder (severity) behind his $1,900
   return {id:"c2",npc:"greg",title:"$1,900 per stay",
     scene:"Greg's spreadsheet is printed, highlighted and pinned to his door. He's practicing his committee speech to an empty chair.",
     message:`<p>Patients on the hospitalist service cost $1,900 more per stay than everyone else's. ${m1.n} stays, straight from billing. On Thursday I'm proposing we cut the program. Check me, but quickly. I have a speech to practice.</p>`,
-    viz:still(o1.co)+still(o2.co),
+    viz:still(o1.ms)+still(o2.ms),
     steps:[
       {id:"c2s1",label:"Interviewing Greg",type:"interview",reveal:true,prompt:"Ask Greg about his comparison, then tell him your plan.",
        hint:["Ask Greg how patients end up on the hospitalist service, and what else the billing file records about them.","Hospitalists take the sickest patients, and sicker patients cost more. Severity is a confounder: put it in the model with hospitalist care and read the hospitalist coefficient holding severity constant."],
@@ -653,7 +653,7 @@ function case2(R,level){ // Greg: the confounder (severity) behind his $1,900
        slots:[
         {label:"The $1,900",options:[{t:"The $1,900 isn't a fair comparison yet: hospitalists get the sickest patients, and sicker patients cost more,",tag:"correct"},{t:"The $1,900 is fair: it comes straight from billing,",tag:"confound_ignored",fb:"Billing is right about the bills, but the two groups of patients weren't equally sick to begin with."}]},
         {label:"So",options:[{t:"so I'll regress cost on hospitalist care and severity together, and read the hospitalist difference holding severity constant.",tag:"correct"},{t:"so I'll compare hospitalist costs with the national average.",tag:"confound_ignored",fb:"That still ignores how sick these particular patients were."}]}],
-       okFb:"A variable linked to both the group and the outcome is a confounder. Put it in the model, and each coefficient holds it constant. Both models are shown above."},
+       okFb:"A variable linked to both the group and the outcome is a confounder. Put it in the model, and each coefficient holds it constant. Both models' summaries are shown above; their coefficients come next."},
       {id:"c2s2",label:"The fair comparison",type:"point",narr:"Greg stops rehearsing and sits down, which for Greg is a big concession.",show:o1.co+o2.co,
        prompt:"Greg: \"Fine. Show me the hospitalist difference once severity is held constant.\" Click it.",
        hint:["Model 2 includes severity. Look there, on the hospitalist row.","B on the hospitalist row of Model 2 is the cost difference between patients with the same severity score."],
