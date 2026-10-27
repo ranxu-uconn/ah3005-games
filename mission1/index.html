@@ -336,6 +336,34 @@ main>h2{margin-top:1.8rem}
 .build select{max-width:100%}
 .build .typ{white-space:normal}
 .narr{font-style:italic;color:var(--muted);margin:.3rem 0 .8rem;font-size:.98rem}
+.react-beat{margin:.2rem 0 0;font-style:italic;color:var(--muted);font-size:.92rem}
+.news{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem;margin:.4rem 0 1rem}
+.news-mast{text-align:center;border-bottom:3px double var(--line-strong);padding-bottom:.6rem;margin-bottom:.9rem}
+.news-mast h1{font-family:var(--serif);font-size:2.1rem;margin:.1rem 0;letter-spacing:.01em}
+.news-mast p{margin-left:auto;margin-right:auto}
+.news-kicker{text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;color:var(--muted);margin:0}
+.news-sub{font-style:italic;color:var(--muted);margin:0;font-size:.92rem}
+.news-lead h2{font-family:var(--serif);font-size:1.5rem;line-height:1.25;margin:.2rem 0 .45rem}
+.news-lead p{font-size:1.05rem;margin:0}
+.news-cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1.2rem;border-top:1px solid var(--line);padding-top:.8rem;margin-top:.9rem}
+@media (max-width:700px){.news-cols{grid-template-columns:1fr}.news-mast h1{font-size:1.7rem}}
+.news-h{font-size:.82rem;text-transform:uppercase;letter-spacing:.07em;color:var(--teal);margin:0 0 .45rem;font-family:var(--sans)}
+.news-items{list-style:none;padding:0;margin:0}
+.news-items li{display:flex;gap:.7rem;align-items:flex-start;padding:.55rem 0;border-bottom:1px solid var(--line)}
+.news-items li:last-child{border-bottom:0}
+.news-items li p{margin:0}
+.news svg{flex:0 0 auto}
+.news-box{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .8rem;margin-bottom:1rem}
+.news-box p{margin:.2rem 0;font-size:.95rem}
+.news-quote{display:flex;gap:.6rem;align-items:flex-start}
+.news-quote blockquote{margin:0;font-family:var(--serif);font-size:1.05rem}
+.news-quote blockquote p{margin:0 0 .2rem}
+.news-quote footer{font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+.news-spot{background:var(--amber-wash);border-radius:10px;padding:.7rem .9rem;margin:.6rem 0}
+.news-spot p{margin:.2rem 0}
+.news-brooks{display:flex;gap:.6rem;align-items:center}
+.news-next{border-top:3px double var(--line-strong);padding-top:.6rem;margin-top:.8rem}
+.news-next p{margin:.2rem 0 .6rem}
 </style>
 </head>
 <body>
@@ -350,7 +378,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:1,version:"1.4",
+const CONFIG={mission:1,version:"1.5",
   // Qualtrics survey link (same survey as the other missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission1-v1"};
@@ -837,7 +865,297 @@ function sdv(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0
 function exactSample(R,n,m,s){const x=[];for(let i=0;i<n;i++)x.push(R.normal(0,1));const mu=mean(x),sd=sdv(x);return x.map(v=>m+(v-mu)/sd*s);}
 function kpis(c){return `<div class="kpis">${c.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;}
 
-function portrait(p,size=64){return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
+const PORTRAIT=(()=>{
+const SKIN={a:"#FBE4D4",b:"#F3CDB0",c:"#DDA67E",d:"#B57E58",e:"#83563A",f:"#F7DEC6"};
+function shade(hex,k){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(k<0?v*(1+k):v+(255-v)*k)));return "#"+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,"0")).join("");}
+function mix(a,b,t){const p=h=>{const n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255]};const A=p(a),B=p(b);return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("");}
+function lum(h){const n=parseInt(h.slice(1),16);return .3*(n>>16)+.59*(n>>8&255)+.11*(n&255);}
+const F=v=>+v.toFixed(2);
+const mx=d=>d.replace(/(-?[\d.]+)[ ,](-?[\d.]+)/g,(m,x,y)=>`${F(120-x)} ${y}`);
+const CAST={
+ jordan:{name:"Jordan Lee",role:"senior statistician",color:"#6A4FA3",skin:"b",hair:"short",hc:"#4A3326",eye:"#6B4630",glasses:1,wear:"cardigan",inner:"#E9E4F5",prop:"mug"},
+ brooks:{earrings:1,name:"Dr. Helen Brooks",role:"chief quality officer",color:"#15656C",skin:"d",hair:"bob",hc:"#BDBAB5",eye:"#4A2E1F",fem:1,wear:"blazer",inner:"#FFFFFF",prop:"badge",age:1},
+ dana:{name:"Dana Okafor, RN",role:"nurse manager",color:"#2F7D4F",skin:"e",hair:"bun",hc:"#221A16",eye:"#3F2618",fem:1,wear:"scrubs",prop:"binder"},
+ greg:{name:"Greg Walton",role:"VP of finance",color:"#9A6B12",skin:"a",hair:"receding",hc:"#CDB892",eye:"#4F7799",stache:1,wear:"suit",inner:"#FFFFFF",tie:"#9A6B12",prop:"highlighter",age:1},
+ ruiz:{name:"Dr. Elena Ruiz",role:"cardiologist",color:"#A33B5A",skin:"c",hair:"long",hc:"#2C1F1A",eye:"#5B3622",fem:1,wear:"coat",inner:"#A33B5A",prop:"stetho+pen"},
+ nair:{name:"Dr. Priya Nair",role:"stroke program director",color:"#B5572D",skin:"d",hair:"ponytail",hc:"#17120F",eye:"#3E2618",fem:1,wear:"coat",inner:"#B5572D",prop:"stetho"},
+ marcus:{name:"Marcus Bell, PT",role:"rehabilitation lead",color:"#2D6FA3",skin:"e",hair:"shaved",hc:"#1A1614",eye:"#3A2216",beard:1,wear:"polo",prop:"stopwatch"},
+ nadia:{name:"Nadia Farouk, CNM",role:"nurse-midwife (Week 5)",color:"#4A63C4",skin:"c",hair:"hijab",hc:"#7A4F9A",eye:"#6E5226",fem:1,wear:"scrubs",prop:"badge"},
+ zhang:{name:"Dr. Wei Zhang",role:"oncologist (Week 6)",color:"#4A63C4",skin:"f",hair:"side",hc:"#1C1C22",eye:"#3A2A22",glasses:1,wear:"coat",inner:"#4A63C4",prop:"stetho"},
+ jamal:{name:"Jamal Wright, LCSW",role:"social worker (Week 7)",color:"#4A63C4",skin:"d",hair:"locs",hc:"#211814",eye:"#3E2618",glasses:1,wear:"cardigan",inner:"#F4F1EA",prop:""},
+ farrow:{name:"Marion Farrow",role:"state surveyor (Weeks 8, 13)",color:"#4A63C4",skin:"a",hair:"pixie",hc:"#DEDAD3",eye:"#5E7684",fem:1,glasses:1,wear:"blazer",inner:"#FFFFFF",blazer:"#26324D",prop:"clipboard",age:1},
+ tomas:{name:"Tomás Reyes, RRT",role:"respiratory therapist (Week 9)",color:"#4A63C4",skin:"c",hair:"quiff",stubble:1,hc:"#30231C",eye:"#5A3A22",wear:"scrubs",prop:"badge"},
+ hale:{name:"Dr. Owen Hale",role:"chief of radiology (Week 10)",color:"#4A63C4",skin:"a",hair:"short",hc:"#A4532C",eye:"#4E7A8E",wear:"coat",inner:"#4A63C4",prop:"mugs"},
+ mensah:{name:"Dr. Kofi Mensah",role:"endocrinologist (Week 11)",color:"#4A63C4",skin:"e",hair:"crop",hc:"#15110F",eye:"#3A2216",temples:"#CFCBC4",stache:1,glasses:1,wear:"suit",inner:"#FFFFFF",tie:"#4A63C4",blazer:"#2E3A4F",prop:"",age:1},
+ rosa:{name:"Rosa Díaz, PharmD",role:"clinical pharmacist (Week 12)",color:"#4A63C4",skin:"c",hair:"curly",hc:"#2E1C14",eye:"#5A3520",fem:1,wear:"coat",inner:"#4A63C4",prop:"highlighter-ear"}
+};
+function clump(rx,ry,tx,ty,w,b=0){const dx=tx-rx,dy=ty-ry,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L;
+ const mX=(rx+tx)/2+px*b,mY=(ry+ty)/2+py*b,k=w*.46;
+ return `M${F(rx+px*w/2)} ${F(ry+py*w/2)} Q${F(mX+px*k)} ${F(mY+py*k)} ${F(tx)} ${F(ty)} Q${F(mX-px*k)} ${F(mY-py*k)} ${F(rx-px*w/2)} ${F(ry-py*w/2)} Z`;}
+function strand(rx,ry,tx,ty,b=0){const dx=tx-rx,dy=ty-ry,L=Math.hypot(dx,dy),px=-dy/L,py=dx/L;
+ const ex=rx+dx*.72,ey=ry+dy*.72;return `M${F(rx+dx*.18)} ${F(ry+dy*.18)} Q${F((rx+ex)/2+px*b*.8)} ${F((ry+ey)/2+py*b*.8)} ${F(ex)} ${F(ey)}`;}
+function lens(ax,ay,bx,by,w){const mX=(ax+bx)/2,mY=(ay+by)/2,dx=bx-ax,dy=by-ay,L=Math.hypot(dx,dy),px=-dy/L*w,py=dx/L*w;
+ return `M${F(ax)} ${F(ay)} Q${F(mX+px)} ${F(mY+py)} ${F(bx)} ${F(by)} Q${F(mX-px)} ${F(mY-py)} ${F(ax)} ${F(ay)} Z`;}
+function cap(sideY=57,top=21,hl=37,wide=0){return `M${36-wide} ${sideY} C${32-wide} 36 45 ${top} 60 ${top} C75 ${top} ${88+wide} 36 ${84+wide} ${sideY} L81 ${sideY} C81 46 73 ${hl} 60 ${hl} C47 ${hl} 39 46 39 ${sideY} Z`;}
+function ring(cy=31,rx=21,n=6,from=205,to=335,w=1.3){let s="";const step=(to-from)/n;
+ for(let i=0;i<n;i++){const a1=(from+step*(i+.12))*Math.PI/180,a2=(from+step*(i+.88))*Math.PI/180,R=rx,Ry=rx*.62;
+  s+=lens(60+R*Math.cos(a1),cy+12+Ry*Math.sin(a1)-(i%2?0:1.2),60+R*Math.cos(a2),cy+12+Ry*Math.sin(a2)+(i%2?1.2:0),w*(i%2?.8:1.2))+" ";}
+ return s;}
+const C=(a)=>a.map(p=>clump(...p));
+function hairSpec(c){const H={back:[],front:[],strands:[],hl:"",shadow:true};
+ switch(c.hair){
+ case "short":{const cl=[[46,30,38.6,52,16,-2],[52,28,45,49.5,16,1],[58,27,53,47.5,15,2],[64,27,61.5,48.5,15,2],[70,29,70,47,15,1.5],[75,31,78.5,50,14,1],[79,36,82,55,10,.5],[41,40,38.6,57,9,0]];
+  H.front=[cap(56),...C(cl)];H.strands=cl.slice(0,6).map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(30,20);break;}
+ case "side":{const cl=[[67,26,39.5,51,18,-4],[67,26,46,49.5,17,-3],[68,27,53,48.5,15,-2],[69,28,60,47.5,13,-1.5],[72,29,68,46.5,11,-.5],[76,32,79,49,12,1],[80,38,82,55,9,.5],[41,40,38.6,57,9,0]];
+  H.front=[cap(56),...C(cl)];H.strands=cl.slice(0,5).map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(30,20);break;}
+ case "crop":{const teeth=[];for(let x=42;x<=78;x+=3.6){const y=37+Math.pow((x-60)/18,2)*7;teeth.push(clump(x,y-3,x+.6,y+1.6,4,0));}
+  H.front=[cap(53,24,36),...teeth];H.hl=ring(31,19,5,215,325,1);H.strands=[];break;}
+ case "shaved":{H.shaved=1;H.shadow=false;break;}
+ case "receding":{const L=[[38.5,36,36.6,58,8,-1.5],[39.5,39,38.8,55,6,-1],[40.5,41,41.4,51.5,4.5,0]],R=L.map(([a,b,c2,d,w,k])=>[120-a,b,120-c2,d,w,-k]);
+  H.front=["M36 58 C32 36 45 22 60 22 C75 22 88 36 84 58 L81 58 C81 52 80.5 47 79 43.5 C78 38 76 34.5 73.5 32.6 C69 34.2 64.6 35.4 60 36 C55.4 35.4 51 34.2 46.5 32.6 C44 34.5 42 38 41 43.5 C39.5 47 39 52 39 58 Z",...C(L),...C(R)];
+  H.swept=["M48 34 C50 28 55 24.5 60 24","M54 35.4 C55 29.5 58 26 62 24.6","M60 36 C61 30 64 26.5 69 25.4","M66 35.2 C68 30 71 27.5 75 27","M72 33.4 C75 30 78 30 80.5 32"];
+  H.combover=["M45 33 C51 30 61 29.5 70 31.5","M47 31 C54 28.5 63 28.5 72 30.5","M50 34.5 C56 32.5 64 32.5 72 34"];H.shadow=false;break;}
+ case "bob":{const back=`M34 60 C31 32 45 20 60 20 C75 20 89 32 86 60 L87 70 L82 73 L77 70 L43 70 L38 73 L33 70 Z`;
+  const cl=[[50,25,39,48,17,-1.5],[55,25,47,46.5,15,0],[59,25,56,46,14,1.5],[63,25,65.5,46.5,14,2],[67,26,74,46,14,2],[72,29,81.5,48,12,1.5],
+   [40,42,41.5,71,11,-2.5],[80,42,78.5,71,11,2.5]];
+  H.back=[back];H.front=[cap(60),...C(cl)];H.strands=cl.slice(0,6).map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(30,21);break;}
+ case "pixie":{const cl=[[69,26,40,47,17,-4],[69,26,46,46,16,-3],[70,27,53,45,14,-2],[71,28,60,44.5,12,-1.5],[73,29,67,44,10,-.5],[76,32,78,46,11,1],[80,38,82,53,8,.5],[41,40,38.6,54,9,-1]];
+  H.front=[cap(55,22,37),...C(cl)];H.strands=cl.slice(0,5).map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(30,20);break;}
+ case "long":{const back=`M34 58 C31 30 46 18 60 18 C74 18 89 30 86 58 L91 112 L29 112 Z`;
+  const cl=[[59,23,40,50,17,-3],[59,23,47,48,15,-1.5],[59,24,54,46,10,-.5],[61,24,66,46,10,.5],[61,23,73,48,15,1.5],[61,23,80,50,17,3],
+   [41,40,34,100,11,-3],[44,46,40.5,92,8,-1.5],[79,40,86,100,11,3],[76,46,79.5,92,8,1.5]];
+  H.back=[back];H.front=[cap(62,20,37),...C(cl)];H.strands=cl.map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(29,21,7);break;}
+ case "ponytail":{const cl=[[55,26,41,48,17,-2.5],[58,26,47.5,46,14,-1.5],[61,26,54,44,10,-.5],[75,31,80.5,50,10,1],[41,40,39,56,8,0]];
+  H.back=[`M78 36 C93 38 99 58 92 92 C90 99 86 101 84 98 C88 80 86 60 76 46 Z`];H.backLines=["M83 48 C89 60 90 76 88 92","M80 44 C86 54 87 70 86 86"];
+  H.front=[cap(55,22,36),...C(cl)];H.strands=cl.slice(0,4).map(p=>strand(...p.slice(0,4),p[5]));
+  H.tie=`<rect x="77" y="38" width="7" height="5" rx="2" fill="${c.color}" stroke="${shade(c.color,-.45)}" stroke-width=".8" transform="rotate(35 80.5 40.5)"/>`;H.hl=ring(30,20);break;}
+ case "bun":{H.front=[cap(54,23,35.5)];H.bun=1;H.strands=["M60 25 C54 29 48 33 43 41","M60 25 C66 29 72 33 77 41","M56 26 C51 30 46 35 42 44","M64 26 C69 30 74 35 78 44"];H.hl=ring(31,19,5,215,325,1.1);break;}
+ case "wavy":{const cl=[[46,30,38.6,51,16,-3.5],[52,28,45.5,48.5,16,3],[58,27,53.5,47,15,-3],[64,27,62,48,15,3],[70,29,70.5,46.5,15,-3],[75,31,79,50,14,3],[79,36,82,55,10,-1],[41,40,38.6,57,9,1],
+   [48,25,44,20,9,2],[58,22,56,16.5,10,-2],[68,24,71,18.5,9,2]];
+  H.front=[cap(57,20,36),...C(cl)];H.strands=cl.slice(0,6).map(p=>strand(...p.slice(0,4),p[5]));H.hl=ring(29,20);break;}
+ case "quiff":{H.fade=1;H.front=[cap(55,25,37),"M41.5 41 C39 30 43 19 52 15.5 C58 13 66 13.5 72 16.5 C79 20.5 81.5 29 79 38 C74 33 68 30.8 60 31.2 C52 31.6 46 35 41.5 41 Z",
+   ...C([[55,32,46.5,44,10,-2.5],[61,31.5,55,41,7,-1.5]])];
+  H.strands=["M46 37 C46 28 50 21 57 17.5","M52 34 C53 26 57 20 64 17.5","M60 32 C62 25 66 21 72 19.5","M68 31.5 C71 27 74 25 77 25"];H.hl=ring(26,19,5,210,330,1.1);H.shadow=true;break;}
+ case "curly":{H.curls={back:[[37,44,11],[42,30,12],[55,22,12],[68,22,12],[79,30,12],[84,44,11],[34,58,10],[87,58,10],[34,71,9],[87,71,9],[37,82,8],[84,82,8]],
+   front:[[45,32,8.5],[54,27.5,8.5],[64,27.5,8.5],[73,31,8.5],[40,41,7],[80,41,7],[50,37,6],[69,37,6]]};break;}
+ case "locs":{const front=[[35.5,40,9,36],[39,37,5,32],[42.6,35,2,13],[84.5,40,-9,36],[81,37,-5,32],[77.4,35,-2,13]];
+   const back=[[30,46,16,44],[33,44,10,48],[87,44,-10,48],[90,46,-16,44]];
+   H.locs={front,back};H.front=[cap(58,21,36)];
+   H.strands=[];for(let a=200;a<=340;a+=14){const r=a*Math.PI/180;H.strands.push(`M60 23 L${F(60+23*Math.cos(r))} ${F(44+18*Math.sin(r)+ (Math.abs(a-270)>50?6:0))}`);}
+   H.hl=ring(29,20,6,205,335,1.1);break;}
+ case "hijab":{H.hijab=1;H.shadow=false;break;}
+ }
+ return H;}
+const FACE="M60 31 C72.5 31 82 39.5 82 53 C82 63 80 70 75.5 76 C71 81.6 65.4 84.6 60 84.6 C54.6 84.6 49 81.6 44.5 76 C40 70 38 63 38 53 C38 39.5 47.5 31 60 31 Z";
+function eye(c,ex,u,k,line){ // screen-left eye; the other is a mirrored copy
+ const O=[44.3,57.4],I=[56.9,56.3],iris=c.eye;
+ const h={neutral:6.6,pleased:6.2,skeptical:3.6}[ex],b={neutral:4.6,pleased:1.6,skeptical:3.9}[ex];
+ const top=`C${F(O[0]+1.3)} ${F(O[1]-h)} ${F(I[0]-2.9)} ${F(I[1]-h)} ${I[0]} ${I[1]}`;
+ const white=`M${O[0]} ${O[1]} ${top} C${F(I[0]-1.6)} ${F(I[1]+b)} ${F(O[0]+2.2)} ${F(O[1]+b)} ${O[0]} ${O[1]} Z`;
+ const fl=c.fem?2.6:1.4,th=c.fem?1.7:1.35;
+ const lash=`M${F(O[0]-fl)} ${F(O[1]-fl*.85)} C${F(O[0]+.8)} ${F(O[1]-h-th)} ${F(I[0]-2.9)} ${F(I[1]-h-th*.75)} ${F(I[0]+.6)} ${F(I[1]-.5)} C${F(I[0]-2.9)} ${F(I[1]-h+.15)} ${F(O[0]+1.3)} ${F(O[1]-h+.15)} ${F(O[0]+.2)} ${F(O[1]+.3)} Z`;
+ const cx=50.9,cy=56.9,id=`ec${k}-${u}`;
+ let s=`<clipPath id="${id}"><path d="${white}"/></clipPath><path d="${white}" fill="#FFFDFB"/><g clip-path="url(#${id})">`;
+ s+=`<ellipse cx="${cx}" cy="${cy}" rx="3.75" ry="4.6" fill="url(#ir-${u})"/>`;
+ s+=`<ellipse cx="${cx}" cy="${F(cy+.4)}" rx="1.7" ry="2.4" fill="${shade(iris,-.7)}"/>`;
+ s+=`<path d="M${F(cx-2.8)} ${F(cy+2)} Q${cx} ${F(cy+4.6)} ${F(cx+2.8)} ${F(cy+2)} Q${cx} ${F(cy+3.4)} ${F(cx-2.8)} ${F(cy+2)} Z" fill="${shade(iris,.55)}" opacity=".7"/>`;
+ s+=`<ellipse cx="${cx}" cy="${cy}" rx="3.75" ry="4.6" fill="none" stroke="${shade(iris,-.65)}" stroke-width=".55"/>`;
+ s+=`<path d="M${O[0]-1} ${O[1]-9} H${I[0]+1} V${F(O[1]-h*.75+1.9)} H${O[0]-1} Z" fill="#3A2A30" opacity=".22"/>`;
+ s+=`<circle cx="${F(cx-1.35)}" cy="${F(cy-1.7)}" r="1.25" fill="#FFFFFF"/><circle cx="${F(cx+1.5)}" cy="${F(cy+1.9)}" r=".55" fill="#FFFFFF" opacity=".9"/></g>`;
+ s+=`<path d="M${O[0]} ${O[1]} C${F(O[0]+2.2)} ${F(O[1]+b)} ${F(I[0]-1.6)} ${F(I[1]+b)} ${I[0]} ${I[1]}" stroke="${line}" stroke-width=".55" fill="none" opacity=".55"/>`;
+ s+=`<path d="M${F(O[0]+.6)} ${F(O[1]+.6)} C${F(O[0]+1.6)} ${F(O[1]+b*.6)} ${F(O[0]+3)} ${F(O[1]+b*.72)} ${F(O[0]+4.4)} ${F(O[1]+b*.74)}" stroke="${line}" stroke-width=".9" fill="none" stroke-linecap="round"/>`;
+ s+=`<path d="${lash}" fill="${shade(line,-.25)}"/>`;
+ if(c.fem)s+=`<path d="M${F(O[0]-.6)} ${F(O[1]-2.3)} L${F(O[0]-2.6)} ${F(O[1]-4.2)} M${F(O[0]+1)} ${F(O[1]-3.6)} L${F(O[0]-.6)} ${F(O[1]-5.6)}" stroke="${shade(line,-.25)}" stroke-width=".8" stroke-linecap="round"/>`;
+ s+=`<path d="M${F(O[0]+1.8)} ${F(O[1]-h*.75-.9)} C${F(O[0]+3)} ${F(O[1]-h-2.2)} ${F(I[0]-3.2)} ${F(I[1]-h-2)} ${F(I[0]-.8)} ${F(I[1]-h*.75-.6)}" stroke="${line}" stroke-width=".6" fill="none" opacity=".6"/>`;
+ if(ex==="pleased")s+=`<path d="M${F(O[0]+1.6)} ${F(O[1]+b+1.2)} C${F(O[0]+4)} ${F(O[1]+b+2.4)} ${F(I[0]-3.4)} ${F(I[1]+b+2.4)} ${F(I[0]-1.2)} ${F(I[1]+b+1.2)}" stroke="${line}" stroke-width=".6" fill="none" opacity=".5"/>`;
+ if(c.age)s+=`<path d="M${F(O[0]-1.4)} ${F(O[1]+1.6)} l-1.6 1.1 M${F(O[0]-1)} ${F(O[1]+3)} l-1.3 1.3" stroke="${line}" stroke-width=".5" opacity=".45"/><path d="M${F(O[0]+2.5)} ${F(O[1]+b+2.6)} C${F(O[0]+5)} ${F(O[1]+b+3.4)} ${F(I[0]-3)} ${F(I[1]+b+3.2)} ${F(I[0]-1.4)} ${F(I[1]+b+2.2)}" stroke="${line}" stroke-width=".5" fill="none" opacity=".35"/>`;
+ return s;}
+function face(c,ex,u){const sk=SKIN[c.skin],cel=shade(mix(sk,"#C0605A",.22),-.1),line=mix(shade(sk,-.62),"#4A1E1E",.35),hc=c.hc;let s="";
+ if(c.earrings)s+=`<circle cx="36.4" cy="66.4" r="1.8" fill="#F4F1EA" stroke="#9A958C" stroke-width=".5"/><circle cx="83.6" cy="66.4" r="1.8" fill="#F4F1EA" stroke="#9A958C" stroke-width=".5"/>`;
+ if(c.hair!=="hijab"){const ear="M39.2 51.5 C35.2 49.8 33.4 54.4 34.3 59.2 C35.1 63.6 37.5 65.6 40.2 64.6",inn="M38.2 54.6 C36.6 56 36.6 59.6 38.6 61.6";
+  s+=[ear,mx(ear)].map(d=>`<path d="${d} Z" fill="${sk}" stroke="${line}" stroke-width=".9"/>`).join("")+[inn,mx(inn)].map(d=>`<path d="${d}" stroke="${cel}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`).join("");}
+ s+=`<path d="${FACE}" fill="${sk}"/>`;
+ s+=`<path d="M82 53 C82 63 80 70 75.5 76 C71 81.6 65.4 84.6 60 84.6 C66 81 72.6 74 75.4 64 C76.6 59.5 79 55.5 82 53 Z" fill="${cel}" opacity=".55"/>`;
+ if(c.beard)s+=`<path d="M38.8 60 C40 76 49 85.6 60 85.6 C71 85.6 80 76 81.2 60 C79.5 70 73.5 76.4 66.5 77.6 C63.5 76 56.5 76 53.5 77.6 C46.5 76.4 40.5 70 38.8 60 Z" fill="${hc}" stroke="${shade(hc,-.4)}" stroke-width=".7"/><path d="M53 70.6 C55.6 68.6 64.4 68.6 67 70.6 C64.6 71.6 62.2 71.2 60 70.4 C57.8 71.2 55.4 71.6 53 70.6 Z" fill="${hc}"/><path d="M46 77 l1.4 2 M52 81.6 l.6 2 M60 83 v2 M68 81.6 l-.6 2 M74 77 l-1.4 2" stroke="${mix(hc,'#8090A8',.35)}" stroke-width=".7" stroke-linecap="round"/>`;
+ if(c.stubble)s+=`<path d="M38.8 60 C40 76 49 85.6 60 85.6 C71 85.6 80 76 81.2 60 C79.5 70 73.5 76.4 66.5 77.6 C63.5 76 56.5 76 53.5 77.6 C46.5 76.4 40.5 70 38.8 60 Z" fill="${hc}" opacity=".2"/><path d="M53 70.6 C55.6 68.6 64.4 68.6 67 70.6 C64.6 71.6 62.2 71.2 60 70.4 C57.8 71.2 55.4 71.6 53 70.6 Z" fill="${hc}" opacity=".3"/>`;
+ const blush=ex==="pleased"?.34:ex==="neutral"?.16:0;
+ if(blush)s+=`<ellipse cx="46" cy="65.4" rx="5" ry="2.6" fill="#F07F86" opacity="${blush}"/><ellipse cx="74" cy="65.4" rx="5" ry="2.6" fill="#F07F86" opacity="${blush}"/>`;
+ if(ex==="pleased")s+=[44,46.2,48.4].map(x=>`<path d="M${x} 66.6 l1.3 -2.2" stroke="#D9606A" stroke-width=".6" opacity=".55" stroke-linecap="round"/><path d="M${F(120-x)} 66.6 l-1.3 -2.2" stroke="#D9606A" stroke-width=".6" opacity=".55" stroke-linecap="round"/>`).join("");
+ const BR={neutral:[55.6,49.4,50,46.2,44.2,48.6],pleased:[55.6,48.4,50,44.8,44.2,47.6],skeptical:[56.2,50.9,50.6,47.6,44.2,47.8]}[ex];
+ const [x1,y1,qx,qy,x2,y2]=BR,bt=c.age||!c.fem?1.35:1;
+ const bd=`M${x1} ${F(y1-bt)} Q${qx} ${F(qy-bt)} ${x2} ${y2} Q${qx} ${F(qy+.5)} ${x1} ${F(y1+bt*.7)} Z`;
+ const bc=["receding","pixie","shaved"].includes(c.hair)||c.temples||lum(hc)>150?shade(hc,-.45):shade(hc,-.1);
+ s+=`<path d="${bd}" fill="${bc}"/><path d="${mx(bd)}" fill="${bc}"/>`;
+ if(ex==="skeptical")s+=`<path d="M58.4 50.4 L58.9 52.8 M61.6 50.4 L61.1 52.8" stroke="${line}" stroke-width=".7" stroke-linecap="round" opacity=".55"/>`;
+ s+=`<g>${eye(c,ex,u,0,line)}</g><g transform="translate(120 0) scale(-1 1)">${eye(c,ex,u,1,line)}</g>`;
+ s+=`<path d="M61.6 61.2 L60.2 65.2 L62.3 65.5" stroke="${cel}" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M58.4 66.1 Q59.2 66.7 60 66.4" stroke="${line}" stroke-width=".7" fill="none" opacity=".6" stroke-linecap="round"/>`;
+ if(c.age)s+=`<path d="M52.6 67.4 C51.4 69.4 51.6 71.8 53 73.6" stroke="${cel}" stroke-width=".8" fill="none"/><path d="M67.4 67.4 C68.6 69.4 68.4 71.8 67 73.6" stroke="${cel}" stroke-width=".8" fill="none"/>`;
+ if(c.stache)s+=`<path d="M54 70.6 C56.6 68.6 63.4 68.6 66 70.6 C63.6 71.3 61.6 71 60 70.4 C58.4 71 56.4 71.3 54 70.6 Z" fill="${hc}" stroke="${shade(hc,-.45)}" stroke-width=".6"/>`;
+ const lipc=mix(sk,"#C25A60",.35);
+ s+={neutral:`<path d="M56.2 72.6 Q60 73.9 63.8 72.6" stroke="${line}" stroke-width="1.05" fill="none" stroke-linecap="round"/><path d="M58.4 75 Q60 75.6 61.6 75" stroke="${lipc}" stroke-width=".9" fill="none" stroke-linecap="round"/>`,
+     pleased:`<path d="M55.2 71.6 Q60 72.9 64.8 71.6 Q64 77.4 60 77.6 Q56 77.4 55.2 71.6 Z" fill="#7C2E38" stroke="${line}" stroke-width=".85" stroke-linejoin="round"/><path d="M56.6 75.6 Q60 74 63.4 75.6 Q62.5 77.3 60 77.4 Q57.5 77.3 56.6 75.6 Z" fill="#E77D86"/><path d="M55.8 72 Q60 73.2 64.2 72 L63.8 73.3 Q60 74.2 56.2 73.3 Z" fill="#FFFFFF"/>`,
+     skeptical:`<path d="M56.4 74 Q58 72.7 60 72.9 Q62 72.7 63.6 74" stroke="${line}" stroke-width="1.05" fill="none" stroke-linecap="round"/><path d="M58.6 75.6 Q60 75.9 61.4 75.6" stroke="${lipc}" stroke-width=".8" fill="none" stroke-linecap="round"/>`}[ex];
+ s+=`<path d="M38.3 58 C38.8 65 40.6 70.4 44.5 76 C49 81.6 54.6 84.6 60 84.6 C65.4 84.6 71 81.6 75.5 76 C79.4 70.4 81.2 65 81.7 58" stroke="${line}" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+ return {s,line,cel};}
+function locSVG(x,y,a,l,hc){const ol=shade(hc,-.5);let s=`<g transform="rotate(${a} ${x} ${y})"><rect x="${F(x-2.6)}" y="${y}" width="5.2" height="${l}" rx="2.6" fill="${hc}" stroke="${ol}" stroke-width=".7"/>`;
+ for(let t=y+3.4;t<y+l-2;t+=3.4)s+=`<path d="M${F(x-2.4)} ${F(t)} q2.4 1.2 4.8 0" stroke="${ol}" stroke-width=".5" fill="none"/>`;
+ return s+`<path d="M${F(x-1)} ${F(y+2)} v${l-5}" stroke="${shade(hc,.45)}" stroke-width=".7" opacity=".7"/></g>`;}
+function hairBackSVG(c,H){const hc=c.hc,ol=shade(hc,lum(hc)>150?-.42:-.55);let s="";
+ H.back.forEach(d=>s+=`<path d="${d}" fill="${shade(hc,lum(hc)>150?-.08:-.12)}" stroke="${ol}" stroke-width=".9" stroke-linejoin="round"/>`);
+ if(H.backLines)s+=H.backLines.map(d=>`<path d="${d}" stroke="${mix(hc,'#9FB0CC',.35)}" stroke-width=".8" fill="none"/>`).join("");
+ if(H.curls)s+=curlMass(H.curls.back,shade(hc,-.12),ol,mix(hc,"#B08868",.35),shade(hc,-.45),1);
+ if(H.locs)H.locs.back.forEach(([x,y,a,l])=>s+=locSVG(x,y,a,l,shade(hc,-.1)));
+ if(H.hijab)s+=`<path d="M28 70 C26 30 44 15 60 15 C76 15 94 30 92 70 L98 112 L22 112 Z" fill="${hc}" stroke="${shade(hc,-.5)}" stroke-width=".9"/><path d="M31 80 C34 95 40 104 46 112 M89 80 C86 95 80 104 74 112" stroke="${shade(hc,-.25)}" stroke-width="1.2" fill="none"/>`;
+ return s;}
+function hairFrontSVG(c,H,u){const hc=c.hc,ol=shade(hc,lum(hc)>150?-.42:-.55),hl=lum(hc)<70?mix(hc,"#9FB0CC",.42):shade(hc,.5);let s="";
+ if(H.hijab){const outer="M30 64 C29 33 45 22 60 22 C75 22 91 33 90 64 C90 82 78 94 60 95 C42 94 30 82 30 64 Z",inner="M39.5 54 C39.5 41.5 48.5 34 60 34 C71.5 34 80.5 41.5 80.5 54 C80.5 66 78.4 72.4 74.6 77.2 C70.4 82.4 65.2 84.8 60 84.8 C54.8 84.8 49.6 82.4 45.4 77.2 C41.6 72.4 39.5 66 39.5 54 Z";
+  s+=`<path d="${outer} ${inner}" fill-rule="evenodd" fill="${hc}" stroke="${shade(hc,-.5)}" stroke-width=".9"/>`;
+  s+=`<path d="M39.6 50 C41 39 49 33.6 60 33.6 C71 33.6 79 39 80.4 50 C77 41.6 69.6 37.4 60 37.4 C50.4 37.4 43 41.6 39.6 50 Z" fill="${shade(hc,-.3)}"/>`;
+  s+=`<path d="M34 50 C36 36 46 27 58 25.5 M86 52 C84 40 76 30 66 26.5 M33 70 C35 82 44 90 54 93.5 M87 70 C85 82 76 90 66 93.5" stroke="${shade(hc,-.28)}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+  s+=`<path d="M40 31 Q52 23 66 24.5 Q53 26 42 34 Z" fill="${shade(hc,.35)}" opacity=".8"/>`;
+  return s;}
+ if(H.shaved){s+=`<g clip-path="url(#fc-${u})"><path d="M30 64 L30 20 L90 20 L90 64 L81.4 64 C81.4 49 74 38.5 60 38.5 C46 38.5 38.6 49 38.6 64 Z" fill="${hc}" opacity=".42"/><path d="M47 36 Q57 31.5 68 33.5 Q57 33.5 48 38 Z" fill="#FFFFFF" opacity=".28"/></g>`;return s;}
+ if(H.curls){s+=curlMass(H.curls.front,hc,ol,mix(hc,"#C09878",.4),shade(hc,-.5),0);return s;}
+ const clip=`hc-${u}`;
+ s+=`<clipPath id="${clip}">${H.front.map(d=>`<path d="${d}"/>`).join("")}</clipPath>`;
+ const op=H.capOpacity?` opacity="${H.capOpacity}"`:"";
+ const capd=!H.fade&&H.front[0].includes(" L81 ")?H.front[0]:null;
+ if(capd){const outer=capd.split(" L81 ")[0];s+=`<clipPath id="hr-${u}"><path d="${outer} L96 125 L24 125 Z"/></clipPath>`;}
+ s+=`<path d="${H.front[0]}" fill="url(#hg-${u})" stroke="${H.fade?"none":ol}" stroke-width=".85" stroke-linejoin="round"${H.fade?' opacity=".45"':""}/>`;
+ s+=`<g${capd?` clip-path="url(#hr-${u})"`:""}>`+H.front.slice(1).map(d=>`<path d="${d}" fill="url(#hg-${u})" stroke="${ol}" stroke-width=".85" stroke-linejoin="round"/>`).join("")+`</g>`;
+ if(capd&&H.front.length>1)s+=`<path d="${H.front[0]}" fill="url(#hg-${u})"/>`;
+ if(H.bun)s+=`<circle cx="60" cy="23" r="9.5" fill="url(#hg-${u})" stroke="${ol}" stroke-width=".9"/><path d="M53.5 22 C55 16.5 63 15.5 66 20.5 M55.5 26 C58 29 64 28.5 66.5 25" stroke="${shade(hc,-.45)}" stroke-width=".7" fill="none"/><path d="M54.5 19 Q58 15.2 63 16.2" stroke="${hl}" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M51 30.5 Q60 27.5 69 30.5" stroke="${c.color}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+ if(H.hl)s+=`<g clip-path="url(#${clip})"><path d="${H.hl}" fill="${hl}" opacity="${H.capOpacity?.35:.85}"/></g>`;
+ if(H.strands.length)s+=`<g clip-path="url(#${clip})">${H.strands.map(d=>`<path d="${d}" stroke="${shade(hc,-.4)}" stroke-width=".6" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+ if(H.swept)s+=`<g clip-path="url(#${clip})">${H.swept.map(d=>`<path d="${d}" stroke="${shade(hc,-.35)}" stroke-width=".7" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+ if(H.combover)s+=H.combover.map(d=>`<path d="${d}" stroke="${shade(hc,-.12)}" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${shade(hc,.4)}" stroke-width=".5" fill="none" stroke-linecap="round"/>`).join("");
+ if(H.locs)H.locs.front.forEach(([x,y,a,l])=>s+=locSVG(x,y,a,l,hc));
+ if(c.temples)s+=`<g clip-path="url(#${clip})"><path d="M35 56 C35 50 36.5 46 39 43.5 L41 46 C40 49 39.6 52 39.6 56 Z" fill="${c.temples}" opacity=".85"/><path d="${mx("M35 56 C35 50 36.5 46 39 43.5 L41 46 C40 49 39.6 52 39.6 56 Z")}" fill="${c.temples}" opacity=".85"/></g>`;
+ if(0)s+=`<path d="M38.8 53 C38.6 47.5 40.6 43.5 43.4 41.5 L44 50 C42 50.6 40 51.6 38.8 53 Z" fill="${c.temples}"/><path d="${mx("M38.8 53 C38.6 47.5 40.6 43.5 43.4 41.5 L44 50 C42 50.6 40 51.6 38.8 53 Z")}" fill="${c.temples}"/>`;
+ if(H.tie)s+=H.tie;
+ return s;}
+function fringeShadow(H,u,cel){if(!H.shadow)return "";
+ const parts=H.curls?H.curls.front.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}"/>`).join(""):H.front.map(d=>`<path d="${d}"/>`).join("");
+ if(!parts)return "";
+ return `<g clip-path="url(#fc-${u})"><g transform="translate(1.2 2.6)" fill="${cel}" opacity=".75">${parts}</g></g>`;}
+function curlMass(list,fill,ol,hi,lo,back){let s=list.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${F(r+.9)}" fill="${ol}"/>`).join("")+list.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`).join("");
+ list.forEach(([x,y,r],i)=>{const t=i*2.4;for(let j=0;j<(r>8?3:2);j++){const a=t+j*2.1,px=x+Math.cos(a)*r*.45,py=y+Math.sin(a)*r*.45,q=r*.32;
+  s+=`<path d="M${F(px-q)} ${F(py)} a${F(q)} ${F(q)} 0 1 1 ${F(q*1.4)} ${F(q*.9)}" stroke="${lo}" stroke-width=".7" fill="none" stroke-linecap="round"/>`;}
+  s+=`<path d="M${F(x-r*.62)} ${F(y-r*.05)} q${F(r*.35)} ${F(-r*.6)} ${F(r*.95)} ${F(-r*.5)}" stroke="${hi}" stroke-width="${back?.9:1.1}" fill="none" stroke-linecap="round"/>`;});
+ return s;}
+function clothes(c){const col=c.color;
+ const sh=(f)=>{const ol=shade(f,-.5);return `<path d="M14 122 C16 100 34 90 60 90 C86 90 104 100 106 122 Z" fill="${f}" stroke="${ol}" stroke-width="1"/><path d="M84 93.5 C96 98 103 108 106 122 L92 122 C91 110 88 101 84 93.5 Z" fill="${shade(f,-.16)}"/><path d="M30 100 C33 106 34 114 33 122 M90 100 C87 106 86 114 87 122" stroke="${shade(f,-.28)}" stroke-width=".8" fill="none"/>`};
+ switch(c.wear){
+  case "scrubs":return sh(col)+`<path d="M48.5 90 L60 105 L71.5 90" fill="${shade(col,-.3)}" stroke="${shade(col,-.5)}" stroke-width=".9"/><path d="M50 90 L60 103 L70 90" fill="none" stroke="${shade(col,.25)}" stroke-width="1"/>`;
+  case "coat":return sh("#F7F6F2")+`<path d="M50 90 L60 108 L70 90 Z" fill="${c.inner}" stroke="${shade(c.inner,-.4)}" stroke-width=".8"/><path d="M48 90 L56 113 L52 103 L46 92 Z M72 90 L64 113 L68 103 L74 92 Z" fill="#E4E2DB" stroke="#B9B5AB" stroke-width=".8"/><path d="M56 113 L56 122 M64 113 L64 122" stroke="#B9B5AB" stroke-width=".8"/>`;
+  case "blazer":{const b=c.blazer||col;return sh(b)+`<path d="M50 90 L60 106 L70 90 Z" fill="${c.inner}" stroke="${shade(c.inner,-.3)}" stroke-width=".7"/><path d="M48 90 L57 111 L53 101 L45.5 92.5 Z M72 90 L63 111 L67 101 L74.5 92.5 Z" fill="${shade(b,-.22)}" stroke="${shade(b,-.5)}" stroke-width=".8"/>`;}
+  case "suit":{const b=c.blazer||"#3B3D47";return sh(b)+`<path d="M50 90 L60 108 L70 90 Z" fill="${c.inner}" stroke="#BBB" stroke-width=".7"/><path d="M57.6 92.6 L62.4 92.6 L63.4 99 L60 111 L56.6 99 Z" fill="${c.tie}" stroke="${shade(c.tie,-.45)}" stroke-width=".7"/><path d="M57.8 96 L62.2 98 M57.4 100 L62.6 102" stroke="${shade(c.tie,.3)}" stroke-width=".7"/><path d="M48 90 L57 113 L53 102 L45.5 92.5 Z M72 90 L63 113 L67 102 L74.5 92.5 Z" fill="${shade(b,-.25)}" stroke="${shade(b,-.55)}" stroke-width=".8"/>`;}
+  case "cardigan":return sh(col)+`<path d="M51 90 L60 104 L69 90 Z" fill="${c.inner}" stroke="${shade(c.inner,-.3)}" stroke-width=".7"/><path d="M60 104 L60 122" stroke="${shade(col,-.4)}" stroke-width="1.3"/><circle cx="62.6" cy="110" r="1.3" fill="${shade(col,.45)}" stroke="${shade(col,-.4)}" stroke-width=".5"/><circle cx="62.6" cy="117" r="1.3" fill="${shade(col,.45)}" stroke="${shade(col,-.4)}" stroke-width=".5"/><path d="M40 106 v14 M80 106 v14" stroke="${shade(col,-.2)}" stroke-width=".6" stroke-dasharray="1.4 1.4"/>`;
+  case "polo":return sh(col)+`<path d="M49 90 L56 98.5 L60 92 L64 98.5 L71 90 Z" fill="${shade(col,.2)}" stroke="${shade(col,-.5)}" stroke-width=".8"/><path d="M60 92 L60 105" stroke="${shade(col,-.4)}" stroke-width="1"/><circle cx="60" cy="97" r=".8" fill="#FFF"/><circle cx="60" cy="101" r=".8" fill="#FFF"/>`;
+ }}
+function chestProps(c){const p=c.prop||"",out=[];
+ if(p.includes("stetho"))out.push(`<path d="M47 91 C43 99 47 105 55 106 M73 91 C77 99 73 105 65 106" stroke="#4E5763" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M47 91 C43 99 47 105 55 106 M73 91 C77 99 73 105 65 106" stroke="#7C8794" stroke-width=".8" fill="none" stroke-linecap="round"/><circle cx="60" cy="106" r="4" fill="#A9B3BE" stroke="#4E5763" stroke-width="1.3"/><circle cx="59" cy="105" r="1.2" fill="#FFF" opacity=".8"/>`);
+ if(p.includes("pen"))out.push(`<rect x="73" y="94" width="3" height="12" rx="1" fill="#C0392B" stroke="#7A2318" stroke-width=".6" transform="rotate(8 74 100)"/>`);
+ if(p==="badge")out.push(`<path d="M52 91 L57 99 M68 91 L63 99" stroke="${shade(c.color,-.35)}" stroke-width="1.4"/><rect x="54" y="98" width="12" height="9" rx="1.5" fill="#FFFFFF" stroke="#777" stroke-width=".8"/><rect x="55.6" y="99.6" width="3.6" height="4.2" fill="${shade(c.color,.5)}"/><path d="M60.4 100.6 H64.4 M60.4 102.6 H63.4" stroke="#999" stroke-width=".7"/>`);
+ if(p==="highlighter")out.push(`<rect x="70" y="92" width="4" height="12" rx="1.2" fill="#F4E04D" stroke="#9C8A12" stroke-width=".8" transform="rotate(10 72 98)"/><rect x="76" y="93" width="4" height="12" rx="1.2" fill="#F08BB5" stroke="#A04470" stroke-width=".8" transform="rotate(14 78 99)"/>`);
+ if(p==="highlighter-ear")out.push(`<rect x="80" y="40" width="4" height="16" rx="1.2" fill="#F4E04D" stroke="#9C8A12" stroke-width=".8" transform="rotate(-25 82 48)"/>`);
+ return out.join("");}
+function handProps(c){const p=c.prop||"";
+ if(p==="mug")return `<g transform="translate(79 93)"><rect x="0" y="0" width="14" height="16" rx="2.5" fill="#FFFFFF" stroke="#4A3F5C" stroke-width="1.4"/><path d="M14 4 C19.5 4 19.5 12 14 12" stroke="#4A3F5C" stroke-width="1.4" fill="none"/><rect x="3" y="5" width="8" height="5" rx="1" fill="${c.color}"/><path d="M4.5 -3 C2.5 -6 6.5 -8 4.5 -11 M9.5 -3 C7.5 -6 11.5 -8 9.5 -11" stroke="#9A93A8" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>`;
+ if(p==="mugs")return [74,87].map(x=>`<g transform="translate(${x} 95)"><rect x="0" y="0" width="11" height="14" rx="2" fill="#7A4E2D" stroke="#3B2717" stroke-width="1.1"/><rect x="0" y="0" width="11" height="3" fill="#FFFFFF" stroke="#3B2717" stroke-width=".6"/><path d="M3 -3 C1.5 -6 4.5 -7 3 -10" stroke="#9A93A8" stroke-width="1.2" fill="none" stroke-linecap="round"/></g>`).join("");
+ if(p==="binder")return `<g transform="rotate(-8 85 99)"><rect x="76" y="87" width="18" height="23" rx="2" fill="#E2B33C" stroke="#7C5C10" stroke-width="1.2"/><rect x="79" y="92" width="12" height="5" fill="#FFFFFF" stroke="#7C5C10" stroke-width=".5"/><path d="M76 92 H74 M76 99 H74 M76 106 H74" stroke="#7C5C10" stroke-width="1.6"/><path d="M91 89 v19" stroke="#F3D57E" stroke-width="1.2"/></g>`;
+ if(p==="clipboard")return `<g transform="rotate(-6 85 99)"><rect x="76" y="87" width="18" height="23" rx="2" fill="#B58A5A" stroke="#5E4428" stroke-width="1.2"/><rect x="78.5" y="91" width="13" height="17" fill="#FFFFFF"/><rect x="81.5" y="85" width="7" height="4.5" rx="1" fill="#777" stroke="#444" stroke-width=".6"/><path d="M81 96 H89 M81 100 H89 M81 104 H86" stroke="#999" stroke-width="1.1"/><path d="M80.5 95.5 l1 1 l2 -2.2" stroke="#2F7D4F" stroke-width="1.2" fill="none"/></g>`;
+ if(p==="stopwatch")return `<g transform="translate(85 99)"><circle r="9" fill="#FFFFFF" stroke="#2D3A4A" stroke-width="2.2"/><rect x="-2.2" y="-13.5" width="4.4" height="4.5" rx="1" fill="#2D3A4A"/><path d="M0 -6.5 V-5 M6.5 0 H5 M0 6.5 V5 M-6.5 0 H-5" stroke="#2D3A4A" stroke-width=".8"/><path d="M0 0 L0 -5.5 M0 0 L3.5 2.2" stroke="#C0392B" stroke-width="1.6" stroke-linecap="round"/></g>`;
+ return "";}
+function glassesSVG(c){if(!c.glasses)return "";const fr="#2E2A2C";
+ return `<g fill="#FFFFFF" fill-opacity=".14" stroke="${fr}" stroke-width="1.15"><rect x="43" y="51" width="15" height="11.6" rx="4.4"/><rect x="62" y="51" width="15" height="11.6" rx="4.4"/></g><path d="M58 55.6 Q60 54.1 62 55.6 M43 55.2 L38.8 54.2 M77 55.2 L81.2 54.2" stroke="${fr}" stroke-width="1.15" fill="none"/><path d="M45 60 L49 53 M47.6 60.4 L50.4 55.6 M64 60 L68 53 M66.6 60.4 L69.4 55.6" stroke="#FFFFFF" stroke-width=".8" opacity=".55"/>`;}
+let PN=0;function portraitSVG(id,ex,size,attrs){const c=CAST[id];if(!c)return "";ex=ex||"neutral";size=size||96;const u=id[0]+id[1]+(++PN),sk=SKIN[c.skin],H=hairSpec(c),hc=c.hc;
+ const f=face(c,ex,u);
+ const defs=`<defs><clipPath id="cl-${u}"><circle cx="60" cy="60" r="58"/></clipPath><clipPath id="fc-${u}"><path d="${FACE}"/></clipPath>`+
+  `<linearGradient id="ir-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(c.eye,-.55)}"/><stop offset=".55" stop-color="${c.eye}"/><stop offset="1" stop-color="${shade(c.eye,.4)}"/></linearGradient>`+
+  `<linearGradient id="hg-${u}" gradientUnits="userSpaceOnUse" x1="0" y1="18" x2="0" y2="80"><stop offset="0" stop-color="${shade(hc,.14)}"/><stop offset=".55" stop-color="${hc}"/><stop offset="1" stop-color="${shade(hc,-.2)}"/></linearGradient>`+
+  `<radialGradient id="bg-${u}" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="${shade(c.color,.9)}"/><stop offset="1" stop-color="${shade(c.color,.74)}"/></radialGradient></defs>`;
+ const neck=`<path d="M53.6 74 L53.6 91 Q60 94 66.4 91 L66.4 74 Z" fill="${sk}" stroke="${f.line}" stroke-width=".9"/><path d="M53.6 78 C56.5 83.8 63.5 83.8 66.4 78 L66.4 86.5 C63 89 57 89 53.6 86.5 Z" fill="${f.cel}"/>`;
+ return `<svg ${attrs||""} width="${size}" height="${size}" viewBox="0 0 120 120" aria-hidden="true" focusable="false">${defs}
+<circle cx="60" cy="60" r="58" fill="url(#bg-${u})"/><g clip-path="url(#cl-${u})"><g transform="translate(60 63) scale(1.12) translate(-60 -60)">${hairBackSVG(c,H)}${neck}${clothes(c)}${f.s}${fringeShadow(H,u,f.cel)}${hairFrontSVG(c,H,u)}${glassesSVG(c)}${chestProps(c)}</g>${handProps(c)}</g>
+<circle cx="60" cy="60" r="58" fill="none" stroke="${c.color}" stroke-width="3"/></svg>`;}
+return portraitSVG;})();
+/* ---------- character narration beats (third-person, shown with reactions, step changes and sign-offs) ---------- */
+const VOICE={
+ jordan:{ok:["Jordan raises a coffee mug in your direction.","Jordan nods slowly, the way they do when you've earned it.","Jordan makes a small check mark on a sticky note.","Jordan grins and leans back in the chair.","Jordan taps the table twice. That's approval.","Jordan looks quietly pleased and pretends not to be."],
+  no:["Jordan sets the mug down and waits.","Jordan tilts their head, not unkindly.","Jordan pulls a pen from behind one ear.","Jordan raises an eyebrow over the glasses.","Jordan slides the output back across the table.","Jordan hums, which is never a good sign."],
+  step:["Jordan refills the coffee and turns the screen toward you.","Jordan flips to a fresh page of notes.","Jordan stretches, then points at the next item.","Jordan pushes their glasses up and scrolls down.","Jordan draws a quick box around the next question."],
+  done:["Jordan signs off with a tiny coffee-cup doodle.","Jordan initials the page and hands it back.","Jordan salutes you with the mug."]},
+ jordan_sick:{ok:["Jordan sniffles and gives you a thumbs-up.","Jordan nods, then reaches for a tissue.","Jordan croaks out a pleased \"yes.\"","Jordan raises a mug of tea in your direction."],
+  no:["Jordan coughs, then frowns at the screen.","Jordan shakes their head, slowly. It hurts.","Jordan points a tissue at the output.","Jordan squints through the fog of a head cold."],
+  step:["Jordan blows their nose and scrolls down.","Jordan pushes a box of tissues aside to make room.","Jordan sips some tea and turns the page."],
+  done:["Jordan signs off from behind a box of tissues."]},
+ jordan_video:{ok:["Jordan gives a thumbs-up to the laptop camera.","Jordan's video freezes on a smile, then catches up.","Jordan nods from under a blanket.","Jordan raises a mug of tea to the camera."],
+  no:["Jordan leans toward the camera, squinting.","Jordan coughs, then unmutes. \"Hm.\"","Jordan's camera wobbles as they sit up.","Jordan pulls the blanket higher and frowns."],
+  step:["Jordan shares their screen and scrolls down.","Jordan adjusts the laptop and sips some tea.","Jordan's cat walks across the keyboard. Jordan scrolls on."],
+  done:["Jordan waves at the camera and logs off for a nap."]},
+ brooks:{ok:["Dr. Brooks writes something down and underlines it.","Dr. Brooks nods once. From her, that's a lot.","Dr. Brooks moves her pen to the next line of the agenda.","Dr. Brooks allows herself a small smile.","Dr. Brooks closes one folder and opens the next."],
+  no:["Dr. Brooks folds her hands and waits.","Dr. Brooks taps the agenda with one finger.","Dr. Brooks looks at you over the top of the report.","Dr. Brooks's pen stops moving.","Dr. Brooks raises one eyebrow, very slightly."],
+  step:["Dr. Brooks turns to the next item on the agenda.","Dr. Brooks checks the time and moves on.","Dr. Brooks slides another page across the table.","Dr. Brooks straightens the stack of reports."],
+  done:["Dr. Brooks signs the page in neat, small letters.","Dr. Brooks files the page without comment. High praise."]},
+ dana:{ok:["Dana nods and is already writing it down.","Dana snaps her binder shut. Decision made.","Dana gives you a quick, tired smile.","Dana checks it off her list.","Dana exhales, like a weight just shifted."],
+  no:["Dana glances at the clock on the wall.","Dana's pen stops above the page.","Dana crosses her arms.","Dana's phone buzzes. She ignores it and looks at you.","Dana taps the binder, hard."],
+  step:["Dana flips to the next tab in her binder.","Dana answers a page, then turns back to you.","Dana pulls another sheet from the stack.","Dana checks the clock and keeps going."],
+  done:["Dana signs off without sitting down.","Dana initials the page and heads back to the floor."]},
+ greg:{ok:["Greg grudgingly underlines it. Twice.","Greg uncaps a highlighter and marks your answer yellow.","Greg opens his mouth to argue, then closes it.","Greg types it into a new tab of his spreadsheet.","Greg sighs the sigh of a man who was wrong."],
+  no:["Greg leans back, looking hopeful.","Greg's highlighter hovers, uncapped.","Greg starts nodding, then stops.","Greg reaches for his calculator.","Greg looks delighted, which is a bad sign."],
+  step:["Greg clicks to the next slide.","Greg flips to another color-coded tab.","Greg slides a fresh printout across the desk.","Greg caps one highlighter and uncaps another."],
+  done:["Greg signs off with a very expensive pen.","Greg files your sign-off in a tab labeled \"FINAL (really).\""]},
+ ruiz:{ok:["Dr. Ruiz nods once, precisely.","Dr. Ruiz makes a neat check mark in red pen.","Dr. Ruiz turns to her fellow. \"Write that down.\"","Dr. Ruiz almost smiles.","Dr. Ruiz caps her pen. Settled."],
+  no:["Dr. Ruiz's red pen comes out.","Dr. Ruiz waits in silence. It's a long silence.","Dr. Ruiz looks at you, then at the output, then at you.","Dr. Ruiz's fellow winces on your behalf.","Dr. Ruiz taps the desk once."],
+  step:["Dr. Ruiz turns the page with one finger.","Dr. Ruiz straightens the papers on her spotless desk.","Dr. Ruiz nods at her fellow, who brings the next printout.","Dr. Ruiz uncaps her red pen again."],
+  done:["Dr. Ruiz signs off, then straightens the pen on her desk.","Dr. Ruiz initials the page. Her fellow looks relieved."]},
+ nair:{ok:["Dr. Nair highlights your answer and beams.","Dr. Nair does a tiny victory spin in her chair.","Dr. Nair claps once. \"Yes!\"","Dr. Nair is already typing it into a slide.","Dr. Nair gives you two thumbs-up."],
+  no:["Dr. Nair stops pacing.","Dr. Nair's highlighter freezes mid-stroke.","Dr. Nair frowns at the screen, then at you.","Dr. Nair taps her foot, fast.","Dr. Nair's smile flickers."],
+  step:["Dr. Nair paces to the window and back.","Dr. Nair pulls up the next page, fast.","Dr. Nair caps one highlighter and grabs another.","Dr. Nair sticks a new sticky note on the page."],
+  done:["Dr. Nair signs off with a flourish and a sticky note.","Dr. Nair hugs the report, then hands it to you."]},
+ marcus:{ok:["Marcus gives you a fist bump.","Marcus grins and spins his stopwatch.","Marcus nods like you just nailed a rep.","Marcus laughs. \"See? Easy.\"","Marcus writes it on the whiteboard and underlines it."],
+  no:["Marcus puts the stopwatch down.","Marcus rubs the back of his neck.","Marcus squints at the chart, then at you.","Marcus winces, like he just watched a bad landing.","Marcus stops what he's doing and turns around."],
+  step:["Marcus wipes the whiteboard and starts a new column.","Marcus checks on a patient, then comes back.","Marcus pulls up a stool and the next chart.","Marcus resets his stopwatch."],
+  done:["Marcus signs off and gives you a high five.","Marcus initials the page against the parallel bars."]},
+ nadia:{ok:["Nadia smiles and makes a note for the night team.","Nadia nods, relieved.","Nadia writes it on the back of her hand, then on paper.","Nadia gives you a grateful look."],
+  no:["Nadia tilts her head, unconvinced.","Nadia glances at her pager.","Nadia frowns, thinking of the charge nurse.","Nadia taps her pen against her badge."],
+  step:["Nadia checks the unit board, then turns back.","Nadia flips to the next page of her notes.","Nadia answers a quick page, then sits down again."],
+  done:["Nadia signs off and heads back to Women's Health."]},
+ zhang:{ok:["Dr. Zhang nods slowly. \"Thank you.\"","Dr. Zhang writes it down carefully.","Dr. Zhang smiles, relieved.","Dr. Zhang adjusts his glasses and nods."],
+  no:["Dr. Zhang glances at the photo on his desk, then back at you.","Dr. Zhang frowns gently.","Dr. Zhang folds his hands and waits.","Dr. Zhang reads the line again, carefully."],
+  step:["Dr. Zhang pours two cups of tea and turns the page.","Dr. Zhang adjusts his glasses and scrolls down."],
+  done:["Dr. Zhang signs off and thanks you twice."]},
+ jamal:{ok:["Jamal smiles and adds a green tab.","Jamal nods warmly.","Jamal writes it down for his team.","Jamal gives you a thumbs-up."],
+  no:["Jamal adds a yellow tab, thoughtfully.","Jamal leans in, ready to hear more.","Jamal's pen pauses.","Jamal tilts his head, gently skeptical."],
+  step:["Jamal flips to the next tabbed summary.","Jamal straightens his stack of screening summaries."],
+  done:["Jamal signs off and thanks you for your time."]},
+ farrow:{ok:["Ms. Farrow writes something down. Her pen looks satisfied.","Ms. Farrow makes a small check mark.","Ms. Farrow nods, once.","Ms. Farrow turns the page without comment."],
+  no:["Ms. Farrow underlines something. Twice.","Ms. Farrow clicks her pen, once.","Ms. Farrow's pen hovers over the page.","Ms. Farrow tilts her head and waits."],
+  step:["Ms. Farrow turns to the next tab in her binder.","Ms. Farrow uncaps her pen.","Ms. Farrow writes the time at the top of a new page."],
+  done:["Ms. Farrow signs off and closes her binder with a soft click."]},
+ tomas:{ok:["Tomás grins and puts his feet back up.","Tomás gives you a lazy salute.","Tomás nods. \"Nice.\"","Tomás types it into the vent log."],
+  no:["Tomás takes his feet off the desk.","Tomás squints at the laptop.","Tomás scratches his stubble, unconvinced.","Tomás leans forward, suddenly serious."],
+  step:["Tomás scrolls down the ventilator log.","Tomás spins his chair around to face you."],
+  done:["Tomás signs off and goes back to his new chair."]},
+ hale:{ok:["Dr. Hale nods and takes a sip from both coffees.","Dr. Hale is already walking to the next thing.","Dr. Hale grunts. It sounds approving.","Dr. Hale points a coffee at you. \"Good.\""],
+  no:["Dr. Hale stops pacing.","Dr. Hale sighs into one of his coffees.","Dr. Hale checks his watch.","Dr. Hale taps a coffee cup, impatient."],
+  step:["Dr. Hale paces to the window and back.","Dr. Hale swaps coffees and moves on."],
+  done:["Dr. Hale signs off without breaking stride."]},
+ mensah:{ok:["Dr. Mensah raises an eyebrow, approvingly.","Dr. Mensah nods, once.","Dr. Mensah makes a precise note in the margin.","Dr. Mensah almost looks impressed."],
+  no:["Dr. Mensah folds his arms.","Dr. Mensah squares the spreadsheet to the edge of the desk.","Dr. Mensah looks at you over his glasses.","Dr. Mensah waits. He's good at waiting."],
+  step:["Dr. Mensah turns to the next page and squares it to the edge.","Dr. Mensah adjusts his glasses and reads the next line."],
+  done:["Dr. Mensah signs off. He doesn't say \"good,\" but he signs."]},
+ rosa:{ok:["Rosa adds a tally mark with a flourish.","Rosa highlights your answer in yellow.","Rosa grins and caps her highlighter with a click.","Rosa writes it down, neatly."],
+  no:["Rosa checks her tally sheet. Twice.","Rosa's highlighter stops mid-line.","Rosa frowns at her clipboard.","Rosa counts something on her fingers."],
+  step:["Rosa flips to the next tally sheet.","Rosa swaps highlighters and keeps going."],
+  done:["Rosa signs off and adds one last tally mark."]}};
+const _lastBeat={};
+function voiceOf(p){let k=p&&p.id;if(k==="jordan"){if(p.video)k="jordan_video";else if(WEEK.num===11)k="jordan_sick";}return VOICE[k]||null;}
+function beat(p,kind){const v=voiceOf(p);if(!v||!v[kind]||!v[kind].length)return "";const a=v[kind],key=(p.id)+kind;let i=Math.floor(Math.random()*a.length);if(a.length>1&&i===_lastBeat[key])i=(i+1)%a.length;_lastBeat[key]=i;return a[i];}
+function portrait(p,size=80,ex){const pv=PORTRAIT(p.id,ex||"neutral",p.video?30:size,p.video?'x="17" y="12"':"");
+ if(p.video)return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><rect x="9" y="10" width="46" height="34" rx="3" fill="var(--card)" stroke="${p.color}" stroke-width="3"/>${pv}<rect x="5" y="45" width="54" height="6" rx="2" fill="${p.color}"/></svg>`;
+ if(pv)return pv;return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="var(--teal-wash)"/><circle cx="32" cy="25" r="11" fill="${p.color}"/><path d="M12 58c3-13 11-19 20-19s17 6 20 19z" fill="${p.color}"/><text x="32" y="29" text-anchor="middle" class="m-init">${p.initials}</text></svg>`;}
 
 /* ---------- WEEKS 1 TO 3: SHARED HELPERS ---------- */
 let GEN_OK=0;const GEN_MISS=[];
@@ -1003,7 +1321,7 @@ const REACT_NO={
 function pickLine(a){return a[Math.floor(Math.random()*a.length)];}
 function unitNpc(unit){return NPCS.find(p=>p.id===unit.npc)||NPCS.find(p=>p.id==="jordan");}
 function firstName(p){return p.name.split(",")[0];}
-function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,40)}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p></div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
+function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,56,tone==="good"?"pleased":tone==="bad"?"skeptical":"neutral")}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p>${(()=>{const b=tone==="good"?beat(p,"ok"):tone==="bad"?beat(p,"no"):"";return b?`<p class="react-beat">${b}</p>`:"";})()}</div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
 function reactOk(fb,p,body){fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);markScrollers(fb);}
 function playWrong(fb,p,action,body,onReact,onDone){
   const quick=window.matchMedia("(prefers-reduced-motion: reduce)").matches,d1=quick?250:900,d2=quick?300:1300;
@@ -1078,7 +1396,7 @@ function mapSvg(){
   CLUES.forEach(c=>{const cx=c.x*TS+TS/2,cy=c.y*TS+TS/2,read=S.clues.includes(c.id);
     s+=`<g><rect class="m-clue" x="${cx-11}" y="${cy-14}" width="22" height="28" rx="3"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy-5}" y2="${cy-5}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+6}" y1="${cy+1}" y2="${cy+1}"/><line class="m-clue-l" x1="${cx-6}" x2="${cx+3}" y1="${cy+7}" y2="${cy+7}"/>`+(read?"":`<g transform="translate(${cx+12},${cy-16})"><circle r="8" class="mk-need"/><text class="mk-t" y="5" text-anchor="middle" style="font-size:12px">?</text></g>`)+`</g>`;});
   NPCS.forEach(p=>{const cx=p.x*TS+TS/2,cy=p.y*TS+TS/2,st=npcStatus(p);
-    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}" stroke="#fff" stroke-width="2"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text><text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
+    s+=`<g class="npc" data-id="${p.id}"><circle cx="${cx}" cy="${cy}" r="22" fill="#fff"/>${PORTRAIT(p.id,"neutral",43,`x="${cx-21.5}" y="${cy-21.5}"`)||`<circle cx="${cx}" cy="${cy}" r="16" fill="${p.color}"/><text class="m-init" x="${cx}" y="${cy+4}" text-anchor="middle">${p.initials}</text>`}<text class="m-name" x="${cx}" y="${cy+32}" text-anchor="middle">${p.name.split(",")[0]}</text>`;
     if(st!=="wait")s+=`<g transform="translate(${cx+14},${cy-22})"><circle r="10" class="${st==="need"?"mk-need":"mk-done"}"/><text class="mk-t" y="5" text-anchor="middle">${st==="need"?"!":"✓"}</text></g>`;
     s+=`</g>`;});
   s+=`<g id="player" style="transition:transform .11s linear" transform="translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})"><circle r="16" fill="${S.avatar}" stroke="#fff" stroke-width="3"/><text class="m-init" y="4" text-anchor="middle">You</text></g>`;
@@ -1162,7 +1480,7 @@ function showStep(unit,i,kind,lvl){
   const box=document.getElementById("steps");if(i>=unit.steps.length)return showOutro(unit,kind,lvl);
   const st=unit.steps[i],rec=S.results[st.id]||(S.results[st.id]={first:null,hintBefore:false}),n=unit.steps.length;
   let hintUsed=false,done=false,wrongs=0;
-  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.narr?`<p class="narr">${st.narr}</p>`:""}${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
+  box.innerHTML=`<div class="step"><p class="step-count">Decision ${i+1} of ${n}: ${st.label}</p>${st.narr?`<p class="narr">${st.narr}</p>`:(i>0?(()=>{const b=beat(NPCS.find(q=>q.id===unit.npc),"step");return b?`<p class="narr">${b}</p>`:"";})():"")}${st.show||""}<h2 class="prompt" tabindex="-1">${st.prompt}</h2>
     ${st.type==="build"?`<table class="build"><thead><tr><th scope="col">${st.spec.varHead||"Variable"}</th><th scope="col">${st.spec.typeHead||"Type"}</th><th scope="col">${st.spec.roleHead||"Role"}</th></tr></thead><tbody>${st.spec.vars.map((v,k)=>`<tr data-brow="${v[0]}"><th scope="row"><label for="role-${v[0]}"><code>${v[0]}</code><span class="rowstat"></span><span class="where">${v[1]}</span></label></th><td><span class="typ">${v[2]}</span></td><td><select id="role-${v[0]}" data-var="${v[0]}" aria-label="${st.spec.roleHead||"Role"} for ${v[0]}">${st.spec.roles?st.spec.roles.map(([rv,rl])=>`<option value="${rv}">${rl}</option>`).join(""):`<option value="">Not used</option><option value="outcome">Outcome</option><option value="factor">Factor</option>${st.spec.mode==="ancova"?'<option value="covariate">Covariate</option>':""}`}</select></td></tr>`).join("")}</tbody></table>
     ${st.spec.mode==="ancova"||st.spec.noDesign?"":`<fieldset id="designQ"><legend>${st.spec.designQ||"Was anyone measured more than once (in more than one group)?"}<span class="rowstat"></span></legend><div class="radios${st.spec.designQ?" stack":""}"><label><input type="radio" name="rep" value="yes"> ${st.spec.designYes||"Yes"}</label><label><input type="radio" name="rep" value="no"> ${st.spec.designNo||"No"}</label></div></fieldset>`}
     <button class="quiet" id="runB">${st.spec.run||"Run analysis"}</button>`:""}
@@ -1309,7 +1627,7 @@ function unitDone(unit,kind,lvl){
     const ids=unit.steps.map(s=>s.id),misses=ids.filter(id=>!S.results[id]||S.results[id].first!=="correct"),hinted=ids.filter(id=>S.results[id]&&S.results[id].hintBefore);
     if(misses.length===0&&hinted.length===0)S.level=1;else if(misses.length>=2)S.level=0;
     if(S.fuDone.length<1)for(const id of misses){const fu=FU_MAP[S.results[id]&&S.results[id].first];if(fu&&!S.fuDone.includes(fu)){S.pendingFU=fu;break;}}
-    msg=`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
+    msg=(()=>{const b=beat(NPCS.find(q=>q.id===unit.npc),"done");return b?b+" ":"";})()+`Sign-off collected (${S.done.length} of 4).`+(S.done.length===4?" Take the report to Dr. Brooks in the Quality Office.":"");
     if(S.done.length===4&&!S.pendingFU&&WEEK.hidden&&!S.hiddenUnlocked&&CORE.every((c,ci)=>c(coreRng(ci),S.path[ci]).steps.every(st=>S.results[st.id]&&S.results[st.id].first==="correct"))){S.hiddenUnlocked=true;msg+=` ★ Jordan texts: "You didn't need me once this week. Come to Statistics. There's something strange in the data."`;}
   }else if(kind==="hidden"){S.hiddenDone=true;msg="★ Hidden problem solved. Jordan is impressed.";
   }else if(kind==="fu"){S.fuDone.push(unit.id);S.pendingFU=null;msg="Jordan's done with you. Back to the consults.";}
@@ -1336,7 +1654,52 @@ function buildPayload(){
   if(S.expDone.length)add(expertCase(),"Optional ("+expertCase().title+")");
   return {results:parts.join(" | ").replace(/α/g,"alpha").replace(/μ/g,"mu")};
 }
-function renderSummary(){
+const NEWS={key:"w1_greg_median",
+ headline:["New analyst stops a $400,000 contract on day one","The ED dashboard gets an honest makeover"],
+ lead:["Greg Walton's contract to fix an emergency department that was supposedly an hour slower than St. Mary's never got signed. The new analyst asked which average Greg was reading. Compared median to median, most of that hour turned out to be the long tail talking.",
+  "The vendor's dashboard averaged every column, including some you can't average. By Friday every tile had been fixed, and Greg's contract was put on hold once the two medians were lined up."],
+ items:[{id:"dana",t:"Dana Okafor's triage tile now shows counts and percentages instead of an average triage level. Her nurses say it finally looks like their shift."},
+  {id:"ruiz",t:"Dr. Ruiz has taken the sticky note that said \"AVERAGES?\" off her monitor. The new one says \"SD?\""},
+  {id:"marcus",t:"Marcus Bell fixed a walker, the falls tile and (he says) his understanding of box plots, in that order."},
+  {id:"nair",exp:["Dr. Nair's 212-slice pie chart has been retired. A bar chart has taken its place.","Dr. Nair's 212-slice pie chart is still on the wall in the Stroke Center. Visitors are advised not to count."]}],
+ hidden:{id:"jordan",t:"The vendor's pie chart, the one where patients sat in more than one slice, has quietly become a bar chart."},
+ quote:{id:"greg",t:["I had the pen out. I was going to sign it. Anyway, which average do you want next time?","Medians. Fine. Nobody told me averages came in more than one flavor."]},
+ corner:"Before you average a column, ask what kind of variable it is. Codes for ordered categories get counts and percentages. Skewed times get a median and IQR, because the mean gets pulled toward the long tail.",
+ notice:"Lost: one vendor's dignity, last seen on the ED dashboard. Found: Jordan's good coffee mug, in Statistics, where it belongs."};
+/* ---------- The Riverbend Rounds: end-of-week staff newsletter ---------- */
+function renderNews(){
+  mapActive=false;setBar("Newsletter");
+  const N=NEWS,f={...SEASON.flags,...WEEK.keyFlags(S).flags};
+  const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0)),coreSteps=units.flatMap(u=>u.steps);
+  const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length,tot=coreSteps.length||1;
+  const ctx={first,tot,hidden:!!S.hiddenDone,exp:(S.expDone||[]).length>0};
+  const good=typeof N.key==="function"?!!N.key(f,ctx):!!f[N.key];
+  const pk=v=>Array.isArray(v)?v[good?0:1]:v;
+  const P=id=>NPCS.find(q=>q.id===id)||{id,name:id,color:"#4A63C4"};
+  const items=N.items.map(it=>({id:it.id,t:it.exp?it.exp[ctx.exp?0:1]:pk(it.t)}));
+  if(ctx.hidden&&N.hidden)items.push({id:N.hidden.id,t:"★ "+N.hidden.t});
+  const ratio=first/tot,brooksSays=ratio>=.8?"Remarkable week. I mean that.":ratio>=.5?"Solid work. Keep checking the clues first.":"Every analyst has a week like this. Read the takeaways, then come back stronger.";
+  const qp=P(N.quote.id);
+  app.innerHTML=`<article class="news" aria-labelledby="newsH">
+   <header class="news-mast"><p class="news-kicker">Staff newsletter · Week ${WEEK.num}${N.edition?` · ${N.edition}`:""}</p><h1 id="newsH" tabindex="-1">The Riverbend Rounds</h1><p class="news-sub">News from the floor, the offices and the coffee machine</p></header>
+   <section class="news-lead"><h2>${pk(N.headline)}</h2><p>${pk(N.lead)}</p></section>
+   <div class="news-cols">
+    <section class="news-main"><h2 class="news-h">Around the hospital</h2><ul class="news-items">${items.map(it=>`<li>${portrait(P(it.id),48)}<p>${it.t}</p></li>`).join("")}</ul></section>
+    <aside class="news-side">
+     <section class="news-box"><h2 class="news-h">Overheard</h2><div class="news-quote">${portrait(qp,56,"pleased")}<blockquote><p>“${pk(N.quote.t)}”</p><footer>${firstName(qp)}</footer></blockquote></div></section>
+     <section class="news-box"><h2 class="news-h">Jordan's stats corner</h2><p>${N.corner}</p></section>
+     <section class="news-box"><h2 class="news-h">Notices</h2><p>${N.notice}</p></section>
+    </aside>
+   </div>
+   <section class="news-spot"><h2 class="news-h">Staff spotlight: you</h2><p><strong>${title()}.</strong> ${first} of ${coreSteps.length} decisions right on the first try, ${S.hints} hint${S.hints===1?"":"s"}, and a reputation of ${S.cred}.${ctx.hidden?" You also solved the week's hidden problem.":""}${ctx.exp?" You took the optional consult, too.":""}</p><p class="news-brooks">${portrait(P("brooks"),40,ratio>=.5?"pleased":"neutral")}<span><strong>Dr. Brooks:</strong> “${brooksSays}”</span></p></section>
+   <section class="news-next"><h2 class="news-h">Coming up</h2><p>${WEEK.teaser}</p></section>
+   <div class="actions"><button class="primary" id="toResults">See my results and submit</button></div>
+  </article>`;
+  window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
+  document.getElementById("toResults").onclick=()=>{S.newsSeen=true;save();renderSummary0();};
+}
+function renderSummary(){if(typeof NEWS!=="undefined"&&!S.newsSeen)return renderNews();renderSummary0();}
+function renderSummary0(){
   mapActive=false;setBar("Results");
   const units=CORE.map((c,i)=>c(coreRng(i),S.path[i]||0)),coreSteps=units.flatMap(u=>u.steps);
   const first=coreSteps.filter(s=>S.results[s.id]&&S.results[s.id].first==="correct").length;
