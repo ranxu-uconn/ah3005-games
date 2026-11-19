@@ -336,6 +336,11 @@ main>h2{margin-top:1.8rem}
 .news-brooks{display:flex;gap:.6rem;align-items:center}
 .news-next{border-top:3px double var(--line-strong);padding-top:.6rem;margin-top:.8rem}
 .news-next p{margin:.2rem 0 .6rem}
+.map-tog{display:none}
+.dir-who{display:flex;align-items:center;gap:.5rem;min-width:0}.dir-who svg{flex:0 0 auto}.dir button{align-items:center}
+.notes-n{font-weight:400;color:var(--muted);font-size:.9rem}
+.compose>.fb{margin:.3rem 0 .6rem}
+@media (max-width:640px){.map-tog{display:inline-block;margin:.1rem 0 .6rem}.nomap .map-wrap,.nomap .dpad{display:none}}
 </style>
 </head>
 <body>
@@ -350,7 +355,7 @@ main>h2{margin-top:1.8rem}
 </div></header>
 <main id="app" tabindex="-1"></main>
 <script>
-const CONFIG={mission:4,version:"8.3",
+const CONFIG={mission:4,version:"8.4",
   // Qualtrics survey link (same survey for all missions)
   qualtricsUrl:"https://uconn.co1.qualtrics.com/jfe/form/SV_1KRhTm4jwdA7Y7s",
   storageKey:"ahstat3005-mission4-v7"};
@@ -451,7 +456,7 @@ function firstRight(id){return S.results[id]&&S.results[id].first==="correct"?1:
    ============================================================ */
 const WEEK={num:4,title:"First rounds",
   pitch:"Four teams bring their first claims to test: claims they want in the quarterly report. Each one needs your sign-off, and the chief quality officer is watching.",
-  topicLine:"This week: hypothesis testing and t tests. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
+  topicLine:"This mission: hypothesis testing and t tests. Check the clues in each room before talking to anyone. About 20 to 25 minutes. Practice pilot, not graded.",
   opening:[["brooks","Four teams want claims in the quarterly report, and the state reviewers will read every one in December. Get me sign-offs from all four this week, and only for claims that hold up."],
            ["jordan","Testing week: now we decide what the data can and can't support. Look around each room before you start analyzing. Show me the design first."]],
   previously:d=>d.weeks.includes(3)?"Last week Greg's 95% satisfaction number came out of the board report before it was printed."+(d.flags.w3_greg_sample?" He says he'll ask who was surveyed before he quotes a survey again.":" He's still a little sore about it."):"",
@@ -1322,35 +1327,37 @@ function pickLine(a){return a[Math.floor(Math.random()*a.length)];}
 function unitNpc(unit){return NPCS.find(p=>p.id===unit.npc)||NPCS.find(p=>p.id==="jordan");}
 function firstName(p){return p.name.split(",")[0];}
 function reactHtml(p,line,tone,body){return `<div class="react ${tone}"><div class="react-head">${portrait(p,56,tone==="good"?"pleased":tone==="bad"?"skeptical":"neutral")}<div><p class="react-name">${firstName(p)}</p><p class="react-line">${line}</p>${(()=>{const b=tone==="good"?beat(p,"ok"):tone==="bad"?beat(p,"no"):"";return b?`<p class="react-beat">${b}</p>`:"";})()}</div></div>${body?`<div class="react-body">${body}</div>`:""}</div>`;}
-function reactOk(fb,p,body){fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);markScrollers(fb);}
+function placeFb(fb,bad){const st=fb.closest(".step");if(!st)return;const row=bad?st.querySelector(".compose .slotrow.row-bad"):null;if(row){if(fb.previousElementSibling!==row)row.after(fb);}else if(fb.parentElement!==st){const nx=st.querySelector("#next");if(nx)st.insertBefore(fb,nx);}}
+function reactOk(fb,p,body){placeFb(fb,false);fb.innerHTML=reactHtml(p,pickLine(REACT_OK[p.id]||REACT_OK.jordan),"good",body);markScrollers(fb);}
 function playWrong(fb,p,action,body,onReact,onDone){
   const quick=window.matchMedia("(prefers-reduced-motion: reduce)").matches,d1=quick?250:900,d2=quick?300:1300;
   fb.innerHTML=`<div class="react pending"><p class="react-action">${action}</p><p class="typing" aria-hidden="true"><span></span><span></span><span></span></p></div>`;
-  setTimeout(()=>{fb.innerHTML=reactHtml(p,pickLine(REACT_NO[p.id]||REACT_NO.jordan),"bad","");if(onReact)onReact();
-    setTimeout(()=>{fb.querySelector(".react").insertAdjacentHTML("beforeend",`<div class="react-note"><p class="react-name">${p.id==="jordan"?"Jordan explains":"Jordan, on the phone"}</p>${body}<p class="where">Try again.</p></div>`);markScrollers(fb);if(onDone)onDone();},d2);},d1);
+  placeFb(fb,true);
+  setTimeout(()=>{const ln=pickLine(REACT_NO[p.id]||REACT_NO.jordan);fb.innerHTML=reactHtml(p,ln,"bad","");if(onReact)onReact();placeFb(fb,true);
+    setTimeout(()=>{placeFb(fb,true);fb.querySelector(".react").insertAdjacentHTML("beforeend",`<div class="react-note"><p class="react-name">${p.id==="jordan"?"Jordan explains":"Jordan, on the phone"}</p>${body}${/try again/i.test(ln)?"":`<p class="where">Try again.</p>`}</div>`);markScrollers(fb);if(onDone)onDone();if(fb.closest(".compose"))fb.scrollIntoView({block:"nearest",behavior:quick?"auto":"smooth"});},d2);},d1);
 }
 
 function renderIntro(){
   const ok=storageOK(),found=ok?seasonLoad():null,wk=ok?loadSaved():null;setBar("");mapActive=false;
   const wkHere=wk&&(wk.done.length||wk.fuDone.length||wk.phase==="done");
-  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Episode ${WEEK.num}: ${WEEK.title}</h1>
+  app.innerHTML=`<p class="where">Riverbend Regional Medical Center</p><h1 tabindex="-1">Mission ${WEEK.num}: ${WEEK.title}</h1>
    <p class="lede">${WEEK.pitch}</p><p>${WEEK.topicLine}</p>
    <fieldset><legend>Pick your badge color</legend><div class="swatches">${AVATARS.map((a,i)=>`<label><input type="radio" name="av" value="${a[0]}" ${i===0?"checked":""}><span class="swatch" style="background:${a[0]}"></span>${a[1]}</label>`).join("")}</div></fieldset>
    <p><strong>How to play:</strong> arrow keys or WASD to walk, or tap the map. Walk into someone or something to interact. Everything is also reachable from the list under the map.</p>
    <h2>Your season</h2>
    ${ok?"":`<p class="toast">This browser isn't allowing saved data, so saving is off. You can still enter a career code, and nothing will be saved.</p>`}
    <div class="actions">
-     ${wkHere&&found?`<button class="primary" id="resumeW">Resume this week</button>`:""}
-     ${found?`<button class="${wkHere?"quiet":"primary"}" id="cont">Continue my season</button>`:ok?`<button class="primary" id="startSave">Start saving my season</button>`:""}
-     <button class="quiet" id="nosave">Play without saving</button>
+     ${wkHere&&found?`<button class="primary" id="resumeW">Resume this mission</button>`:""}
+     ${found?`<button class="${wkHere?"quiet":"primary"}" id="cont">Continue my season</button>`:ok?`<button class="primary" id="startSave">Start (save my progress)</button>`:""}
+     <button class="quiet" id="nosave">Start without saving</button>
    </div>
    ${found?`<p class="where">Saved season on this browser: ${seasonTitle(found.rep)}, reputation ${found.rep}, ${found.weeks.length} episode${found.weeks.length===1?"":"s"} played. Not you? Enter your own code or play without saving.</p>`:""}
-   <p class="where">Playing without saving stores nothing on this device. If you close the tab, this week starts over.</p>
+   <p class="where">Starting without saving stores nothing on this device. If you close the tab, this mission starts over.</p>
    <fieldset><legend>Have a career code?</legend><div class="radios" style="gap:.5rem"><input id="codeIn" aria-label="Career code" placeholder="RIV-XXXXX-XXXXX-XXXXXXX" style="font:inherit;padding:.45rem;border-radius:6px;border:1.5px solid var(--line-strong);min-width:15rem"><button class="quiet" id="useCode">Use code</button></div><p id="codeErr" class="where" aria-live="polite"></p></fieldset>`;
   app.querySelector("h1").focus();
   const av=()=>app.querySelector('input[name="av"]:checked').value;
   const begin=(mode,season)=>{
-    if(mode==="season"&&wkHere&&!confirm("Start this week over? Your in-progress week will be replaced."))return;
+    if(mode==="season"&&wkHere&&!confirm("Start this mission over? Your in-progress mission will be replaced."))return;
     SEASON=season;MODE=mode;if(MODE==="season"){clearSaved();seasonSave();}
     S=newState(av());S.mode=MODE;save();renderOpening();};
   const g=id=>document.getElementById(id);
@@ -1363,7 +1370,7 @@ function renderIntro(){
 }
 function renderOpening(){
   mapActive=false;setBar("");const prev=WEEK.previously?WEEK.previously(SEASON):"";
-  app.innerHTML=`<p class="where">Episode ${WEEK.num}</p><h1 tabindex="-1">${WEEK.title}</h1>
+  app.innerHTML=`<p class="where">Mission ${WEEK.num}</p><h1 tabindex="-1">${WEEK.title}</h1>
    ${prev?`<p class="lede"><strong>Previously at Riverbend:</strong> ${prev}</p>`:""}
    ${WEEK.opening.map(([id,line])=>{const p=NPCS.find(q=>q.id===id);return `<div class="talk-head" style="align-items:flex-start">${portrait(p,52)}<div style="flex:1"><p class="who" style="margin-bottom:.2rem"><strong>${p.name.split(",")[0]}</strong></p><div class="bubble" style="margin:0 0 .6rem">${line}</div></div></div>`;}).join("")}
    <div class="actions"><button class="primary" id="go">Head to the floor</button></div>`;
@@ -1383,7 +1390,7 @@ function npcStatus(p){
   if(p.kind==="cameo")return "wait";
   return S.done.length===4?"need":"wait";
 }
-function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return S.pendingFU?"Wants to see you":(S.hiddenUnlocked&&!S.hiddenDone?"★ Hidden problem":"Available");if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";if(p.kind==="cameo")return "No consult this week";return s==="done"?"Signed off":"Needs help";}
+function statusText(p){const s=npcStatus(p);if(p.kind==="stats")return S.pendingFU?"Wants to see you":(S.hiddenUnlocked&&!S.hiddenDone?"★ Hidden problem":"Available");if(p.kind==="admin")return s==="need"?"Ready for your report":"Needs 4 sign-offs";if(p.kind==="expert")return s==="done"?"Helped":"Optional";if(p.kind==="cameo")return "No consult this mission";return s==="done"?"Signed off":"Needs help";}
 function toast(html){const t=document.getElementById("toast");if(t){t.innerHTML=html;markScrollers(t);}}
 
 function mapSvg(){
@@ -1407,11 +1414,12 @@ function renderMap(){
   const quest=S.done.length<4?`Get sign-offs from 4 teams (${S.done.length} of 4 so far), then report to Dr. Brooks.`:"All 4 sign-offs collected. Take the report to Dr. Brooks in the Quality Office.";
   app.innerHTML=`<h1 class="sr" tabindex="-1">Hospital map</h1><p class="quest"><strong>Task:</strong> ${quest}</p>
     <div id="toast" class="toast" aria-live="polite"></div>
-    <div class="map-wrap"><svg id="mapsvg" viewBox="0 0 ${COLS*TS} ${ROWS*TS}" tabindex="0" role="application" aria-label="Hospital map. Use arrow keys to walk. The staff list below the map is an alternative.">${mapSvg()}</svg></div>
+    <div id="mapArea" class="${window.matchMedia("(max-width:640px)").matches&&!S.showMap?"nomap":""}"><button class="quiet map-tog" id="mapTog" aria-expanded="${S.showMap?"true":"false"}">${S.showMap?"Hide map":"Show map"}</button><div class="map-wrap"><svg id="mapsvg" viewBox="0 0 ${COLS*TS} ${ROWS*TS}" tabindex="0" role="application" aria-label="Hospital map. Use arrow keys to walk. The staff list below the map is an alternative.">${mapSvg()}</svg></div>
     <div class="controls">
       <div class="dpad" aria-label="Movement buttons"><button class="up" data-d="0,-1" aria-label="Up">▲</button><button class="left" data-d="-1,0" aria-label="Left">◀</button><button class="down" data-d="0,1" aria-label="Down">▼</button><button class="right" data-d="1,0" aria-label="Right">▶</button></div>
       <div class="dir" id="dir">${dirHtml()}</div>
-    </div>`;
+    </div></div>`;
+  {const mt=document.getElementById("mapTog");mt.onclick=()=>{S.showMap=!S.showMap;document.getElementById("mapArea").classList.toggle("nomap",!S.showMap);mt.textContent=S.showMap?"Hide map":"Show map";mt.setAttribute("aria-expanded",S.showMap?"true":"false");};}
   const svg=document.getElementById("mapsvg");
   svg.addEventListener("click",ev=>{const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());const tx=Math.floor(q.x/TS),ty=Math.floor(q.y/TS);
     const npc=NPCS.find(p=>p.x===tx&&p.y===ty)||CLUES.find(c=>c.x===tx&&c.y===ty);if(npc)goTo(npc);else walkTo(tx,ty,null);});
@@ -1420,7 +1428,7 @@ function renderMap(){
   if(S.pendingFU)toast(`Jordan from Statistics wants a quick word. Head to the <strong>Statistics</strong> office.`);
   focusMap();
 }
-function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span>${p.name.split(",")[0]}, ${p.room}</span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
+function dirHtml(){return `<h2>People and places</h2><ul>${NPCS.map(p=>{const st=npcStatus(p);const cl=p.kind==="core"?`<div class="clue-row">${roomClues(p.idx).map(c=>`<button class="clue-btn" data-clue="${c.id}">${S.clues.includes(c.id)?"✓":"?"} ${c.name}</button>`).join("")}</div>`:"";return `<li><button data-go="${p.id}"><span class="dir-who">${portrait(p,34)}<span>${p.name.split(",")[0]}, ${p.room}</span></span><span class="tag ${st}">${statusText(p)}</span></button>${cl}</li>`;}).join("")}</ul>`;}
 function bindDir(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>goTo(NPCS.find(p=>p.id===b.dataset.go)));app.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>goTo(CLUES.find(c=>c.id===b.dataset.clue)));}
 function refreshMap(){const svg=document.getElementById("mapsvg");if(!svg)return;const pos=S.pos;svg.innerHTML=mapSvg();document.getElementById("dir").innerHTML=dirHtml();bindDir();}
 function inspect(c){
@@ -1429,7 +1437,7 @@ function inspect(c){
   toast(`<p class="fb-head">${c.name}, ${room}</p>${c.html(S.lock[c.idx])}<p class="where">${isNew?"Added to your notes.":"Already in your notes."}</p>`);
   save();refreshMap();
 }
-function focusMap(){const s=document.getElementById("mapsvg");if(s)s.focus({preventScroll:true});}
+function focusMap(){const s=document.getElementById("mapsvg");if(s&&s.getClientRects().length)s.focus({preventScroll:true});else{const h=app.querySelector("h1");if(h)h.focus({preventScroll:true});}}
 function movePlayer(){const p=document.getElementById("player");if(p)p.setAttribute("transform",`translate(${S.pos[0]*TS+TS/2},${S.pos[1]*TS+TS/2})`);}
 function free(x,y){return x>=0&&y>=0&&x<COLS&&y<ROWS&&GRID[y][x]==="."&&!NPCS.some(p=>p.x===x&&p.y===y)&&!CLUES.some(c=>c.x===x&&c.y===y);}
 function step(dx,dy){
@@ -1471,7 +1479,7 @@ function interact(p){
 function startUnit(unit,kind,lvl,npc){
   mapActive=false;walking=null;setBar(signText());
   app.innerHTML=`<div class="talk-head">${portrait(npc)}<div><p class="where">${npc.room}</p><h1 tabindex="-1">${unit.title}</h1><p class="who">${npc.name}, ${npc.role}</p></div></div>
-    <div class="bubble">${npcLine(npc)}${unit.message}</div>${kind==="core"?`<details class="notes" open><summary>Your notes from this room</summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!(unit.steps[0].spec||unit.steps[0].reveal)?unit.viz:""}</div><div id="steps"></div>`;
+    <div class="bubble">${npcLine(npc)}${unit.message}</div>${kind==="core"?`<details class="notes"><summary>Your notes from this room <span class="notes-n">(${roomClues(npc.idx).length}, click to open)</span></summary>${roomClues(npc.idx).map(c=>`<div class="note">${c.html(lvl)}</div>`).join("")}</details>`:""}${unit.cards?kpis(unit.cards):""}<div id="vizSlot">${unit.viz&&!(unit.steps[0].spec||unit.steps[0].reveal)?unit.viz:""}</div><div id="steps"></div>`;
   window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
   markScrollers();
   showStep(unit,0,kind,lvl);
@@ -1700,7 +1708,7 @@ function renderNews(){
   const ratio=first/tot,brooksSays=ratio>=.8?"Remarkable week. I mean that.":ratio>=.5?"Solid work. Keep checking the clues first.":"Every analyst has a week like this. Read the takeaways, then come back stronger.";
   const qp=P(N.quote.id);
   app.innerHTML=`<article class="news" aria-labelledby="newsH">
-   <header class="news-mast"><p class="news-kicker">Staff newsletter · Week ${WEEK.num}${N.edition?` · ${N.edition}`:""}</p><h1 id="newsH" tabindex="-1">The Riverbend Rounds</h1><p class="news-sub">News from the floor, the offices and the coffee machine</p></header>
+   <header class="news-mast"><p class="news-kicker">Staff newsletter · Mission ${WEEK.num}${N.edition?` · ${N.edition}`:""}</p><h1 id="newsH" tabindex="-1">The Riverbend Rounds</h1><p class="news-sub">News from the floor, the offices and the coffee machine</p></header>
    <section class="news-lead"><h2>${pk(N.headline)}</h2><p>${pk(N.lead)}</p></section>
    <div class="news-cols">
     <section class="news-main"><h2 class="news-h">Around the hospital</h2><ul class="news-items">${items.map(it=>`<li>${portrait(P(it.id),48)}<p>${it.t}</p></li>`).join("")}</ul></section>
@@ -1710,7 +1718,7 @@ function renderNews(){
      <section class="news-box"><h2 class="news-h">Notices</h2><p>${N.notice}</p></section>
     </aside>
    </div>
-   <section class="news-spot"><h2 class="news-h">Staff spotlight: you</h2><p><strong>${title()}.</strong> ${first} of ${coreSteps.length} decisions right on the first try, ${S.hints} hint${S.hints===1?"":"s"}, and a reputation of ${S.cred}.${ctx.hidden?" You also solved the week's hidden problem.":""}${ctx.exp?" You took the optional consult, too.":""}</p><p class="news-brooks">${portrait(P("brooks"),40,ratio>=.5?"pleased":"neutral")}<span><strong>Dr. Brooks:</strong> “${brooksSays}”</span></p></section>
+   <section class="news-spot"><h2 class="news-h">Staff spotlight: you</h2><p><strong>${title()}.</strong> ${first} of ${coreSteps.length} decisions right on the first try, ${S.hints} hint${S.hints===1?"":"s"}, and a reputation of ${S.cred}.${ctx.hidden?" You also solved the mission's hidden problem.":""}${ctx.exp?" You took the optional consult, too.":""}</p><p class="news-brooks">${portrait(P("brooks"),40,ratio>=.5?"pleased":"neutral")}<span><strong>Dr. Brooks:</strong> “${brooksSays}”</span></p></section>
    <section class="news-next"><h2 class="news-h">Coming up</h2><p>${WEEK.teaser}</p></section>
    <div class="actions"><button class="primary" id="toResults">See my results and submit</button></div>
   </article>`;
@@ -1727,14 +1735,14 @@ function renderSummary0(){
   const codeBox=MODE==="season"?`<div class="submit-box" style="margin:1rem 0"><h2>Your career code</h2><p>Your season is saved on this browser. To continue on another device, keep this code somewhere safe:</p><p><code id="ccode" style="font-size:1.15rem">${encodeCareer(SEASON)}</code> <button class="quiet" id="copyc">Copy</button></p></div>`
     :`<div class="submit-box" style="margin:1rem 0"><h2>Played without saving</h2><p>Nothing was saved on this device.</p><p id="ccWrap"><button class="linkish" id="showc">Get a career code anyway</button></p></div>`;
   app.innerHTML=`<p class="where">Report filed</p><h1 tabindex="-1">${title()}</h1>
-    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this week's hidden problem.</p>`:""}
+    <div class="stats"><div class="stat"><b>${first} of ${coreSteps.length}</b><span>right on the first try</span></div><div class="stat"><b>${S.cred}</b><span>reputation</span></div><div class="stat"><b>${S.hints}</b><span>hints</span></div></div>${S.hiddenDone?`<p class="takeaway">★ You solved this mission's hidden problem.</p>`:""}
     <div class="submit-box">${configured?`<h2>Submit your results</h2><p>You'll go to a short anonymous survey. Your game results go along automatically, without your name. <strong>Click the arrow at the bottom of the survey to finish.</strong></p><div class="actions"><button class="primary" id="submit">Submit my results</button></div>`:`<h2>Instructor preview</h2><p>No survey connected.</p>`}</div>
-    <div class="bubble"><p><strong>Next week:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
+    <div class="bubble"><p><strong>Next mission:</strong> ${WEEK.teaser}</p></div>${codeBox}<ul class="review">${units.flatMap(u=>u.steps.map(s=>`<li><span>${u.title}: ${s.label}</span>${status(s.id)}</li>`)).join("")}</ul>
     ${(!configured||PREVIEW)?`<h2>What gets sent</h2><p style="font-size:.9rem;overflow-wrap:anywhere">${payload.results}</p>`:""}
     <div class="actions"><button class="linkish" id="restart">Play again from the start</button></div>`;
   window.scrollTo(0,0);app.querySelector("h1").focus({preventScroll:true});
   const cp=document.getElementById("copyc");if(cp)cp.onclick=()=>{const t=document.getElementById("ccode").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{cp.textContent="Copied";},()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("ccode"));getSelection().removeAllRanges();getSelection().addRange(r);cp.textContent="Selected: press Ctrl+C";});};
-  const shc=document.getElementById("showc");if(shc)shc.onclick=()=>{document.getElementById("ccWrap").innerHTML=`<code style="font-size:1.15rem">${encodeCareer(SEASON)}</code><br><span class="where">Enter it at the start of next week's game to keep your story.</span>`;};
+  const shc=document.getElementById("showc");if(shc)shc.onclick=()=>{document.getElementById("ccWrap").innerHTML=`<code style="font-size:1.15rem">${encodeCareer(SEASON)}</code><br><span class="where">Enter it at the start of the next mission to keep your story.</span>`;};
   const sb=document.getElementById("submit");if(sb)sb.onclick=()=>{const u=new URL(CONFIG.qualtricsUrl);u.searchParams.set("results",payload.results);location.href=u.toString();};
   document.getElementById("restart").onclick=()=>{if(!confirm("Start over? Your results on this device will be erased."))return;clearSaved();S=null;renderIntro();};
 }
